@@ -1,9 +1,13 @@
 package com.mybus;
 
 import android.content.Context;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.view.KeyEvent;
@@ -28,6 +32,9 @@ import butterknife.OnClick;
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private LocationUpdater locationUpdater;
+    private String CURRENT_LOCATION_MARKER;
+    private Float DEFAULT_MAP_ZOOM;
     @Bind(R.id.app_bar_layout)
     AppBarLayout mAppBarLayout;
     @Bind(R.id.floating_action_button)
@@ -72,6 +79,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         showSoftKeyBoard(true);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +98,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mToImput.setAdapter(autoCompleteAdapter);
 
         mToImput.setOnEditorActionListener(mOnEditorAndroidListener);
+        locationUpdater = new LocationUpdater(this);
+        CURRENT_LOCATION_MARKER = getString(R.string.current_location_marker);
+        DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
     }
 
     /**
@@ -99,10 +110,28 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker in Mar Del Plata and move the camera
-        LatLng latLng = new LatLng(-37.979858, -57.589794);
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Mar Del Plata"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+        startLocationListening();
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_MAP_ZOOM));
+    }
+
+    public void setCurrentLocation(double lat, double lon) {
+        mMap.clear();
+        float currentZoom = mMap.getCameraPosition().zoom;
+        LatLng latLng = new LatLng(lat, lon);
+        mMap.addMarker(new MarkerOptions().position(latLng).title(CURRENT_LOCATION_MARKER));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, currentZoom));
+    }
+
+    public void startLocationListening() {
+        // Define a listener that responds to location updates
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        // Acquire a reference to the system Location Manager
+        LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        // Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationUpdater);
     }
 
     private void showSoftKeyBoard(boolean show) {
