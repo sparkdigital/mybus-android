@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyBus</string>
+    <string name="current_location_marker">Current Location</string>
 </resources>
