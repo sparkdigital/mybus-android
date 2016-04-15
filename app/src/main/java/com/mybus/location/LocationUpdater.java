@@ -1,33 +1,38 @@
 package com.mybus.location;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 
+import com.google.android.gms.maps.model.LatLng;
+
+@SuppressWarnings("MissingPermission")
 public class LocationUpdater implements LocationListener {
 
     private OnLocationChangedCallback onLocationChangedCallback;
     private LocationUpdater locationUpdater;
-    private Context context;
+    LocationManager locationManager;
 
     public LocationUpdater(OnLocationChangedCallback onLocationChangedCallback, Context context) {
         this.onLocationChangedCallback = onLocationChangedCallback;
-        this.context = context;
+        // Acquire a reference to the system Location Manager
+        locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+    }
+
+    /**
+     * Get the last known gps location, null otherwise
+     */
+    public LatLng getLastKnownLocation() {
+        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        if (lastKnownLocation == null) {
+            return null;
+        }
+        return new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
     }
 
     public void startListening() {
-        // Define a listener that responds to location updates
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
     }
