@@ -13,14 +13,10 @@ public class LocationUpdater implements LocationListener {
 
     private OnLocationChangedCallback onLocationChangedCallback;
     private LocationUpdater locationUpdater;
-    private Context context;
-    private boolean isFirstLocation;
     LocationManager locationManager;
 
     public LocationUpdater(OnLocationChangedCallback onLocationChangedCallback, Context context) {
         this.onLocationChangedCallback = onLocationChangedCallback;
-        this.context = context;
-        isFirstLocation = false;
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
     }
@@ -39,15 +35,6 @@ public class LocationUpdater implements LocationListener {
     public void startListening() {
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-    }
-
-    public boolean isFirstLocation() {
-        if (isFirstLocation == true) {
-            isFirstLocation = false;
-            return isFirstLocation;
-        } else {
-            return false;
-        }
     }
 
     @Override

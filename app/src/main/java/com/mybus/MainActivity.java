@@ -31,6 +31,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     AppBarLayout mAppBarLayout;
     @Bind(R.id.floating_action_button)
     FloatingActionButton mFAB;
+    @Bind(R.id.center_location_action_button)
+    FloatingActionButton mCLAB;
     @Bind(R.id.from_field)
     AppCompatAutoCompleteTextView mFromImput;
     @Bind(R.id.to_field)
@@ -49,6 +51,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void mFABClickListener(View view) {
         mAppBarLayout.setExpanded(true, true);
         mFAB.hide();
+    }
+
+    @OnClick(R.id.center_location_action_button)
+    public void mCLABClickListener(View view) {
+        centerToLastKnownLocation();
     }
 
     @Override
@@ -73,11 +80,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         locationUpdater.startListening();
+        centerToLastKnownLocation();
+    }
+
+    public void centerToLastKnownLocation(){
         //get the last gps location
         LatLng lastLocation = locationUpdater.getLastKnownLocation();
         if (lastLocation != null) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
         }
+        mMap.addMarker(new MarkerOptions().position(lastLocation).title(CURRENT_LOCATION_MARKER));
     }
 
     @Override
@@ -86,4 +98,5 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(lat, lon);
         mMap.addMarker(new MarkerOptions().position(latLng).title(CURRENT_LOCATION_MARKER));
     }
+
 }
