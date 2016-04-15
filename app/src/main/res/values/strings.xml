@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyBus</string>
+    <string name="from_hint">From:</string>
+    <string name="to_hint">To:</string>
 </resources>
