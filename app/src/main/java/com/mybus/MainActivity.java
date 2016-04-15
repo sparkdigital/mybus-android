@@ -3,10 +3,10 @@ package com.mybus;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.view.View;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,11 +14,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.listener.AppBarStateChangeListener;
+import com.mybus.location.LocationUpdater;
+import com.mybus.location.OnLocationChangedCallback;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.mybus.location.LocationUpdater;
-import com.mybus.location.OnLocationChangedCallback;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback {
 
@@ -50,13 +51,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mFAB.hide();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -74,7 +73,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         locationUpdater.startListening();
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_MAP_ZOOM));
+        //get the last gps location
+        LatLng lastLocation = locationUpdater.getLastKnownLocation();
+        if (lastLocation != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
+        }
     }
 
     @Override
