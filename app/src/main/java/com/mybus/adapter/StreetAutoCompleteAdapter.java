@@ -24,6 +24,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
+ * Adapter for AutoCompleteEditText searching streets names
+ *
  * @author Lucas Dimitroff <ldimitroff@devspark.com>
  */
 public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable {
@@ -54,8 +56,7 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
         }
         ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position));
@@ -72,7 +73,7 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
                     mLastCall.cancel();
                 }
                 if (constraint != null && constraint.length() >= 3) {
-                    List<String> streetList = findStreets(mContext, constraint.toString());
+                    List<String> streetList = findStreets(constraint.toString());
 
                     // Assign the data to the FilterResults
                     filterResults.values = streetList;
@@ -93,12 +94,19 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
         };
     }
 
-    private List<String> findStreets(Context mContext, String s) {
+    /**
+     * Get's the list of streets matching a constraint
+     * <p/>
+     * Example url: //http://gis.mardelplata.gob.ar/opendata/ws.php?method=rest&endpoint=callejero_mgp&token=rwef3253465htrt546dcasadg4343&nombre_calle=ind
+     *
+     * @param constraint
+     * @return list of streets
+     */
+    private List<String> findStreets(String constraint) {
         List<String> results = new ArrayList<>();
-        //http://gis.mardelplata.gob.ar/opendata/ws.php?method=rest&endpoint=callejero_mgp&token=rwef3253465htrt546dcasadg4343&nombre_calle=ind
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://gis.mardelplata.gob.ar/opendata/ws.php?method=rest&endpoint=callejero_mgp&token=rwef3253465htrt546dcasadg4343&nombre_calle=" + s)
+                .url("http://gis.mardelplata.gob.ar/opendata/ws.php?method=rest&endpoint=callejero_mgp&token=rwef3253465htrt546dcasadg4343&nombre_calle=" + constraint)
                 .build();
         try {
             mLastCall = client.newCall(request);
