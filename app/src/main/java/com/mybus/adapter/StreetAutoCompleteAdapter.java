@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,8 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
                     mLastCall.cancel();
                 }
                 if (constraint != null && constraint.length() >= 3) {
-                    List<String> streetList = findStreets(constraint.toString());
+
+                    List<String> streetList = findStreets(stripAccents(constraint.toString()));
 
                     // Assign the data to the FilterResults
                     filterResults.values = streetList;
@@ -123,5 +125,17 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
         }
 
         return results;
+    }
+
+    /**
+     * Removes the accents to any string
+     *
+     * @param s
+     * @return
+     */
+    private String stripAccents(String s) {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return s;
     }
 }
