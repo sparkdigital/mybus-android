@@ -11,21 +11,21 @@ import com.google.android.gms.maps.model.LatLng;
 @SuppressWarnings("MissingPermission")
 public class LocationUpdater implements LocationListener {
 
-    private OnLocationChangedCallback onLocationChangedCallback;
-    private LocationUpdater locationUpdater;
-    LocationManager locationManager;
+    private OnLocationChangedCallback mOnLocationChangedCallback;
+    private LocationUpdater mLocationUpdater;
+    private LocationManager mLocationManager;
 
     public LocationUpdater(OnLocationChangedCallback onLocationChangedCallback, Context context) {
-        this.onLocationChangedCallback = onLocationChangedCallback;
+        this.mOnLocationChangedCallback = onLocationChangedCallback;
         // Acquire a reference to the system Location Manager
-        locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
     }
 
     /**
      * Get the last known gps location, null otherwise
      */
     public LatLng getLastKnownLocation() {
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         if (lastKnownLocation == null) {
             return null;
         }
@@ -34,13 +34,13 @@ public class LocationUpdater implements LocationListener {
 
     public void startListening() {
         // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
     }
 
     @Override
     public void onLocationChanged(Location location) {
         // Called when a new location is found by the network location provider.
-        onLocationChangedCallback.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
+        mOnLocationChangedCallback.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     @Override
