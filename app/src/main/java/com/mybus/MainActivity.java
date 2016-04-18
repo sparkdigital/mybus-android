@@ -16,11 +16,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.listener.AppBarStateChangeListener;
+import com.mybus.listener.CustomAutoCompleteClickListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnLocationChangedCallback;
 
@@ -36,16 +38,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Bind(R.id.app_bar_layout)
     AppBarLayout mAppBarLayout;
     @Bind(R.id.floating_action_button)
-    FloatingActionButton mFAB;
+    FloatingActionButton mFloatingSearchButton;
     @Bind(R.id.center_location_action_button)
-    FloatingActionButton mCLAB;
+    FloatingActionButton mCenterLocationButton;
     @Bind(R.id.from_field)
-    AppCompatAutoCompleteTextView mFromImput;
+    AppCompatAutoCompleteTextView mFromInput;
     @Bind(R.id.to_field)
-    AppCompatAutoCompleteTextView mToImput;
+    AppCompatAutoCompleteTextView mToInput;
     MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
     Marker mUserLocationMarker;
+
 
     /**
      * Checks the state of the AppBarLayout
@@ -54,7 +57,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public void onStateChanged(AppBarLayout appBarLayout, State state) {
             if (state.equals(State.COLLAPSED)) {
-                mFAB.show();
+                mFloatingSearchButton.show();
                 showSoftKeyBoard(false);
             }
         }
@@ -67,23 +70,30 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                //ToDo: Perform Search
+                //TODO: Perform Search
+                showSoftKeyBoard(false);
                 return true;
             }
             return false;
         }
     };
+    private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
+        @Override
+        public void onMapLongClick(LatLng latLng) {
+            //TODO: Add marker
+        }
+    };
 
     @OnClick(R.id.floating_action_button)
-    public void onFABClick(View view) {
+    public void onFloatingSearchButton(View view) {
         mAppBarLayout.setExpanded(true, true);
-        mFAB.hide();
-        mFromImput.requestFocus();
+        mFloatingSearchButton.hide();
+        mFromInput.requestFocus();
         showSoftKeyBoard(true);
     }
 
     @OnClick(R.id.center_location_action_button)
-    public void mCLABClickListener(View view) {
+    public void onCenterLocationButtonClick(View view) {
         centerToLastKnownLocation();
     }
 
@@ -99,13 +109,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         StreetAutoCompleteAdapter autoCompleteAdapter = new StreetAutoCompleteAdapter(MainActivity.this);
 
-        mFromImput.setAdapter(autoCompleteAdapter);
-        mToImput.setAdapter(autoCompleteAdapter);
+        mFromInput.setAdapter(autoCompleteAdapter);
+        mFromInput.setOnItemClickListener(new CustomAutoCompleteClickListener(mFromInput));
 
-        mToImput.setOnEditorActionListener(mOnEditorAndroidListener);
+        mToInput.setAdapter(autoCompleteAdapter);
+        mToInput.setOnItemClickListener(new CustomAutoCompleteClickListener(mToInput));
+        mToInput.setOnEditorActionListener(mOnEditorAndroidListener);
+
         mLocationUpdater = new LocationUpdater(this, this);
         DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
-        mUserLocationMarkerOptions = new MarkerOptions().title(getString(R.string.current_location_marker));
+        mUserLocationMarkerOptions = new MarkerOptions()
+                .title(getString(R.string.current_location_marker))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
     }
 
     /**
@@ -139,17 +154,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Show or hide the soft keyboard
+     *
+     * @param show
+     */
     private void showSoftKeyBoard(boolean show) {
         View view = this.getCurrentFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (view != null) {
             if (show) {
-                imm.showSoftInput(mFromImput, InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(mFromInput, InputMethodManager.SHOW_IMPLICIT);
             } else {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
     }
-
-
 }
