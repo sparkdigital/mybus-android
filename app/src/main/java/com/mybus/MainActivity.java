@@ -31,8 +31,7 @@ import butterknife.OnClick;
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback {
 
     private GoogleMap mMap;
-    private LocationUpdater locationUpdater;
-    private String CURRENT_LOCATION_MARKER;
+    private LocationUpdater mLocationUpdater;
     private Float DEFAULT_MAP_ZOOM;
     @Bind(R.id.app_bar_layout)
     AppBarLayout mAppBarLayout;
@@ -44,9 +43,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     AppCompatAutoCompleteTextView mFromImput;
     @Bind(R.id.to_field)
     AppCompatAutoCompleteTextView mToImput;
-    MarkerOptions userLocationMarkerOptions;
+    MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
-    Marker userLocationMarker;
+    Marker mUserLocationMarker;
 
     /**
      * Checks the state of the AppBarLayout
@@ -104,9 +103,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mToImput.setAdapter(autoCompleteAdapter);
 
         mToImput.setOnEditorActionListener(mOnEditorAndroidListener);
-        locationUpdater = new LocationUpdater(this, this);
+        mLocationUpdater = new LocationUpdater(this, this);
         DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
-        userLocationMarkerOptions = new MarkerOptions().title(getString(R.string.current_location_marker));
+        mUserLocationMarkerOptions = new MarkerOptions().title(getString(R.string.current_location_marker));
     }
 
     /**
@@ -116,27 +115,27 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        locationUpdater.startListening();
+        mLocationUpdater.startListening();
         centerToLastKnownLocation();
     }
 
     public void centerToLastKnownLocation() {
         //get the last gps location
-        LatLng lastLocation = locationUpdater.getLastKnownLocation();
+        LatLng lastLocation = mLocationUpdater.getLastKnownLocation();
         if (lastLocation != null) {
-            userLocationMarkerOptions.position(lastLocation);
+            mUserLocationMarkerOptions.position(lastLocation);
             //if the marker is not on the map, add it
-            if (userLocationMarker == null) {
-                userLocationMarker = mMap.addMarker(userLocationMarkerOptions);
+            if (mUserLocationMarker == null) {
+                mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
             }
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLocationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
         }
     }
 
     @Override
     public void onLocationChanged(LatLng latLng) {
-        if (userLocationMarker != null) {
-            userLocationMarker.setPosition(latLng);
+        if (mUserLocationMarker != null) {
+            mUserLocationMarker.setPosition(latLng);
         }
     }
 
