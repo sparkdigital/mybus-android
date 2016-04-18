@@ -40,7 +40,7 @@ public class LocationUpdater implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         // Called when a new location is found by the network location provider.
-        onLocationChangedCallback.onLocationChanged(location.getLatitude(), location.getLongitude());
+        onLocationChangedCallback.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     @Override

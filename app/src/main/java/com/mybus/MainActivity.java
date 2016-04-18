@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.listener.AppBarStateChangeListener;
@@ -43,6 +44,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     AppCompatAutoCompleteTextView mFromImput;
     @Bind(R.id.to_field)
     AppCompatAutoCompleteTextView mToImput;
+    MarkerOptions userLocationMarkerOptions;
+    //Marker used to update the location on the map
+    Marker userLocationMarker;
 
     /**
      * Checks the state of the AppBarLayout
@@ -101,8 +105,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         mToImput.setOnEditorActionListener(mOnEditorAndroidListener);
         locationUpdater = new LocationUpdater(this, this);
-        CURRENT_LOCATION_MARKER = getString(R.string.current_location_marker);
         DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
+        userLocationMarkerOptions = new MarkerOptions().title(getString(R.string.current_location_marker));
     }
 
     /**
@@ -116,20 +120,24 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         centerToLastKnownLocation();
     }
 
-    public void centerToLastKnownLocation(){
+    public void centerToLastKnownLocation() {
         //get the last gps location
         LatLng lastLocation = locationUpdater.getLastKnownLocation();
         if (lastLocation != null) {
+            userLocationMarkerOptions.position(lastLocation);
+            //if the marker is not on the map, add it
+            if (userLocationMarker == null) {
+                userLocationMarker = mMap.addMarker(userLocationMarkerOptions);
+            }
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
         }
-        mMap.addMarker(new MarkerOptions().position(lastLocation).title(CURRENT_LOCATION_MARKER));
     }
 
     @Override
-    public void onLocationChanged(double lat, double lon) {
-        mMap.clear();
-        LatLng latLng = new LatLng(lat, lon);
-        mMap.addMarker(new MarkerOptions().position(latLng).title(CURRENT_LOCATION_MARKER));
+    public void onLocationChanged(LatLng latLng) {
+        if (userLocationMarker != null) {
+            userLocationMarker.setPosition(latLng);
+        }
     }
 
     private void showSoftKeyBoard(boolean show) {
