@@ -58,6 +58,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker mTempMarker;
 
 
+
     /**
      * Checks the state of the AppBarLayout
      */
