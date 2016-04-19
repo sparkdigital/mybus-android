@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.listener.AppBarStateChangeListener;
+import com.mybus.location.LocationGeocoding;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnLocationChangedCallback;
 
@@ -117,6 +118,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mLocationUpdater.startListening();
         centerToLastKnownLocation();
+        LatLng home = new LocationGeocoding(this).geocode("14 de julio 139, mar del plata");
+        mUserLocationMarkerOptions.position(home);
+        mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLocationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
     }
 
     public void centerToLastKnownLocation() {
@@ -134,9 +139,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(LatLng latLng) {
+        /*
         if (mUserLocationMarker != null) {
             mUserLocationMarker.setPosition(latLng);
+            new LocationGeocoding(this).reverseGeocode(latLng);
         }
+        */
     }
 
     private void showSoftKeyBoard(boolean show) {
