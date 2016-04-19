@@ -34,8 +34,9 @@ public class RouteSearchTask extends AsyncTask<LatLng, Integer, List<BusRouteRes
         OkHttpClient client = new OkHttpClient();
         //Create request to get a list of possible routes between two locations.
         //TODO: Remove token from url and use a system property
+        String url = "http://www.mybus.com.ar/api/v1/NexusApi.php?lat0=" + latLngs[0].latitude + "&lng0=" + latLngs[0].longitude + "&lat1=" + latLngs[1].latitude + "&lng1=" + latLngs[1].longitude + "&tk=94a08da1fecbb6e8b46990538c7b50b2";
         Request request = new Request.Builder()
-                .url("http://www.mybus.com.ar/api/v1/NexusApi.php?lat0=" + latLngs[0].latitude + "&lng0=" + latLngs[0].longitude + "&lat1=" + latLngs[1].latitude + "&lng1=" + latLngs[1].longitude + "&tk=94a08da1fecbb6e8b46990538c7b50b2")
+                .url(url)
                 .build();
         JSONObject jsonObject;
         Call call = client.newCall(request);
@@ -45,8 +46,8 @@ public class RouteSearchTask extends AsyncTask<LatLng, Integer, List<BusRouteRes
             Response response = call.execute();
             String jsonData = response.body().string();
             jsonObject = new JSONObject(jsonData);
-            type = jsonObject.getInt("type"); //Gets type of results
-            results = jsonObject.getJSONArray("results"); //Gets results
+            type = jsonObject.getInt("Type"); //Gets type of results
+            results = jsonObject.getJSONArray("Results"); //Gets results
         } catch (IOException | JSONException e) {
             //TODO
             e.printStackTrace();

@@ -4,28 +4,28 @@ package com.mybus.model;
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public class BusRoute {
-    int mIdBusLine;
+    Integer mIdBusLine;
     String mBusLineName;
-    int mBusLineDirection;
+    Integer mBusLineDirection;
     String mBusLineColor;
-    int mStartBusStopNumber;
+    Integer mStartBusStopNumber;
     String mStartBusStopLat;
     String mStartBusStopLng;
     String mStartBusStopStreetName;
-    int mStartBusStopStreetNumber;
-    double mStartBusStopDistanceToOrigin;
-    int mDestinationBusStopNumber;
+    Integer mStartBusStopStreetNumber;
+    Double mStartBusStopDistanceToOrigin;
+    Integer mDestinationBusStopNumber;
     String mDestinationBusStopLat;
     String mDestinationBusStopLng;
     String mDestinationBusStopStreetName;
-    int mDestinationBusStopStreetNumber;
-    double mDestinationBusStopDistanceToDestination;
+    Integer mDestinationBusStopStreetNumber;
+    Double mDestinationBusStopDistanceToDestination;
 
-    public int getIdBusLine() {
+    public Integer getIdBusLine() {
         return mIdBusLine;
     }
 
-    public void setIdBusLine(int idBusLine) {
+    public void setIdBusLine(Integer idBusLine) {
         this.mIdBusLine = idBusLine;
     }
 
@@ -37,11 +37,11 @@ public class BusRoute {
         this.mBusLineName = busLineName;
     }
 
-    public int getBusLineDirection() {
+    public Integer getBusLineDirection() {
         return mBusLineDirection;
     }
 
-    public void setBusLineDirection(int busLineDirection) {
+    public void setBusLineDirection(Integer busLineDirection) {
         this.mBusLineDirection = busLineDirection;
     }
 
@@ -53,11 +53,11 @@ public class BusRoute {
         this.mBusLineColor = busLineColor;
     }
 
-    public int getStartBusStopNumber() {
+    public Integer getStartBusStopNumber() {
         return mStartBusStopNumber;
     }
 
-    public void setStartBusStopNumber(int startBusStopNumber) {
+    public void setStartBusStopNumber(Integer startBusStopNumber) {
         this.mStartBusStopNumber = startBusStopNumber;
     }
 
@@ -85,27 +85,27 @@ public class BusRoute {
         this.mStartBusStopStreetName = startBusStopStreetName;
     }
 
-    public int getStartBusStopStreetNumber() {
+    public Integer getStartBusStopStreetNumber() {
         return mStartBusStopStreetNumber;
     }
 
-    public void setStartBusStopStreetNumber(int startBusStopStreetNumber) {
+    public void setStartBusStopStreetNumber(Integer startBusStopStreetNumber) {
         this.mStartBusStopStreetNumber = startBusStopStreetNumber;
     }
 
-    public double getStartBusStopDistanceToOrigin() {
+    public Double getStartBusStopDistanceToOrigin() {
         return mStartBusStopDistanceToOrigin;
     }
 
-    public void setStartBusStopDistanceToOrigin(double startBusStopDistanceToOrigin) {
+    public void setStartBusStopDistanceToOrigin(Double startBusStopDistanceToOrigin) {
         this.mStartBusStopDistanceToOrigin = startBusStopDistanceToOrigin;
     }
 
-    public int getDestinationBusStopNumber() {
+    public Integer getDestinationBusStopNumber() {
         return mDestinationBusStopNumber;
     }
 
-    public void setDestinationBusStopNumber(int destinationBusStopNumber) {
+    public void setDestinationBusStopNumber(Integer destinationBusStopNumber) {
         this.mDestinationBusStopNumber = destinationBusStopNumber;
     }
 
@@ -133,19 +133,19 @@ public class BusRoute {
         this.mDestinationBusStopStreetName = destinationBusStopStreetName;
     }
 
-    public int getDestinationBusStopStreetNumber() {
+    public Integer getDestinationBusStopStreetNumber() {
         return mDestinationBusStopStreetNumber;
     }
 
-    public void setDestinationBusStopStreetNumber(int destinationBusStopStreetNumber) {
+    public void setDestinationBusStopStreetNumber(Integer destinationBusStopStreetNumber) {
         this.mDestinationBusStopStreetNumber = destinationBusStopStreetNumber;
     }
 
-    public double getDestinationBusStopDistanceToDestination() {
+    public Double getDestinationBusStopDistanceToDestination() {
         return mDestinationBusStopDistanceToDestination;
     }
 
-    public void setDestinationBusStopDistanceToDestination(double destinationBusStopDistanceToDestination) {
+    public void setDestinationBusStopDistanceToDestination(Double destinationBusStopDistanceToDestination) {
         this.mDestinationBusStopDistanceToDestination = destinationBusStopDistanceToDestination;
     }
 }

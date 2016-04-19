@@ -4,8 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
@@ -76,13 +79,15 @@ public class BusRouteResult {
         busRoute.setStartBusStopLng(route.optString("StartBusStopLng"));
         busRoute.setStartBusStopStreetName(route.optString("StartBusStopStreetName"));
         busRoute.setStartBusStopStreetNumber(route.optInt("StartBusStopStreetNumber"));
-        busRoute.setStartBusStopDistanceToOrigin(route.optDouble("StartBusStopDistanceToOrigin"));
+        String doubleString = route.optString("StartBusStopDistanceToOrigin");
+        busRoute.setStartBusStopDistanceToOrigin(new Double(doubleString.replaceAll(",",".")));
         busRoute.setDestinationBusStopNumber(route.optInt("DestinationBusStopNumber"));
         busRoute.setDestinationBusStopLat(route.optString("DestinationBusStopLat"));
-        busRoute.setDestinationBusStopLng(route.optString("DestinationBusStopLng"));
-        busRoute.setDestinationBusStopStreetName(route.optString("DestinationBusStopStreetName"));
-        busRoute.setDestinationBusStopStreetNumber(route.optInt("DestinationBusStopStreetNumber"));
-        busRoute.setDestinationBusStopDistanceToDestination(route.optDouble("DestinationBusStopDistanceToDestination"));
+        busRoute.setDestinationBusStopLng(route.optString("DestinatioBusStopLng")); //Destination is misspelled
+        busRoute.setDestinationBusStopStreetName(route.optString("DestinatioBusStopStreetName")); //Destination is misspelled
+        busRoute.setDestinationBusStopStreetNumber(route.optInt("DestinatioBusStopStreetNumber")); //Destination is misspelled
+        doubleString = route.optString("DestinatioBusStopDistanceToDestination"); //Destination is misspelled
+        busRoute.setDestinationBusStopDistanceToDestination(new Double(doubleString.replaceAll(",",".")));
         busRouteResult.getBusRoutes().add(busRoute);
         return busRouteResult;
     }
@@ -97,45 +102,56 @@ public class BusRouteResult {
 
         //Parsing First Line:
         BusRoute firstBusRoute = new BusRoute();
+        //Bus Line information
         firstBusRoute.setIdBusLine(route.optInt("IdFirstBusLine"));
         firstBusRoute.setBusLineName(route.optString("FirstBusLineName"));
         firstBusRoute.setBusLineDirection(route.optInt("FirstBusLineDirection"));
         firstBusRoute.setBusLineColor(route.optString("FirstBusLineColor"));
+        //Route information
         firstBusRoute.setStartBusStopNumber(route.optInt("FirstLineStartBusStopNumber"));
+        firstBusRoute.setStartBusStopStreetName(route.optString("FirstLineStartBusStopStreet"));
+        firstBusRoute.setStartBusStopStreetNumber(route.optInt("FirstLineStartBusStopStreetNumber"));
         firstBusRoute.setStartBusStopLat(route.optString("FirstLineStartBusStopLat"));
         firstBusRoute.setStartBusStopLng(route.optString("FirstLineStartBusStopLng"));
-        firstBusRoute.setStartBusStopStreetName(route.optString("FirstLineStartBusStopStreetName"));
-        firstBusRoute.setStartBusStopStreetNumber(route.optInt("FirstLineStartBusStopStreetNumber"));
-        firstBusRoute.setStartBusStopDistanceToOrigin(route.optDouble("FirstLineStartBusStopDistanceToOrigin"));
         firstBusRoute.setDestinationBusStopNumber(route.optInt("FirstLineDestinationBusStopNumber"));
-        firstBusRoute.setDestinationBusStopLat(route.optString("FirstLineDestinationBusStopLat"));
-        firstBusRoute.setDestinationBusStopLng(route.optString("FirstLineDestinationBusStopLng"));
-        firstBusRoute.setDestinationBusStopStreetName(route.optString("FirstLineDestinationBusStopStreetName"));
-        firstBusRoute.setDestinationBusStopStreetNumber(route.optInt("FirstLineDestinationBusStopStreetNumber"));
-        firstBusRoute.setDestinationBusStopDistanceToDestination(route.optDouble("FirstLineDestinationBusStopDistanceToDestination"));
+        firstBusRoute.setDestinationBusStopStreetName(route.optString("FirstLineDestinatioBusStopStreet")); //Destination is misspelled
+        firstBusRoute.setDestinationBusStopStreetNumber(route.optInt("FirstLineDestinatioBusStopStreetNumber")); //Destination is misspelled
+        firstBusRoute.setDestinationBusStopLat(route.optString("FirstLineDestinatioBusStopLat")); //Destination is misspelled
+        firstBusRoute.setDestinationBusStopLng(route.optString("FirstLineDestinatioBusStopLng")); //Destination is misspelled
+        //Distance to start BusStop
+        String doubleString = route.optString("FirstLineStartBusStopDistance");
+        firstBusRoute.setStartBusStopDistanceToOrigin(new Double(doubleString.replaceAll(",",".")));
+
+        //Adding the first line route
         busRouteResult.getBusRoutes().add(firstBusRoute);
 
-        //Parsing First Line:
+        //Parsing Second Line:
         BusRoute secondBusRoute = new BusRoute();
+        //Bus Line information
         secondBusRoute.setIdBusLine(route.optInt("IdSecondBusLine"));
         secondBusRoute.setBusLineName(route.optString("SecondBusLineName"));
         secondBusRoute.setBusLineDirection(route.optInt("SecondBusLineDirection"));
         secondBusRoute.setBusLineColor(route.optString("SecondBusLineColor"));
+        //Route information
         secondBusRoute.setStartBusStopNumber(route.optInt("SecondLineStartBusStopNumber"));
+        secondBusRoute.setStartBusStopStreetName(route.optString("SecondLineStartBusStopStreet"));
+        secondBusRoute.setStartBusStopStreetNumber(route.optInt("SecondLineStartBusStopStreetNumber"));
         secondBusRoute.setStartBusStopLat(route.optString("SecondLineStartBusStopLat"));
         secondBusRoute.setStartBusStopLng(route.optString("SecondLineStartBusStopLng"));
-        secondBusRoute.setStartBusStopStreetName(route.optString("SecondLineStartBusStopStreetName"));
-        secondBusRoute.setStartBusStopStreetNumber(route.optInt("SecondLineStartBusStopStreetNumber"));
-        secondBusRoute.setStartBusStopDistanceToOrigin(route.optDouble("SecondLineStartBusStopDistanceToOrigin"));
         secondBusRoute.setDestinationBusStopNumber(route.optInt("SecondLineDestinationBusStopNumber"));
+        secondBusRoute.setDestinationBusStopStreetName(route.optString("SecondLineDestinationBusStopStreet"));
+        secondBusRoute.setDestinationBusStopStreetNumber(route.optInt("SecondLineDestinationBusStopStreetNumber"));
         secondBusRoute.setDestinationBusStopLat(route.optString("SecondLineDestinationBusStopLat"));
         secondBusRoute.setDestinationBusStopLng(route.optString("SecondLineDestinationBusStopLng"));
-        secondBusRoute.setDestinationBusStopStreetName(route.optString("SecondLineDestinationBusStopStreetName"));
-        secondBusRoute.setDestinationBusStopStreetNumber(route.optInt("SecondLineDestinationBusStopStreetNumber"));
-        secondBusRoute.setDestinationBusStopDistanceToDestination(route.optDouble("SecondLineDestinationBusStopDistanceToDestination"));
+        //Distance to Destination from DestinationBusStop
+        doubleString = route.optString("SecondLineDestinationBusStopDistance");
+        secondBusRoute.setDestinationBusStopDistanceToDestination(new Double(doubleString.replaceAll(",",".")));
+        //Adding the second line route
         busRouteResult.getBusRoutes().add(secondBusRoute);
 
-        busRouteResult.setCombinationDistance(route.optDouble("CombinationDistance"));
+        //Set the combination distance
+        doubleString = route.optString("CombinationDistance");
+        busRouteResult.setCombinationDistance(new Double(doubleString.replaceAll(",",".")));
         return busRouteResult;
     }
 
@@ -157,5 +173,9 @@ public class BusRouteResult {
 
     public double getCombinationDistance() {
         return this.mCombinationDistance;
+    }
+
+    public boolean isCombined() {
+        return mType == 1;
     }
 }
