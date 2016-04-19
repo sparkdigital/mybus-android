@@ -56,7 +56,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mEndLocationMarker = null;
     //Temporary Marker
     private Marker mTempMarker;
-
+    //Keeps the state of the app bar
+    private AppBarStateChangeListener.State mAppBarState;
 
 
     /**
@@ -65,6 +66,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarStateChangeListener() {
         @Override
         public void onStateChanged(AppBarLayout appBarLayout, State state) {
+            mAppBarState = state;
             if (state.equals(State.COLLAPSED)) {
                 showSoftKeyBoard(false);
             }
@@ -255,5 +257,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mTempMarker.remove();
             mTempMarker = null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mAppBarState != null && mAppBarState.equals(AppBarStateChangeListener.State.EXPANDED)) {
+            mAppBarLayout.setExpanded(false, true);
+            return;
+        }
+        super.onBackPressed();
     }
 }
