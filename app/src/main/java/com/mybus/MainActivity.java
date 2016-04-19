@@ -17,25 +17,35 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.listener.AppBarStateChangeListener;
+import com.mybus.location.LocationUpdater;
+import com.mybus.location.OnLocationChangedCallback;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback {
 
     private GoogleMap mMap;
+    private LocationUpdater mLocationUpdater;
+    private Float DEFAULT_MAP_ZOOM;
     @Bind(R.id.app_bar_layout)
     AppBarLayout mAppBarLayout;
     @Bind(R.id.floating_action_button)
     FloatingActionButton mFAB;
+    @Bind(R.id.center_location_action_button)
+    FloatingActionButton mCLAB;
     @Bind(R.id.from_field)
     AppCompatAutoCompleteTextView mFromImput;
     @Bind(R.id.to_field)
     AppCompatAutoCompleteTextView mToImput;
+    MarkerOptions mUserLocationMarkerOptions;
+    //Marker used to update the location on the map
+    Marker mUserLocationMarker;
 
     /**
      * Checks the state of the AppBarLayout
@@ -72,16 +82,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         showSoftKeyBoard(true);
     }
 
+    @OnClick(R.id.center_location_action_button)
+    public void mCLABClickListener(View view) {
+        centerToLastKnownLocation();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
         StreetAutoCompleteAdapter autoCompleteAdapter = new StreetAutoCompleteAdapter(MainActivity.this);
@@ -90,6 +103,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mToImput.setAdapter(autoCompleteAdapter);
 
         mToImput.setOnEditorActionListener(mOnEditorAndroidListener);
+        mLocationUpdater = new LocationUpdater(this, this);
+        DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
+        mUserLocationMarkerOptions = new MarkerOptions().title(getString(R.string.current_location_marker));
     }
 
     /**
@@ -99,10 +115,28 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker in Mar Del Plata and move the camera
-        LatLng latLng = new LatLng(-37.979858, -57.589794);
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Mar Del Plata"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+        mLocationUpdater.startListening();
+        centerToLastKnownLocation();
+    }
+
+    public void centerToLastKnownLocation() {
+        //get the last gps location
+        LatLng lastLocation = mLocationUpdater.getLastKnownLocation();
+        if (lastLocation != null) {
+            mUserLocationMarkerOptions.position(lastLocation);
+            //if the marker is not on the map, add it
+            if (mUserLocationMarker == null) {
+                mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
+            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLocationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
+        }
+    }
+
+    @Override
+    public void onLocationChanged(LatLng latLng) {
+        if (mUserLocationMarker != null) {
+            mUserLocationMarker.setPosition(latLng);
+        }
     }
 
     private void showSoftKeyBoard(boolean show) {

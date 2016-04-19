@@ -2,4 +2,5 @@
     <string name="app_name">MyBus</string>
     <string name="from_hint">From:</string>
     <string name="to_hint">To:</string>
+    <string name="current_location_marker">Current Location</string>
 </resources>
