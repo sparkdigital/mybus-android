@@ -32,11 +32,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        app:layout_anchor="@id/floating_action_button"
-        app:layout_anchorGravity="top"
         android:layout_margin="0dp"
         android:src="@android:drawable/ic_menu_mylocation"
         app:backgroundTint="@color/colorPrimary"
+        app:layout_anchor="@id/floating_action_button"
+        app:layout_anchorGravity="top"
         app:rippleColor="@color/colorPrimaryDark" />
 
 </android.support.design.widget.CoordinatorLayout>

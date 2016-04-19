@@ -20,7 +20,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mybus.adapter.CustomInfoWindowAdapter;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
+import com.mybus.helper.SearchFormStatus;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
 import com.mybus.location.LocationUpdater;
@@ -48,6 +50,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
     Marker mUserLocationMarker;
+    //Marker used to show the Start Location
+    Marker mStartLocationMarker = null;
+    //Marker used to show the End Location
+    Marker mEndLocationMarker = null;
+    //Temporary Marker
+    private Marker mTempMarker;
 
 
     /**
@@ -57,7 +65,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public void onStateChanged(AppBarLayout appBarLayout, State state) {
             if (state.equals(State.COLLAPSED)) {
-                mFloatingSearchButton.show();
                 showSoftKeyBoard(false);
             }
         }
@@ -77,17 +84,79 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             return false;
         }
     };
+
+    /**
+     * Listener for Map Long Click Listener for setting start or end locations.
+     */
     private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
             //TODO: Add marker
+            if (!SearchFormStatus.getInstance().isStartFilled()) {
+                mTempMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen)));
+                mTempMarker.showInfoWindow();
+            } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
+                mTempMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino)));
+                mTempMarker.showInfoWindow();
+            }
+
+        }
+    };
+
+    /**
+     * Listener for PopUp Window of Markers
+     */
+    private GoogleMap.OnInfoWindowClickListener mOnInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+            if (mUserLocationMarker != null && !marker.getId().equals(mUserLocationMarker.getId())) {
+                marker.remove();
+                clearTempMarker();
+            }
+            marker.hideInfoWindow();
+            if (!SearchFormStatus.getInstance().isStartFilled()) {
+                mStartLocationMarker = mMap.addMarker(new MarkerOptions().position(marker.getPosition()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen)));
+                //TODO: Change to Geocoding
+                mFromInput.setText(marker.getPosition().toString());
+                SearchFormStatus.getInstance().setStartFilled(true);
+                SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
+            } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
+                mEndLocationMarker = mMap.addMarker(new MarkerOptions().position(marker.getPosition()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino)));
+                //TODO: Change to Geocoding
+                mToInput.setText(marker.getPosition().toString());
+                SearchFormStatus.getInstance().setDestinationFilled(true);
+            }
+        }
+    };
+
+    /**
+     * Listener for Map Clicks and removes the Temporary Marker
+     */
+    private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
+        @Override
+        public void onMapClick(LatLng latLng) {
+            clearTempMarker();
+        }
+    };
+
+    /**
+     * Listener for Marker Clicks and removes the Temporary Marker
+     */
+    private GoogleMap.OnMarkerClickListener mOnMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            clearTempMarker();
+            return false;
         }
     };
 
     @OnClick(R.id.floating_action_button)
     public void onFloatingSearchButton(View view) {
+        if (SearchFormStatus.getInstance().canMakeSearch()) {
+            //TODO: Perform Search
+            return;
+        }
         mAppBarLayout.setExpanded(true, true);
-        mFloatingSearchButton.hide();
         mFromInput.requestFocus();
         showSoftKeyBoard(true);
     }
@@ -132,6 +201,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mLocationUpdater.startListening();
         centerToLastKnownLocation();
+
+        mMap.setOnMapLongClickListener(mMapOnLongClickListener);
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getLayoutInflater(), MainActivity.this));
+        mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
+        mMap.setOnMapClickListener(mOnMapClickListener);
+        mMap.setOnMarkerClickListener(mOnMarkerClickListener);
     }
 
     public void centerToLastKnownLocation() {
@@ -168,6 +243,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
+        }
+    }
+
+    /**
+     * Clears the Temporary Marker from the map
+     */
+    private void clearTempMarker() {
+        if (mTempMarker != null) {
+            mTempMarker.remove();
+            mTempMarker = null;
         }
     }
 }
