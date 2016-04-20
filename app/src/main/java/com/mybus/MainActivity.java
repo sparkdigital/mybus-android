@@ -226,9 +226,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         mLocationUpdater = new LocationUpdater(this, this);
         DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
-        mUserLocationMarkerOptions = new MarkerOptions()
-                .title(getString(R.string.current_location_marker))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
     }
 
     /**
@@ -237,6 +234,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mUserLocationMarkerOptions = new MarkerOptions()
+                .title(getString(R.string.current_location_marker))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
         mMap = googleMap;
         mLocationUpdater.startListening();
         centerToLastKnownLocation();
