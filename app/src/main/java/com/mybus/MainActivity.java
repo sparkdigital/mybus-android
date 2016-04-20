@@ -6,12 +6,9 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-
+import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,13 +20,16 @@ import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.location.LocationGeocoding;
 import com.mybus.location.LocationUpdater;
+import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
+import com.mybus.location.OnLocationGeocodingCompleteCallback;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback {
+public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback
+        , OnLocationGeocodingCompleteCallback, OnAddressGeocodingCompleteCallback {
 
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
@@ -47,6 +47,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
     Marker mUserLocationMarker;
+    private SearchAddressEditor mOnEditorAndroidListener;
 
     /**
      * Checks the state of the AppBarLayout
@@ -61,19 +62,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
-    /**
-     * Listener for To_TextView, makes the search when the user hits the magnifying glass
-     */
-    private TextView.OnEditorActionListener mOnEditorAndroidListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                //ToDo: Perform Search
-                return true;
-            }
-            return false;
-        }
-    };
+
 
     @OnClick(R.id.floating_action_button)
     public void onFABClick(View view) {
@@ -103,10 +92,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mFromImput.setAdapter(autoCompleteAdapter);
         mToImput.setAdapter(autoCompleteAdapter);
 
+        mOnEditorAndroidListener = new SearchAddressEditor(this,this);
         mToImput.setOnEditorActionListener(mOnEditorAndroidListener);
         mLocationUpdater = new LocationUpdater(this, this);
         DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
         mUserLocationMarkerOptions = new MarkerOptions().title(getString(R.string.current_location_marker));
+
+        LocationGeocoding.setContext(this);
     }
 
     /**
@@ -118,10 +110,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mLocationUpdater.startListening();
         centerToLastKnownLocation();
-        LatLng home = new LocationGeocoding(this).geocode("14 de julio 139, mar del plata");
-        mUserLocationMarkerOptions.position(home);
-        mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLocationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
     }
 
     public void centerToLastKnownLocation() {
@@ -133,18 +121,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             if (mUserLocationMarker == null) {
                 mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
             }
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLocationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
+            else{
+                mUserLocationMarker.setPosition(lastLocation);
+            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, DEFAULT_MAP_ZOOM));
+            LocationGeocoding.getInstance().performGeocodeByLocation(lastLocation, this);
         }
     }
 
     @Override
     public void onLocationChanged(LatLng latLng) {
-        /*
         if (mUserLocationMarker != null) {
             mUserLocationMarker.setPosition(latLng);
-            new LocationGeocoding(this).reverseGeocode(latLng);
         }
-        */
     }
 
     private void showSoftKeyBoard(boolean show) {
@@ -160,4 +149,23 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    @Override
+    public void onAddressGeocodingComplete(LatLng location) {
+        if(location!=null){
+            mUserLocationMarkerOptions.position(location);
+            //if the marker is not on the map, add it
+            if (mUserLocationMarker == null) {
+                mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
+            }
+            else{
+                mUserLocationMarker.setPosition(location);
+            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_MAP_ZOOM));
+        }
+    }
+
+    @Override
+    public void onLocationGeocodingComplete(String address) {
+        Toast.makeText(this,address,Toast.LENGTH_LONG).show();
+    }
 }
