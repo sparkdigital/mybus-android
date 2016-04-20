@@ -78,8 +78,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private TextView.OnEditorActionListener mOnEditorAndroidListener = new TextView.OnEditorActionListener() {
         @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+        public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
+            if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
+                mToInput.requestFocus();
+                return true;
+            }
+            if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
                 //TODO: Perform Search
                 showSoftKeyBoard(false);
                 return true;
@@ -102,7 +106,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 mTempMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino)));
                 mTempMarker.showInfoWindow();
             }
-
         }
     };
 
@@ -182,6 +185,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         StreetAutoCompleteAdapter autoCompleteAdapter = new StreetAutoCompleteAdapter(MainActivity.this);
 
         mFromInput.setAdapter(autoCompleteAdapter);
+        mFromInput.setOnEditorActionListener(mOnEditorAndroidListener);
         mFromInput.setOnItemClickListener(new CustomAutoCompleteClickListener(mFromInput));
 
         mToInput.setAdapter(autoCompleteAdapter);

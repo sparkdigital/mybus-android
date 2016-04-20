@@ -46,7 +46,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/from_hint"
-                        android:nextFocusRight="@+id/to_field"
+                        android:imeOptions="actionNext"
                         android:paddingLeft="@dimen/appbar_padding"
                         android:paddingRight="@dimen/appbar_padding"
                         android:singleLine="true" />
