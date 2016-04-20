@@ -80,10 +80,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
             if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
+                //TODO: Put Marker FROM
                 mToInput.requestFocus();
                 return true;
             }
             if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
+                //TODO: Put Marker TO
                 //TODO: Perform Search
                 showSoftKeyBoard(false);
                 return true;
@@ -121,13 +123,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
             marker.hideInfoWindow();
             if (!SearchFormStatus.getInstance().isStartFilled()) {
-                mStartLocationMarker = mMap.addMarker(new MarkerOptions().position(marker.getPosition()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen)));
                 //TODO: Change to Geocoding
+                mStartLocationMarker = mMap.addMarker(new MarkerOptions()
+                        .position(marker.getPosition())
+                        .draggable(true)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
+                        .title(marker.getPosition().toString()));
                 mFromInput.setText(marker.getPosition().toString());
                 SearchFormStatus.getInstance().setStartFilled(true);
                 SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
             } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
-                mEndLocationMarker = mMap.addMarker(new MarkerOptions().position(marker.getPosition()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino)));
+                mEndLocationMarker = mMap.addMarker(new MarkerOptions()
+                        .position(marker.getPosition())
+                        .draggable(true)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
+                        .title(marker.getPosition().toString()));
                 //TODO: Change to Geocoding
                 mToInput.setText(marker.getPosition().toString());
                 SearchFormStatus.getInstance().setDestinationFilled(true);
@@ -153,6 +163,28 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         public boolean onMarkerClick(Marker marker) {
             clearTempMarker();
             return false;
+        }
+    };
+
+    /**
+     * Listener for the marker drag
+     */
+    private GoogleMap.OnMarkerDragListener mOnMarkerDragListener = new GoogleMap.OnMarkerDragListener() {
+        @Override
+        public void onMarkerDragStart(Marker marker) {
+        }
+
+        @Override
+        public void onMarkerDrag(Marker marker) {
+        }
+
+        @Override
+        public void onMarkerDragEnd(Marker marker) {
+            if (marker.getId().equals(mStartLocationMarker.getId())) {
+                mFromInput.setText(marker.getPosition().toString());
+            } else if (marker.getId().equals(mEndLocationMarker.getId())) {
+                mToInput.setText(marker.getPosition().toString());
+            }
         }
     };
 
@@ -214,6 +246,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
         mMap.setOnMapClickListener(mOnMapClickListener);
         mMap.setOnMarkerClickListener(mOnMarkerClickListener);
+        mMap.setOnMarkerDragListener(mOnMarkerDragListener);
     }
 
     public void centerToLastKnownLocation() {
