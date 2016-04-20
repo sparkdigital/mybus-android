@@ -17,15 +17,8 @@ public class LocationGeocoding {
     private static Context mContext;
     private static LocationGeocoding instance;
 
-    public static void setContext(Context context) {
-        mContext = context;
-    }
-
-    public static LocationGeocoding getInstance() {
-        if (instance == null) {
-            instance = new LocationGeocoding();
-        }
-        return instance;
+    public LocationGeocoding(Context context) {
+        this.mContext = context;
     }
 
     public void performGeocodeByLocation(LatLng location, OnLocationGeocodingCompleteCallback callback) {
@@ -43,7 +36,7 @@ public class LocationGeocoding {
 
         private OnAddressGeocodingCompleteCallback callback;
 
-        public AddressGeocodingAcyncTask(OnAddressGeocodingCompleteCallback callback){
+        public AddressGeocodingAcyncTask(OnAddressGeocodingCompleteCallback callback) {
             this.callback = callback;
         }
 
@@ -85,7 +78,7 @@ public class LocationGeocoding {
 
         private OnLocationGeocodingCompleteCallback callback;
 
-        public LocationGeocodingAcyncTask(OnLocationGeocodingCompleteCallback callback){
+        public LocationGeocodingAcyncTask(OnLocationGeocodingCompleteCallback callback) {
             this.callback = callback;
         }
 

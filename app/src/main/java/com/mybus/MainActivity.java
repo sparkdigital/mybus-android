@@ -25,6 +25,7 @@ import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.helper.SearchFormStatus;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
+import com.mybus.location.LocationGeocoding;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
@@ -59,9 +60,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mEndLocationMarker = null;
     //Temporary Marker
     private Marker mTempMarker;
+
+    MarkerOptions mStartLocationMarkerOptions;
+    MarkerOptions mEndLocationMarkerOptions;
+
     //Keeps the state of the app bar
     private AppBarStateChangeListener.State mAppBarState;
+    OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
+    OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
+    LocationGeocoding locationGeocoding;
 
+    MarkerOptions lastAddressGeocodingType;
 
     /**
      * Checks the state of the AppBarLayout
@@ -84,11 +93,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
             if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
                 //TODO: Put Marker FROM
+                String address = tv.getText().toString();
+                lastAddressGeocodingType = mStartLocationMarkerOptions;
+                locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
                 mToInput.requestFocus();
                 return true;
             }
             if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
                 //TODO: Put Marker TO
+                String address = tv.getText().toString();
+                lastAddressGeocodingType = mEndLocationMarkerOptions;
+                locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
                 //TODO: Perform Search
                 showSoftKeyBoard(false);
                 return true;
@@ -127,26 +142,28 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             marker.hideInfoWindow();
             if (!SearchFormStatus.getInstance().isStartFilled()) {
                 //TODO: Change to Geocoding
-                mStartLocationMarker = mMap.addMarker(new MarkerOptions()
-                        .position(marker.getPosition())
-                        .draggable(true)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
-                        .title(marker.getPosition().toString()));
+                mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, marker.getPosition());
                 mFromInput.setText(marker.getPosition().toString());
                 SearchFormStatus.getInstance().setStartFilled(true);
                 SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
             } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
-                mEndLocationMarker = mMap.addMarker(new MarkerOptions()
-                        .position(marker.getPosition())
-                        .draggable(true)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
-                        .title(marker.getPosition().toString()));
+                mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, marker.getPosition());
                 //TODO: Change to Geocoding
                 mToInput.setText(marker.getPosition().toString());
                 SearchFormStatus.getInstance().setDestinationFilled(true);
             }
         }
     };
+
+    public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng) {
+        if (marker == null) {
+            markerOptions.position(latLng);
+            marker = mMap.addMarker(markerOptions);
+        } else {
+            marker.setPosition(latLng);
+        }
+        return marker;
+    }
 
     /**
      * Listener for Map Clicks and removes the Temporary Marker
@@ -232,6 +249,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mUserLocationMarkerOptions = new MarkerOptions()
                 .title(getString(R.string.current_location_marker))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
+        mOnAddressGeocodingCompleteCallback = this;
+        mOnLocationGeocodingCompleteCallback = this;
+        locationGeocoding = new LocationGeocoding(this);
+
+        mStartLocationMarkerOptions = new MarkerOptions()
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
+                .title("origen");
+        mEndLocationMarkerOptions = new MarkerOptions()
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
+                .title("destino");
     }
 
     /**
@@ -261,8 +290,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             if (mUserLocationMarker == null) {
                 mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
             }
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLocationUpdater.getLastKnownLocation(), DEFAULT_MAP_ZOOM));
+            zoomTo(mLocationUpdater.getLastKnownLocation());
         }
+    }
+
+    private void zoomTo(LatLng latLng) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM));
     }
 
     @Override
@@ -310,7 +343,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onAddressGeocodingComplete(LatLng location) {
-
+        if (location != null) {
+            if (lastAddressGeocodingType == mStartLocationMarkerOptions) {
+                mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, location);
+            }
+            if (lastAddressGeocodingType == mEndLocationMarkerOptions) {
+                mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location);
+            }
+            zoomTo(location);
+        }
     }
 
     @Override
