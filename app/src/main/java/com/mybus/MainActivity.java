@@ -101,6 +101,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public void onMapLongClick(LatLng latLng) {
             //TODO: Add marker
+            if (mTempMarker != null) {
+                clearTempMarker();
+            }
             if (!SearchFormStatus.getInstance().isStartFilled()) {
                 mTempMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen)));
                 mTempMarker.showInfoWindow();
@@ -226,6 +229,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         mLocationUpdater = new LocationUpdater(this, this);
         DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
+
+        resetLocalVariables();
+    }
+
+    /**
+     * This method restart the local variables to avoid old apps's states
+     */
+    private void resetLocalVariables() {
+        SearchFormStatus.getInstance().clearFormStatus();
+        if (mStartLocationMarker != null) {
+            mStartLocationMarker = null;
+        }
+        if (mEndLocationMarker != null) {
+            mEndLocationMarker = null;
+        }
     }
 
     /**
