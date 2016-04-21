@@ -119,6 +119,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public void onMapLongClick(LatLng latLng) {
             //TODO: Add marker
+            if (mTempMarker != null) {
+                clearTempMarker();
+            }
             if (!SearchFormStatus.getInstance().isStartFilled()) {
                 mTempMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen)));
                 mTempMarker.showInfoWindow();
@@ -261,6 +264,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
                 .title("destino");
+        resetLocalVariables();
+    }
+
+    /**
+     * This method restart the local variables to avoid old apps's states
+     */
+    private void resetLocalVariables() {
+        SearchFormStatus.getInstance().clearFormStatus();
+        if (mStartLocationMarker != null) {
+            mStartLocationMarker = null;
+        }
+        if (mEndLocationMarker != null) {
+            mEndLocationMarker = null;
+        }
     }
 
     /**
@@ -269,6 +286,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mUserLocationMarkerOptions = new MarkerOptions()
+                .title(getString(R.string.current_location_marker))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
         mMap = googleMap;
         mLocationUpdater.startListening();
         centerToLastKnownLocation();
