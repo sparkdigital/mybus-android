@@ -5,14 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:expanded="false">
 
     <android.support.design.widget.CollapsingToolbarLayout
         android:id="@+id/main.collapsing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         app:contentScrim="?attr/colorPrimary"
         app:expandedTitleMarginEnd="64dp"
         app:expandedTitleMarginStart="48dp"
@@ -34,17 +32,23 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/actionbar_marker" />
+                    android:src="@drawable/marker_origen" />
 
-                <android.support.v7.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/from_field"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_from"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/from_hint"
-                    android:nextFocusRight="@+id/to_field"
-                    android:paddingLeft="@dimen/appbar_padding"
-                    android:paddingRight="@dimen/appbar_padding"
-                    android:singleLine="true" />
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/from_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/from_hint"
+                        android:imeOptions="actionNext"
+                        android:paddingLeft="@dimen/appbar_padding"
+                        android:paddingRight="@dimen/appbar_padding"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -56,17 +60,23 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/actionbar_marker" />
+                    android:src="@drawable/marker_destino" />
 
-                <android.support.v7.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/to_field"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_to"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/to_hint"
-                    android:imeOptions="actionSearch"
-                    android:paddingLeft="@dimen/appbar_padding"
-                    android:paddingRight="@dimen/appbar_padding"
-                    android:singleLine="true" />
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/to_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/to_hint"
+                        android:imeOptions="actionSearch"
+                        android:paddingLeft="@dimen/appbar_padding"
+                        android:paddingRight="@dimen/appbar_padding"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
     </android.support.design.widget.CollapsingToolbarLayout>
