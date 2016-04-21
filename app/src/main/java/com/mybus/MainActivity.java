@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mybus.adapter.CustomInfoWindowAdapter;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.helper.SearchFormStatus;
 import com.mybus.listener.AppBarStateChangeListener;
@@ -55,22 +54,22 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     //Marker used to update the location on the map
     Marker mUserLocationMarker;
     //Marker used to show the Start Location
-    Marker mStartLocationMarker = null;
+    Marker mStartLocationMarker;
     //Marker used to show the End Location
-    Marker mEndLocationMarker = null;
+    Marker mEndLocationMarker;
     //Temporary Marker
     private Marker mTempMarker;
-
     MarkerOptions mStartLocationMarkerOptions;
-    MarkerOptions mEndLocationMarkerOptions;
+    MarkerOptions lastAddressGeocodingType;
+    MarkerOptions lastLocationGeocodingType;
 
+    MarkerOptions mEndLocationMarkerOptions;
     //Keeps the state of the app bar
     private AppBarStateChangeListener.State mAppBarState;
     OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
     OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
-    LocationGeocoding locationGeocoding;
 
-    MarkerOptions lastAddressGeocodingType;
+    LocationGeocoding locationGeocoding;
 
     /**
      * Checks the state of the AppBarLayout
@@ -91,9 +90,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView.OnEditorActionListener mOnEditorAndroidListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
+            String address = tv.getText().toString();
             if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
                 //TODO: Put Marker FROM
-                String address = tv.getText().toString();
+                setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 lastAddressGeocodingType = mStartLocationMarkerOptions;
                 locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
                 mToInput.requestFocus();
@@ -101,7 +101,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
             if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
                 //TODO: Put Marker TO
-                String address = tv.getText().toString();
+                setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 lastAddressGeocodingType = mEndLocationMarkerOptions;
                 locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
                 //TODO: Perform Search
@@ -123,47 +123,25 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 clearTempMarker();
             }
             if (!SearchFormStatus.getInstance().isStartFilled()) {
-                mTempMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen)));
-                mTempMarker.showInfoWindow();
+                lastLocationGeocodingType = mStartLocationMarkerOptions;
+                mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, true);
             } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
-                mTempMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino)));
-                mTempMarker.showInfoWindow();
+                lastLocationGeocodingType = mEndLocationMarkerOptions;
+                mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, true);
             }
         }
     };
 
-    /**
-     * Listener for PopUp Window of Markers
-     */
-    private GoogleMap.OnInfoWindowClickListener mOnInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
-        @Override
-        public void onInfoWindowClick(Marker marker) {
-            if (mUserLocationMarker != null && !marker.getId().equals(mUserLocationMarker.getId())) {
-                marker.remove();
-                clearTempMarker();
-            }
-            marker.hideInfoWindow();
-            if (!SearchFormStatus.getInstance().isStartFilled()) {
-                //TODO: Change to Geocoding
-                mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, marker.getPosition());
-                mFromInput.setText(marker.getPosition().toString());
-                SearchFormStatus.getInstance().setStartFilled(true);
-                SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
-            } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
-                mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, marker.getPosition());
-                //TODO: Change to Geocoding
-                mToInput.setText(marker.getPosition().toString());
-                SearchFormStatus.getInstance().setDestinationFilled(true);
-            }
-        }
-    };
 
-    public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng) {
+    public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, boolean performGeocoding) {
         if (marker == null) {
             markerOptions.position(latLng);
             marker = mMap.addMarker(markerOptions);
         } else {
             marker.setPosition(latLng);
+        }
+        if (performGeocoding) {
+            locationGeocoding.performGeocodeByLocation(latLng, mOnLocationGeocodingCompleteCallback);
         }
         return marker;
     }
@@ -193,21 +171,26 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * Listener for the marker drag
      */
     private GoogleMap.OnMarkerDragListener mOnMarkerDragListener = new GoogleMap.OnMarkerDragListener() {
+
         @Override
         public void onMarkerDragStart(Marker marker) {
+            marker.hideInfoWindow();
         }
 
         @Override
         public void onMarkerDrag(Marker marker) {
+            marker.hideInfoWindow();
         }
 
         @Override
         public void onMarkerDragEnd(Marker marker) {
+            marker.hideInfoWindow();
             if (marker.getId().equals(mStartLocationMarker.getId())) {
-                mFromInput.setText(marker.getPosition().toString());
+                lastLocationGeocodingType = mStartLocationMarkerOptions;
             } else if (marker.getId().equals(mEndLocationMarker.getId())) {
-                mToInput.setText(marker.getPosition().toString());
+                lastLocationGeocodingType = mEndLocationMarkerOptions;
             }
+            locationGeocoding.performGeocodeByLocation(marker.getPosition(), mOnLocationGeocodingCompleteCallback);
         }
     };
 
@@ -256,14 +239,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mOnLocationGeocodingCompleteCallback = this;
         locationGeocoding = new LocationGeocoding(this);
 
-        mStartLocationMarkerOptions = new MarkerOptions()
-                .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
-                .title("origen");
-        mEndLocationMarkerOptions = new MarkerOptions()
-                .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
-                .title("destino");
+
         resetLocalVariables();
     }
 
@@ -272,12 +248,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private void resetLocalVariables() {
         SearchFormStatus.getInstance().clearFormStatus();
-        if (mStartLocationMarker != null) {
-            mStartLocationMarker = null;
-        }
-        if (mEndLocationMarker != null) {
-            mEndLocationMarker = null;
-        }
+        mUserLocationMarkerOptions = null;
+        mUserLocationMarker = null;
+        mStartLocationMarker = null;
+        mEndLocationMarker = null;
+        mTempMarker = null;
+        lastAddressGeocodingType = null;
+        lastLocationGeocodingType = null;
+        mStartLocationMarkerOptions = new MarkerOptions()
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
+                .title("origen");
+        mEndLocationMarkerOptions = new MarkerOptions()
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
+                .title("destino");
     }
 
     /**
@@ -294,8 +279,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         centerToLastKnownLocation();
 
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getLayoutInflater(), MainActivity.this));
-        mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
+        //mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
         mMap.setOnMapClickListener(mOnMapClickListener);
         mMap.setOnMarkerClickListener(mOnMarkerClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
@@ -365,17 +349,37 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onAddressGeocodingComplete(LatLng location) {
         if (location != null) {
             if (lastAddressGeocodingType == mStartLocationMarkerOptions) {
-                mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, location);
+                mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, location, false);
             }
             if (lastAddressGeocodingType == mEndLocationMarkerOptions) {
-                mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location);
+                mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location, false);
             }
             zoomTo(location);
         }
     }
 
+    private void setMarkerTitle(Marker marker, MarkerOptions markerOptions, String title) {
+        if (marker != null) {
+            marker.setTitle(title);
+            marker.showInfoWindow();
+        }
+        markerOptions.title(title);
+    }
+
     @Override
     public void onLocationGeocodingComplete(String address) {
-
+        if (address != null) {
+            if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
+                setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
+                mFromInput.setText(address);
+                SearchFormStatus.getInstance().setStartFilled(true);
+                SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
+            }
+            if (lastLocationGeocodingType == mEndLocationMarkerOptions) {
+                setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
+                mToInput.setText(address);
+                SearchFormStatus.getInstance().setDestinationFilled(true);
+            }
+        }
     }
 }
