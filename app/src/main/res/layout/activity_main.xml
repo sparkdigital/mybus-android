@@ -39,4 +39,6 @@
         app:layout_anchorGravity="top"
         app:rippleColor="@color/colorPrimaryDark" />
 
+    <include layout="@layout/bottom_sheet_layout" />
+
 </android.support.design.widget.CoordinatorLayout>

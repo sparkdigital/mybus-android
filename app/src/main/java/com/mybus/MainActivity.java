@@ -3,13 +3,17 @@ package com.mybus;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +26,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.CustomInfoWindowAdapter;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
+import com.mybus.adapter.ViewPagerAdapter;
+import com.mybus.fragment.BusRouteFragment;
 import com.mybus.helper.SearchFormStatus;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
@@ -58,6 +64,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker mTempMarker;
     //Keeps the state of the app bar
     private AppBarStateChangeListener.State mAppBarState;
+    private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
+    private ViewPagerAdapter mViewPagerAdapter;
+    private TabLayout mTabLayout;
 
 
     /**
@@ -87,6 +96,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
                 //TODO: Put Marker TO
                 //TODO: Perform Search
+                showBottomSheetResults(true);
+                if (mTabLayout != null && mTabLayout.getTabAt(0) != null) {
+                    mTabLayout.getTabAt(0).getCustomView().setSelected(true);
+                }
                 showSoftKeyBoard(false);
                 return true;
             }
@@ -188,10 +201,33 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
+    /**
+     * Bottom Sheet Tab selected listener
+     * <p/>
+     * Expands the bottom sheet when the user re-selects any tab
+     */
+    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    };
+
     @OnClick(R.id.floating_action_button)
     public void onFloatingSearchButton(View view) {
         if (SearchFormStatus.getInstance().canMakeSearch()) {
-            //TODO: Perform Search
+            //TODO: Perform Search and then show bottom sheet
+            showBottomSheetResults(true);
             return;
         }
         mAppBarLayout.setExpanded(true, true);
@@ -229,6 +265,26 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mUserLocationMarkerOptions = new MarkerOptions()
                 .title(getString(R.string.current_location_marker))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
+
+        setupBottomSheet();
+    }
+
+    private void setupBottomSheet() {
+        LinearLayout bottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this.getLayoutInflater());
+        mViewPagerAdapter.addFragment(new BusRouteFragment(), "ONE");
+        mViewPagerAdapter.addFragment(new BusRouteFragment(), "TWO");
+        mViewPagerAdapter.addFragment(new BusRouteFragment(), "THREE");
+        viewPager.setAdapter(mViewPagerAdapter);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(viewPager);
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, i));
+        }
     }
 
     /**
@@ -293,6 +349,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if (mTempMarker != null) {
             mTempMarker.remove();
             mTempMarker = null;
+        }
+    }
+
+    /**
+     * Show or hide the bottom sheet Layout
+     *
+     * @param show
+     */
+    private void showBottomSheetResults(boolean show) {
+        if (show) {
+            mBottomSheetBehavior.setPeekHeight(100);
+        } else {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
 
