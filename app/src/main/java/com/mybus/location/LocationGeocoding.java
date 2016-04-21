@@ -16,6 +16,7 @@ public class LocationGeocoding {
 
     private static Context mContext;
     private static LocationGeocoding instance;
+    private static final String TAG = "LocationGeocoding";
 
     public LocationGeocoding(Context context) {
         this.mContext = context;
@@ -27,6 +28,8 @@ public class LocationGeocoding {
     }
 
     public void performGeocodeByAddress(String address, OnAddressGeocodingCompleteCallback callback) {
+        //TODO remove this hardcoded city, used to filter Mar del Plata results
+        address+=", mar del plata";
         AddressGeocodingAcyncTask addressGeocodingTask = new AddressGeocodingAcyncTask(callback);
         addressGeocodingTask.execute(new String[]{address});
     }
@@ -49,19 +52,18 @@ public class LocationGeocoding {
                 addresses = geocoder.getFromLocationName(locationName, 4);
             } catch (IOException ioException) {
                 // Catch network or other I/O problems.
-                Log.e("TAG", "string.service_not_available", ioException);
+                Log.e(TAG, "service_not_available", ioException);
             } catch (IllegalArgumentException illegalArgumentException) {
                 // Catch invalid latitude or longitude values.
-                Log.e("TAG", "string.invalid_lat_long_used", illegalArgumentException);
+                Log.e(TAG, "invalid_lat_long_used", illegalArgumentException);
             }
 
             // Handle case where no address was found.
             if (addresses == null || addresses.size() == 0) {
-                Log.e("TAG", "no_address_found");
+                Log.e(TAG, "no_address_found");
             } else {
                 Address address = addresses.get(0);
-
-                Log.i("TAG", "address_found");
+                Log.i(TAG, "address_found");
                 return new LatLng(address.getLatitude(), address.getLongitude());
             }
             return null;
@@ -91,20 +93,20 @@ public class LocationGeocoding {
                 addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 4);
             } catch (IOException ioException) {
                 // Catch network or other I/O problems.
-                Log.e("TAG", "string.service_not_available", ioException);
+                Log.e(TAG, "service_not_available", ioException);
             } catch (IllegalArgumentException illegalArgumentException) {
                 // Catch invalid latitude or longitude values.
-                Log.e("TAG", "string.invalid_lat_long_used" + ". " +
+                Log.e(TAG, "invalid_lat_long_used" + ". " +
                         "Latitude = " + latLng.latitude +
                         ", Longitude = " + latLng.longitude, illegalArgumentException);
             }
 
             // Handle case where no address was found.
             if (addresses == null || addresses.size() == 0) {
-                Log.e("TAG", "no_address_found");
+                Log.e(TAG, "no_address_found");
             } else {
                 Address address = addresses.get(0);
-                Log.i("TAG", "address_found");
+                Log.i(TAG, "address_found");
                 return address.getThoroughfare() + " " + address.getFeatureName();
             }
             return null;
