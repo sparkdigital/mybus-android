@@ -6,6 +6,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -43,6 +44,7 @@ import butterknife.OnClick;
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback {
 
+    public static final String TAG = "MainActivity";
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
     private Float DEFAULT_MAP_ZOOM;
@@ -369,5 +371,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         Toast.makeText(this, "results found", Toast.LENGTH_LONG).show();
+        int i = 0;
+        for (BusRouteResult route : results) {
+            Log.d(TAG, "result "+i+": "+route.toString());
+            i++;
+        }
     }
 }

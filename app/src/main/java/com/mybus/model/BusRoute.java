@@ -148,4 +148,16 @@ public class BusRoute {
     public void setDestinationBusStopDistanceToDestination(Double destinationBusStopDistanceToDestination) {
         this.mDestinationBusStopDistanceToDestination = destinationBusStopDistanceToDestination;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("BusLineName: ")
+                .append(getBusLineName())
+                .append(", StartBusStopStreetName: ")
+                .append(getStartBusStopStreetName())
+                .append(", DestinationBusStopStreetName: ")
+                .append(getDestinationBusStopStreetName());
+        return result.toString();
+    }
 }
