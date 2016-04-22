@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,6 +22,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
+import com.mybus.asynctask.RouteSearchCallback;
+import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.helper.SearchFormStatus;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
@@ -29,13 +32,16 @@ import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.model.BusRouteResult;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback,
-        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback {
+        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback {
 
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
@@ -46,6 +52,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     FloatingActionButton mFloatingSearchButton;
     @Bind(R.id.center_location_action_button)
     FloatingActionButton mCenterLocationButton;
+    @Bind(R.id.perform_search_action_button)
+    FloatingActionButton mPerformSearchButton;
     @Bind(R.id.from_field)
     AppCompatAutoCompleteTextView mFromInput;
     @Bind(R.id.to_field)
@@ -58,7 +66,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     //Marker used to show the End Location
     Marker mEndLocationMarker;
     //Temporary Marker
-    private Marker mTempMarker;
     MarkerOptions mStartLocationMarkerOptions;
     MarkerOptions lastAddressGeocodingType;
     MarkerOptions lastLocationGeocodingType;
@@ -92,7 +99,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
             String address = tv.getText().toString();
             if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
-                //TODO: Put Marker FROM
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 lastAddressGeocodingType = mStartLocationMarkerOptions;
                 locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
@@ -100,11 +106,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 return true;
             }
             if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
-                //TODO: Put Marker TO
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 lastAddressGeocodingType = mEndLocationMarkerOptions;
                 locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
-                //TODO: Perform Search
                 showSoftKeyBoard(false);
                 return true;
             }
@@ -118,10 +122,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            //TODO: Add marker
-            if (mTempMarker != null) {
-                clearTempMarker();
-            }
             if (!SearchFormStatus.getInstance().isStartFilled()) {
                 lastLocationGeocodingType = mStartLocationMarkerOptions;
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, true);
@@ -143,29 +143,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if (performGeocoding) {
             locationGeocoding.performGeocodeByLocation(latLng, mOnLocationGeocodingCompleteCallback);
         }
+        //Update searchButton status
+        if (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
+                || mEndLocationMarker != null && markerOptions == mStartLocationMarkerOptions) {
+            mPerformSearchButton.setAlpha(255);
+            mPerformSearchButton.setEnabled(true);
+        }
         return marker;
     }
-
-    /**
-     * Listener for Map Clicks and removes the Temporary Marker
-     */
-    private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
-        @Override
-        public void onMapClick(LatLng latLng) {
-            clearTempMarker();
-        }
-    };
-
-    /**
-     * Listener for Marker Clicks and removes the Temporary Marker
-     */
-    private GoogleMap.OnMarkerClickListener mOnMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
-        @Override
-        public boolean onMarkerClick(Marker marker) {
-            clearTempMarker();
-            return false;
-        }
-    };
 
     /**
      * Listener for the marker drag
@@ -196,10 +181,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.floating_action_button)
     public void onFloatingSearchButton(View view) {
-        if (SearchFormStatus.getInstance().canMakeSearch()) {
-            //TODO: Perform Search
-            return;
-        }
         mAppBarLayout.setExpanded(true, true);
         mFromInput.requestFocus();
         showSoftKeyBoard(true);
@@ -208,6 +189,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.center_location_action_button)
     public void onCenterLocationButtonClick(View view) {
         centerToLastKnownLocation();
+    }
+
+    @OnClick(R.id.perform_search_action_button)
+    public void onPerformSearchButtonClick(View view) {
+        performSearch();
     }
 
     @Override
@@ -238,8 +224,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mOnAddressGeocodingCompleteCallback = this;
         mOnLocationGeocodingCompleteCallback = this;
         locationGeocoding = new LocationGeocoding(this);
-
-
+        //Disable the mPerformSearchButton action
+        mPerformSearchButton.setAlpha(50);
+        mPerformSearchButton.setEnabled(false);
         resetLocalVariables();
     }
 
@@ -252,7 +239,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mUserLocationMarker = null;
         mStartLocationMarker = null;
         mEndLocationMarker = null;
-        mTempMarker = null;
         lastAddressGeocodingType = null;
         lastLocationGeocodingType = null;
         mStartLocationMarkerOptions = new MarkerOptions()
@@ -280,8 +266,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
         //mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
-        mMap.setOnMapClickListener(mOnMapClickListener);
-        mMap.setOnMarkerClickListener(mOnMarkerClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
     }
 
@@ -323,16 +307,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-        }
-    }
-
-    /**
-     * Clears the Temporary Marker from the map
-     */
-    private void clearTempMarker() {
-        if (mTempMarker != null) {
-            mTempMarker.remove();
-            mTempMarker = null;
         }
     }
 
@@ -381,5 +355,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 SearchFormStatus.getInstance().setDestinationFilled(true);
             }
         }
+    }
+
+    private void performSearch() {
+        if (mStartLocationMarker == null || mEndLocationMarker == null) {
+            return;
+        }
+        RouteSearchTask routeSearchTask = new RouteSearchTask(this);
+        routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
+        Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRouteFound(List<BusRouteResult> results) {
+        Toast.makeText(this, "results found", Toast.LENGTH_LONG).show();
     }
 }
