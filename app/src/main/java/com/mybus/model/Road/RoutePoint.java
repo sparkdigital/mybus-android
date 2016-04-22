@@ -11,6 +11,10 @@ public class RoutePoint {
     private String mStopId, mLat, mLng, mAddress;
     private boolean isWaypoint;
 
+    /**
+     * @param jsonObject
+     * @return
+     */
     public static RoutePoint parse(JSONObject jsonObject) {
         RoutePoint point = new RoutePoint();
         try {

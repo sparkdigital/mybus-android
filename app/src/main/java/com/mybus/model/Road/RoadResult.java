@@ -19,9 +19,12 @@ public class RoadResult {
     private String mIdBusLine1;
     private String mIdBusLine2;
 
+    /**
+     * @param jsonObject
+     * @return
+     */
     public static RoadResult parse(JSONObject jsonObject) {
         RoadResult singleRoad = new RoadResult();
-        List<Route> routeList = new ArrayList<>();
         try {
             singleRoad.setType(jsonObject.getInt("Type"));
             singleRoad.setTotalDistance(jsonObject.getInt("TotalDistance"));
@@ -92,6 +95,9 @@ public class RoadResult {
         return mRouteList;
     }
 
+    /**
+     * @return a set of RoutePoint for all the Routes on the RoadResult
+     */
     public List<RoutePoint> getPointList() {
         if (mRouteList == null || mRouteList.isEmpty()) {
             return null;

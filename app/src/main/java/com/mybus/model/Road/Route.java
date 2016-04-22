@@ -14,6 +14,10 @@ public class Route {
 
     private List<RoutePoint> mPointList;
 
+    /**
+     * @param jsonArray
+     * @return
+     */
     public static Route parse(JSONArray jsonArray) {
         Route route = new Route();
         List<RoutePoint> points = new ArrayList<>();
