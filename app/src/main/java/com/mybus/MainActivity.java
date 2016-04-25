@@ -25,7 +25,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.asynctask.RouteSearchTask;
-import com.mybus.helper.SearchFormStatus;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
 import com.mybus.location.LocationGeocoding;
@@ -124,10 +123,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            if (!SearchFormStatus.getInstance().isStartFilled()) {
+            if (mStartLocationMarker == null) {
                 lastLocationGeocodingType = mStartLocationMarkerOptions;
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, true);
-            } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
+            } else {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, true);
             }
@@ -236,7 +235,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * This method restart the local variables to avoid old apps's states
      */
     private void resetLocalVariables() {
-        SearchFormStatus.getInstance().clearFormStatus();
         mUserLocationMarkerOptions = null;
         mUserLocationMarker = null;
         mStartLocationMarker = null;
@@ -348,13 +346,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 mFromInput.setText(address);
-                SearchFormStatus.getInstance().setStartFilled(true);
-                SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
             }
             if (lastLocationGeocodingType == mEndLocationMarkerOptions) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 mToInput.setText(address);
-                SearchFormStatus.getInstance().setDestinationFilled(true);
             }
         }
     }
@@ -372,9 +367,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRouteFound(List<BusRouteResult> results) {
         Toast.makeText(this, "results found", Toast.LENGTH_LONG).show();
         int i = 0;
-        for (BusRouteResult route : results) {
-            Log.d(TAG, "result "+i+": "+route.toString());
-            i++;
+        if(results!=null){
+            for (BusRouteResult route : results) {
+                Log.d(TAG, "result "+i+": "+route.toString());
+                i++;
+            }
         }
     }
 }
