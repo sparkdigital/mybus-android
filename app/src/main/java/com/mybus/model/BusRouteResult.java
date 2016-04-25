@@ -4,11 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
@@ -177,5 +174,15 @@ public class BusRouteResult {
 
     public boolean isCombined() {
         return mType == 1;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (BusRoute route : getBusRoutes()) {
+            result.append(route.toString())
+                    .append("; ");
+        }
+        return result.toString();
     }
 }

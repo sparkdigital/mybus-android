@@ -8,5 +8,5 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/textView" />
+        android:id="@+id/route_walk_origin" />
 </LinearLayout>

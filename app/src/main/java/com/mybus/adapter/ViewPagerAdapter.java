@@ -6,8 +6,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mybus.R;
+import com.mybus.model.BusRouteResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +48,19 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return mFragmentTitleList.get(position);
     }
 
-    public View getTabView(TabLayout tabLayout, int position) {
+    public View getTabView(TabLayout tabLayout, BusRouteResult busRouteResult) {
         View view = mInflater.inflate(R.layout.tab_layout, tabLayout, false);
+        TextView busLineTitle = (TextView) view.findViewById(R.id.bus_line_text);
+        ImageView busLineImage = (ImageView) view.findViewById(R.id.bus_line_image);
+
+        if (busRouteResult.getType() == 0) {
+            busLineTitle.setText(busRouteResult.getBusRoutes().get(0).getBusLineName());
+            busLineImage.setImageResource(R.drawable.mini_bondi);
+        } else {
+            String text = busRouteResult.getBusRoutes().get(0).getBusLineName() + " / " + busRouteResult.getBusRoutes().get(1).getBusLineName();
+            busLineTitle.setText(text);
+            busLineImage.setImageResource(R.drawable.mini_combinado);
+        }
         return view;
     }
 }
