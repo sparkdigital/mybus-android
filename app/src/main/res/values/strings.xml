@@ -3,6 +3,4 @@
     <string name="from_hint">From:</string>
     <string name="to_hint">To:</string>
     <string name="current_location_marker">Current Location</string>
-    <string name="popup_question_origin">"¿Utilizar esta ubicacion como tu Origen? "</string>
-    <string name="popup_question_destination">"¿Utilizar esta ubicacion como tu Destino? "</string>
 </resources>

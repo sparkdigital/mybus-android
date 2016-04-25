@@ -16,6 +16,7 @@
 
     <include layout="@layout/app_bar_layout" />
 
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
@@ -36,6 +37,18 @@
         android:src="@android:drawable/ic_menu_mylocation"
         app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@id/floating_action_button"
+        app:layout_anchorGravity="top"
+        app:rippleColor="@color/colorPrimaryDark" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/perform_search_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="0dp"
+        android:src="@android:drawable/ic_media_ff"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_anchor="@id/center_location_action_button"
         app:layout_anchorGravity="top"
         app:rippleColor="@color/colorPrimaryDark" />
 

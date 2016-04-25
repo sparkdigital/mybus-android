@@ -74,9 +74,7 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
                     mLastCall.cancel();
                 }
                 if (constraint != null && constraint.length() >= 3) {
-
                     List<String> streetList = findStreets(stripAccents(constraint.toString()));
-
                     // Assign the data to the FilterResults
                     filterResults.values = streetList;
                     filterResults.count = streetList.size();
