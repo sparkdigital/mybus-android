@@ -9,7 +9,7 @@ import com.mybus.model.Road.RoadResult;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Used to test the async task which returns a single Road result
+ * Used to test the async task which returns a Combined Road result
  *
  * @author Lucas Dimitroff <ldimitroff@devspark.com>
  */
