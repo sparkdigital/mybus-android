@@ -34,6 +34,7 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
+import com.mybus.requirements.DeviceRequirementsChecker;
 
 import java.util.List;
 
@@ -360,12 +361,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void performSearch() {
+
         if (mStartLocationMarker == null || mEndLocationMarker == null) {
             return;
         }
-        RouteSearchTask routeSearchTask = new RouteSearchTask(this);
-        routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
-        Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+        if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
+            RouteSearchTask routeSearchTask = new RouteSearchTask(this);
+            routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
+            Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "There is no internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
