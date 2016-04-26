@@ -3,4 +3,6 @@
     <string name="from_hint">From:</string>
     <string name="to_hint">To:</string>
     <string name="current_location_marker">Current Location</string>
+    <string name="stop_destination_title">Parada destino:</string>
+    <string name="stop_origin_title">Parada origen:</string>
 </resources>

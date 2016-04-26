@@ -197,12 +197,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-
+            //TODO: At least display both start and destination markers
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-
+            //TODO: Remove markers
         }
 
         @Override
@@ -356,7 +356,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onBackPressed() {
         if (mAppBarState != null && mAppBarState.equals(AppBarStateChangeListener.State.EXPANDED)) {
             mAppBarLayout.setExpanded(false, true);
-            showBottomSheetResults(false);
             return;
         }
         super.onBackPressed();
@@ -429,7 +428,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         for (BusRouteResult route : results) {
             BusRouteFragment fragment = new BusRouteFragment();
             fragment.setBusRouteResult(route);
-            mViewPagerAdapter.addFragment(fragment, "");
+            mViewPagerAdapter.addFragment(fragment);
         }
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -448,7 +447,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private void showBottomSheetResults(boolean show) {
         if (mBottomSheetBehavior != null) {
             if (show) {
-                mBottomSheetBehavior.setPeekHeight(200);
+                mBottomSheetBehavior.setPeekHeight(100);
             } else {
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 mBottomSheetBehavior.setPeekHeight(0);

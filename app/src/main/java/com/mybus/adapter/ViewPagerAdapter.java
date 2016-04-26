@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
     private final LayoutInflater mInflater;
 
     public ViewPagerAdapter(FragmentManager manager, LayoutInflater layoutInflater) {
@@ -38,16 +37,15 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.size();
     }
 
-    public void addFragment(Fragment fragment, String title) {
+    public void addFragment(Fragment fragment) {
         mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
     }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return mFragmentTitleList.get(position);
-    }
-
+    /**
+     * @param tabLayout
+     * @param busRouteResult
+     * @return
+     */
     public View getTabView(TabLayout tabLayout, BusRouteResult busRouteResult) {
         View view = mInflater.inflate(R.layout.tab_layout, tabLayout, false);
         TextView busLineTitle = (TextView) view.findViewById(R.id.bus_line_text);

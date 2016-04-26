@@ -33,8 +33,21 @@ public class BusRouteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.bus_route_fragment, container, false);
-        TextView textView = (TextView) v.findViewById(R.id.route_walk_origin);
-        textView.setText("Caminar " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getStartBusStopDistanceToOrigin()));
+        TextView stopOrigin = (TextView) v.findViewById(R.id.stop_origin_name);
+        TextView walkOrigin = (TextView) v.findViewById(R.id.route_walk_origin);
+        TextView stopDestination = (TextView) v.findViewById(R.id.stop_destination_name);
+        TextView walkDestination = (TextView) v.findViewById(R.id.route_walk_destination);
+
+        stopOrigin.setText(mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetNumber());
+        walkOrigin.setText("Distancia desde el origen: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getStartBusStopDistanceToOrigin()));
+
+        if (mBusRouteResult.getType() == 0) {
+            stopDestination.setText(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopNumber());
+            walkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopDistanceToDestination()));
+        } else {
+            stopDestination.setText(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopNumber());
+            walkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopDistanceToDestination()));
+        }
         return v;
     }
 
