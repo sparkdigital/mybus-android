@@ -3,4 +3,5 @@
     <string name="from_hint">From:</string>
     <string name="to_hint">To:</string>
     <string name="current_location_marker">Current Location</string>
+    <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
 </resources>
