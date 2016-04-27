@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">30dp</dimen>
     <dimen name="appbar_padding">3dp</dimen>
+    <dimen name="splash_powered_by_textSize">17dp</dimen>
+    <dimen name="splash_app_url_textSize">14dp</dimen>
+    <dimen name="splash_logo_layout_height">200px</dimen>
 </resources>
