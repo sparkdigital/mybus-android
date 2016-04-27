@@ -190,7 +190,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.center_location_action_button)
     public void onCenterLocationButtonClick(View view) {
-        centerToLastKnownLocation();
+        if (DeviceRequirementsChecker.checkGpsEnabled(this)) {
+            centerToLastKnownLocation();
+        }
     }
 
     @OnClick(R.id.perform_search_action_button)
@@ -230,6 +232,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mPerformSearchButton.setAlpha(50);
         mPerformSearchButton.setEnabled(false);
         resetLocalVariables();
+        DeviceRequirementsChecker.checkGpsEnabled(this);
     }
 
     /**
