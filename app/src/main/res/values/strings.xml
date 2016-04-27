@@ -5,4 +5,5 @@
     <string name="current_location_marker">Current Location</string>
     <string name="stop_destination_title">Parada destino:</string>
     <string name="stop_origin_title">Parada origen:</string>
+    <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
 </resources>

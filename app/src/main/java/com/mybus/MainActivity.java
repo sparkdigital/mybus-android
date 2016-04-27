@@ -30,7 +30,6 @@ import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.fragment.BusRouteFragment;
-import com.mybus.helper.SearchFormStatus;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
 import com.mybus.location.LocationGeocoding;
@@ -39,6 +38,7 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
+import com.mybus.requirements.DeviceRequirementsChecker;
 
 import java.util.List;
 
@@ -133,10 +133,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            if (!SearchFormStatus.getInstance().isStartFilled()) {
+            if (mStartLocationMarker == null) {
                 lastLocationGeocodingType = mStartLocationMarkerOptions;
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, true);
-            } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
+            } else {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, true);
             }
@@ -194,10 +194,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
-    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+    private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             //TODO: At least display both start and destination markers
+            mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
+            mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
+            mViewPager.setCurrentItem(tab.getPosition(), true);
         }
 
         @Override
@@ -220,7 +223,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.center_location_action_button)
     public void onCenterLocationButtonClick(View view) {
-        centerToLastKnownLocation();
+        if (DeviceRequirementsChecker.checkGpsEnabled(this)) {
+            centerToLastKnownLocation();
+        }
     }
 
     @OnClick(R.id.perform_search_action_button)
@@ -262,6 +267,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mPerformSearchButton.setEnabled(false);
         resetLocalVariables();
         setupBottomSheet();
+        DeviceRequirementsChecker.checkGpsEnabled(this);
     }
 
     private void setupBottomSheet() {
@@ -270,13 +276,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
+
     }
 
     /**
      * This method restart the local variables to avoid old apps's states
      */
     private void resetLocalVariables() {
-        SearchFormStatus.getInstance().clearFormStatus();
         mUserLocationMarkerOptions = null;
         mUserLocationMarker = null;
         mStartLocationMarker = null;
@@ -388,24 +394,26 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 mFromInput.setText(address);
-                SearchFormStatus.getInstance().setStartFilled(true);
-                SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
             }
             if (lastLocationGeocodingType == mEndLocationMarkerOptions) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 mToInput.setText(address);
-                SearchFormStatus.getInstance().setDestinationFilled(true);
             }
         }
     }
 
     private void performSearch() {
+
         if (mStartLocationMarker == null || mEndLocationMarker == null) {
             return;
         }
-        RouteSearchTask routeSearchTask = new RouteSearchTask(this);
-        routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
-        Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+        if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
+            RouteSearchTask routeSearchTask = new RouteSearchTask(this);
+            routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
+            Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "There is no internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
