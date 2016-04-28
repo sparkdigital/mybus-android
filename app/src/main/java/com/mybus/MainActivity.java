@@ -277,10 +277,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setupBottomSheet() {
-//        mBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-//        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-//        mTabLayout = (TabLayout) findViewById(R.id.tabs);
     }
 
     /**
