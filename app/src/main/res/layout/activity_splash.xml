@@ -7,16 +7,25 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/splash_logo_layout_height"
         android:layout_centerInParent="true"
         android:src="@drawable/mybus_logo" />
+
+    <TextView
+        android:layout_below="@id/imgLogo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/splash_powered_by_textSize"
+        android:textColor="@color/splashText"
+        android:text="@string/powered_by" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:textSize="14dp"
-        android:textColor="#454545"
+        android:textSize="@dimen/splash_app_url_textSize"
+        android:textColor="@color/splashText"
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:text="@string/app_url" />
