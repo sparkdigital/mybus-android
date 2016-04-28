@@ -1,5 +1,10 @@
 package com.mybus.model.Road;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.mybus.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,6 +112,66 @@ public class RoadResult {
             points.addAll(route.getPointList());
         }
         return points;
+    }
+
+    /**
+     * @return a list of Marker options to be drawed on the map
+     */
+    public List<MarkerOptions> getMarkerOptions() {
+        List<MarkerOptions> list = new ArrayList<>();
+        if (mType == 0) {
+            list.add(new MarkerOptions()
+                    .title("Parada Origen")
+                    .position(mRouteList.get(0).getFirstLatLng())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+            list.add(new MarkerOptions()
+                    .title("Parada Destino")
+                    .position(mRouteList.get(0).getLastLatLng())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+        } else {
+            list.add(new MarkerOptions()
+                    .title("Parada Origen 1")
+                    .position(mRouteList.get(0).getFirstLatLng())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+            list.add(new MarkerOptions()
+                    .title("Parada Destino 1")
+                    .position(mRouteList.get(0).getLastLatLng())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+
+            list.add(new MarkerOptions()
+                    .title("Parada Origen 2")
+                    .position(mRouteList.get(1).getFirstLatLng())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+            list.add(new MarkerOptions()
+                    .title("Parada Destino 2")
+                    .position(mRouteList.get(1).getLastLatLng())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+        }
+        return list;
+    }
+
+    /**
+     * @return a list of polyline options to be drawed on the map
+     */
+    public List<PolylineOptions> getPolylineOptions() {
+        List<PolylineOptions> list = new ArrayList<>();
+
+        PolylineOptions rectOptions = new PolylineOptions();
+        Route route = mRouteList.get(0);
+        for (RoutePoint point : route.getPointList()) {
+            rectOptions.add(point.getLatLng());
+        }
+        list.add(rectOptions);
+
+        if (mType == 1) {
+            rectOptions = new PolylineOptions();
+            route = mRouteList.get(1);
+            for (RoutePoint point : route.getPointList()) {
+                rectOptions.add(point.getLatLng());
+            }
+            list.add(rectOptions);
+        }
+        return list;
     }
 
 }
