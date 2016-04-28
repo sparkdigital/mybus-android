@@ -54,14 +54,14 @@ public class BusRouteFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mStopOrigin.setText(mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetNumber());
-        mWalkOrigin.setText("Distancia desde el origen: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getStartBusStopDistanceToOrigin()));
+        mWalkOrigin.setText(getContext().getString(R.string.distance_to_origin) + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getStartBusStopDistanceToOrigin()));
 
         if (mBusRouteResult.getType() == 0) {
             mStopDestination.setText(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopNumber());
-            mWalkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopDistanceToDestination()));
+            mWalkDestination.setText(getContext().getString(R.string.distance_to_destination) + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopDistanceToDestination()));
         } else {
             mStopDestination.setText(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopNumber());
-            mWalkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopDistanceToDestination()));
+            mWalkDestination.setText(getContext().getString(R.string.distance_to_destination) + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopDistanceToDestination()));
         }
     }
 

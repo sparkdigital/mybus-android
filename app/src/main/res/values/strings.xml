@@ -8,4 +8,9 @@
     <string name="stop_destination_title">Parada destino:</string>
     <string name="stop_origin_title">Parada origen:</string>
     <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
+    <string name="distance_to_origin">"Distancia desde el origen: "</string>
+    <string name="distance_to_destination">"Distancia hasta el destino: "</string>
+    <string name="toast_no_result_found">No se encontraron resultados</string>
+    <string name="toast_no_internet">No hay una conexion a Internet</string>
+    <string name="toast_searching">Buscando rutas…</string>
 </resources>

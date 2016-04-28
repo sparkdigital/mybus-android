@@ -89,6 +89,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
+    private final int BOTTOM_SHEET_PEEK_HEIGHT = 100;
     /*---------------------*/
     OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
     OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
@@ -411,20 +412,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
             RouteSearchTask routeSearchTask = new RouteSearchTask(this);
             routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
-            Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_searching, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "There is no internet connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
-        if (results != null && !results.isEmpty()) {
-            Toast.makeText(this, "results found", Toast.LENGTH_LONG).show();
-            populateBottomSheet(results);
-        } else {
-            Toast.makeText(this, "Did not get any result", Toast.LENGTH_LONG).show();
-        }
+        populateBottomSheet(results);
     }
 
     /**
@@ -433,6 +429,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * @param results
      */
     private void populateBottomSheet(List<BusRouteResult> results) {
+        if (results == null || results.isEmpty()) {
+            showBottomSheetResults(false);
+            mViewPagerAdapter = null;
+            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
+            return;
+        }
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this.getLayoutInflater());
         for (BusRouteResult route : results) {
             BusRouteFragment fragment = new BusRouteFragment();
@@ -456,7 +458,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private void showBottomSheetResults(boolean show) {
         if (mBottomSheetBehavior != null) {
             if (show) {
-                mBottomSheetBehavior.setPeekHeight(100);
+                mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
             } else {
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 mBottomSheetBehavior.setPeekHeight(0);
