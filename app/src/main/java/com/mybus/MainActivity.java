@@ -3,14 +3,17 @@ package com.mybus;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
+import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.asynctask.RouteSearchTask;
+import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
 import com.mybus.location.LocationGeocoding;
@@ -73,8 +78,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     MarkerOptions lastLocationGeocodingType;
 
     MarkerOptions mEndLocationMarkerOptions;
+    /*---Bottom Sheet------*/
     //Keeps the state of the app bar
     private AppBarStateChangeListener.State mAppBarState;
+    private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
+    private ViewPagerAdapter mViewPagerAdapter;
+    @Bind(R.id.bottom_sheet)
+    LinearLayout mBottomSheet;
+    @Bind(R.id.tabs)
+    TabLayout mTabLayout;
+    @Bind(R.id.viewpager)
+    ViewPager mViewPager;
+    private final int BOTTOM_SHEET_PEEK_HEIGHT = 100;
+    /*---------------------*/
     OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
     OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
 
@@ -134,7 +150,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
-
     public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, boolean performGeocoding) {
         if (marker == null) {
             markerOptions.position(latLng);
@@ -178,6 +193,31 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
             }
             locationGeocoding.performGeocodeByLocation(marker.getPosition(), mOnLocationGeocodingCompleteCallback);
+        }
+    };
+
+    /**
+     * Bottom Sheet Tab selected listener
+     * <p/>
+     * Expands the bottom sheet when the user re-selects any tab
+     */
+    private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
+            mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
+            mViewPager.setCurrentItem(tab.getPosition(), true);
+            mViewPager.requestLayout();
+            mBottomSheet.requestLayout();
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     };
 
@@ -225,6 +265,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mUserLocationMarkerOptions = new MarkerOptions()
                 .title(getString(R.string.current_location_marker))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
+
         mOnAddressGeocodingCompleteCallback = this;
         mOnLocationGeocodingCompleteCallback = this;
         locationGeocoding = new LocationGeocoding(this);
@@ -232,7 +273,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mPerformSearchButton.setAlpha(50);
         mPerformSearchButton.setEnabled(false);
         resetLocalVariables();
+        setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
+    }
+
+    private void setupBottomSheet() {
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
     }
 
     /**
@@ -366,20 +412,56 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
             RouteSearchTask routeSearchTask = new RouteSearchTask(this);
             routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
-            Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_searching, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "There is no internet connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
-        Toast.makeText(this, "results found", Toast.LENGTH_LONG).show();
-        int i = 0;
-        if(results!=null){
-            for (BusRouteResult route : results) {
-                Log.d(TAG, "result "+i+": "+route.toString());
-                i++;
+        populateBottomSheet(results);
+    }
+
+    /**
+     * Populates the bottom sheet with the Routes found
+     *
+     * @param results
+     */
+    private void populateBottomSheet(List<BusRouteResult> results) {
+        if (results == null || results.isEmpty()) {
+            showBottomSheetResults(false);
+            mViewPagerAdapter = null;
+            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
+            return;
+        }
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this.getLayoutInflater());
+        for (BusRouteResult route : results) {
+            BusRouteFragment fragment = new BusRouteFragment();
+            fragment.setBusRouteResult(route);
+            mViewPagerAdapter.addFragment(fragment);
+        }
+        mViewPager.setAdapter(mViewPagerAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
+        }
+        showBottomSheetResults(true);
+    }
+
+    /**
+     * Show or hide the bottom sheet Layout
+     *
+     * @param show
+     */
+    private void showBottomSheetResults(boolean show) {
+        if (mBottomSheetBehavior != null) {
+            if (show) {
+                mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
+            } else {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                mBottomSheetBehavior.setPeekHeight(0);
             }
         }
     }
