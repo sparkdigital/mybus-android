@@ -78,12 +78,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     MarkerOptions lastLocationGeocodingType;
 
     MarkerOptions mEndLocationMarkerOptions;
+    /*---Bottom Sheet------*/
     //Keeps the state of the app bar
     private AppBarStateChangeListener.State mAppBarState;
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
+    @Bind(R.id.bottom_sheet)
+    LinearLayout mBottomSheet;
+    @Bind(R.id.tabs)
+    TabLayout mTabLayout;
+    @Bind(R.id.viewpager)
+    ViewPager mViewPager;
+    /*---------------------*/
     OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
     OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
 
@@ -197,15 +203,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            //TODO: At least display both start and destination markers
             mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
             mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
             mViewPager.setCurrentItem(tab.getPosition(), true);
+            mViewPager.requestLayout();
+            mBottomSheet.requestLayout();
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            //TODO: Remove markers
         }
 
         @Override
@@ -271,12 +277,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setupBottomSheet() {
-        LinearLayout bottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-
+//        mBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+//        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+//        mTabLayout = (TabLayout) findViewById(R.id.tabs);
     }
 
     /**

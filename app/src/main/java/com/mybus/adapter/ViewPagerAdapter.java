@@ -15,12 +15,20 @@ import com.mybus.model.BusRouteResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * @author Lucas Dimitroff <ldimitroff@devspark.com>
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final LayoutInflater mInflater;
+
+    @Bind(R.id.bus_line_text)
+    TextView mBusLineTitle;
+    @Bind(R.id.bus_line_image)
+    ImageView mBusLineImage;
 
     public ViewPagerAdapter(FragmentManager manager, LayoutInflater layoutInflater) {
         super(manager);
@@ -48,16 +56,16 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
      */
     public View getTabView(TabLayout tabLayout, BusRouteResult busRouteResult) {
         View view = mInflater.inflate(R.layout.tab_layout, tabLayout, false);
-        TextView busLineTitle = (TextView) view.findViewById(R.id.bus_line_text);
-        ImageView busLineImage = (ImageView) view.findViewById(R.id.bus_line_image);
+        ButterKnife.bind(this, view);
+
 
         if (busRouteResult.getType() == 0) {
-            busLineTitle.setText(busRouteResult.getBusRoutes().get(0).getBusLineName());
-            busLineImage.setImageResource(R.drawable.mini_bondi);
+            mBusLineTitle.setText(busRouteResult.getBusRoutes().get(0).getBusLineName());
+            mBusLineImage.setImageResource(R.drawable.mini_bondi);
         } else {
             String text = busRouteResult.getBusRoutes().get(0).getBusLineName() + " / " + busRouteResult.getBusRoutes().get(1).getBusLineName();
-            busLineTitle.setText(text);
-            busLineImage.setImageResource(R.drawable.mini_combinado);
+            mBusLineTitle.setText(text);
+            mBusLineImage.setImageResource(R.drawable.mini_combinado);
         }
         return view;
     }

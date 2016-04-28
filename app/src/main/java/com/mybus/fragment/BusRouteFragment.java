@@ -1,6 +1,7 @@
 package com.mybus.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,22 @@ import com.mybus.R;
 import com.mybus.helper.WalkDistanceHelper;
 import com.mybus.model.BusRouteResult;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * @author Lucas Dimitroff <ldimitroff@devspark.com>
  */
 public class BusRouteFragment extends Fragment {
+
+    @Bind(R.id.stop_origin_name)
+    TextView mStopOrigin;
+    @Bind(R.id.route_walk_origin)
+    TextView mWalkOrigin;
+    @Bind(R.id.stop_destination_name)
+    TextView mStopDestination;
+    @Bind(R.id.route_walk_destination)
+    TextView mWalkDestination;
 
     private BusRouteResult mBusRouteResult;
 
@@ -32,23 +45,24 @@ public class BusRouteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.bus_route_fragment, container, false);
-        TextView stopOrigin = (TextView) v.findViewById(R.id.stop_origin_name);
-        TextView walkOrigin = (TextView) v.findViewById(R.id.route_walk_origin);
-        TextView stopDestination = (TextView) v.findViewById(R.id.stop_destination_name);
-        TextView walkDestination = (TextView) v.findViewById(R.id.route_walk_destination);
+        View view = inflater.inflate(R.layout.bus_route_fragment, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
 
-        stopOrigin.setText(mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetNumber());
-        walkOrigin.setText("Distancia desde el origen: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getStartBusStopDistanceToOrigin()));
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mStopOrigin.setText(mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getStartBusStopStreetNumber());
+        mWalkOrigin.setText("Distancia desde el origen: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getStartBusStopDistanceToOrigin()));
 
         if (mBusRouteResult.getType() == 0) {
-            stopDestination.setText(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopNumber());
-            walkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopDistanceToDestination()));
+            mStopDestination.setText(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopNumber());
+            mWalkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopDistanceToDestination()));
         } else {
-            stopDestination.setText(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopNumber());
-            walkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopDistanceToDestination()));
+            mStopDestination.setText(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopStreetName() + " " + mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopNumber());
+            mWalkDestination.setText("Distancia hasta el destino: " + WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopDistanceToDestination()));
         }
-        return v;
     }
 
     public void setBusRouteResult(BusRouteResult routeResult) {

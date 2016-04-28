@@ -5,7 +5,7 @@ package com.mybus.helper;
  */
 public class WalkDistanceHelper {
 
-    private static String[] strArr = {"cero", "uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve", "Diez",};
+    private static String[] strArr = {"cero", "uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve", "Diez"};
     private static int BLOCK_LENGHT = 100;
 
     /**
