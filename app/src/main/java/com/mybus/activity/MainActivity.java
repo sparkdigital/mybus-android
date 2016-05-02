@@ -290,7 +290,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setupBottomSheet() {
+        mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
     }
 
     /**
@@ -528,12 +530,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * @param show
      */
     private void showBottomSheetResults(boolean show) {
-        if (mBottomSheetBehavior != null) {
+        if (mBottomSheet != null) {
             if (show) {
-                mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
+                mBottomSheet.setVisibility(View.VISIBLE);
             } else {
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                mBottomSheetBehavior.setPeekHeight(0);
+                mBottomSheet.setVisibility(View.INVISIBLE);
             }
         }
     }
