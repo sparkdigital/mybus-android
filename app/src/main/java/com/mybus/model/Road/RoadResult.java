@@ -1,8 +1,11 @@
 package com.mybus.model.Road;
 
+import android.support.v4.content.ContextCompat;
+
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.mybus.MyBus;
 import com.mybus.R;
 
 import org.json.JSONException;
@@ -23,6 +26,8 @@ public class RoadResult {
     private List<Route> mRouteList = new ArrayList<>();
     private String mIdBusLine1;
     private String mIdBusLine2;
+
+    private final float POLYLINE_WIDTH = 15F;
 
     /**
      * @param jsonObject
@@ -121,29 +126,29 @@ public class RoadResult {
         List<MarkerOptions> list = new ArrayList<>();
         if (mType == 0) {
             list.add(new MarkerOptions()
-                    .title("Parada Origen")
+                    .title(MyBus.getContext().getString(R.string.bus_stop_origin, ""))
                     .position(mRouteList.get(0).getFirstLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
             list.add(new MarkerOptions()
-                    .title("Parada Destino")
+                    .title(MyBus.getContext().getString(R.string.bus_stop_destination, ""))
                     .position(mRouteList.get(0).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
         } else {
             list.add(new MarkerOptions()
-                    .title("Parada Origen 1")
+                    .title(MyBus.getContext().getString(R.string.bus_stop_origin, "1"))
                     .position(mRouteList.get(0).getFirstLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
             list.add(new MarkerOptions()
-                    .title("Parada Destino 1")
+                    .title(MyBus.getContext().getString(R.string.bus_stop_destination, "1"))
                     .position(mRouteList.get(0).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
 
             list.add(new MarkerOptions()
-                    .title("Parada Origen 2")
+                    .title(MyBus.getContext().getString(R.string.bus_stop_origin, "2"))
                     .position(mRouteList.get(1).getFirstLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
             list.add(new MarkerOptions()
-                    .title("Parada Destino 2")
+                    .title(MyBus.getContext().getString(R.string.bus_stop_destination, "2"))
                     .position(mRouteList.get(1).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
         }
@@ -157,6 +162,9 @@ public class RoadResult {
         List<PolylineOptions> list = new ArrayList<>();
 
         PolylineOptions rectOptions = new PolylineOptions();
+        rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.colorPrimary));
+        rectOptions.width(POLYLINE_WIDTH);
+        rectOptions.geodesic(true);
         Route route = mRouteList.get(0);
         for (RoutePoint point : route.getPointList()) {
             rectOptions.add(point.getLatLng());
@@ -165,6 +173,9 @@ public class RoadResult {
 
         if (mType == 1) {
             rectOptions = new PolylineOptions();
+            rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.colorAccent));
+            rectOptions.width(POLYLINE_WIDTH);
+            rectOptions.geodesic(true);
             route = mRouteList.get(1);
             for (RoutePoint point : route.getPointList()) {
                 rectOptions.add(point.getLatLng());
