@@ -3,6 +3,7 @@ package com.mybus.asynctask;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.mybus.builder.UrlBuilder;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.RoadResult;
@@ -137,35 +138,10 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     private String getUrl() {
         String url;
         if (mType == 0) {
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("http")
-                    .authority("www.mybus.com.ar")
-                    .appendPath("api")
-                    .appendPath("v1")
-                    .appendPath("SingleRoadApi.php")
-                    .appendQueryParameter("idline", mIdLine)
-                    .appendQueryParameter("direction", mDirection)
-                    .appendQueryParameter("stop1", mStop1)
-                    .appendQueryParameter("stop2", mStop2)
-                    .appendQueryParameter("tk", "94a08da1fecbb6e8b46990538c7b50b2");
-            url = builder.build().toString();
+            url = UrlBuilder.buildSingleRoadUrl(mIdLine, mDirection, mStop1, mStop2);
         } else {
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("http")
-                    .authority("www.mybus.com.ar")
-                    .appendPath("api")
-                    .appendPath("v1")
-                    .appendPath("CombinedRoadApi.php")
-                    .appendQueryParameter("idline1", mIdLine)
-                    .appendQueryParameter("idline2", mIdLine2)
-                    .appendQueryParameter("direction1", mDirection)
-                    .appendQueryParameter("direction2", mDirection2)
-                    .appendQueryParameter("L1stop1", mStop1)
-                    .appendQueryParameter("L1stop2", mStop2)
-                    .appendQueryParameter("L2stop1", mStop1L2)
-                    .appendQueryParameter("L2stop2", mStop2L2)
-                    .appendQueryParameter("tk", "94a08da1fecbb6e8b46990538c7b50b2");
-            url = builder.build().toString();
+            url = UrlBuilder.buildCombinedRoadUrl(mIdLine, mIdLine2, mDirection, mDirection2,
+                                                  mStop1, mStop2, mStop1L2, mStop2L2);
         }
         return url;
     }
