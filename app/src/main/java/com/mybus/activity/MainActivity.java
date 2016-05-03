@@ -218,9 +218,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
 
-
-            if (mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).getMapBusRoad() != null) {
-                mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(true);
+            if (mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null) {
+                mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
             } else {
                 BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
                 performRoadSearch(busRouteResult);
