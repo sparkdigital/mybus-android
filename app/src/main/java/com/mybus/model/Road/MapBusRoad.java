@@ -19,17 +19,17 @@ public class MapBusRoad {
 
     /**
      * Adds the Specific road result into the map
-     *
-     * @param map
+     *  @param map
      * @param roadResult
      */
-    public void addBusRoadOnMap(GoogleMap map, RoadResult roadResult) {
+    public MapBusRoad addBusRoadOnMap(GoogleMap map, RoadResult roadResult) {
         for (MarkerOptions markerOptions : roadResult.getMarkerOptions()) {
             mMarkerList.add(map.addMarker(markerOptions));
         }
         for (PolylineOptions polylineOptions : roadResult.getPolylineOptions()) {
             mPolylineList.add(map.addPolyline(polylineOptions));
         }
+        return this;
     }
 
     /**
@@ -44,6 +44,20 @@ public class MapBusRoad {
         }
         mMarkerList.clear();
         mPolylineList.clear();
+    }
+
+    /**
+     * Shows or hides the markers and polilynes from the map
+     *
+     * @param show
+     */
+    public void showBusRoadFromMap(boolean show) {
+        for (Marker marker : mMarkerList) {
+            marker.setVisible(show);
+        }
+        for (Polyline polyline : mPolylineList) {
+            polyline.setVisible(show);
+        }
     }
 
 }
