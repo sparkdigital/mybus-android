@@ -1,5 +1,6 @@
-package com.mybus;
+package com.mybus.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -25,8 +26,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mybus.R;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.adapter.ViewPagerAdapter;
+import com.mybus.asynctask.RoadSearchCallback;
+import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.fragment.BusRouteFragment;
@@ -38,6 +42,8 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.Road.MapBusRoad;
+import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
 
 import java.util.List;
@@ -47,7 +53,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback,
-        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback {
+        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback {
 
     public static final String TAG = "MainActivity";
     private GoogleMap mMap;
@@ -95,6 +101,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
 
     LocationGeocoding locationGeocoding;
+
+    private MapBusRoad mCurrentMapBusRoad;
+    private ProgressDialog mDialog;
 
     /**
      * Checks the state of the AppBarLayout
@@ -209,6 +218,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mViewPager.setCurrentItem(tab.getPosition(), true);
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
+
+            BusRouteResult busRouteResult = ((BusRouteFragment) mViewPagerAdapter.getItem(tab.getPosition())).getBusRouteResult();
+            performRoadSearch(busRouteResult);
         }
 
         @Override
@@ -237,7 +249,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.perform_search_action_button)
     public void onPerformSearchButtonClick(View view) {
-        performSearch();
+        performRoutesSearch();
     }
 
     @Override
@@ -278,7 +290,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setupBottomSheet() {
+        mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
     }
 
     /**
@@ -404,23 +418,50 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void performSearch() {
-
+    /**
+     * Searches between two points in the map
+     */
+    private void performRoutesSearch() {
         if (mStartLocationMarker == null || mEndLocationMarker == null) {
             return;
         }
         if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
+            clearBusRouteOnMap();
+            showBottomSheetResults(false);
+            showProgressDialog(getString(R.string.toast_searching));
             RouteSearchTask routeSearchTask = new RouteSearchTask(this);
             routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
-            Toast.makeText(this, R.string.toast_searching, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     * Searchs a specific route for a bus
+     *
+     * @param busRouteResult
+     */
+    private void performRoadSearch(BusRouteResult busRouteResult) {
+        if (busRouteResult == null) {
+            return;
+        }
+        clearBusRouteOnMap();
+        showProgressDialog(getString(R.string.dialog_searching_specific_route));
+        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, MainActivity.this);
+        routeSearchTask.execute();
+    }
+
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
+        cancelProgressDialog();
         populateBottomSheet(results);
+    }
+
+    @Override
+    public void onRoadFound(RoadResult roadResult) {
+        cancelProgressDialog();
+        mCurrentMapBusRoad = new MapBusRoad();
+        mCurrentMapBusRoad.addBusRoadOnMap(mMap, roadResult);
     }
 
     /**
@@ -448,6 +489,39 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
         }
         showBottomSheetResults(true);
+        //After populating the bottom sheet, show the first result
+        BusRouteResult busRouteResult = ((BusRouteFragment) mViewPagerAdapter.getItem(0)).getBusRouteResult();
+        performRoadSearch(busRouteResult);
+
+    }
+
+    /**
+     * Shows a progress dialog with specified text
+     *
+     * @param text
+     */
+    private void showProgressDialog(String text) {
+        cancelProgressDialog();
+        mDialog = ProgressDialog.show(MainActivity.this, "", text, true, false);
+    }
+
+    /**
+     * Cancels the current progress dialog if any
+     */
+    private void cancelProgressDialog() {
+        if (mDialog != null) {
+            mDialog.cancel();
+            mDialog = null;
+        }
+    }
+
+    /**
+     * Clears all markers and polyline for a previous route
+     */
+    private void clearBusRouteOnMap() {
+        if (mCurrentMapBusRoad != null) {
+            mCurrentMapBusRoad.clearBusRoadFromMap();
+        }
     }
 
     /**
@@ -456,12 +530,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * @param show
      */
     private void showBottomSheetResults(boolean show) {
-        if (mBottomSheetBehavior != null) {
+        if (mBottomSheet != null) {
             if (show) {
-                mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
+                mBottomSheet.setVisibility(View.VISIBLE);
             } else {
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                mBottomSheetBehavior.setPeekHeight(0);
+                mBottomSheet.setVisibility(View.INVISIBLE);
             }
         }
     }

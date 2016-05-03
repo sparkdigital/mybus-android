@@ -1,5 +1,7 @@
 package com.mybus.model.Road;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,4 +73,7 @@ public class RoutePoint {
         isWaypoint = waypoint;
     }
 
+    public LatLng getLatLng() {
+        return new LatLng(Double.parseDouble(mLat), Double.parseDouble(mLng));
+    }
 }

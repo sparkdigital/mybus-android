@@ -68,4 +68,8 @@ public class BusRouteFragment extends Fragment {
     public void setBusRouteResult(BusRouteResult routeResult) {
         this.mBusRouteResult = routeResult;
     }
+
+    public BusRouteResult getBusRouteResult(){
+        return this.mBusRouteResult;
+    }
 }
