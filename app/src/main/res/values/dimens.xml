@@ -8,4 +8,6 @@
     <dimen name="splash_powered_by_textSize">17dp</dimen>
     <dimen name="splash_app_url_textSize">14dp</dimen>
     <dimen name="splash_logo_layout_height">200px</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">120dp</dimen>
 </resources>
