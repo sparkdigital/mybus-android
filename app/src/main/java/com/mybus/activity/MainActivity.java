@@ -218,17 +218,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
 
-            if (mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null) {
-                mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
-            } else {
-                BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
-                performRoadSearch(busRouteResult);
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
+                boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
+                if (isMapBusRoadPresent) {
+                    mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                } else {
+                    BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
+                    performRoadSearch(busRouteResult);
+                }
             }
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            if (mViewPagerAdapter != null && mViewPagerAdapter.getItem(tab.getPosition()) != null) {
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
                 mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(false);
             }
         }
@@ -466,7 +469,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRoadFound(RoadResult roadResult) {
         cancelProgressDialog();
         MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult);
-        if (mViewPagerAdapter != null && mViewPager != null && mViewPagerAdapter.getItem(mViewPager.getCurrentItem()) != null) {
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
         }
     }
@@ -526,9 +529,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * Clears all markers and polyline for a previous route
      */
     private void clearBusRouteOnMap() {
-        if (mViewPagerAdapter != null && mViewPager != null && mViewPagerAdapter.getItem(mViewPager.getCurrentItem()) != null) {
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
         }
+    }
+
+    /**
+     * Checks if the BusRouteFragment is present or not
+     *
+     * @param index
+     * @return
+     */
+    private boolean isBusRouteFragmentPresent(int index) {
+        return (mViewPagerAdapter != null && mViewPagerAdapter.getItem(index) != null);
     }
 
     /**
