@@ -102,7 +102,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationGeocoding locationGeocoding;
 
-    private MapBusRoad mCurrentMapBusRoad;
     private ProgressDialog mDialog;
 
     /**
@@ -219,12 +218,22 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
 
-            BusRouteResult busRouteResult = ((BusRouteFragment) mViewPagerAdapter.getItem(tab.getPosition())).getBusRouteResult();
-            performRoadSearch(busRouteResult);
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
+                boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
+                if (isMapBusRoadPresent) {
+                    mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                } else {
+                    BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
+                    performRoadSearch(busRouteResult);
+                }
+            }
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
+                mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(false);
+            }
         }
 
         @Override
@@ -329,7 +338,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         centerToLastKnownLocation();
 
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
-        //mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
     }
 
@@ -460,8 +468,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRoadFound(RoadResult roadResult) {
         cancelProgressDialog();
-        mCurrentMapBusRoad = new MapBusRoad();
-        mCurrentMapBusRoad.addBusRoadOnMap(mMap, roadResult);
+        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult);
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
+        }
     }
 
     /**
@@ -490,7 +500,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
         showBottomSheetResults(true);
         //After populating the bottom sheet, show the first result
-        BusRouteResult busRouteResult = ((BusRouteFragment) mViewPagerAdapter.getItem(0)).getBusRouteResult();
+        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(0).getBusRouteResult();
         performRoadSearch(busRouteResult);
 
     }
@@ -519,9 +529,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * Clears all markers and polyline for a previous route
      */
     private void clearBusRouteOnMap() {
-        if (mCurrentMapBusRoad != null) {
-            mCurrentMapBusRoad.clearBusRoadFromMap();
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
         }
+    }
+
+    /**
+     * Checks if the BusRouteFragment is present or not
+     *
+     * @param index
+     * @return
+     */
+    private boolean isBusRouteFragmentPresent(int index) {
+        return (mViewPagerAdapter != null && mViewPagerAdapter.getItem(index) != null);
     }
 
     /**
