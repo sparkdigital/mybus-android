@@ -18,18 +18,18 @@ public class GisServiceUrlBuilder {
 
     /**
      *
-     * Creates the API url in order to get the streets that include
-     * a specific street name
+     * Creates the API url in order to get the street names that include
+     * a specific text
      *
-     * @param streetName
+     * @param text
      * @return API url
      */
-    public static String buildFindStreetsUrl(String streetName) {
+    public static String buildFindStreetsUrl(String text) {
         Uri.Builder builder = buildBaseUri()
                 .appendPath("ws.php")
                 .appendQueryParameter("method", "rest")
                 .appendQueryParameter("endpoint", "callejero_mgp")
-                .appendQueryParameter("nombre_calle", streetName)
+                .appendQueryParameter("nombre_calle", text)
                 .appendQueryParameter("token", TOKEN);
         return builder.build().toString();
     }
