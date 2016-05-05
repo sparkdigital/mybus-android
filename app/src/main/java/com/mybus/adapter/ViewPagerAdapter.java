@@ -1,7 +1,6 @@
 package com.mybus.adapter;
 
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mybus.R;
+import com.mybus.fragment.BusRouteFragment;
 import com.mybus.model.BusRouteResult;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
  * @author Lucas Dimitroff <ldimitroff@devspark.com>
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<BusRouteFragment> mFragmentList = new ArrayList<>();
     private final LayoutInflater mInflater;
 
     @Bind(R.id.bus_line_text)
@@ -36,7 +36,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public BusRouteFragment getItem(int position) {
         return mFragmentList.get(position);
     }
 
@@ -45,7 +45,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.size();
     }
 
-    public void addFragment(Fragment fragment) {
+    public void addFragment(BusRouteFragment fragment) {
         mFragmentList.add(fragment);
     }
 

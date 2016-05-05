@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.mybus.R;
 import com.mybus.helper.WalkDistanceHelper;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.Road.MapBusRoad;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +31,7 @@ public class BusRouteFragment extends Fragment {
     TextView mWalkDestination;
 
     private BusRouteResult mBusRouteResult;
+    private MapBusRoad mMapBusRoad;
 
     @Override
     public void setArguments(Bundle args) {
@@ -71,5 +73,19 @@ public class BusRouteFragment extends Fragment {
 
     public BusRouteResult getBusRouteResult(){
         return this.mBusRouteResult;
+    }
+
+    public void setMapBusRoad(MapBusRoad mapBusRoad) {
+        this.mMapBusRoad = mapBusRoad;
+    }
+
+    public MapBusRoad getMapBusRoad(){
+        return this.mMapBusRoad;
+    }
+
+    public void showMapBusRoad(boolean show) {
+        if (mMapBusRoad != null){
+            mMapBusRoad.showBusRoadFromMap(show);
+        }
     }
 }

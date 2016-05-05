@@ -6,11 +6,16 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -52,8 +57,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback,
-        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationChangedCallback,
+        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "MainActivity";
     private GoogleMap mMap;
@@ -71,6 +76,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     AppCompatAutoCompleteTextView mFromInput;
     @Bind(R.id.to_field)
     AppCompatAutoCompleteTextView mToInput;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout drawer;
+    @Bind(R.id.nav_view)
+    NavigationView navigationView;
+
     MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
     Marker mUserLocationMarker;
@@ -102,7 +114,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationGeocoding locationGeocoding;
 
-    private MapBusRoad mCurrentMapBusRoad;
     private ProgressDialog mDialog;
 
     /**
@@ -207,7 +218,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p/>
+     * <p>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -219,12 +230,22 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
 
-            BusRouteResult busRouteResult = ((BusRouteFragment) mViewPagerAdapter.getItem(tab.getPosition())).getBusRouteResult();
-            performRoadSearch(busRouteResult);
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
+                boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
+                if (isMapBusRoadPresent) {
+                    mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                } else {
+                    BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
+                    performRoadSearch(busRouteResult);
+                }
+            }
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
+                mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(false);
+            }
         }
 
         @Override
@@ -232,6 +253,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     };
+
 
     @OnClick(R.id.floating_action_button)
     public void onFloatingSearchButton(View view) {
@@ -257,6 +279,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -329,7 +360,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         centerToLastKnownLocation();
 
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
-        //mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
     }
 
@@ -460,8 +490,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRoadFound(RoadResult roadResult) {
         cancelProgressDialog();
-        mCurrentMapBusRoad = new MapBusRoad();
-        mCurrentMapBusRoad.addBusRoadOnMap(mMap, roadResult);
+        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult);
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
+        }
     }
 
     /**
@@ -490,7 +522,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
         showBottomSheetResults(true);
         //After populating the bottom sheet, show the first result
-        BusRouteResult busRouteResult = ((BusRouteFragment) mViewPagerAdapter.getItem(0)).getBusRouteResult();
+        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(0).getBusRouteResult();
         performRoadSearch(busRouteResult);
 
     }
@@ -519,9 +551,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * Clears all markers and polyline for a previous route
      */
     private void clearBusRouteOnMap() {
-        if (mCurrentMapBusRoad != null) {
-            mCurrentMapBusRoad.clearBusRoadFromMap();
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
         }
+    }
+
+    /**
+     * Checks if the BusRouteFragment is present or not
+     *
+     * @param index
+     * @return
+     */
+    private boolean isBusRouteFragmentPresent(int index) {
+        return (mViewPagerAdapter != null && mViewPagerAdapter.getItem(index) != null);
     }
 
     /**
@@ -538,4 +580,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        //TODO: Implement the item selected actions
+        return false;
+    }
+
+
 }
