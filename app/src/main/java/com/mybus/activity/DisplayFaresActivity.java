@@ -10,39 +10,19 @@ import com.mybus.R;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFaresActivity extends AppCompatActivity {
+public class DisplayFaresActivity extends BaseDisplayActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_fares);
-        initToolbar();
-    }
-
-    /**
-     * Initialize the toolbar with the correct title and replace the transactions between activities
-     */
-    private void initToolbar() {
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.displayFaresToolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBackPressed();
-                }
-            });
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(R.string.displayFaresToolbarTittle);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-            }
-        }
+    public int getLayoutToInflate() {
+        return R.layout.activity_display_fares;
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //Replacing the transaction between the activities
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    public int getToolbarId() {
+        return R.id.displayFaresToolbar;
+    }
+
+    @Override
+    protected int getToolbarTittle() {
+        return R.string.displayFaresToolbarTittle;
     }
 }

@@ -10,39 +10,19 @@ import com.mybus.R;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFavoritesActivity extends AppCompatActivity {
+public class DisplayFavoritesActivity extends BaseDisplayActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_favorites);
-        initToolbar();
-    }
-
-    /**
-     * Initialize the toolbar with the correct title and replace the transactions between activities
-     */
-    private void initToolbar() {
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.displayFavoritesToolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBackPressed();
-                }
-            });
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(R.string.displayFavoritesToolbarTittle);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-            }
-        }
+    public int getLayoutToInflate() {
+        return R.layout.activity_display_favorites;
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //Replacing the transaction between the activities
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    public int getToolbarId() {
+        return R.id.displayFavoritesToolbar;
+    }
+
+    @Override
+    protected int getToolbarTittle() {
+        return R.string.displayFavoritesToolbarTittle;
     }
 }
