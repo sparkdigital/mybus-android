@@ -3,17 +3,20 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/drawe_favorites"
+            android:id="@+id/drawerFavorites"
             android:icon="@android:drawable/btn_star_big_off"
-            android:title="Lugares favoritos" />
+            android:title="Lugares favoritos"
+            android:checkable="false"/>
         <item
-            android:id="@+id/drawe_charge"
+            android:id="@+id/drawerCharge"
             android:icon="@android:drawable/ic_menu_directions"
-            android:title="Puntos de carga cercanos" />
+            android:title="Puntos de carga cercanos"
+            android:checkable="false"/>
         <item
-            android:id="@+id/drawe_costs"
+            android:id="@+id/drawerCosts"
             android:icon="@android:drawable/ic_menu_rotate"
-            android:title="Tarifas" />
+            android:title="Tarifas"
+            android:checkable="false"/>
     </group>
 
 </menu>

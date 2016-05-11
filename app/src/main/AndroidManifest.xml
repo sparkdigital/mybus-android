@@ -21,8 +21,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MainActivity">
-        </activity>
+        <activity android:name=".activity.MainActivity"/>
+
+        <activity android:name=".activity.DisplayFaresActivity"/>
+
+        <activity android:name=".activity.DisplayFavoritesActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
