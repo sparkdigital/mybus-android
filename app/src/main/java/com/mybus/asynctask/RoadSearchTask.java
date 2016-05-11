@@ -1,8 +1,8 @@
 package com.mybus.asynctask;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.mybus.facade.Facade;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.RoadResult;
@@ -12,10 +12,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * AsyncTask used to return a RoadResult either simple or combined
@@ -113,61 +109,15 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
 
     @Override
     protected RoadResult doInBackground(Void... params) {
-        OkHttpClient client = new OkHttpClient();
-        //Create request to get a list of possible routes between two locations.
-        String url = getUrl();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
         JSONObject jsonObject;
-        Call call = client.newCall(request);
         try {
-            Response response = call.execute();
-            String jsonData = response.body().string();
-            jsonObject = new JSONObject(jsonData);
+            jsonObject = Facade.getInstance().searchRoads(mType, mIdLine, mDirection, mStop1, mStop2, mIdLine2, mDirection2, mStop2L2, mStop1L2);
         } catch (IOException | JSONException e) {
-            //TODO
             e.printStackTrace();
             return null;
         }
 
         return RoadResult.parse(jsonObject);
-    }
-
-    private String getUrl() {
-        String url;
-        if (mType == 0) {
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("http")
-                    .authority("www.mybus.com.ar")
-                    .appendPath("api")
-                    .appendPath("v1")
-                    .appendPath("SingleRoadApi.php")
-                    .appendQueryParameter("idline", mIdLine)
-                    .appendQueryParameter("direction", mDirection)
-                    .appendQueryParameter("stop1", mStop1)
-                    .appendQueryParameter("stop2", mStop2)
-                    .appendQueryParameter("tk", "94a08da1fecbb6e8b46990538c7b50b2");
-            url = builder.build().toString();
-        } else {
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("http")
-                    .authority("www.mybus.com.ar")
-                    .appendPath("api")
-                    .appendPath("v1")
-                    .appendPath("CombinedRoadApi.php")
-                    .appendQueryParameter("idline1", mIdLine)
-                    .appendQueryParameter("idline2", mIdLine2)
-                    .appendQueryParameter("direction1", mDirection)
-                    .appendQueryParameter("direction2", mDirection2)
-                    .appendQueryParameter("L1stop1", mStop1)
-                    .appendQueryParameter("L1stop2", mStop2)
-                    .appendQueryParameter("L2stop1", mStop1L2)
-                    .appendQueryParameter("L2stop2", mStop2L2)
-                    .appendQueryParameter("tk", "94a08da1fecbb6e8b46990538c7b50b2");
-            url = builder.build().toString();
-        }
-        return url;
     }
 
     @Override
