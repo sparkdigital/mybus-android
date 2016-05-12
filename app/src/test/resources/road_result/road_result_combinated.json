@@ -1,0 +1,40 @@
+{
+  "Type":1,
+  "IdBusLine1":"20",
+  "IdBusLine2":"10",
+  "TotalDistance":11.67,
+  "TravelTime":45,
+  "ArrivalTime":null,
+  "Route1":[
+    {
+      "StopId":"4897",
+      "Lat":"-38.024818",
+      "Lng":"-57.533588",
+      "Address":"Leandro N Alem 3360",
+      "isWaypoint":false
+    },
+    {
+      "StopId":"4898",
+      "Lat":"-38.023266",
+      "Lng":"-57.532352",
+      "Address":"Leandro N Alem 3160",
+      "isWaypoint":false
+    }
+  ],
+  "Route2":[
+    {
+      "StopId":"1830",
+      "Lat":"-38.010841",
+      "Lng":"-57.542393",
+      "Address":"Gascon 1631",
+      "isWaypoint":false
+    },
+    {
+      "StopId":"1831",
+      "Lat":"-38.010017",
+      "Lng":"-57.544067",
+      "Address":"",
+      "isWaypoint":true
+    }
+  ]
+}
