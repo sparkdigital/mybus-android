@@ -41,7 +41,6 @@ import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
-import com.mybus.location.LocationGeocoding;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
@@ -50,6 +49,7 @@ import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.MapBusRoad;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
+import com.mybus.service.ServiceFacade;
 
 import java.util.List;
 
@@ -112,9 +112,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
     OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
 
-    LocationGeocoding locationGeocoding;
-
     private ProgressDialog mDialog;
+    private Context mContext;
 
     /**
      * Checks the state of the AppBarLayout
@@ -139,14 +138,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 lastAddressGeocodingType = mStartLocationMarkerOptions;
-                locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
+                ServiceFacade.getInstance().performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback, mContext);
                 mToInput.requestFocus();
                 return true;
             }
             if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 lastAddressGeocodingType = mEndLocationMarkerOptions;
-                locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
+                ServiceFacade.getInstance().performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback, mContext);
                 showSoftKeyBoard(false);
                 return true;
             }
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             marker.setPosition(latLng);
         }
         if (performGeocoding) {
-            locationGeocoding.performGeocodeByLocation(latLng, mOnLocationGeocodingCompleteCallback);
+            ServiceFacade.getInstance().performGeocodeByLocation(latLng, mOnLocationGeocodingCompleteCallback, mContext);
         }
         //Update searchButton status
         if (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
@@ -212,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             } else if (marker.getId().equals(mEndLocationMarker.getId())) {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
             }
-            locationGeocoding.performGeocodeByLocation(marker.getPosition(), mOnLocationGeocodingCompleteCallback);
+            ServiceFacade.getInstance().performGeocodeByLocation(marker.getPosition(), mOnLocationGeocodingCompleteCallback, mContext);
         }
     };
 
@@ -277,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -311,7 +311,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mOnAddressGeocodingCompleteCallback = this;
         mOnLocationGeocodingCompleteCallback = this;
-        locationGeocoding = new LocationGeocoding(this);
         //Disable the mPerformSearchButton action
         mPerformSearchButton.setAlpha(50);
         mPerformSearchButton.setEnabled(false);

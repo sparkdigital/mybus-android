@@ -3,7 +3,7 @@ package com.mybus.asynctask;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.mybus.facade.Facade;
+import com.mybus.service.ServiceFacade;
 import com.mybus.model.BusRouteResult;
 
 import org.json.JSONArray;
@@ -32,7 +32,7 @@ public class RouteSearchTask extends AsyncTask<LatLng, Integer, List<BusRouteRes
         int type;
         JSONArray results;
         try {
-            jsonObject = Facade.getInstance().searchRoutes(latLngs[0], latLngs[1]);
+            jsonObject = ServiceFacade.getInstance().searchRoutes(latLngs[0], latLngs[1]);
             type = jsonObject.getInt("Type"); //Gets type of results
             results = jsonObject.getJSONArray("Results"); //Gets results
         } catch (IOException | JSONException e) {

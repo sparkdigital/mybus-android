@@ -2,7 +2,7 @@ package com.mybus.asynctask;
 
 import android.os.AsyncTask;
 
-import com.mybus.facade.Facade;
+import com.mybus.service.ServiceFacade;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.RoadResult;
@@ -111,7 +111,7 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     protected RoadResult doInBackground(Void... params) {
         JSONObject jsonObject;
         try {
-            jsonObject = Facade.getInstance().searchRoads(mType, mIdLine, mDirection, mStop1, mStop2, mIdLine2, mDirection2, mStop2L2, mStop1L2);
+            jsonObject = ServiceFacade.getInstance().searchRoads(mType, mIdLine, mDirection, mStop1, mStop2, mIdLine2, mDirection2, mStop2L2, mStop1L2);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             return null;

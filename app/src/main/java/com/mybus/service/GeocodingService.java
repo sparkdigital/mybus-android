@@ -1,4 +1,4 @@
-package com.mybus.location;
+package com.mybus.service;
 
 import android.content.Context;
 import android.location.Address;
@@ -7,27 +7,30 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.mybus.location.OnAddressGeocodingCompleteCallback;
+import com.mybus.location.OnLocationGeocodingCompleteCallback;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class LocationGeocoding {
+public class GeocodingService {
 
     private static Context mContext;
-    private static LocationGeocoding instance;
+    private static GeocodingService instance;
     private static final String TAG = "LocationGeocoding";
 
-    public LocationGeocoding(Context context) {
-        this.mContext = context;
+    public GeocodingService() {
     }
 
-    public void performGeocodeByLocation(LatLng location, OnLocationGeocodingCompleteCallback callback) {
+    public void performGeocodeByLocation(LatLng location, OnLocationGeocodingCompleteCallback callback, Context context) {
+        this.mContext = context;
         LocationGeocodingAcyncTask locationGeocodingTask = new LocationGeocodingAcyncTask(callback);
         locationGeocodingTask.execute(new LatLng[]{location});
     }
 
-    public void performGeocodeByAddress(String address, OnAddressGeocodingCompleteCallback callback) {
+    public void performGeocodeByAddress(String address, OnAddressGeocodingCompleteCallback callback, Context context) {
+        this.mContext = context;
         //TODO remove this hardcoded city, used to filter Mar del Plata results
         address+=", mar del plata";
         AddressGeocodingAcyncTask addressGeocodingTask = new AddressGeocodingAcyncTask(callback);

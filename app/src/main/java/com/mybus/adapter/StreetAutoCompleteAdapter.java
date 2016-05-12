@@ -10,7 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.mybus.R;
-import com.mybus.facade.Facade;
+import com.mybus.service.ServiceFacade;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,7 +103,7 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
     private List<String> findStreets(String constraint) {
         List<String> results = new ArrayList<>();
         try {
-            JSONArray jsonArray = Facade.getInstance().findStreets(constraint);
+            JSONArray jsonArray = ServiceFacade.getInstance().findStreets(constraint);
             for (int i = 0; i < jsonArray.length(); i++) {
                 results.add(jsonArray.getJSONObject(i).getString("descripcion"));
             }
