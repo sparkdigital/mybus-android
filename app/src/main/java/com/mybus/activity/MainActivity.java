@@ -2,12 +2,14 @@ package com.mybus.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -406,8 +408,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onBackPressed() {
-        if (mAppBarState != null && mAppBarState.equals(AppBarStateChangeListener.State.EXPANDED)) {
-            mAppBarLayout.setExpanded(false, true);
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
             return;
         }
         super.onBackPressed();
@@ -584,7 +586,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         //TODO: Implement the item selected actions
-        return false;
+        drawer.closeDrawer(GravityCompat.START);
+        switch (item.getItemId()) {
+            case R.id.drawerCosts:
+                startActivity(new Intent(MainActivity.this, DisplayFaresActivity.class));
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+            case R.id.drawerFavorites:
+                startActivity(new Intent(MainActivity.this, DisplayFavoritesActivity.class));
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+        }
+        return true;
     }
 
 
