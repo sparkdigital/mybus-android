@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-public class GisServiceUrlBuilderUnitTest {
+public class GisServiceImplUrlBuilderUnitTest {
 
     @Test
     public void buildFindStreetsUrl() {
