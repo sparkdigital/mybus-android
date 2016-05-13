@@ -1,0 +1,64 @@
+{
+  "Type": 0,
+  "TotalDistance": 8.47,
+  "TravelTime": 33,
+  "ArrivalTime": null,
+  "Route1": [
+    {
+      "StopId": "3710",
+      "Lat": "-38.017799",
+      "Lng": "-57.572887",
+      "Address": "Av Juan B Justo 3385",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3711",
+      "Lat": "-38.019493",
+      "Lng": "-57.570572",
+      "Address": "Av Juan B Justo 3125",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3712",
+      "Lat": "-38.020691",
+      "Lng": "-57.568962",
+      "Address": "Av Juan B Justo 2935",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3713",
+      "Lat": "-38.022144",
+      "Lng": "-57.567032",
+      "Address": "Av Juan B Justo 2735",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3714",
+      "Lat": "-38.023361",
+      "Lng": "-57.565376",
+      "Address": "Av Juan B Justo 2535",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3715",
+      "Lat": "-38.024830",
+      "Lng": "-57.563461",
+      "Address": "Av Juan B Justo 2335",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3716",
+      "Lat": "-38.026096",
+      "Lng": "-57.561752",
+      "Address": "Av Juan B Justo 2135",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3718",
+      "Lat": "-38.027122",
+      "Lng": "-57.560394",
+      "Address": "Av Juan B Justo 1975",
+      "isWaypoint": false
+    }
+  ]
+}
