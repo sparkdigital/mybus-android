@@ -101,16 +101,7 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
      * @return list of streets
      */
     private List<String> findStreets(String constraint) {
-        List<String> results = new ArrayList<>();
-        try {
-            JSONArray jsonArray = ServiceFacade.getInstance().findStreets(constraint);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                results.add(jsonArray.getJSONObject(i).getString("descripcion"));
-            }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-        return results;
+        return ServiceFacade.getInstance().findStreets(constraint);
     }
 
     /**

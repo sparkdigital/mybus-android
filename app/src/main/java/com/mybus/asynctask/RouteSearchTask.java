@@ -28,19 +28,7 @@ public class RouteSearchTask extends AsyncTask<LatLng, Integer, List<BusRouteRes
 
     @Override
     protected List<BusRouteResult> doInBackground(LatLng... latLngs) {
-        JSONObject jsonObject;
-        int type;
-        JSONArray results;
-        try {
-            jsonObject = ServiceFacade.getInstance().searchRoutes(latLngs[0], latLngs[1]);
-            type = jsonObject.getInt("Type"); //Gets type of results
-            results = jsonObject.getJSONArray("Results"); //Gets results
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return BusRouteResult.parseResults(results, type); //Parse results from JSONArray to model's objects
+        return ServiceFacade.getInstance().searchRoutes(latLngs[0], latLngs[1]);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.mybus.builder;
 
+import com.mybus.model.Road.RoadSearch;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Enrique Pennimpede <epennimpede@devspark.com>
@@ -18,7 +20,8 @@ public class MyBusServiceUrlBuilderUnitTest {
     public void buildSingleRoadUrl() {
         String expectedUrl = MyBusServiceUrlBuilder.buildBaseUri().build().toString() +
                 "/SingleRoadApi.php?idline=a&direction=b&stop1=c&stop2=d";
-        String url = MyBusServiceUrlBuilder.buildSingleRoadUrl("a", "b", "c", "d");
+        RoadSearch roadSearch = new RoadSearch("a", "b", "c", "d");
+        String url = MyBusServiceUrlBuilder.buildSingleRoadUrl(roadSearch);
         assertTrue(url.contains(expectedUrl));
     }
 
@@ -27,7 +30,8 @@ public class MyBusServiceUrlBuilderUnitTest {
         String expectedUrl = MyBusServiceUrlBuilder.buildBaseUri().build().toString() +
                 "/CombinedRoadApi.php?idline1=a&idline2=b&direction1=c" +
                 "&direction2=d&L1stop1=e&L1stop2=f&L2stop1=g&L2stop2=h";
-        String url = MyBusServiceUrlBuilder.buildCombinedRoadUrl("a", "b", "c", "d", "e", "f", "g", "h");
+        RoadSearch roadSearch = new RoadSearch("a", "b", "c", "d", "e", "f", "g", "h");
+        String url = MyBusServiceUrlBuilder.buildCombinedRoadUrl(roadSearch);
         assertTrue(url.contains(expectedUrl));
     }
 

@@ -15,6 +15,12 @@ public abstract class GenericService {
         client = new OkHttpClient();
     }
 
+    /**
+     *
+     * @param url
+     * @return
+     * @throws IOException
+     */
     protected String executeUrl(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)

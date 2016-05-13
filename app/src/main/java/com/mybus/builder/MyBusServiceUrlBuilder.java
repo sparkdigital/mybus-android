@@ -2,6 +2,8 @@ package com.mybus.builder;
 
 import android.net.Uri;
 
+import com.mybus.model.Road.RoadSearch;
+
 /**
  *
  * MyBus Service Public API url builder.
@@ -21,20 +23,16 @@ public class MyBusServiceUrlBuilder {
      *
      * Creates the API url in order to get a single road.
      *
-     * @param mIdLine
-     * @param mDirection
-     * @param mStop1
-     * @param mStop2
+     * @param roadSearch
      * @return API url for a single road.
      */
-    public static String buildSingleRoadUrl(String mIdLine, String mDirection,
-                                            String mStop1, String mStop2) {
+    public static String buildSingleRoadUrl(RoadSearch roadSearch) {
         Uri.Builder builder = buildBaseUri()
                 .appendPath("SingleRoadApi.php")
-                .appendQueryParameter("idline", mIdLine)
-                .appendQueryParameter("direction", mDirection)
-                .appendQueryParameter("stop1", mStop1)
-                .appendQueryParameter("stop2", mStop2)
+                .appendQueryParameter("idline", roadSearch.getmIdLine())
+                .appendQueryParameter("direction", roadSearch.getmDirection())
+                .appendQueryParameter("stop1", roadSearch.getmStop1())
+                .appendQueryParameter("stop2", roadSearch.getmStop2())
                 .appendQueryParameter("tk", TOKEN);
         return builder.build().toString();
     }
@@ -43,30 +41,20 @@ public class MyBusServiceUrlBuilder {
      *
      * Creates the API url in order to get a combined road.
      *
-     * @param mIdLine
-     * @param mIdLine2
-     * @param mDirection
-     * @param mDirection2
-     * @param mStop1
-     * @param mStop2
-     * @param mStop1L2
-     * @param mStop2L2
+     * @param roadSearch
      * @return API url for a combined road.
      */
-    public static String buildCombinedRoadUrl(String mIdLine, String mIdLine2,
-                                              String mDirection, String mDirection2,
-                                              String mStop1, String mStop2, String mStop1L2,
-                                              String mStop2L2) {
+    public static String buildCombinedRoadUrl(RoadSearch roadSearch) {
         Uri.Builder builder = buildBaseUri()
                 .appendPath("CombinedRoadApi.php")
-                .appendQueryParameter("idline1", mIdLine)
-                .appendQueryParameter("idline2", mIdLine2)
-                .appendQueryParameter("direction1", mDirection)
-                .appendQueryParameter("direction2", mDirection2)
-                .appendQueryParameter("L1stop1", mStop1)
-                .appendQueryParameter("L1stop2", mStop2)
-                .appendQueryParameter("L2stop1", mStop1L2)
-                .appendQueryParameter("L2stop2", mStop2L2)
+                .appendQueryParameter("idline1", roadSearch.getmIdLine())
+                .appendQueryParameter("idline2", roadSearch.getmIdLine2())
+                .appendQueryParameter("direction1", roadSearch.getmDirection())
+                .appendQueryParameter("direction2", roadSearch.getmDirection2())
+                .appendQueryParameter("L1stop1", roadSearch.getmStop1())
+                .appendQueryParameter("L1stop2", roadSearch.getmStop2())
+                .appendQueryParameter("L2stop1", roadSearch.getmStop1L2())
+                .appendQueryParameter("L2stop2", roadSearch.getmStop2L2())
                 .appendQueryParameter("tk", TOKEN);
         return builder.build().toString();
     }

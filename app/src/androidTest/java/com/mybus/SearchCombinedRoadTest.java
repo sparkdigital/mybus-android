@@ -5,6 +5,7 @@ import android.test.InstrumentationTestCase;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.model.Road.RoadResult;
+import com.mybus.model.Road.RoadSearch;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -21,7 +22,8 @@ public class SearchCombinedRoadTest extends InstrumentationTestCase implements R
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mAsycTask = new RoadSearchTask(1, "2", "5", "0", "0", "107", "114", "92", "129", this);
+        RoadSearch roadSearch = new RoadSearch("2", "5", "0", "0", "107", "114", "92", "129");
+        mAsycTask = new RoadSearchTask(1, roadSearch, this);
         signal = new CountDownLatch(1); //CountDownLatch used to perform wait-notify behaviour
     }
 
