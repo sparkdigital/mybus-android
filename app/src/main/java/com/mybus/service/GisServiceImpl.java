@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GisServiceImp extends GenericService implements GisService{
+public class GisServiceImpl extends GenericService implements GisService{
 
     /**
      * @param constraint

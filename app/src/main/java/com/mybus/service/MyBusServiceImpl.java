@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
-public class MyBusServiceImp extends GenericService implements MyBusService {
+public class MyBusServiceImpl extends GenericService implements MyBusService {
 
     /**
      * @param origin

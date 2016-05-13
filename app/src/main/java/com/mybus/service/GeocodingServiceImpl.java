@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class GeocodingServiceImp implements GeocodingService{
+public class GeocodingServiceImpl implements GeocodingService{
 
     private static Context mContext;
-    private static GeocodingServiceImp instance;
+    private static GeocodingServiceImpl instance;
     private static final String TAG = "LocationGeocoding";
 
-    public GeocodingServiceImp() {
+    public GeocodingServiceImpl() {
     }
 
     @Override
