@@ -198,7 +198,7 @@ public class BusRoute {
         if (!mStartBusStopLng.equals(busRoute.mStartBusStopLng)) return false;
         if (!mStartBusStopStreetName.equals(busRoute.mStartBusStopStreetName)) return false;
         if (!mStartBusStopStreetNumber.equals(busRoute.mStartBusStopStreetNumber)) return false;
-        if (!mStartBusStopDistanceToOrigin.equals(busRoute.mStartBusStopDistanceToOrigin))
+        if (mStartBusStopDistanceToOrigin != null ? !mStartBusStopDistanceToOrigin.equals(busRoute.mStartBusStopDistanceToOrigin) : busRoute.mStartBusStopDistanceToOrigin != null)
             return false;
         if (!mDestinationBusStopNumber.equals(busRoute.mDestinationBusStopNumber)) return false;
         if (!mDestinationBusStopLat.equals(busRoute.mDestinationBusStopLat)) return false;
@@ -207,7 +207,7 @@ public class BusRoute {
             return false;
         if (!mDestinationBusStopStreetNumber.equals(busRoute.mDestinationBusStopStreetNumber))
             return false;
-        return mDestinationBusStopDistanceToDestination.equals(busRoute.mDestinationBusStopDistanceToDestination);
+        return mDestinationBusStopDistanceToDestination != null ? mDestinationBusStopDistanceToDestination.equals(busRoute.mDestinationBusStopDistanceToDestination) : busRoute.mDestinationBusStopDistanceToDestination == null;
 
     }
 
@@ -222,13 +222,13 @@ public class BusRoute {
         result = 31 * result + mStartBusStopLng.hashCode();
         result = 31 * result + mStartBusStopStreetName.hashCode();
         result = 31 * result + mStartBusStopStreetNumber.hashCode();
-        result = 31 * result + mStartBusStopDistanceToOrigin.hashCode();
+        result = 31 * result + (mStartBusStopDistanceToOrigin != null ? mStartBusStopDistanceToOrigin.hashCode() : 0);
         result = 31 * result + mDestinationBusStopNumber.hashCode();
         result = 31 * result + mDestinationBusStopLat.hashCode();
         result = 31 * result + mDestinationBusStopLng.hashCode();
         result = 31 * result + mDestinationBusStopStreetName.hashCode();
         result = 31 * result + mDestinationBusStopStreetNumber.hashCode();
-        result = 31 * result + mDestinationBusStopDistanceToDestination.hashCode();
+        result = 31 * result + (mDestinationBusStopDistanceToDestination != null ? mDestinationBusStopDistanceToDestination.hashCode() : 0);
         return result;
     }
 }
