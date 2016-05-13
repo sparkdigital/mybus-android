@@ -24,9 +24,9 @@ public class ServiceFacade {
     private GeocodingService geocodingService;
 
     private ServiceFacade() {
-        gisService = new GisServiceImp();
-        myBusService = new MyBusServiceImp();
-        geocodingService = new GeocodingServiceImp();
+        gisService = new GisServiceImpl();
+        myBusService = new MyBusServiceImpl();
+        geocodingService = new GeocodingServiceImpl();
     }
 
     public static ServiceFacade getInstance() {
