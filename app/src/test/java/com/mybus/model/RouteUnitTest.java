@@ -26,8 +26,16 @@ public class RouteUnitTest {
         JSONObject jsonMockedResponse = FileLoaderHelper.loadJSONObjectFromResource(this, "route/route.json");
         JSONArray routeArray = jsonMockedResponse.getJSONArray("Route1");
         Route parsedRoute = Route.parse(routeArray);
-        List<RoutePoint> pointList = parsedRoute.getPointList();
-        assertNotNull(pointList);
-        assertEquals(pointList.size(), 8);
+        // Checks PointList
+        assertNotNull(parsedRoute.getPointList());
+        assertEquals(parsedRoute.getPointList().size(), 2);
+
+        Route expectedRoute = new Route();
+        RoutePoint rPoint1 = new RoutePoint("3710", "-38.017799", "-57.572887", "Av Juan B Justo 3385", false);
+        RoutePoint rPoint2 = new RoutePoint("3711", "-38.019493", "-57.570572", "Av Juan B Justo 3125", false);
+        expectedRoute.getPointList().add(rPoint1);
+        expectedRoute.getPointList().add(rPoint2);
+        // Checks entire object
+        assertEquals(expectedRoute, parsedRoute);
     }
 }

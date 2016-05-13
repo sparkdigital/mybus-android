@@ -13,6 +13,16 @@ public class RoutePoint {
     private String mStopId, mLat, mLng, mAddress;
     private boolean isWaypoint;
 
+    public RoutePoint() {}
+
+    public RoutePoint(String mStopId, String mLat, String mLng, String mAddress, boolean isWaypoint) {
+        this.mStopId = mStopId;
+        this.mLat = mLat;
+        this.mLng = mLng;
+        this.mAddress = mAddress;
+        this.isWaypoint = isWaypoint;
+    }
+
     /**
      * @param jsonObject
      * @return
