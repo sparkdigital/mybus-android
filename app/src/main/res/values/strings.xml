@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">MyBus</string>
+    <string name="app_url">www.mybus.com.ar</string>
+    <string name="powered_by">Powered by Devspark</string>
+    <string name="from_hint">From:</string>
+    <string name="to_hint">To:</string>
+    <string name="current_location_marker">Current Location</string>
+    <string name="stop_destination_title">Parada destino:</string>
+    <string name="stop_origin_title">Parada origen:</string>
+    <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
+    <string name="distance_to_origin">"Distancia desde el origen: "</string>
+    <string name="distance_to_destination">"Distancia hasta el destino: "</string>
+    <string name="toast_no_result_found">No se encontraron resultados</string>
+    <string name="toast_no_internet">No hay una conexion a Internet</string>
+    <string name="toast_searching">Buscando rutas…</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="bus_stop_origin"> Parada Origen %1$s</string>
+    <string name="bus_stop_destination"> Parada Destino %1$s</string>
+    <string name="dialog_searching_specific_route">Obteniendo ruta de colectivo</string>
 </resources>
