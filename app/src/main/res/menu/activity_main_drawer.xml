@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawe_favorites"
+            android:icon="@android:drawable/btn_star_big_off"
+            android:title="Lugares favoritos" />
+        <item
+            android:id="@+id/drawe_charge"
+            android:icon="@android:drawable/ic_menu_directions"
+            android:title="Puntos de carga cercanos" />
+        <item
+            android:id="@+id/drawe_costs"
+            android:icon="@android:drawable/ic_menu_rotate"
+            android:title="Tarifas" />
+    </group>
+
+</menu>

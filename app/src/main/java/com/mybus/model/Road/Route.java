@@ -1,5 +1,7 @@
 package com.mybus.model.Road;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,5 +45,13 @@ public class Route {
 
     public List<RoutePoint> getPointList() {
         return mPointList;
+    }
+
+    public LatLng getFirstLatLng() {
+        return mPointList.get(0).getLatLng();
+    }
+
+    public LatLng getLastLatLng() {
+        return mPointList.get(mPointList.size() - 1).getLatLng();
     }
 }

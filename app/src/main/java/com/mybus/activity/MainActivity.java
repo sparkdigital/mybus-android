@@ -1,16 +1,25 @@
-package com.mybus;
+package com.mybus.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +31,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mybus.R;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
+import com.mybus.adapter.ViewPagerAdapter;
+import com.mybus.asynctask.RoadSearchCallback;
+import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.asynctask.RouteSearchTask;
-import com.mybus.helper.SearchFormStatus;
+import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
 import com.mybus.location.LocationGeocoding;
@@ -34,6 +47,9 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.Road.MapBusRoad;
+import com.mybus.model.Road.RoadResult;
+import com.mybus.requirements.DeviceRequirementsChecker;
 
 import java.util.List;
 
@@ -41,8 +57,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback, OnLocationChangedCallback,
-        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationChangedCallback,
+        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "MainActivity";
     private GoogleMap mMap;
@@ -60,6 +76,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     AppCompatAutoCompleteTextView mFromInput;
     @Bind(R.id.to_field)
     AppCompatAutoCompleteTextView mToInput;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout drawer;
+    @Bind(R.id.nav_view)
+    NavigationView navigationView;
+
     MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
     Marker mUserLocationMarker;
@@ -73,12 +96,25 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     MarkerOptions lastLocationGeocodingType;
 
     MarkerOptions mEndLocationMarkerOptions;
+    /*---Bottom Sheet------*/
     //Keeps the state of the app bar
     private AppBarStateChangeListener.State mAppBarState;
+    private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
+    private ViewPagerAdapter mViewPagerAdapter;
+    @Bind(R.id.bottom_sheet)
+    LinearLayout mBottomSheet;
+    @Bind(R.id.tabs)
+    TabLayout mTabLayout;
+    @Bind(R.id.viewpager)
+    ViewPager mViewPager;
+    private final int BOTTOM_SHEET_PEEK_HEIGHT = 100;
+    /*---------------------*/
     OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
     OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
 
     LocationGeocoding locationGeocoding;
+
+    private ProgressDialog mDialog;
 
     /**
      * Checks the state of the AppBarLayout
@@ -124,16 +160,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            if (!SearchFormStatus.getInstance().isStartFilled()) {
+            if (mStartLocationMarker == null) {
                 lastLocationGeocodingType = mStartLocationMarkerOptions;
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, true);
-            } else if (!SearchFormStatus.getInstance().isDestinationFilled()) {
+            } else {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, true);
             }
         }
     };
-
 
     public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, boolean performGeocoding) {
         if (marker == null) {
@@ -181,6 +216,45 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
+    /**
+     * Bottom Sheet Tab selected listener
+     * <p>
+     * Expands the bottom sheet when the user re-selects any tab
+     */
+    private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
+            mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
+            mViewPager.setCurrentItem(tab.getPosition(), true);
+            mViewPager.requestLayout();
+            mBottomSheet.requestLayout();
+
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
+                boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
+                if (isMapBusRoadPresent) {
+                    mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                } else {
+                    BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
+                    performRoadSearch(busRouteResult);
+                }
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+            if (isBusRouteFragmentPresent(tab.getPosition())) {
+                mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(false);
+            }
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    };
+
+
     @OnClick(R.id.floating_action_button)
     public void onFloatingSearchButton(View view) {
         mAppBarLayout.setExpanded(true, true);
@@ -190,12 +264,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.center_location_action_button)
     public void onCenterLocationButtonClick(View view) {
-        centerToLastKnownLocation();
+        if (DeviceRequirementsChecker.checkGpsEnabled(this)) {
+            centerToLastKnownLocation();
+        }
     }
 
     @OnClick(R.id.perform_search_action_button)
     public void onPerformSearchButtonClick(View view) {
-        performSearch();
+        performRoutesSearch();
     }
 
     @Override
@@ -203,6 +279,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -223,6 +308,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mUserLocationMarkerOptions = new MarkerOptions()
                 .title(getString(R.string.current_location_marker))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
+
         mOnAddressGeocodingCompleteCallback = this;
         mOnLocationGeocodingCompleteCallback = this;
         locationGeocoding = new LocationGeocoding(this);
@@ -230,13 +316,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mPerformSearchButton.setAlpha(50);
         mPerformSearchButton.setEnabled(false);
         resetLocalVariables();
+        setupBottomSheet();
+        DeviceRequirementsChecker.checkGpsEnabled(this);
+    }
+
+    private void setupBottomSheet() {
+        mBottomSheet.setVisibility(View.INVISIBLE);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
     }
 
     /**
      * This method restart the local variables to avoid old apps's states
      */
     private void resetLocalVariables() {
-        SearchFormStatus.getInstance().clearFormStatus();
         mUserLocationMarkerOptions = null;
         mUserLocationMarker = null;
         mStartLocationMarker = null;
@@ -267,7 +360,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         centerToLastKnownLocation();
 
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
-        //mMap.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
     }
 
@@ -348,33 +440,152 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 mFromInput.setText(address);
-                SearchFormStatus.getInstance().setStartFilled(true);
-                SearchFormStatus.getInstance().setStartMarkerId(mStartLocationMarker.getId());
             }
             if (lastLocationGeocodingType == mEndLocationMarkerOptions) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 mToInput.setText(address);
-                SearchFormStatus.getInstance().setDestinationFilled(true);
             }
         }
     }
 
-    private void performSearch() {
+    /**
+     * Searches between two points in the map
+     */
+    private void performRoutesSearch() {
         if (mStartLocationMarker == null || mEndLocationMarker == null) {
             return;
         }
-        RouteSearchTask routeSearchTask = new RouteSearchTask(this);
-        routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
-        Toast.makeText(this, "performing search", Toast.LENGTH_SHORT).show();
+        if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
+            clearBusRouteOnMap();
+            showBottomSheetResults(false);
+            showProgressDialog(getString(R.string.toast_searching));
+            RouteSearchTask routeSearchTask = new RouteSearchTask(this);
+            routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
+        } else {
+            Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Searchs a specific route for a bus
+     *
+     * @param busRouteResult
+     */
+    private void performRoadSearch(BusRouteResult busRouteResult) {
+        if (busRouteResult == null) {
+            return;
+        }
+        clearBusRouteOnMap();
+        showProgressDialog(getString(R.string.dialog_searching_specific_route));
+        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, MainActivity.this);
+        routeSearchTask.execute();
     }
 
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
-        Toast.makeText(this, "results found", Toast.LENGTH_LONG).show();
-        int i = 0;
-        for (BusRouteResult route : results) {
-            Log.d(TAG, "result "+i+": "+route.toString());
-            i++;
+        cancelProgressDialog();
+        populateBottomSheet(results);
+    }
+
+    @Override
+    public void onRoadFound(RoadResult roadResult) {
+        cancelProgressDialog();
+        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult);
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
         }
     }
+
+    /**
+     * Populates the bottom sheet with the Routes found
+     *
+     * @param results
+     */
+    private void populateBottomSheet(List<BusRouteResult> results) {
+        if (results == null || results.isEmpty()) {
+            showBottomSheetResults(false);
+            mViewPagerAdapter = null;
+            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
+            return;
+        }
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this.getLayoutInflater());
+        for (BusRouteResult route : results) {
+            BusRouteFragment fragment = new BusRouteFragment();
+            fragment.setBusRouteResult(route);
+            mViewPagerAdapter.addFragment(fragment);
+        }
+        mViewPager.setAdapter(mViewPagerAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
+        }
+        showBottomSheetResults(true);
+        //After populating the bottom sheet, show the first result
+        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(0).getBusRouteResult();
+        performRoadSearch(busRouteResult);
+
+    }
+
+    /**
+     * Shows a progress dialog with specified text
+     *
+     * @param text
+     */
+    private void showProgressDialog(String text) {
+        cancelProgressDialog();
+        mDialog = ProgressDialog.show(MainActivity.this, "", text, true, false);
+    }
+
+    /**
+     * Cancels the current progress dialog if any
+     */
+    private void cancelProgressDialog() {
+        if (mDialog != null) {
+            mDialog.cancel();
+            mDialog = null;
+        }
+    }
+
+    /**
+     * Clears all markers and polyline for a previous route
+     */
+    private void clearBusRouteOnMap() {
+        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
+        }
+    }
+
+    /**
+     * Checks if the BusRouteFragment is present or not
+     *
+     * @param index
+     * @return
+     */
+    private boolean isBusRouteFragmentPresent(int index) {
+        return (mViewPagerAdapter != null && mViewPagerAdapter.getItem(index) != null);
+    }
+
+    /**
+     * Show or hide the bottom sheet Layout
+     *
+     * @param show
+     */
+    private void showBottomSheetResults(boolean show) {
+        if (mBottomSheet != null) {
+            if (show) {
+                mBottomSheet.setVisibility(View.VISIBLE);
+            } else {
+                mBottomSheet.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        //TODO: Implement the item selected actions
+        return false;
+    }
+
+
 }
