@@ -185,4 +185,30 @@ public class RoadResult {
         return list;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RoadResult that = (RoadResult) o;
+
+        if (mType != that.mType) return false;
+        if (Float.compare(that.mTotalDistance, mTotalDistance) != 0) return false;
+        if (mTravelTime != that.mTravelTime) return false;
+        if (mArrivalTime != that.mArrivalTime) return false;
+        //TODO: Remove this comment When Route contains the equals method
+        //if (!mRouteList.equals(that.mRouteList)) return false;
+        return true;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mType;
+        result = 31 * result + (mTotalDistance != +0.0f ? Float.floatToIntBits(mTotalDistance) : 0);
+        result = 31 * result + mTravelTime;
+        result = 31 * result + mArrivalTime;
+        result = 31 * result + mRouteList.hashCode();
+        return result;
+    }
 }

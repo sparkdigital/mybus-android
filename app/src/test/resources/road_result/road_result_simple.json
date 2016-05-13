@@ -3,20 +3,5 @@
   "TotalDistance":3.02,
   "TravelTime":12,
   "ArrivalTime":null,
-  "Route1":[
-    {
-      "StopId":"4218",
-      "Lat":"-38.026630",
-      "Lng":"-57.532726",
-      "Address":"Av Patricio Peralta Ramos 5380",
-      "isWaypoint":false
-    },
-    {
-      "StopId":"4219",
-      "Lat":"-38.025402",
-      "Lng":"-57.530781",
-      "Address":"Av Patricio Peralta Ramos 5180",
-      "isWaypoint":false
-    }
-  ]
+  "Route1":[]
 }

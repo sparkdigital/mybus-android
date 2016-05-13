@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Route {
 
-    private List<RoutePoint> mPointList;
+    private List<RoutePoint> mPointList = new ArrayList<>();
 
     /**
      * @param jsonArray
