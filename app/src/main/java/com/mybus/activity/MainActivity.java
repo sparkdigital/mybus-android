@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String TAG = "MainActivity";
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
-    private Float DEFAULT_MAP_ZOOM;
     @Bind(R.id.app_bar_layout)
     AppBarLayout mAppBarLayout;
     @Bind(R.id.floating_action_button)
@@ -162,26 +161,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (mStartLocationMarker == null) {
                 lastLocationGeocodingType = mStartLocationMarkerOptions;
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, true);
+                zoomTo(mStartLocationMarker.getPosition());
             } else {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, true);
+                zoomOutMap(); // Makes a zoom out in the map to see both markers at the same time.
             }
-            zoomOutMap(); // Makes a zoom out in the map to see both markers at the same time.
         }
     };
+
+    /**
+     * Makes a zoom in the map using a LatLng
+     * @param latLng
+     */
+    private void zoomTo(LatLng latLng) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, getResources().getInteger(R.integer.default_map_zoom)));
+    }
+
+    /**
+     * Makes a zoom in the map using a LatLngBounds (created with one or several LatLng's)
+     * @param bounds
+     */
+    private void zoomTo(LatLngBounds bounds) {
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, getResources().getInteger(R.integer.map_padding));
+        mMap.animateCamera(cu);
+    }
 
     /**
      * Makes a zoom out in the map to keep both markers in view.
      */
     private void zoomOutMap() {
-        if (mStartLocationMarker != null && mEndLocationMarker != null && mStartLocationMarker.isVisible() && mEndLocationMarker.isVisible()) {
+        if (mStartLocationMarker != null && mStartLocationMarker.isVisible() && mEndLocationMarker != null && mEndLocationMarker.isVisible()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             builder.include(mStartLocationMarker.getPosition());
             builder.include(mEndLocationMarker.getPosition());
             LatLngBounds bounds = builder.build();
-
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, getResources().getInteger(R.integer.map_padding));
-            mMap.animateCamera(cu);
+            zoomTo(bounds);
         }
     }
 
@@ -234,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p>
+     * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -321,7 +336,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToInput.setOnEditorActionListener(mOnEditorAndroidListener);
 
         mLocationUpdater = new LocationUpdater(this, this);
-        DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
         mUserLocationMarkerOptions = new MarkerOptions()
                 .title(getString(R.string.current_location_marker))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
@@ -389,10 +403,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void zoomTo(LatLng latLng) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM));
-    }
-
     @Override
     public void onLocationChanged(LatLng latLng) {
         if (mUserLocationMarker != null) {
@@ -431,12 +441,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location != null) {
             if (lastAddressGeocodingType == mStartLocationMarkerOptions) {
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, location, false);
-                if (mEndLocationMarker == null) {
+                if (mEndLocationMarker == null || !mEndLocationMarker.isVisible()) {
                     zoomTo(location);
                 }
             }
             if (lastAddressGeocodingType == mEndLocationMarkerOptions) {
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location, false);
+                if (mStartLocationMarker ==  null || !mStartLocationMarker.isVisible()) {
+                    zoomTo(location);
+                }
             }
             zoomOutMap();
         }
