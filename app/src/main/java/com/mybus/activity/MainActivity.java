@@ -55,6 +55,7 @@ import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
 import com.mybus.service.ServiceFacade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             } else {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, true);
-                zoomOutMap(); // Makes a zoom out in the map to see both markers at the same time.
+                zoomOutStartEndMarkers(); // Makes a zoom out in the map to see both markers at the same time.
             }
         }
     };
@@ -188,15 +189,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Makes a zoom out in the map to keep both markers in view.
+     * Makes a zoom out in the map to keep all the markers received in view.
      */
-    private void zoomOutMap() {
-        if (mStartLocationMarker != null && mStartLocationMarker.isVisible() && mEndLocationMarker != null && mEndLocationMarker.isVisible()) {
+    private void zoomOut(List<Marker> markerList) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(mStartLocationMarker.getPosition());
-            builder.include(mEndLocationMarker.getPosition());
+            for (Marker marker : markerList) {
+                builder.include(marker.getPosition());
+            }
             LatLngBounds bounds = builder.build();
             zoomTo(bounds);
+    }
+
+    /**
+     * Makes a zoom out in the map to keep mStartLocationMarker and mEndLocationMarker visible.
+     */
+    private void zoomOutStartEndMarkers() {
+        if (mStartLocationMarker != null && mStartLocationMarker.isVisible() && mEndLocationMarker != null && mEndLocationMarker.isVisible()) {
+            List<Marker> markerList = new ArrayList<>();
+            markerList.add(mStartLocationMarker);
+            markerList.add(mEndLocationMarker);
+            zoomOut(markerList);
         }
     }
 
@@ -243,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
             }
             ServiceFacade.getInstance().performGeocodeByLocation(marker.getPosition(), MainActivity.this, mContext);
-            zoomOutMap();
+            zoomOutStartEndMarkers();
         }
     };
 
@@ -260,12 +272,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mViewPager.setCurrentItem(tab.getPosition(), true);
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
-            zoomOutMap();
 
             if (isBusRouteFragmentPresent(tab.getPosition())) {
                 boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
                 if (isMapBusRoadPresent) {
                     mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                    MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
+                    List<Marker> markerList = new ArrayList<>();
+                    markerList.addAll(mapBusRoad.getMarkerList());
+                    markerList.add(mStartLocationMarker);
+                    markerList.add(mEndLocationMarker);
+                    zoomOut(markerList);
                 } else {
                     BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
                     performRoadSearch(busRouteResult);
@@ -452,7 +469,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     zoomTo(location);
                 }
             }
-            zoomOutMap();
+            zoomOutStartEndMarkers();
         }
     }
 
@@ -515,7 +532,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
         populateBottomSheet(results);
-        zoomOutMap();
     }
 
     @Override
@@ -524,6 +540,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult);
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
+            List<Marker> markerList = new ArrayList<>();
+            markerList.addAll(mapBusRoad.getMarkerList());
+            markerList.add(mStartLocationMarker);
+            markerList.add(mEndLocationMarker);
+            zoomOut(markerList);
         }
     }
 
