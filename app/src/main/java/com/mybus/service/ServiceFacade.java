@@ -3,15 +3,15 @@ package com.mybus.service;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.PendingResult;
+import com.google.maps.model.DirectionsResult;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.model.Road.RoadSearch;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
 public class ServiceFacade {
 
     private static ServiceFacade instance = null;
+    private DirectionsServiceImpl directionsService;
     private GisService gisService;
     private MyBusService myBusService;
     private GeocodingService geocodingService;
@@ -27,6 +28,7 @@ public class ServiceFacade {
         gisService = new GisServiceImpl();
         myBusService = new MyBusServiceImpl();
         geocodingService = new GeocodingServiceImpl();
+        directionsService = new DirectionsServiceImpl();
     }
 
     public static ServiceFacade getInstance() {
@@ -42,7 +44,7 @@ public class ServiceFacade {
      * @throws IOException
      * @throws JSONException
      */
-    public List<String> findStreets(String constraint){
+    public List<String> findStreets(String constraint) {
         return gisService.findStreets(constraint);
     }
 
@@ -60,7 +62,7 @@ public class ServiceFacade {
      * @param roadSearch
      * @return
      */
-    public RoadResult searchRoads(int mType, RoadSearch roadSearch){
+    public RoadResult searchRoads(int mType, RoadSearch roadSearch) {
         return myBusService.searchRoads(mType, roadSearch);
     }
 
@@ -78,5 +80,13 @@ public class ServiceFacade {
      */
     public void performGeocodeByAddress(String address, OnAddressGeocodingCompleteCallback callback, Context context) {
         geocodingService.performGeocodeByAddress(address, callback, context);
+    }
+
+    /**
+     * @param origin
+     * @param destination
+     */
+    public DirectionsResult getDirection(LatLng origin, LatLng destination) {
+        return directionsService.getDirections(origin, destination);
     }
 }

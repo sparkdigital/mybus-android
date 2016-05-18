@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p>
+     * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -478,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         clearBusRouteOnMap();
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
-        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, MainActivity.this);
+        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
         routeSearchTask.execute();
     }
 

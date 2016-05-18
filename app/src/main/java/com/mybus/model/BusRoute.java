@@ -1,5 +1,7 @@
 package com.mybus.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
@@ -21,7 +23,8 @@ public class BusRoute {
     Integer mDestinationBusStopStreetNumber;
     Double mDestinationBusStopDistanceToDestination;
 
-    public BusRoute(){};
+    public BusRoute() {
+    }
 
     public BusRoute(Integer mIdBusLine, String mBusLineName, Integer mBusLineDirection, String mBusLineColor, Integer mStartBusStopNumber, String mStartBusStopLat, String mStartBusStopLng, String mStartBusStopStreetName, Integer mStartBusStopStreetNumber, Double mStartBusStopDistanceToOrigin, Integer mDestinationBusStopNumber, String mDestinationBusStopLat, String mDestinationBusStopLng, String mDestinationBusStopStreetName, Integer mDestinationBusStopStreetNumber, Double mDestinationBusStopDistanceToDestination) {
         this.mIdBusLine = mIdBusLine;
@@ -230,5 +233,13 @@ public class BusRoute {
         result = 31 * result + mDestinationBusStopStreetNumber.hashCode();
         result = 31 * result + (mDestinationBusStopDistanceToDestination != null ? mDestinationBusStopDistanceToDestination.hashCode() : 0);
         return result;
+    }
+
+    public LatLng getStartBusStopLatLng() {
+        return new LatLng(Double.valueOf(mStartBusStopLat), Double.valueOf(mStartBusStopLng));
+    }
+
+    public LatLng getEndBusStopLatLng() {
+        return new LatLng(Double.valueOf(mDestinationBusStopLat), Double.valueOf(mDestinationBusStopLng));
     }
 }
