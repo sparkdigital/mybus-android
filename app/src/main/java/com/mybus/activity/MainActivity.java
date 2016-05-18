@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mViewPager.setCurrentItem(tab.getPosition(), true);
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
+            zoomOutMap();
 
             if (isBusRouteFragmentPresent(tab.getPosition())) {
                 boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
@@ -514,6 +515,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
         populateBottomSheet(results);
+        zoomOutMap();
     }
 
     @Override
