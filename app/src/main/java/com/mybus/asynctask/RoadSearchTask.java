@@ -2,6 +2,8 @@ package com.mybus.asynctask;
 
 import android.os.AsyncTask;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.model.DirectionsResult;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.RoadResult;
@@ -21,6 +23,12 @@ import java.io.IOException;
  */
 public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     private final int mType;
+    private LatLng midEndStop;
+    private LatLng midStartStop;
+    private LatLng endBusStop;
+    private LatLng startLocation;
+    private LatLng endLocation;
+    private LatLng firstBusStop;
     private RoadSearchCallback roadSearchCallback;
     RoadSearch roadSearch;
 
@@ -45,9 +53,11 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
      * @param route
      * @param callback
      */
-    public RoadSearchTask(int type, BusRouteResult route, RoadSearchCallback callback) {
+    public RoadSearchTask(int type, BusRouteResult route, LatLng startLocation, LatLng endLocation, RoadSearchCallback callback) {
         this.mType = type;
         this.roadSearchCallback = callback;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
         roadSearch = new RoadSearch();
         if (route != null) {
             BusRoute busRoute = route.getBusRoutes().get(0);
@@ -55,8 +65,13 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
             roadSearch.setmDirection(String.valueOf(busRoute.getBusLineDirection()));
             roadSearch.setmStop1(String.valueOf(busRoute.getStartBusStopNumber()));
             roadSearch.setmStop2(String.valueOf(busRoute.getDestinationBusStopNumber()));
+            firstBusStop = busRoute.getStartBusStopLatLng();
+            endBusStop = busRoute.getEndBusStopLatLng();
             if (type == 1) {
+                midStartStop = busRoute.getEndBusStopLatLng();
                 busRoute = route.getBusRoutes().get(1);
+                midEndStop = busRoute.getStartBusStopLatLng();
+                endBusStop = busRoute.getEndBusStopLatLng();
                 roadSearch.setmIdLine2(String.valueOf(busRoute.getIdBusLine()));
                 roadSearch.setmDirection2(String.valueOf(busRoute.getBusLineDirection()));
                 roadSearch.setmStop1L2(String.valueOf(busRoute.getStartBusStopNumber()));
@@ -68,7 +83,13 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
 
     @Override
     protected RoadResult doInBackground(Void... params) {
-        return ServiceFacade.getInstance().searchRoads(mType, roadSearch);
+        RoadResult result = ServiceFacade.getInstance().searchRoads(mType, roadSearch);
+        result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
+        if (midStartStop != null && midEndStop != null) {
+            result.addWalkingDirection(ServiceFacade.getInstance().getDirection(midStartStop, midEndStop));
+        }
+        result.addWalkingDirection(ServiceFacade.getInstance().getDirection(endLocation, endBusStop));
+        return result;
     }
 
     @Override

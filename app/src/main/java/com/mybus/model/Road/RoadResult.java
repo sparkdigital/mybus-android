@@ -3,8 +3,10 @@ package com.mybus.model.Road;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.model.DirectionsResult;
 import com.mybus.MyBus;
 import com.mybus.R;
 
@@ -24,6 +26,7 @@ public class RoadResult {
     private int mTravelTime;
     private int mArrivalTime;
     private List<Route> mRouteList = new ArrayList<>();
+    private List<DirectionsResult> mWalkingList = new ArrayList<>();
     private String mIdBusLine1;
     private String mIdBusLine2;
 
@@ -182,6 +185,17 @@ public class RoadResult {
             }
             list.add(rectOptions);
         }
+        //Draws the walking direction lines
+        for (DirectionsResult directionsResult : mWalkingList) {
+            List<com.google.maps.model.LatLng> asd = directionsResult.routes[0].overviewPolyline.decodePath();
+            rectOptions = new PolylineOptions();
+            rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.walkingLine));
+            rectOptions.width(POLYLINE_WIDTH);
+            for (com.google.maps.model.LatLng latLng : asd) {
+                rectOptions.add(new LatLng(latLng.lat, latLng.lng));
+            }
+            list.add(rectOptions);
+        }
         return list;
     }
 
@@ -210,5 +224,14 @@ public class RoadResult {
         result = 31 * result + mArrivalTime;
         result = 31 * result + mRouteList.hashCode();
         return result;
+    }
+
+    /**
+     * @param walkingDirection
+     */
+    public void addWalkingDirection(DirectionsResult walkingDirection) {
+        if (walkingDirection != null) {
+            mWalkingList.add(walkingDirection);
+        }
     }
 }
