@@ -1,6 +1,5 @@
 #!groovy
 
-
 stage 'build'
 node {
     echo "Checking out the code from Github"
