@@ -2,8 +2,9 @@ package com.mybus.builder;
 
 import android.net.Uri;
 
+import okhttp3.Request;
+
 /**
- *
  * GIS Service API url builder.
  *
  * @author Enrique Pennimpede <epennimpede@devspark.com>
@@ -17,7 +18,6 @@ public class GisServiceUrlBuilder {
     private static final String TOKEN = "rwef3253465htrt546dcasadg4343";
 
     /**
-     *
      * Creates the API url in order to get the street names that include
      * a specific text
      *
@@ -35,7 +35,6 @@ public class GisServiceUrlBuilder {
     }
 
     /**
-     *
      * Creates the base API url.
      *
      * @return base API url

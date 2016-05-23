@@ -17,6 +17,10 @@ public class MapBusRoad {
     private List<Marker> mMarkerList = new ArrayList<>();
     private List<Polyline> mPolylineList = new ArrayList<>();
 
+    public List<Marker> getMarkerList() {
+        return mMarkerList;
+    }
+
     /**
      * Adds the Specific road result into the map
      *  @param map

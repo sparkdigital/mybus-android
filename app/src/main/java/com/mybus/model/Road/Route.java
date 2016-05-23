@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Route {
 
-    private List<RoutePoint> mPointList;
+    private List<RoutePoint> mPointList = new ArrayList<>();
 
     /**
      * @param jsonArray
@@ -53,5 +53,20 @@ public class Route {
 
     public LatLng getLastLatLng() {
         return mPointList.get(mPointList.size() - 1).getLatLng();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Route route = (Route) o;
+
+        return mPointList != null ? mPointList.equals(route.mPointList) : route.mPointList == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return mPointList != null ? mPointList.hashCode() : 0;
     }
 }

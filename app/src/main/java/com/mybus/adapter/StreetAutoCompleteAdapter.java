@@ -10,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.mybus.R;
+import com.mybus.service.ServiceFacade;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,9 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Adapter for AutoCompleteEditText searching streets names
@@ -103,26 +101,7 @@ public class StreetAutoCompleteAdapter extends BaseAdapter implements Filterable
      * @return list of streets
      */
     private List<String> findStreets(String constraint) {
-        List<String> results = new ArrayList<>();
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("http://gis.mardelplata.gob.ar/opendata/ws.php?method=rest&endpoint=callejero_mgp&token=rwef3253465htrt546dcasadg4343&nombre_calle=" + constraint)
-                .build();
-        try {
-            mLastCall = client.newCall(request);
-            Response response = mLastCall.execute();
-
-            String jsonData = response.body().string();
-            JSONArray jsonArray = new JSONArray(jsonData);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                results.add(jsonArray.getJSONObject(i).getString("descripcion"));
-            }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-
-        return results;
+        return ServiceFacade.getInstance().findStreets(constraint);
     }
 
     /**

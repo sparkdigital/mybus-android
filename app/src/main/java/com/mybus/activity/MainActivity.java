@@ -2,12 +2,14 @@ package com.mybus.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,12 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
@@ -41,7 +45,6 @@ import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
-import com.mybus.location.LocationGeocoding;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
@@ -50,7 +53,9 @@ import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.MapBusRoad;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
+import com.mybus.service.ServiceFacade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -63,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String TAG = "MainActivity";
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
-    private Float DEFAULT_MAP_ZOOM;
     @Bind(R.id.app_bar_layout)
     AppBarLayout mAppBarLayout;
     @Bind(R.id.floating_action_button)
@@ -108,13 +112,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
     private final int BOTTOM_SHEET_PEEK_HEIGHT = 100;
-    /*---------------------*/
-    OnAddressGeocodingCompleteCallback mOnAddressGeocodingCompleteCallback;
-    OnLocationGeocodingCompleteCallback mOnLocationGeocodingCompleteCallback;
-
-    LocationGeocoding locationGeocoding;
-
     private ProgressDialog mDialog;
+    private Context mContext;
 
     /**
      * Checks the state of the AppBarLayout
@@ -139,14 +138,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 lastAddressGeocodingType = mStartLocationMarkerOptions;
-                locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
+                ServiceFacade.getInstance().performGeocodeByAddress(address, MainActivity.this, mContext);
                 mToInput.requestFocus();
                 return true;
             }
             if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 lastAddressGeocodingType = mEndLocationMarkerOptions;
-                locationGeocoding.performGeocodeByAddress(address, mOnAddressGeocodingCompleteCallback);
+                ServiceFacade.getInstance().performGeocodeByAddress(address, MainActivity.this, mContext);
                 showSoftKeyBoard(false);
                 return true;
             }
@@ -163,12 +162,55 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (mStartLocationMarker == null) {
                 lastLocationGeocodingType = mStartLocationMarkerOptions;
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, true);
+                zoomTo(mStartLocationMarker.getPosition());
             } else {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, true);
+                zoomOutStartEndMarkers(); // Makes a zoom out in the map to see both markers at the same time.
             }
         }
     };
+
+    /**
+     * Makes a zoom in the map using a LatLng
+     * @param latLng
+     */
+    private void zoomTo(LatLng latLng) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, getResources().getInteger(R.integer.default_map_zoom)));
+    }
+
+    /**
+     * Makes a zoom in the map using a LatLngBounds (created with one or several LatLng's)
+     * @param bounds
+     */
+    private void zoomTo(LatLngBounds bounds) {
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, getResources().getInteger(R.integer.map_padding));
+        mMap.animateCamera(cu);
+    }
+
+    /**
+     * Makes a zoom out in the map to keep all the markers received in view.
+     */
+    private void zoomOut(List<Marker> markerList) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (Marker marker : markerList) {
+                builder.include(marker.getPosition());
+            }
+            LatLngBounds bounds = builder.build();
+            zoomTo(bounds);
+    }
+
+    /**
+     * Makes a zoom out in the map to keep mStartLocationMarker and mEndLocationMarker visible.
+     */
+    private void zoomOutStartEndMarkers() {
+        if (mStartLocationMarker != null && mStartLocationMarker.isVisible() && mEndLocationMarker != null && mEndLocationMarker.isVisible()) {
+            List<Marker> markerList = new ArrayList<>();
+            markerList.add(mStartLocationMarker);
+            markerList.add(mEndLocationMarker);
+            zoomOut(markerList);
+        }
+    }
 
     public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, boolean performGeocoding) {
         if (marker == null) {
@@ -178,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             marker.setPosition(latLng);
         }
         if (performGeocoding) {
-            locationGeocoding.performGeocodeByLocation(latLng, mOnLocationGeocodingCompleteCallback);
+            ServiceFacade.getInstance().performGeocodeByLocation(latLng, MainActivity.this, mContext);
         }
         //Update searchButton status
         if (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
@@ -212,13 +254,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             } else if (marker.getId().equals(mEndLocationMarker.getId())) {
                 lastLocationGeocodingType = mEndLocationMarkerOptions;
             }
-            locationGeocoding.performGeocodeByLocation(marker.getPosition(), mOnLocationGeocodingCompleteCallback);
+            ServiceFacade.getInstance().performGeocodeByLocation(marker.getPosition(), MainActivity.this, mContext);
+            zoomOutStartEndMarkers();
         }
     };
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p>
+     * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -234,6 +277,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
                 if (isMapBusRoadPresent) {
                     mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                    MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
+                    List<Marker> markerList = new ArrayList<>();
+                    markerList.addAll(mapBusRoad.getMarkerList());
+                    markerList.add(mStartLocationMarker);
+                    markerList.add(mEndLocationMarker);
+                    zoomOut(markerList);
                 } else {
                     BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
                     performRoadSearch(busRouteResult);
@@ -277,6 +326,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -304,14 +354,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToInput.setOnEditorActionListener(mOnEditorAndroidListener);
 
         mLocationUpdater = new LocationUpdater(this, this);
-        DEFAULT_MAP_ZOOM = new Float(getResources().getInteger(R.integer.default_map_zoom));
         mUserLocationMarkerOptions = new MarkerOptions()
                 .title(getString(R.string.current_location_marker))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
-
-        mOnAddressGeocodingCompleteCallback = this;
-        mOnLocationGeocodingCompleteCallback = this;
-        locationGeocoding = new LocationGeocoding(this);
         //Disable the mPerformSearchButton action
         mPerformSearchButton.setAlpha(50);
         mPerformSearchButton.setEnabled(false);
@@ -376,10 +421,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void zoomTo(LatLng latLng) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM));
-    }
-
     @Override
     public void onLocationChanged(LatLng latLng) {
         if (mUserLocationMarker != null) {
@@ -406,8 +447,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onBackPressed() {
-        if (mAppBarState != null && mAppBarState.equals(AppBarStateChangeListener.State.EXPANDED)) {
-            mAppBarLayout.setExpanded(false, true);
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
             return;
         }
         super.onBackPressed();
@@ -418,11 +459,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location != null) {
             if (lastAddressGeocodingType == mStartLocationMarkerOptions) {
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, location, false);
+                if (mEndLocationMarker == null || !mEndLocationMarker.isVisible()) {
+                    zoomTo(location);
+                }
             }
             if (lastAddressGeocodingType == mEndLocationMarkerOptions) {
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location, false);
+                if (mStartLocationMarker ==  null || !mStartLocationMarker.isVisible()) {
+                    zoomTo(location);
+                }
             }
-            zoomTo(location);
+            zoomOutStartEndMarkers();
         }
     }
 
@@ -477,7 +524,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         clearBusRouteOnMap();
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
-        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, MainActivity.this);
+        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
         routeSearchTask.execute();
     }
 
@@ -493,6 +540,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult);
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
+            List<Marker> markerList = new ArrayList<>();
+            markerList.addAll(mapBusRoad.getMarkerList());
+            markerList.add(mStartLocationMarker);
+            markerList.add(mEndLocationMarker);
+            zoomOut(markerList);
         }
     }
 
@@ -584,7 +636,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         //TODO: Implement the item selected actions
-        return false;
+        drawer.closeDrawer(GravityCompat.START);
+        switch (item.getItemId()) {
+            case R.id.drawerCosts:
+                startActivity(new Intent(MainActivity.this, DisplayFaresActivity.class));
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+            case R.id.drawerFavorites:
+                startActivity(new Intent(MainActivity.this, DisplayFavoritesActivity.class));
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+        }
+        return true;
     }
 
 

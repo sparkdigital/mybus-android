@@ -71,7 +71,7 @@ public class BusRouteFragment extends Fragment {
         this.mBusRouteResult = routeResult;
     }
 
-    public BusRouteResult getBusRouteResult(){
+    public BusRouteResult getBusRouteResult() {
         return this.mBusRouteResult;
     }
 
@@ -79,12 +79,12 @@ public class BusRouteFragment extends Fragment {
         this.mMapBusRoad = mapBusRoad;
     }
 
-    public MapBusRoad getMapBusRoad(){
+    public MapBusRoad getMapBusRoad() {
         return this.mMapBusRoad;
     }
 
     public void showMapBusRoad(boolean show) {
-        if (mMapBusRoad != null){
+        if (mMapBusRoad != null) {
             mMapBusRoad.showBusRoadFromMap(show);
         }
     }

@@ -13,6 +13,16 @@ public class RoutePoint {
     private String mStopId, mLat, mLng, mAddress;
     private boolean isWaypoint;
 
+    public RoutePoint() {}
+
+    public RoutePoint(String mStopId, String mLat, String mLng, String mAddress, boolean isWaypoint) {
+        this.mStopId = mStopId;
+        this.mLat = mLat;
+        this.mLng = mLng;
+        this.mAddress = mAddress;
+        this.isWaypoint = isWaypoint;
+    }
+
     /**
      * @param jsonObject
      * @return
@@ -75,5 +85,30 @@ public class RoutePoint {
 
     public LatLng getLatLng() {
         return new LatLng(Double.parseDouble(mLat), Double.parseDouble(mLng));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RoutePoint that = (RoutePoint) o;
+
+        if (isWaypoint != that.isWaypoint) return false;
+        if (!mStopId.equals(that.mStopId)) return false;
+        if (!mLat.equals(that.mLat)) return false;
+        if (!mLng.equals(that.mLng)) return false;
+        return mAddress.equals(that.mAddress);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mStopId.hashCode();
+        result = 31 * result + mLat.hashCode();
+        result = 31 * result + mLng.hashCode();
+        result = 31 * result + mAddress.hashCode();
+        result = 31 * result + (isWaypoint ? 1 : 0);
+        return result;
     }
 }
