@@ -506,8 +506,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             clearBusRouteOnMap();
             showBottomSheetResults(false);
             showProgressDialog(getString(R.string.toast_searching));
-            RouteSearchTask routeSearchTask = new RouteSearchTask(this);
-            routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
+            ServiceFacade.getInstance().searchRoutes(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), this);
         } else {
             Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
@@ -524,8 +523,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         clearBusRouteOnMap();
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
-        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
-        routeSearchTask.execute();
+        ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
     }
 
     @Override

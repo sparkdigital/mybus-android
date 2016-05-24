@@ -1,7 +1,6 @@
 package com.mybus;
 
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.asynctask.RouteSearchCallback;
@@ -13,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
- *
+ * <p/>
  * Used to test the async task which returns the possible routes between two locations.
  */
 public class SearchRouteTest extends InstrumentationTestCase implements RouteSearchCallback {
@@ -24,7 +23,7 @@ public class SearchRouteTest extends InstrumentationTestCase implements RouteSea
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mAsycTask = new RouteSearchTask(this);
+        mAsycTask = new RouteSearchTask(new LatLng(-37.979858, -57.589794), new LatLng(-38.000452, -57.556120), this);
         signal = new CountDownLatch(1); //CountDownLatch used to perform wait-notify behaviour
     }
 
@@ -39,7 +38,7 @@ public class SearchRouteTest extends InstrumentationTestCase implements RouteSea
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAsycTask.execute(new LatLng(-37.979858, -57.589794), new LatLng(-38.000452, -57.556120));
+                mAsycTask.execute();
             }
         });
         try {
