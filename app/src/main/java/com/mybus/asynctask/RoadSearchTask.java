@@ -7,6 +7,7 @@ import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.model.Road.RoadSearch;
+import com.mybus.service.MyBusServiceImpl;
 import com.mybus.service.ServiceFacade;
 
 
@@ -33,10 +34,12 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
      * @param roadSearch
      * @param callback
      */
-    public RoadSearchTask(int type, RoadSearch roadSearch, RoadSearchCallback callback) {
+    public RoadSearchTask(int type, RoadSearch roadSearch, LatLng startLocation, LatLng endLocation, RoadSearchCallback callback) {
         this.mType = type;
         this.roadSearchCallback = callback;
         this.roadSearch = roadSearch;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
     }
 
 
@@ -77,12 +80,16 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
 
     @Override
     protected RoadResult doInBackground(Void... params) {
-        RoadResult result = ServiceFacade.getInstance().searchRoads(mType, roadSearch);
-        result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
+        RoadResult result = new MyBusServiceImpl().searchRoads(mType, roadSearch);
+        if (startLocation != null && firstBusStop != null) {
+            result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
+        }
         if (midStartStop != null && midEndStop != null) {
             result.addWalkingDirection(ServiceFacade.getInstance().getDirection(midStartStop, midEndStop));
         }
-        result.addWalkingDirection(ServiceFacade.getInstance().getDirection(endLocation, endBusStop));
+        if (endLocation != null && endBusStop != null) {
+            result.addWalkingDirection(ServiceFacade.getInstance().getDirection(endLocation, endBusStop));
+        }
         return result;
     }
 
