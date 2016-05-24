@@ -88,4 +88,10 @@ public class BusRouteFragment extends Fragment {
             mMapBusRoad.showBusRoadFromMap(show);
         }
     }
+
+    public void clearBusRoadFromMap() {
+        if (mMapBusRoad != null) {
+            mMapBusRoad.clearBusRoadFromMap();
+        }
+    }
 }

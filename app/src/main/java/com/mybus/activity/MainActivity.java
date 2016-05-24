@@ -292,9 +292,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            if (isBusRouteFragmentPresent(tab.getPosition())) {
-                mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(false);
-            }
+            clearCurrentBusRouteOnMap();
         }
 
         @Override
@@ -600,9 +598,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Clears all markers and polyline for a previous route
      */
-    private void clearBusRouteOnMap() {
+    private void clearCurrentBusRouteOnMap() {
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
-            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).clearBusRoadFromMap();
+        }
+    }
+
+    /**
+     * Clears all markers and polyline
+     */
+    private void clearBusRouteOnMap() {
+        if (mViewPagerAdapter != null) {
+            mViewPagerAdapter.clearBusRoutes();
         }
     }
 
