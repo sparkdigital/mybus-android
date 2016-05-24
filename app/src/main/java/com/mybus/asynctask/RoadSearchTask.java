@@ -3,17 +3,11 @@ package com.mybus.asynctask;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.model.DirectionsResult;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.model.Road.RoadSearch;
 import com.mybus.service.ServiceFacade;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 
 /**

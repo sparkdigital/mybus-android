@@ -3,14 +3,9 @@ package com.mybus.asynctask;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.mybus.service.ServiceFacade;
 import com.mybus.model.BusRouteResult;
+import com.mybus.service.ServiceFacade;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.List;
 
 
