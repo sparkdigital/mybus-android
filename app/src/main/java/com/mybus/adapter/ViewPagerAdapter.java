@@ -69,4 +69,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         }
         return view;
     }
+
+    public void clearBusRoutes() {
+        if (mFragmentList != null) {
+            for (BusRouteFragment busRoute : mFragmentList) {
+                busRoute.clearBusRoadFromMap();
+            }
+        }
+    }
+
 }
