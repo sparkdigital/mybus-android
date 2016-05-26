@@ -39,9 +39,7 @@ import com.mybus.R;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RoadSearchCallback;
-import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
-import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
@@ -296,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            clearCurrentBusRouteOnMap();
+            hideCurrentBusRouteOnMap();
         }
 
         @Override
@@ -523,7 +521,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (busRouteResult == null) {
             return;
         }
-        clearBusRouteOnMap();
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
         ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
     }
@@ -600,11 +597,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Clears all markers and polyline for a previous route
+     * Hide all markers and polyline for a previous route
      */
-    private void clearCurrentBusRouteOnMap() {
+    private void hideCurrentBusRouteOnMap() {
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
-            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).clearBusRoadFromMap();
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
         }
     }
 
@@ -633,7 +630,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @param show
      */
     private void showBottomSheetResults(boolean show) {
-        if (mBottomSheet != null && mBottomSheet!=null) {
+        if (mBottomSheet != null) {
             if (show) {
                 mBottomSheet.setVisibility(View.VISIBLE);
             } else {
