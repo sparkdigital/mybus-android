@@ -68,10 +68,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String TAG = "MainActivity";
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
-    @Bind(R.id.app_bar_layout)
-    AppBarLayout mAppBarLayout;
-    @Bind(R.id.floating_action_button)
-    FloatingActionButton mFloatingSearchButton;
     @Bind(R.id.center_location_action_button)
     FloatingActionButton mCenterLocationButton;
     @Bind(R.id.perform_search_action_button)
@@ -114,19 +110,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int BOTTOM_SHEET_PEEK_HEIGHT = 100;
     private ProgressDialog mDialog;
     private Context mContext;
-
-    /**
-     * Checks the state of the AppBarLayout
-     */
-    private AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarStateChangeListener() {
-        @Override
-        public void onStateChanged(AppBarLayout appBarLayout, State state) {
-            mAppBarState = state;
-            if (state.equals(State.COLLAPSED)) {
-                showSoftKeyBoard(false);
-            }
-        }
-    };
 
     /**
      * Listener for To_TextView, makes the search when the user hits the magnifying glass
@@ -303,14 +286,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
 
-
-    @OnClick(R.id.floating_action_button)
-    public void onFloatingSearchButton(View view) {
-        mAppBarLayout.setExpanded(true, true);
-        mFromInput.requestFocus();
-        showSoftKeyBoard(true);
-    }
-
     @OnClick(R.id.center_location_action_button)
     public void onCenterLocationButtonClick(View view) {
         if (DeviceRequirementsChecker.checkGpsEnabled(this)) {
@@ -341,7 +316,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
         StreetAutoCompleteAdapter autoCompleteAdapter = new StreetAutoCompleteAdapter(MainActivity.this);
 
