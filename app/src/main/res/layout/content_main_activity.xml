@@ -20,7 +20,7 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appBarLayout" />
+            android:layout_below="@id/appBarLayout"/>
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
