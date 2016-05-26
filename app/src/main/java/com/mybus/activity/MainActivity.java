@@ -39,9 +39,7 @@ import com.mybus.R;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RoadSearchCallback;
-import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
-import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
@@ -213,6 +211,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, boolean performGeocoding) {
+        clearBusRouteOnMap();
+        showBottomSheetResults(false);
         if (marker == null) {
             markerOptions.position(latLng);
             marker = mMap.addMarker(markerOptions);
@@ -239,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onMarkerDragStart(Marker marker) {
             marker.hideInfoWindow();
+            clearBusRouteOnMap();
+            showBottomSheetResults(false);
         }
 
         @Override
@@ -292,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            clearCurrentBusRouteOnMap();
+            hideCurrentBusRouteOnMap();
         }
 
         @Override
@@ -519,7 +521,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (busRouteResult == null) {
             return;
         }
-        clearBusRouteOnMap();
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
         ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
     }
@@ -596,11 +597,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Clears all markers and polyline for a previous route
+     * Hide all markers and polyline for a previous route
      */
-    private void clearCurrentBusRouteOnMap() {
+    private void hideCurrentBusRouteOnMap() {
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
-            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).clearBusRoadFromMap();
+            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
         }
     }
 
