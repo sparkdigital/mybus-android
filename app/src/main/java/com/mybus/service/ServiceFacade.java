@@ -5,6 +5,10 @@ import android.content.Context;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.PendingResult;
 import com.google.maps.model.DirectionsResult;
+import com.mybus.asynctask.RoadSearchCallback;
+import com.mybus.asynctask.RoadSearchTask;
+import com.mybus.asynctask.RouteSearchCallback;
+import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
@@ -53,17 +57,21 @@ public class ServiceFacade {
      * @param destiny
      * @return
      */
-    public List<BusRouteResult> searchRoutes(LatLng origin, LatLng destiny) {
-        return myBusService.searchRoutes(origin, destiny);
+    public void searchRoutes(LatLng origin, LatLng destiny, RouteSearchCallback rsCallback) {
+        RouteSearchTask routeSearchTask = new RouteSearchTask(origin, destiny, rsCallback);
+        routeSearchTask.execute();
     }
 
     /**
-     * @param mType
-     * @param roadSearch
-     * @return
+     * @param type
+     * @param route
+     * @param startLocation
+     * @param endLocation
+     * @param callback
      */
-    public RoadResult searchRoads(int mType, RoadSearch roadSearch) {
-        return myBusService.searchRoads(mType, roadSearch);
+    public void searchRoads(int type, BusRouteResult route, LatLng startLocation, LatLng endLocation, RoadSearchCallback callback) {
+        RoadSearchTask routeSearchTask = new RoadSearchTask(type, route, startLocation, endLocation, callback);
+        routeSearchTask.execute();
     }
 
     /**

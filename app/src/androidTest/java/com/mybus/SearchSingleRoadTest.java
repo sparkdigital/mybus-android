@@ -2,6 +2,7 @@ package com.mybus;
 
 import android.test.InstrumentationTestCase;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.model.Road.RoadResult;
@@ -23,7 +24,9 @@ public class SearchSingleRoadTest extends InstrumentationTestCase implements Roa
     protected void setUp() throws Exception {
         super.setUp();
         RoadSearch roadSearch = new RoadSearch("1", "0", "24", "39");
-        mAsycTask = new RoadSearchTask(0, roadSearch, this);
+        LatLng origin = new LatLng(-38.10821902246196,-57.59124767035246);
+        LatLng destiny = new LatLng(-37.954447126607825,-57.59074375033378);
+        mAsycTask = new RoadSearchTask(0, roadSearch, origin, destiny, this);
         signal = new CountDownLatch(1); //CountDownLatch used to perform wait-notify behaviour
     }
 

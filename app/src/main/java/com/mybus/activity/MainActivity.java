@@ -39,9 +39,7 @@ import com.mybus.R;
 import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RoadSearchCallback;
-import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
-import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CustomAutoCompleteClickListener;
@@ -196,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, boolean performGeocoding) {
+        clearBusRouteOnMap();
+        showBottomSheetResults(false);
         if (marker == null) {
             markerOptions.position(latLng);
             marker = mMap.addMarker(markerOptions);
@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onMarkerDragStart(Marker marker) {
             marker.hideInfoWindow();
+            clearBusRouteOnMap();
+            showBottomSheetResults(false);
         }
 
         @Override
@@ -275,9 +277,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            if (isBusRouteFragmentPresent(tab.getPosition())) {
-                mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(false);
-            }
+            hideCurrentBusRouteOnMap();
         }
 
         @Override
@@ -480,8 +480,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             clearBusRouteOnMap();
             showBottomSheetResults(false);
             showProgressDialog(getString(R.string.toast_searching));
-            RouteSearchTask routeSearchTask = new RouteSearchTask(this);
-            routeSearchTask.execute(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition());
+            ServiceFacade.getInstance().searchRoutes(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), this);
         } else {
             Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
@@ -496,10 +495,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (busRouteResult == null) {
             return;
         }
-        clearBusRouteOnMap();
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
-        RoadSearchTask routeSearchTask = new RoadSearchTask(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
-        routeSearchTask.execute();
+        ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
     }
 
     @Override
@@ -574,11 +571,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Clears all markers and polyline for a previous route
+     * Hide all markers and polyline for a previous route
      */
-    private void clearBusRouteOnMap() {
+    private void hideCurrentBusRouteOnMap() {
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
+        }
+    }
+
+    /**
+     * Clears all markers and polyline
+     */
+    private void clearBusRouteOnMap() {
+        if (mViewPagerAdapter != null) {
+            mViewPagerAdapter.clearBusRoutes();
         }
     }
 
