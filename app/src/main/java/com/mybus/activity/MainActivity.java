@@ -213,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, boolean performGeocoding) {
+        clearBusRouteOnMap();
+        showBottomSheetResults(false);
         if (marker == null) {
             markerOptions.position(latLng);
             marker = mMap.addMarker(markerOptions);
@@ -239,6 +241,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onMarkerDragStart(Marker marker) {
             marker.hideInfoWindow();
+            clearBusRouteOnMap();
+            showBottomSheetResults(false);
         }
 
         @Override
@@ -629,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @param show
      */
     private void showBottomSheetResults(boolean show) {
-        if (mBottomSheet != null) {
+        if (mBottomSheet != null && mBottomSheet!=null) {
             if (show) {
                 mBottomSheet.setVisibility(View.VISIBLE);
             } else {

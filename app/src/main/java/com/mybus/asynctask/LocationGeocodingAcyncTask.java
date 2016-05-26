@@ -50,7 +50,9 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, String> 
         } else {
             Address address = addresses.get(0);
             Log.i(TAG, "address_found");
-            return address.getThoroughfare() + " " + address.getFeatureName();
+            String addressThoroughfare = address.getThoroughfare() != null ? address.getThoroughfare() : "";
+            String addressFeatureName = address.getFeatureName() != null ? address.getFeatureName() : "";
+            return addressThoroughfare + " " + addressFeatureName;
         }
         return null;
     }
