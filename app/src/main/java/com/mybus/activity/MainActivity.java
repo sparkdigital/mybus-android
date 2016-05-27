@@ -465,11 +465,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             if (lastAddressGeocodingType == mEndLocationMarkerOptions) {
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location, false);
-                if (mStartLocationMarker ==  null || !mStartLocationMarker.isVisible()) {
+                if (mStartLocationMarker == null || !mStartLocationMarker.isVisible()) {
                     zoomTo(location);
                 }
             }
             zoomOutStartEndMarkers();
+        } else {
+            Toast.makeText(mContext, getResources().getString(R.string.invalidAddress), Toast.LENGTH_SHORT).show();
         }
     }
 
