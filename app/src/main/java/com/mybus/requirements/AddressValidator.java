@@ -1,8 +1,8 @@
 package com.mybus.requirements;
 
-public class AddressValidaror {
+public class AddressValidator {
 
-    private static final long MAX_NUMBER = 9999;
+    private static final int MAX_NUMBER = 20000;
 
     /**
      *
@@ -27,7 +27,10 @@ public class AddressValidaror {
      * @param text
      * @return
      */
-    private static boolean isValisCharacters(String text) {
+    private static boolean isValidCharacters(String text) {
+        if (text == null) {
+            return false;
+        }
         //regular expresion
         String pattern = "[a-zA-Z0-9 ,-]+";
         return text.matches(pattern);
@@ -39,7 +42,7 @@ public class AddressValidaror {
      * @return
      */
     public static boolean isValidAddress(String address) {
-        if (!isValisCharacters(address)) {
+        if (!isValidCharacters(address)) {
             return false;
         }
         Long number = getStreetNumber(address);

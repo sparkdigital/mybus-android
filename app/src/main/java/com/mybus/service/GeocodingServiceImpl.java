@@ -7,7 +7,7 @@ import com.mybus.asynctask.AddressGeocodingAcyncTask;
 import com.mybus.asynctask.LocationGeocodingAcyncTask;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
-import com.mybus.requirements.AddressValidaror;
+import com.mybus.requirements.AddressValidator;
 
 public class GeocodingServiceImpl implements GeocodingService {
 
@@ -20,7 +20,7 @@ public class GeocodingServiceImpl implements GeocodingService {
 
     @Override
     public void performGeocodeByAddress(String address, OnAddressGeocodingCompleteCallback callback, Context context) {
-        if (!AddressValidaror.isValidAddress(address)) {
+        if (!AddressValidator.isValidAddress(address)) {
             callback.onAddressGeocodingComplete(null);
             return;
         }
