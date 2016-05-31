@@ -6,6 +6,10 @@ node {
     echo "Checking out the code from Github"
     checkout scm
 
+    echo "Running Instrumentation Tests"
+    build job: ' ../mybus-emulator/branch/${BRANCH_NAME}'
+
+
     echo "Building and running the unit tests for the project"
     sh './gradlew clean test'
 
