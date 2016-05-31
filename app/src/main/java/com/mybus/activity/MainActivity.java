@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "MainActivity";
+    public static final int FROM_SEARCH_RESULT_ID = 1;
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
     @Bind(R.id.perform_search_action_button)
@@ -336,16 +337,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
             @Override
             public void onFocus() {
-                mToolbar.closeMenu(false);
-                mToolbar.clearSearchFocus();
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+                startActivityForResult(new Intent(MainActivity.this, SearchActivity.class), FROM_SEARCH_RESULT_ID);
+                overridePendingTransition(0,0);
             }
 
             @Override
-            public void onFocusCleared() {
-                return;
-            }
+            public void onFocusCleared() {}
         });
 
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
@@ -636,5 +633,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mToolbar.clearSearchFocus();
+        mToolbar.closeMenu(false);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FROM_SEARCH_RESULT_ID) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    Toast.makeText(this, data.getStringExtra("TEXT"), Toast.LENGTH_SHORT).show();
+                    break;
+                case RESULT_CANCELED:
+                    Toast.makeText(this, "FALLO", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

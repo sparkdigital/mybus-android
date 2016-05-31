@@ -1,11 +1,12 @@
 package com.mybus.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -27,6 +28,8 @@ public class SearchActivity extends AppCompatActivity {
 
     @Bind(R.id.floating_search_view)
     FloatingSearchView mSearchView;
+    @Bind(R.id.searchContent)
+    LinearLayout mSearchContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
         initSearchView();
+        Animation bottomUp = AnimationUtils.loadAnimation(this,R.anim.bottom_up);
+        mSearchContent.startAnimation(bottomUp);
     }
 
     private void initSearchView() {
@@ -77,6 +82,11 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 Log.d(TAG, "onSuggestionClicked()");
+                Intent intent = new Intent();
+                intent.putExtra("TEXT", searchSuggestion.getBody());
+                setResult(RESULT_OK, intent);
+                overridePendingTransition(0,0);
+                finish();
             }
 
             @Override
@@ -112,8 +122,9 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //Replacing the transaction between the activities
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        overridePendingTransition(0,0);
         finish();
     }
 }
