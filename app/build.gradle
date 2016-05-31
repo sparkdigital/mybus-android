@@ -13,7 +13,7 @@ android {
     buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.mybus"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -44,5 +44,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
-
+    compile 'com.github.arimorty:floatingsearchview:1.1.2'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
