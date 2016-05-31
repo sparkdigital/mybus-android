@@ -46,9 +46,6 @@ public class AddressValidator {
             return false;
         }
         Long number = getStreetNumber(address);
-        if (number == null) {
-            return true;
-        }
-        return number < MAX_NUMBER;
+        return number != null && number < MAX_NUMBER;
     }
 }
