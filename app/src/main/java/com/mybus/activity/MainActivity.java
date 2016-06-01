@@ -3,7 +3,6 @@ package com.mybus.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
@@ -20,10 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
-import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,8 +35,6 @@ import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.fragment.BusRouteFragment;
-import com.mybus.helper.ColorSuggestion;
-import com.mybus.helper.DataHelper;
 import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
@@ -121,11 +114,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     };
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     /**
      * Makes a zoom in the map using a LatLng
@@ -302,9 +290,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         resetLocalVariables();
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initDrawer() {
