@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,19 +11,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,7 +36,6 @@ import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
-import com.mybus.listener.CustomAutoCompleteClickListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
@@ -64,22 +57,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "MainActivity";
+    public static final int FROM_SEARCH_RESULT_ID = 1;
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
-    @Bind(R.id.center_location_action_button)
-    FloatingActionButton mCenterLocationButton;
     @Bind(R.id.perform_search_action_button)
     FloatingActionButton mPerformSearchButton;
-    @Bind(R.id.from_field)
-    AppCompatAutoCompleteTextView mFromInput;
-    @Bind(R.id.to_field)
-    AppCompatAutoCompleteTextView mToInput;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
     @Bind(R.id.drawer_layout)
-    DrawerLayout drawer;
+    DrawerLayout mDrawerLayout;
     @Bind(R.id.nav_view)
     NavigationView navigationView;
+    @Bind(R.id.mainActivityBar)
+    FloatingSearchView mToolbar;
 
     MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
@@ -110,31 +98,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Context mContext;
 
     /**
-     * Listener for To_TextView, makes the search when the user hits the magnifying glass
-     */
-    private TextView.OnEditorActionListener mOnEditorAndroidListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView tv, int actionId, KeyEvent event) {
-            String address = tv.getText().toString();
-            if ((tv.getId() == mFromInput.getId()) && actionId == EditorInfo.IME_ACTION_NEXT) {
-                setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
-                lastAddressGeocodingType = mStartLocationMarkerOptions;
-                ServiceFacade.getInstance().performGeocodeByAddress(address, MainActivity.this, mContext);
-                mToInput.requestFocus();
-                return true;
-            }
-            if ((tv.getId() == mToInput.getId()) && actionId == EditorInfo.IME_ACTION_SEARCH) {
-                setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
-                lastAddressGeocodingType = mEndLocationMarkerOptions;
-                ServiceFacade.getInstance().performGeocodeByAddress(address, MainActivity.this, mContext);
-                showSoftKeyBoard(false);
-                return true;
-            }
-            return false;
-        }
-    };
-
-    /**
      * Listener for Map Long Click Listener for setting start or end locations.
      */
     private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
@@ -154,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Makes a zoom in the map using a LatLng
+     *
      * @param latLng
      */
     private void zoomTo(LatLng latLng) {
@@ -162,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Makes a zoom in the map using a LatLngBounds (created with one or several LatLng's)
+     *
      * @param bounds
      */
     private void zoomTo(LatLngBounds bounds) {
@@ -173,12 +138,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Makes a zoom out in the map to keep all the markers received in view.
      */
     private void zoomOut(List<Marker> markerList) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (Marker marker : markerList) {
-                builder.include(marker.getPosition());
-            }
-            LatLngBounds bounds = builder.build();
-            zoomTo(bounds);
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markerList) {
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+        zoomTo(bounds);
     }
 
     /**
@@ -246,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p/>
+     * <p>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -305,12 +270,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        initToolbar();
+        initDrawer();
         navigationView.setNavigationItemSelectedListener(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -318,14 +279,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         StreetAutoCompleteAdapter autoCompleteAdapter = new StreetAutoCompleteAdapter(MainActivity.this);
-
-        mFromInput.setAdapter(autoCompleteAdapter);
-        mFromInput.setOnEditorActionListener(mOnEditorAndroidListener);
-        mFromInput.setOnItemClickListener(new CustomAutoCompleteClickListener(mFromInput));
-
-        mToInput.setAdapter(autoCompleteAdapter);
-        mToInput.setOnItemClickListener(new CustomAutoCompleteClickListener(mToInput));
-        mToInput.setOnEditorActionListener(mOnEditorAndroidListener);
 
         mLocationUpdater = new LocationUpdater(this, this);
         mUserLocationMarkerOptions = new MarkerOptions()
@@ -337,6 +290,62 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         resetLocalVariables();
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
+    }
+
+    private void initDrawer() {
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+                //since the drawer might have opened as a results of
+                //a click on the left menu, we need to make sure
+                //to close it right after the drawer opens, so that
+                //it is closed when the drawer is  closed.
+                mToolbar.closeMenu(false);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+    }
+
+    private void initToolbar() {
+        mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
+            @Override
+            public void onFocus() {
+                startActivityForResult(new Intent(MainActivity.this, SearchActivity.class), FROM_SEARCH_RESULT_ID);
+                overridePendingTransition(0,0);
+            }
+
+            @Override
+            public void onFocusCleared() {}
+        });
+
+        //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
+        mToolbar.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
+            @Override
+            public void onMenuOpened() {
+                Log.d(TAG, "onMenuOpened()");
+
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            }
+
+            @Override
+            public void onMenuClosed() {
+                Log.d(TAG, "onMenuClosed()");
+
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
     }
 
     private void setupBottomSheet() {
@@ -402,27 +411,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /**
-     * Show or hide the soft keyboard
-     *
-     * @param show
-     */
-    private void showSoftKeyBoard(boolean show) {
-        View view = this.getCurrentFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (view != null) {
-            if (show) {
-                imm.showSoftInput(mFromInput, InputMethodManager.SHOW_IMPLICIT);
-            } else {
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-        }
-    }
-
     @Override
     public void onBackPressed() {
-        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
             return;
         }
         super.onBackPressed();
@@ -439,7 +431,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             if (lastAddressGeocodingType == mEndLocationMarkerOptions) {
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location, false);
-                if (mStartLocationMarker ==  null || !mStartLocationMarker.isVisible()) {
+                if (mStartLocationMarker == null || !mStartLocationMarker.isVisible()) {
                     zoomTo(location);
                 }
             }
@@ -460,11 +452,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (address != null) {
             if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
-                mFromInput.setText(address);
             }
             if (lastLocationGeocodingType == mEndLocationMarkerOptions) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
-                mToInput.setText(address);
             }
         }
     }
@@ -616,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         //TODO: Implement the item selected actions
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         switch (item.getItemId()) {
             case R.id.drawerCosts:
                 startActivity(new Intent(MainActivity.this, DisplayFaresActivity.class));
@@ -630,5 +620,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mToolbar.clearSearchFocus();
+        mToolbar.closeMenu(false);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FROM_SEARCH_RESULT_ID) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    Toast.makeText(this, data.getStringExtra("TEXT"), Toast.LENGTH_SHORT).show();
+                    break;
+                case RESULT_CANCELED:
+                    Toast.makeText(this, "FALLO", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

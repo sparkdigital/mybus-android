@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/splash_logo_layout_height"
         android:layout_centerInParent="true"
         android:src="@drawable/mybus_logo" />
