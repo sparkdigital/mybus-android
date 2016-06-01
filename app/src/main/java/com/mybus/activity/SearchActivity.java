@@ -25,7 +25,8 @@ import butterknife.ButterKnife;
  */
 public class SearchActivity extends AppCompatActivity {
 
-    public static final String TAG = "SearchActivity";
+    private static final String TAG = "SearchActivity";
+    public static final String SEARCH_TITLE = "SEARCH_TITLE";
 
     @Bind(R.id.floating_search_view)
     FloatingSearchView mSearchView;
@@ -37,6 +38,11 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+
+        if (getIntent().getStringExtra(SEARCH_TITLE) != null) {
+            mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE));
+        }
+
         initSearchView();
         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);

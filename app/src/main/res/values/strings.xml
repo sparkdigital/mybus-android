@@ -20,4 +20,5 @@
     <string name="dialog_searching_specific_route">Obteniendo ruta de colectivo</string>
     <string name="displayFaresToolbarTittle">Tarifas</string>
     <string name="displayFavoritesToolbarTittle">Favoritos</string>
+    <string name="floating_search_origin">Origen de tu viaje...</string>
 </resources>

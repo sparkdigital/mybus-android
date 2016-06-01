@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p>
+     * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -319,12 +319,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
             @Override
             public void onFocus() {
-                startActivityForResult(new Intent(MainActivity.this, SearchActivity.class), FROM_SEARCH_RESULT_ID);
-                overridePendingTransition(0,0);
+                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                searchIntent.putExtra(SearchActivity.SEARCH_TITLE, getString(R.string.floating_search_origin));
+                startActivityForResult(searchIntent, FROM_SEARCH_RESULT_ID);
+                overridePendingTransition(0, 0);
             }
 
             @Override
-            public void onFocusCleared() {}
+            public void onFocusCleared() {
+            }
         });
 
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
