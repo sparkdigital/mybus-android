@@ -11,8 +11,9 @@ import android.widget.LinearLayout;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.mybus.R;
-import com.mybus.helper.ColorSuggestion;
-import com.mybus.helper.DataHelper;
+import com.mybus.helper.SearchSuggestionsHelper;
+import com.mybus.listener.OnFindResultsListener;
+import com.mybus.model.StreetSuggestion;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
         initSearchView();
-        Animation bottomUp = AnimationUtils.loadAnimation(this,R.anim.bottom_up);
+        Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);
     }
 
@@ -58,10 +59,10 @@ public class SearchActivity extends AppCompatActivity {
 
                     //simulates a query call to a data source
                     //with a new query.
-                    DataHelper.find(SearchActivity.this, newQuery, new DataHelper.OnFindResultsListener() {
+                    SearchSuggestionsHelper.findStreets(newQuery, new OnFindResultsListener() {
 
                         @Override
-                        public void onResults(List<ColorSuggestion> results) {
+                        public void onResults(List<StreetSuggestion> results) {
 
                             //this will swap the data and
                             //render the collapse/expand animations as necessary
@@ -85,7 +86,7 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("TEXT", searchSuggestion.getBody());
                 setResult(RESULT_OK, intent);
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 finish();
             }
 
@@ -99,7 +100,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onFocus() {
                 //show suggestions when search bar gains focus (typically history suggestions)
-                mSearchView.swapSuggestions(DataHelper.getHistory(SearchActivity.this, 3));
+                mSearchView.swapSuggestions(SearchSuggestionsHelper.getHistory(3));
                 Log.d(TAG, "onFocus()");
             }
 
@@ -124,7 +125,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         finish();
     }
 }
