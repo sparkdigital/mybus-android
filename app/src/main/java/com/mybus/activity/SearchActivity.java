@@ -25,8 +25,10 @@ import butterknife.ButterKnife;
  */
 public class SearchActivity extends AppCompatActivity {
 
-    private static final String TAG = "SearchActivity";
-    public static final String SEARCH_TITLE = "SEARCH_TITLE";
+    public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
+    public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
+
+    private static final String TAG = SearchActivity.class.getSimpleName();
 
     @Bind(R.id.floating_search_view)
     FloatingSearchView mSearchView;
@@ -39,8 +41,8 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        if (getIntent().getStringExtra(SEARCH_TITLE) != null) {
-            mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE));
+        if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
+            mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
         }
 
         initSearchView();
@@ -90,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 Log.d(TAG, "onSuggestionClicked()");
                 Intent intent = new Intent();
-                intent.putExtra("TEXT", searchSuggestion.getBody());
+                intent.putExtra(RESULT_STREET_EXTRA, searchSuggestion.getBody());
                 setResult(RESULT_OK, intent);
                 overridePendingTransition(0, 0);
                 finish();

@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class StreetSuggestionFilter extends Filter {
 
-    private OnFindResultsListener listener;
+    private OnFindResultsListener mListener;
 
     public StreetSuggestionFilter(OnFindResultsListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
     }
 
     @Override
@@ -43,8 +43,8 @@ public class StreetSuggestionFilter extends Filter {
 
     @Override
     public void publishResults(CharSequence constraint, FilterResults results) {
-        if (listener != null)
-            listener.onResults((List<StreetSuggestion>) results.values);
+        if (mListener != null)
+            mListener.onResults((List<StreetSuggestion>) results.values);
     }
 
 
