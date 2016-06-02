@@ -11,8 +11,9 @@ import android.widget.LinearLayout;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.mybus.R;
-import com.mybus.helper.ColorSuggestion;
-import com.mybus.helper.DataHelper;
+import com.mybus.helper.SearchSuggestionsHelper;
+import com.mybus.listener.OnFindResultsListener;
+import com.mybus.model.StreetSuggestion;
 
 import java.util.List;
 
@@ -24,7 +25,10 @@ import butterknife.ButterKnife;
  */
 public class SearchActivity extends AppCompatActivity {
 
-    public static final String TAG = "SearchActivity";
+    public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
+    public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
+
+    private static final String TAG = SearchActivity.class.getSimpleName();
 
     @Bind(R.id.floating_search_view)
     FloatingSearchView mSearchView;
@@ -36,8 +40,13 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+
+        if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
+            mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
+        }
+
         initSearchView();
-        Animation bottomUp = AnimationUtils.loadAnimation(this,R.anim.bottom_up);
+        Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);
     }
 
@@ -58,10 +67,10 @@ public class SearchActivity extends AppCompatActivity {
 
                     //simulates a query call to a data source
                     //with a new query.
-                    DataHelper.find(SearchActivity.this, newQuery, new DataHelper.OnFindResultsListener() {
+                    SearchSuggestionsHelper.findStreets(newQuery, new OnFindResultsListener() {
 
                         @Override
-                        public void onResults(List<ColorSuggestion> results) {
+                        public void onResults(List<StreetSuggestion> results) {
 
                             //this will swap the data and
                             //render the collapse/expand animations as necessary
@@ -83,29 +92,15 @@ public class SearchActivity extends AppCompatActivity {
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 Log.d(TAG, "onSuggestionClicked()");
                 Intent intent = new Intent();
-                intent.putExtra("TEXT", searchSuggestion.getBody());
+                intent.putExtra(RESULT_STREET_EXTRA, searchSuggestion.getBody());
                 setResult(RESULT_OK, intent);
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 finish();
             }
 
             @Override
             public void onSearchAction() {
                 Log.d(TAG, "onSearchAction()");
-            }
-        });
-
-        mSearchView.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
-            @Override
-            public void onFocus() {
-                //show suggestions when search bar gains focus (typically history suggestions)
-                mSearchView.swapSuggestions(DataHelper.getHistory(SearchActivity.this, 3));
-                Log.d(TAG, "onFocus()");
-            }
-
-            @Override
-            public void onFocusCleared() {
-                Log.d(TAG, "onFocusCleared()");
             }
         });
 
@@ -124,7 +119,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         finish();
     }
 }
