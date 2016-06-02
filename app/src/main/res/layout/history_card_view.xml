@@ -19,5 +19,5 @@
         android:scrollbars="vertical"
         android:layout_marginTop="@dimen/search_view_inset"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

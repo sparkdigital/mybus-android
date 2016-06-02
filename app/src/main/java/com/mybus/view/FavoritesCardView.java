@@ -14,13 +14,13 @@ import com.mybus.adapter.FavoriteItemAdapter;
  */
 public class FavoritesCardView extends CardView {
 
-    private FavoriteItemSelectedListener mHistoryItemSelectedListener;
+    private FavoriteItemSelectedListener mFavoriteItemSelectedListener;
     private RecyclerView mFavoriteItemsList;
     private RecyclerView.Adapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public void setFavoriteItemSelectedListener(FavoriteItemSelectedListener mHistoryItemSelectedListener) {
-        this.mHistoryItemSelectedListener = mHistoryItemSelectedListener;
+        this.mFavoriteItemSelectedListener = mHistoryItemSelectedListener;
     }
 
     public FavoritesCardView(Context context, AttributeSet attrs) {
@@ -42,7 +42,7 @@ public class FavoritesCardView extends CardView {
         mFavoriteItemsList.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        String[] myDataSet = {"Casa", "Trabajo"};
+        String[] myDataSet = {"Casa", "Trabajo", "Gym", "Casa Novia", "Casa", "Trabajo", "Gym", "Casa Novia"};
         mListAdapter = new FavoriteItemAdapter(myDataSet);
         mFavoriteItemsList.setAdapter(mListAdapter);
     }
