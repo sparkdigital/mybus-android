@@ -13,6 +13,13 @@ import com.mybus.R;
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public class HistoryCardView extends CardView {
+
+    private HistoryItemSelectedListener mHistoryItemSelectedListener;
+
+    public void setHistoryItemSelectedListener(HistoryItemSelectedListener mHistoryItemSelectedListener) {
+        this.mHistoryItemSelectedListener = mHistoryItemSelectedListener;
+    }
+
     public HistoryCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -20,5 +27,10 @@ public class HistoryCardView extends CardView {
 
     private void init(){
         inflate(getContext(), R.layout.history_card_view, this);
+    }
+
+    public interface HistoryItemSelectedListener {
+
+        void onHistoryItemSelected(String result);
     }
 }
