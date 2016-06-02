@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -10,8 +11,32 @@
         android:id="@+id/searchContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="#E7E7E7"
         android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+
+        <com.mybus.view.HistoryCardView
+            android:id="@+id/card_view_recent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/search_view_inset"
+            android:layout_marginRight="@dimen/search_view_inset"
+            android:layout_weight="1"
+            card_view:cardCornerRadius="4dp" />
+
+        <com.mybus.view.FavoritesCardView
+            android:id="@+id/card_view_favorites"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/search_view_inset"
+            android:layout_marginBottom="@dimen/search_view_inset"
+            android:layout_marginLeft="@dimen/search_view_inset"
+            android:layout_marginRight="@dimen/search_view_inset"
+            android:layout_weight="1"
+            card_view:cardCornerRadius="4dp" />
     </LinearLayout>
 
     <com.arlib.floatingsearchview.FloatingSearchView
