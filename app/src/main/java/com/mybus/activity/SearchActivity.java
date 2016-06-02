@@ -104,20 +104,6 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        mSearchView.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
-            @Override
-            public void onFocus() {
-                //show suggestions when search bar gains focus (typically history suggestions)
-                mSearchView.swapSuggestions(SearchSuggestionsHelper.getHistory(3));
-                Log.d(TAG, "onFocus()");
-            }
-
-            @Override
-            public void onFocusCleared() {
-                Log.d(TAG, "onFocusCleared()");
-            }
-        });
-
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHome"
         mSearchView.setOnHomeActionClickListener(new FloatingSearchView.OnHomeActionClickListener() {
             @Override
