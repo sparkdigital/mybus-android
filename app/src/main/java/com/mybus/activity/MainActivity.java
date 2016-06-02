@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
-import com.mybus.adapter.StreetAutoCompleteAdapter;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
@@ -211,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p>
+     * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -278,8 +277,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        StreetAutoCompleteAdapter autoCompleteAdapter = new StreetAutoCompleteAdapter(MainActivity.this);
-
         mLocationUpdater = new LocationUpdater(this, this);
         mUserLocationMarkerOptions = new MarkerOptions()
                 .title(getString(R.string.current_location_marker))
@@ -322,12 +319,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
             @Override
             public void onFocus() {
-                startActivityForResult(new Intent(MainActivity.this, SearchActivity.class), FROM_SEARCH_RESULT_ID);
-                overridePendingTransition(0,0);
+                startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID);
             }
 
             @Override
-            public void onFocusCleared() {}
+            public void onFocusCleared() {
+            }
         });
 
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
@@ -627,12 +624,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToolbar.closeMenu(false);
     }
 
+    /**
+     * @param searchHint
+     * @param requestCode
+     */
+    private void startSearchActivity(int searchHint, int requestCode) {
+        Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+        searchIntent.putExtra(SearchActivity.SEARCH_TITLE_EXTRA, getString(searchHint));
+        startActivityForResult(searchIntent, requestCode);
+        overridePendingTransition(0, 0);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FROM_SEARCH_RESULT_ID) {
             switch (resultCode) {
                 case RESULT_OK:
-                    Toast.makeText(this, data.getStringExtra("TEXT"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA),
+                            Toast.LENGTH_SHORT).show();
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(this, "FALLO", Toast.LENGTH_SHORT).show();
