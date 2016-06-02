@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.arlib.floatingsearchview.util.Util;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.helper.SearchSuggestionsHelper;
@@ -106,6 +107,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             @Override
             public void onSearchAction(String currentQuery) {
                 Log.d(TAG, "onSearchAction()");
+                Util.closeSoftKeyboard(SearchActivity.this);
                 showProgressDialog(getString(R.string.toast_searching_address));
                 mCurrentQuery = currentQuery;
                 ServiceFacade.getInstance().performGeocodeByAddress(currentQuery, SearchActivity.this, SearchActivity.this);

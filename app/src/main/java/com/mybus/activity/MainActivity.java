@@ -297,16 +297,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onDrawerOpened(View drawerView) {
-
-                //since the drawer might have opened as a results of
-                //a click on the left menu, we need to make sure
-                //to close it right after the drawer opens, so that
-                //it is closed when the drawer is  closed.
-                mToolbar.closeMenu(false);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
+                mToolbar.closeMenu(false);
             }
 
             @Override
