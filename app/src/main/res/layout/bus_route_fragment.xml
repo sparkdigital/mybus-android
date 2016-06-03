@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/bondi_circulo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stop_origin_title"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/stop_origin_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dorrego 4230"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/route_walk_origin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="menos de 3 cuadras"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorAccent"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/bondi_circulo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stop_destination_title"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/stop_destination_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Castelli 5798"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/route_walk_destination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="menos de una cuadra"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

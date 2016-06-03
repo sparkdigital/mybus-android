@@ -1,12 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        MyBusDebug {
+            keyAlias 'MyBusDebug'
+            keyPassword 'devspark'
+            storeFile file('../debugkey.jks')
+            storePassword 'devspark'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         applicationId "com.mybus"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -16,11 +23,27 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.MyBusDebug
+        }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.1'
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.json:json:20140107'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.google.maps:google-maps-services:0.1.12'
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.0.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.android.support:cardview-v7:23.4.0'
+    compile project(path: ':FloatingSearchViewLib')
 }
