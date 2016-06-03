@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.AppBarStateChangeListener;
+import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
@@ -44,6 +46,7 @@ import com.mybus.model.Road.MapBusRoad;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
 import com.mybus.service.ServiceFacade;
+import com.mybus.view.CompoundSearchBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +56,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationChangedCallback,
-        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener {
+        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener, CompoundSearchBoxListener {
 
     public static final String TAG = "MainActivity";
     public static final int FROM_SEARCH_RESULT_ID = 1;
+    public static final int TO_SEARCH_RESULT_ID = 2;
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
     @Bind(R.id.perform_search_action_button)
     FloatingActionButton mPerformSearchButton;
+    @Bind(R.id.compoundSearchBox)
+    CompoundSearchBox mCompoundSearchBox;
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.nav_view)
@@ -92,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    private final int BOTTOM_SHEET_PEEK_HEIGHT = 100;
+    private final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     private ProgressDialog mDialog;
     private Context mContext;
 
@@ -287,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         resetLocalVariables();
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
+        mCompoundSearchBox.setListener(this);
     }
 
     private void initDrawer() {
@@ -343,7 +350,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setupBottomSheet() {
         mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
+        mBottomSheetBehavior.setPeekHeight(dpToPx(BOTTOM_SHEET_PEEK_HEIGHT_DP));
+    }
+
+    /**
+     * Returns pixels dimension from DensityPoints given the display metrics from the device
+     *
+     * @param dp
+     * @return
+     */
+    private int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     /**
@@ -446,9 +465,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (address != null) {
             if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
+                mToolbar.setVisibility(View.GONE);
+                mCompoundSearchBox.setVisible(true, !mCompoundSearchBox.isVisible());
+                mCompoundSearchBox.setFromAddress(address);
             }
             if (lastLocationGeocodingType == mEndLocationMarkerOptions) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
+                mToolbar.setVisibility(View.GONE);
+                mCompoundSearchBox.setVisible(true);
+                mCompoundSearchBox.setToAddress(address);
             }
         }
     }
@@ -634,22 +659,79 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == FROM_SEARCH_RESULT_ID) {
-            switch (resultCode) {
-                case RESULT_OK:
-                    String address = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
-                    mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions,
-                            (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), false);
-                    setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
-                    zoomTo(mStartLocationMarker.getPosition());
-                    //TODO: Will be changed to show the two input search bar
-                    mToolbar.setSearchBarTitle("From: " + address);
-                    break;
-                case RESULT_CANCELED:
-                    Toast.makeText(this, "FALLO", Toast.LENGTH_SHORT).show();
-                    break;
-            }
+        switch (resultCode) {
+            case RESULT_CANCELED:
+                //TODO: The user canceled
+                break;
+            case RESULT_OK:
+                switch (requestCode) {
+                    case FROM_SEARCH_RESULT_ID:
+                        String address = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
+                        mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions,
+                                (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), false);
+                        setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
+
+                        mToolbar.setVisibility(View.GONE);
+                        mCompoundSearchBox.setVisible(true, true);
+                        mCompoundSearchBox.setFromAddress(address);
+
+                        zoomTo(mStartLocationMarker.getPosition());
+                        break;
+                    case TO_SEARCH_RESULT_ID:
+                        String addr = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
+                        mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions,
+                                (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), false);
+                        setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, addr);
+
+                        mToolbar.setVisibility(View.GONE);
+                        mCompoundSearchBox.setVisible(true);
+                        mCompoundSearchBox.setToAddress(addr);
+
+                        zoomOutStartEndMarkers();
+                        break;
+                }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onFromClick() {
+        startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID);
+    }
+
+    @Override
+    public void onToClick() {
+        startSearchActivity(R.string.floating_search_destination, TO_SEARCH_RESULT_ID);
+    }
+
+    @Override
+    public void onDrawerToggleClick() {
+        if (mStartLocationMarker != null) {
+            mStartLocationMarker.remove();
+            mStartLocationMarker = null;
+        }
+        if (mEndLocationMarker != null) {
+            mEndLocationMarker.remove();
+            mEndLocationMarker = null;
+        }
+        showBottomSheetResults(false);
+        clearBusRouteOnMap();
+        mCompoundSearchBox.setVisible(false);
+        mToolbar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onFlipSearchClick() {
+        if (mStartLocationMarker == null || mEndLocationMarker == null) {
+            return;
+        }
+        LatLng latLngAux = mStartLocationMarker.getPosition();
+        String addressAux = mStartLocationMarker.getTitle();
+        mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, mEndLocationMarker.getPosition(), false);
+        mStartLocationMarker.setTitle(mEndLocationMarker.getTitle());
+        mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLngAux, false);
+        mEndLocationMarker.setTitle(addressAux);
+
+        zoomOutStartEndMarkers();
     }
 }
