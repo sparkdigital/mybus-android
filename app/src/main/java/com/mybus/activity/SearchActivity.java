@@ -21,6 +21,7 @@ import com.mybus.listener.HistoryItemSelectedListener;
 import com.mybus.listener.OnFindResultsListener;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.model.StreetSuggestion;
+import com.mybus.requirements.AddressValidator;
 import com.mybus.service.ServiceFacade;
 import com.mybus.view.FavoritesCardView;
 import com.mybus.view.HistoryCardView;
@@ -118,6 +119,10 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             @Override
             public void onSearchAction(String currentQuery) {
                 Log.d(TAG, "onSearchAction()");
+                if (!AddressValidator.isValidAddress(currentQuery)) {
+                    Toast.makeText(SearchActivity.this, R.string.invalidAddress, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Util.closeSoftKeyboard(SearchActivity.this);
                 showProgressDialog(getString(R.string.toast_searching_address));
                 mCurrentQuery = currentQuery;
