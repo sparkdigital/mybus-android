@@ -23,4 +23,5 @@
     <string name="displayFavoritesToolbarTittle">Favoritos</string>
     <string name="floating_search_origin">Origen de tu viaje...</string>
     <string name="main_activity_search_hint">Buscar...</string>
+    <string name="invalidAddress">Invalid Address</string>
 </resources>
