@@ -13,6 +13,7 @@
     <string name="toast_no_result_found">No se encontraron resultados</string>
     <string name="toast_no_internet">No hay una conexion a Internet</string>
     <string name="toast_searching">Buscando rutas…</string>
+    <string name="toast_searching_address">Buscando la direccion especificada…</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="bus_stop_origin"> Parada Origen %1$s</string>

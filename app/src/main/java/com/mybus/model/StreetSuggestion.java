@@ -24,11 +24,6 @@ public class StreetSuggestion implements SearchSuggestion {
         return mStreetName;
     }
 
-    @Override
-    public Creator getCreator() {
-        return CREATOR;
-    }
-
     public static final Creator<StreetSuggestion> CREATOR = new Creator<StreetSuggestion>() {
         @Override
         public StreetSuggestion createFromParcel(Parcel in) {
