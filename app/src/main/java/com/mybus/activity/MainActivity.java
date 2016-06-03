@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    private final int BOTTOM_SHEET_PEEK_HEIGHT = 150;
+    private final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     private ProgressDialog mDialog;
     private Context mContext;
 
@@ -349,7 +350,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setupBottomSheet() {
         mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
+        mBottomSheetBehavior.setPeekHeight(dpToPx(BOTTOM_SHEET_PEEK_HEIGHT_DP));
+    }
+
+    /**
+     * Returns pixels dimension from DensityPoints given the display metrics from the device
+     *
+     * @param dp
+     * @return
+     */
+    private int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     /**
