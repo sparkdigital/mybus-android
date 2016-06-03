@@ -297,16 +297,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onDrawerOpened(View drawerView) {
-
-                //since the drawer might have opened as a results of
-                //a click on the left menu, we need to make sure
-                //to close it right after the drawer opens, so that
-                //it is closed when the drawer is  closed.
-                mToolbar.closeMenu(false);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
+                mToolbar.closeMenu(false);
             }
 
             @Override
@@ -640,8 +635,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == FROM_SEARCH_RESULT_ID) {
             switch (resultCode) {
                 case RESULT_OK:
-                    Toast.makeText(this, data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA),
-                            Toast.LENGTH_SHORT).show();
+                    String address = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
+                    mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions,
+                            (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), false);
+                    setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
+                    zoomTo(mStartLocationMarker.getPosition());
+                    //TODO: Will be changed to show the two input search bar
+                    mToolbar.setSearchBarTitle("From: " + address);
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(this, "FALLO", Toast.LENGTH_SHORT).show();

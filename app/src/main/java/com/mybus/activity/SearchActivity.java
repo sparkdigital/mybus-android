@@ -1,5 +1,6 @@
 package com.mybus.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,13 +8,18 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.arlib.floatingsearchview.util.Util;
+import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.helper.SearchSuggestionsHelper;
 import com.mybus.listener.OnFindResultsListener;
+import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.model.StreetSuggestion;
+import com.mybus.service.ServiceFacade;
 
 import java.util.List;
 
@@ -23,10 +29,11 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements OnAddressGeocodingCompleteCallback {
 
     public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
     public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
+    public static final String RESULT_LATLNG_EXTRA = "RESULT_LATLNG_EXTRA";
 
     private static final String TAG = SearchActivity.class.getSimpleName();
 
@@ -34,12 +41,16 @@ public class SearchActivity extends AppCompatActivity {
     FloatingSearchView mSearchView;
     @Bind(R.id.searchContent)
     LinearLayout mSearchContent;
+    private String mCurrentQuery;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+
+        mCurrentQuery = "";
 
         if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
             mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
@@ -58,7 +69,6 @@ public class SearchActivity extends AppCompatActivity {
                 if (!oldQuery.equals("") && newQuery.equals("")) {
                     mSearchView.clearSuggestions();
                 } else {
-
                     //this shows the top left circular progress
                     //you can call it where ever you want, but
                     //it makes sense to do it when loading something in
@@ -91,16 +101,17 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 Log.d(TAG, "onSuggestionClicked()");
-                Intent intent = new Intent();
-                intent.putExtra(RESULT_STREET_EXTRA, searchSuggestion.getBody());
-                setResult(RESULT_OK, intent);
-                overridePendingTransition(0, 0);
-                finish();
+                mSearchView.setSearchTextFocused(searchSuggestion.getBody());
             }
 
             @Override
-            public void onSearchAction() {
+            public void onSearchAction(String currentQuery) {
                 Log.d(TAG, "onSearchAction()");
+                Util.closeSoftKeyboard(SearchActivity.this);
+                showProgressDialog(getString(R.string.toast_searching_address));
+                mCurrentQuery = currentQuery;
+                ServiceFacade.getInstance().performGeocodeByAddress(currentQuery, SearchActivity.this, SearchActivity.this);
+
             }
         });
 
@@ -121,5 +132,40 @@ public class SearchActivity extends AppCompatActivity {
         setResult(RESULT_CANCELED, intent);
         overridePendingTransition(0, 0);
         finish();
+    }
+
+    @Override
+    public void onAddressGeocodingComplete(LatLng location) {
+        cancelProgressDialog();
+        if (mCurrentQuery == null || location == null) {
+            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent();
+        intent.putExtra(RESULT_STREET_EXTRA, mCurrentQuery);
+        intent.putExtra(RESULT_LATLNG_EXTRA, location);
+        setResult(RESULT_OK, intent);
+        overridePendingTransition(0, 0);
+        finish();
+    }
+
+    /**
+     * Shows a progress dialog with specified text
+     *
+     * @param text
+     */
+    private void showProgressDialog(String text) {
+        cancelProgressDialog();
+        mDialog = ProgressDialog.show(SearchActivity.this, "", text, true, false);
+    }
+
+    /**
+     * Cancels the current progress dialog if any
+     */
+    private void cancelProgressDialog() {
+        if (mDialog != null) {
+            mDialog.cancel();
+            mDialog = null;
+        }
     }
 }
