@@ -8,15 +8,16 @@ import android.util.AttributeSet;
 
 import com.mybus.R;
 import com.mybus.adapter.HistoryItemAdapter;
+import com.mybus.listener.HistoryItemSelectedListener;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class HistoryCardView extends CardView {
+public class HistoryCardView extends CardView implements HistoryItemSelectedListener{
 
     private HistoryItemSelectedListener mHistoryItemSelectedListener;
     private RecyclerView mHistoryItemsList;
-    private RecyclerView.Adapter mListAdapter;
+    private HistoryItemAdapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public void setHistoryItemSelectedListener(HistoryItemSelectedListener mHistoryItemSelectedListener) {
@@ -42,12 +43,16 @@ public class HistoryCardView extends CardView {
         mHistoryItemsList.setLayoutManager(mLayoutManager);
 
         //TODO: Should get the list of history
-        String[] myDataSet = {"Avenida Pedro Luro 2228", "Aristobulo del Valle 2248", "Constitucion 570"};
+        String[] myDataSet = {"Avenida Pedro Luro 2228", "Aristobulo del Valle 2248", "Avenida Constitucion 570"};
         mListAdapter = new HistoryItemAdapter(myDataSet);
+        mListAdapter.setItemSelectedListener(this);
         mHistoryItemsList.setAdapter(mListAdapter);
     }
 
-    public interface HistoryItemSelectedListener {
-        void onHistoryItemSelected(String result);
+    @Override
+    public void onHistoryItemSelected(String result) {
+        if (mHistoryItemSelectedListener != null) {
+            mHistoryItemSelectedListener.onHistoryItemSelected(result);
+        }
     }
 }

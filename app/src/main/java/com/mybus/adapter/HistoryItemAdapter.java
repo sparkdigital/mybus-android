@@ -6,14 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mybus.R;
+import com.mybus.listener.HistoryItemSelectedListener;
 import com.mybus.view.FavoriteViewHolder;
+import com.mybus.view.HistoryCardView;
 import com.mybus.view.HistoryViewHolder;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
+public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> implements HistoryItemSelectedListener {
     private String[] mDataset;
+    private HistoryItemSelectedListener mItemSelectedListener;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -40,7 +43,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> 
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.history_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        HistoryViewHolder vh = new HistoryViewHolder(v);
+        HistoryViewHolder vh = new HistoryViewHolder(v, this);
         return vh;
     }
 
@@ -53,5 +56,16 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> 
     @Override
     public int getItemCount() {
         return mDataset.length;
+    }
+
+    public void setItemSelectedListener(HistoryItemSelectedListener listener) {
+        this.mItemSelectedListener = listener;
+    }
+
+    @Override
+    public void onHistoryItemSelected(String result) {
+        if (mItemSelectedListener != null) {
+            mItemSelectedListener.onHistoryItemSelected(result);
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mybus.R;
+import com.mybus.listener.HistoryItemSelectedListener;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
@@ -13,15 +14,19 @@ import com.mybus.R;
 public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView historyAddress;
+    public HistoryItemSelectedListener mItemSelectedListener;
 
-    public HistoryViewHolder(View itemView) {
+    public HistoryViewHolder(View itemView, HistoryItemSelectedListener itemSelectedListener) {
         super(itemView);
+        mItemSelectedListener = itemSelectedListener;
         itemView.setOnClickListener(this);
         historyAddress = (TextView) itemView.findViewById(R.id.history_address);
     }
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(view.getContext(), "Clicked History Item = " + getPosition(), Toast.LENGTH_SHORT).show();
+        if (mItemSelectedListener != null) {
+            mItemSelectedListener.onHistoryItemSelected(historyAddress.getText().toString());
+        }
     }
 }
