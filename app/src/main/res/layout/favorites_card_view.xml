@@ -7,8 +7,8 @@
         android:id="@+id/favorites_cardView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/search_view_inset"
-        android:text="@string/displayFavoritesToolbarTittle" />
+        android:padding="@dimen/card_view_title_padding"
+        android:text="@string/favorite_card_view_title" />
 
     <View style="@style/Divider" />
 

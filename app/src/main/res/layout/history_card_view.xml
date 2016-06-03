@@ -7,17 +7,15 @@
         android:id="@+id/history_cardView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/search_view_inset"
-        android:layout_marginBottom="@dimen/search_view_inset"
-        android:layout_marginLeft="@dimen/search_view_inset"
+        android:padding="@dimen/card_view_title_padding"
         android:text="@string/history_card_view_title" />
 
     <View style="@style/Divider"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recent_list"
-        android:scrollbars="vertical"
-        android:layout_marginTop="@dimen/search_view_inset"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"/>
 </LinearLayout>
