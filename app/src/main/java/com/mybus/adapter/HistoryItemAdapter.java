@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 
 import com.mybus.R;
 import com.mybus.view.FavoriteViewHolder;
+import com.mybus.view.HistoryViewHolder;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
+public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
     private String[] mDataset;
 
     // Provide a reference to the views for each data item
@@ -28,24 +29,24 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FavoriteItemAdapter(String[] myDataset) {
+    public HistoryItemAdapter(String[] myDataset) {
         mDataset = myDataset;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public FavoriteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.favorite_item, parent, false);
+                .inflate(R.layout.history_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        FavoriteViewHolder vh = new FavoriteViewHolder(v);
+        HistoryViewHolder vh = new HistoryViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(FavoriteViewHolder holder, int position) {
-        holder.favName.setText(mDataset[position]);
+    public void onBindViewHolder(HistoryViewHolder holder, int position) {
+        holder.historyAddress.setText(mDataset[position]);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
