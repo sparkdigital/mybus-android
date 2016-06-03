@@ -22,5 +22,6 @@
     <string name="displayFaresToolbarTittle">Tarifas</string>
     <string name="displayFavoritesToolbarTittle">Favoritos</string>
     <string name="floating_search_origin">Origen de tu viaje...</string>
+    <string name="floating_search_destination">Destino de tu viaje...</string>
     <string name="main_activity_search_hint">Buscar...</string>
 </resources>
