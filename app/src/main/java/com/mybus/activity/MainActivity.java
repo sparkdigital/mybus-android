@@ -434,6 +434,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
             zoomOutStartEndMarkers();
+        } else {
+            Toast.makeText(mContext, getResources().getString(R.string.invalidAddress), Toast.LENGTH_SHORT).show();
         }
     }
 
