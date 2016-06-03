@@ -14,7 +14,7 @@ import com.mybus.listener.HistoryItemSelectedListener;
 public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView historyAddress;
-    public HistoryItemSelectedListener mItemSelectedListener;
+    private HistoryItemSelectedListener mItemSelectedListener;
 
     public HistoryViewHolder(View itemView, HistoryItemSelectedListener itemSelectedListener) {
         super(itemView);

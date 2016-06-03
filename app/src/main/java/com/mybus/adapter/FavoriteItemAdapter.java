@@ -6,13 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mybus.R;
+import com.mybus.listener.FavoriteItemSelectedListener;
 import com.mybus.view.FavoriteViewHolder;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
+public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder> implements FavoriteItemSelectedListener{
     private String[] mDataset;
+    private FavoriteItemSelectedListener mItemSelectedListener;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -39,7 +41,7 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favorite_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        FavoriteViewHolder vh = new FavoriteViewHolder(v);
+        FavoriteViewHolder vh = new FavoriteViewHolder(v, mItemSelectedListener);
         return vh;
     }
 
@@ -52,5 +54,16 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder
     @Override
     public int getItemCount() {
         return mDataset.length;
+    }
+
+    public void setItemSelectedListener(FavoriteItemSelectedListener listener) {
+        this.mItemSelectedListener = listener;
+    }
+
+    @Override
+    public void onFavoriteItemSelected(String result) {
+        if (mItemSelectedListener != null) {
+            mItemSelectedListener.onFavoriteItemSelected(result);
+        }
     }
 }

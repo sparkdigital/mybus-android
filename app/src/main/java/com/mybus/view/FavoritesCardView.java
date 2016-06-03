@@ -8,15 +8,16 @@ import android.util.AttributeSet;
 
 import com.mybus.R;
 import com.mybus.adapter.FavoriteItemAdapter;
+import com.mybus.listener.FavoriteItemSelectedListener;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class FavoritesCardView extends CardView {
+public class FavoritesCardView extends CardView implements FavoriteItemSelectedListener{
 
     private FavoriteItemSelectedListener mFavoriteItemSelectedListener;
     private RecyclerView mFavoriteItemsList;
-    private RecyclerView.Adapter mListAdapter;
+    private FavoriteItemAdapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public void setFavoriteItemSelectedListener(FavoriteItemSelectedListener mHistoryItemSelectedListener) {
@@ -44,11 +45,14 @@ public class FavoritesCardView extends CardView {
         // specify an adapter (see also next example)
         String[] myDataSet = {"Casa", "Trabajo", "Gym", "Casa Novia", "Casa", "Trabajo", "Gym", "Casa Novia"};
         mListAdapter = new FavoriteItemAdapter(myDataSet);
+        mListAdapter.setItemSelectedListener(this);
         mFavoriteItemsList.setAdapter(mListAdapter);
     }
 
-    public interface FavoriteItemSelectedListener {
-
-        void onFavoriteItemSelected(String result);
+    @Override
+    public void onFavoriteItemSelected(String result) {
+        if (mFavoriteItemSelectedListener != null) {
+            mFavoriteItemSelectedListener.onFavoriteItemSelected(result);
+        }
     }
 }

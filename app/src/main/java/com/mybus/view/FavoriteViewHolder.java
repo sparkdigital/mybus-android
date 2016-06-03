@@ -6,6 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mybus.R;
+import com.mybus.listener.FavoriteItemSelectedListener;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
@@ -14,9 +15,11 @@ public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.
 
     public TextView favName;
     public TextView favAddress;
+    private FavoriteItemSelectedListener mItemSelectedListener;
 
-    public FavoriteViewHolder(View itemView) {
+    public FavoriteViewHolder(View itemView, FavoriteItemSelectedListener favoriteItemSelectedListener) {
         super(itemView);
+        mItemSelectedListener = favoriteItemSelectedListener;
         itemView.setOnClickListener(this);
         favName = (TextView) itemView.findViewById(R.id.favorite_name);
         favAddress = (TextView) itemView.findViewById(R.id.favorite_address);
@@ -24,6 +27,8 @@ public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(view.getContext(), "Clicked Favorite Item = " + getPosition(), Toast.LENGTH_SHORT).show();
+        if (mItemSelectedListener != null) {
+            mItemSelectedListener.onFavoriteItemSelected(favAddress.getText().toString());
+        }
     }
 }
