@@ -16,10 +16,14 @@ import com.arlib.floatingsearchview.util.Util;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.helper.SearchSuggestionsHelper;
+import com.mybus.listener.FavoriteItemSelectedListener;
+import com.mybus.listener.HistoryItemSelectedListener;
 import com.mybus.listener.OnFindResultsListener;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.model.StreetSuggestion;
 import com.mybus.service.ServiceFacade;
+import com.mybus.view.FavoritesCardView;
+import com.mybus.view.HistoryCardView;
 
 import java.util.List;
 
@@ -29,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class SearchActivity extends AppCompatActivity implements OnAddressGeocodingCompleteCallback {
+public class SearchActivity extends AppCompatActivity implements OnAddressGeocodingCompleteCallback, HistoryItemSelectedListener, FavoriteItemSelectedListener {
 
     public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
     public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
@@ -41,6 +45,10 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     FloatingSearchView mSearchView;
     @Bind(R.id.searchContent)
     LinearLayout mSearchContent;
+    @Bind(R.id.card_view_recent)
+    HistoryCardView mHistoryCardView;
+    @Bind(R.id.card_view_favorites)
+    FavoritesCardView mFavoriteCardView;
     private String mCurrentQuery;
     private ProgressDialog mDialog;
 
@@ -59,6 +67,9 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         initSearchView();
         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);
+
+        mHistoryCardView.setHistoryItemSelectedListener(this);
+        mFavoriteCardView.setFavoriteItemSelectedListener(this);
     }
 
     private void initSearchView() {
@@ -111,7 +122,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                 showProgressDialog(getString(R.string.toast_searching_address));
                 mCurrentQuery = currentQuery;
                 ServiceFacade.getInstance().performGeocodeByAddress(currentQuery, SearchActivity.this, SearchActivity.this);
-
             }
         });
 
@@ -167,5 +177,21 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             mDialog.cancel();
             mDialog = null;
         }
+    }
+
+    @Override
+    public void onHistoryItemSelected(String result) {
+        //TODO: Result should contain a valid LatLng and return it on the intent
+        showProgressDialog(getString(R.string.toast_searching_address));
+        mCurrentQuery = result;
+        ServiceFacade.getInstance().performGeocodeByAddress(result, SearchActivity.this, SearchActivity.this);
+    }
+
+    @Override
+    public void onFavoriteItemSelected(String result) {
+        //TODO: Result should contain a valid LatLng and return it on the intent
+        showProgressDialog(getString(R.string.toast_searching_address));
+        mCurrentQuery = result;
+        ServiceFacade.getInstance().performGeocodeByAddress(result, SearchActivity.this, SearchActivity.this);
     }
 }
