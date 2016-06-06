@@ -45,6 +45,7 @@ import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.MapBusRoad;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
+import com.mybus.requirements.PlayServicesChecker;
 import com.mybus.service.ServiceFacade;
 import com.mybus.view.CompoundSearchBox;
 
@@ -274,6 +275,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mContext = this;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        //check if play services are intalled and updated
+        if (!PlayServicesChecker.checkPlayServices(mContext)) {
+            //if not, request to open the play store
+            PlayServicesChecker.buildAlertMessageUpdatePlayServices(mContext);
+            return;
+        }
 
         initToolbar();
         initDrawer();
