@@ -14,6 +14,7 @@
     <string name="toast_no_result_found">No se encontraron resultados</string>
     <string name="toast_no_internet">No hay una conexion a Internet</string>
     <string name="toast_searching">Buscando rutas…</string>
+    <string name="toast_searching_address">Buscando la direccion especificada…</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="bus_stop_origin"> Parada Origen %1$s</string>
@@ -21,5 +22,10 @@
     <string name="dialog_searching_specific_route">Obteniendo ruta de colectivo</string>
     <string name="displayFaresToolbarTittle">Tarifas</string>
     <string name="displayFavoritesToolbarTittle">Favoritos</string>
-    <string name="invalidAddress">Invalid Address</string>
+    <string name="floating_search_origin">Origen de tu viaje...</string>
+    <string name="floating_search_destination">Destino de tu viaje...</string>
+    <string name="main_activity_search_hint">Buscar...</string>
+    <string name="history_card_view_title">Recientes</string>
+    <string name="favorite_card_view_title">Favoritos</string>
+    <string name="invalidAddress">Direccion invalida</string>
 </resources>
