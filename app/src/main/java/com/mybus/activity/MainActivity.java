@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -51,6 +50,7 @@ import com.mybus.model.BusRouteResult;
 import com.mybus.model.Road.MapBusRoad;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
+import com.mybus.requirements.PlayServicesChecker;
 import com.mybus.service.ServiceFacade;
 
 import java.util.ArrayList;
@@ -304,8 +304,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mContext = this;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-
+        //check if play services are intalled and updated
+        if(!PlayServicesChecker.checkPlayServices(mContext)){
+            //if not, request to open the play store
+            PlayServicesChecker.buildAlertMessageUpdatePlayServices(mContext);
+            return;
+        }
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
