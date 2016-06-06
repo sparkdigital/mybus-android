@@ -13,29 +13,26 @@ import com.mybus.R;
 public class PlayServicesChecker {
 
     /**
-     *
      * @param context
      * @return
      */
     public static boolean checkPlayServices(Context context) {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
-        return status != ConnectionResult.SUCCESS;
+        return GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
     }
 
     /**
-     *
      * @param context
      */
     public static void buildAlertMessageUpdatePlayServices(final Context context) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(context.getResources().getString(R.string.update_playservice))
                 .setCancelable(false)
-                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                .setPositiveButton(context.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.google.android.gms")));
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(context.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         dialog.cancel();
                     }

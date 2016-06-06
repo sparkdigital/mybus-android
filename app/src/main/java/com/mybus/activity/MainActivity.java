@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ButterKnife.bind(this);
 
         //check if play services are intalled and updated
-        if(!PlayServicesChecker.checkPlayServices(mContext)){
+        if (!PlayServicesChecker.checkPlayServices(mContext)) {
             //if not, request to open the play store
             PlayServicesChecker.buildAlertMessageUpdatePlayServices(mContext);
             return;
