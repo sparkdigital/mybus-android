@@ -1,0 +1,10 @@
+{
+  "Type": 1,
+  "IdBusLine1": "20",
+  "IdBusLine2": "10",
+  "TotalDistance": 11.67,
+  "TravelTime": 45,
+  "ArrivalTime": null,
+  "Route1": [],
+  "Route2": []
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawerFavorites"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="Lugares favoritos"
+            android:checkable="false"/>
+        <item
+            android:id="@+id/drawerCharge"
+            android:icon="@android:drawable/ic_dialog_map"
+            android:title="Puntos de carga"
+            android:checkable="false"/>
+        <item
+            android:id="@+id/drawerRoads"
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="Recorridos"
+            android:checkable="false"/>
+
+        <item
+            android:id="@+id/drawerCosts"
+            android:icon="@android:drawable/ic_menu_rotate"
+            android:title="Tarifas"
+            android:checkable="false"/>
+
+    </group>
+
+</menu>
