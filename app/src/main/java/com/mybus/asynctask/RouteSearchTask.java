@@ -3,32 +3,33 @@ package com.mybus.asynctask;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.mybus.service.ServiceFacade;
 import com.mybus.model.BusRouteResult;
+import com.mybus.service.MyBusService;
+import com.mybus.service.MyBusServiceImpl;
+import com.mybus.service.ServiceFacade;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.List;
 
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>-
- *
+ * <p/>
  * AsyncTask used to return a list of possible routes between two locations.
  */
-public class RouteSearchTask extends AsyncTask<LatLng, Integer, List<BusRouteResult>> {
+public class RouteSearchTask extends AsyncTask<Void, Integer, List<BusRouteResult>> {
+
+    private final LatLng mOrigin, mDestiny;
     private RouteSearchCallback routeSearchCallback;
 
-    public RouteSearchTask(RouteSearchCallback rsCallback) {
+    public RouteSearchTask(LatLng origin, LatLng destiny, RouteSearchCallback rsCallback) {
+        this.mOrigin = origin;
+        this.mDestiny = destiny;
         routeSearchCallback = rsCallback;
     }
 
     @Override
-    protected List<BusRouteResult> doInBackground(LatLng... latLngs) {
-        return ServiceFacade.getInstance().searchRoutes(latLngs[0], latLngs[1]);
+    protected List<BusRouteResult> doInBackground(Void... params) {
+        return new MyBusServiceImpl().searchRoutes(mOrigin, mDestiny);
     }
 
     @Override

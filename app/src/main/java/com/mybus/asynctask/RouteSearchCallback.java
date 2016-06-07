@@ -2,8 +2,6 @@ package com.mybus.asynctask;
 
 import com.mybus.model.BusRouteResult;
 
-import org.json.JSONArray;
-
 import java.util.List;
 
 /**
