@@ -1,15 +1,16 @@
 package com.mybus.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
- *
+ * <p/>
  * RealmObject to persist favorite locations
  */
 public class FavoriteLocation extends RealmObject {
-    @Required
+    @PrimaryKey
     private String name;
     @Required
     private String streetName;
@@ -19,12 +20,15 @@ public class FavoriteLocation extends RealmObject {
     private Double latitude;
     @Required
     private Double longitude;
+    @Required
+    private Integer usageCount;
 
-    //Default constructor
-    public FavoriteLocation(){
+    // Default constructor
+    public FavoriteLocation() {
     }
 
-    public FavoriteLocation(String name, String stName, Integer stNumber, Double latitude, Double longitude){
+    // Constructor used for testing
+    public FavoriteLocation(String name, String stName, Integer stNumber, Double latitude, Double longitude) {
         this.name = name;
         this.streetName = stName;
         this.streetNumber = stNumber;
@@ -71,6 +75,10 @@ public class FavoriteLocation extends RealmObject {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    public void setUsageCount(Integer usesCount) { this.usageCount = usesCount; }
+
+    public Integer getUsageCount() { return usageCount; }
 
     // Used for testing.
     @Override
