@@ -4,8 +4,8 @@
     <string name="no">No</string>
     <string name="app_url">www.mybus.com.ar</string>
     <string name="powered_by">Powered by Devspark</string>
-    <string name="from_hint">From:</string>
-    <string name="to_hint">To:</string>
+    <string name="from_hint">Ingresa tu Origen</string>
+    <string name="to_hint">Ingresa tu Destino</string>
     <string name="current_location_marker">Tu Ubicación</string>
     <string name="stop_destination_title">Parada destino:</string>
     <string name="stop_origin_title">Parada origen:</string>
