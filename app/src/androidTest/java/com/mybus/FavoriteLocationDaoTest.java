@@ -23,19 +23,20 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
 
     public void test1SaveFavorite() {
         FavoriteLocation favLocation = new FavoriteLocation("Casa", "9 de Julio", 500, -37.3291053, -59.1336692);
-        FavoriteLocationDao.getInstance(mContext).saveOrUpdate(favLocation);
+        FavoriteLocationDao.getInstance(mContext).save(favLocation);
         Log.i("TestSaveFavorite", "Favorite saved: " + favLocation.toString());
     }
 
     public void test2GetFavoriteByName() {
-        FavoriteLocation favLocation = FavoriteLocationDao.getInstance(mContext).getById("Casa");
+        FavoriteLocation favLocation = FavoriteLocationDao.getInstance(mContext).getByField("name", "Casa");
         assertTrue(favLocation != null);
         Log.i("TestGetFavoriteByName", "Favorite (name == 'Casa'): " + favLocation.toString());
     }
 
     public void test3UpdateUsageCount() {
-        FavoriteLocationDao.getInstance(mContext).updateItemUsageCount("Casa");
-        assertTrue(FavoriteLocationDao.getInstance(mContext).getById("Casa").getUsageCount() > 0);
+        FavoriteLocation favLocation = FavoriteLocationDao.getInstance(mContext).getByField("name", "Casa");
+        FavoriteLocationDao.getInstance(mContext).updateItemUsageCount(favLocation.getId());
+        assertTrue(favLocation.getUsageCount() > 0);
     }
 
     public void test4ListFavorites() {

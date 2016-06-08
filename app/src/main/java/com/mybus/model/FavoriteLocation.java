@@ -9,8 +9,10 @@ import io.realm.annotations.Required;
  * <p/>
  * RealmObject to persist favorite locations
  */
-public class FavoriteLocation extends RealmObject {
+public class FavoriteLocation extends RealmObject implements UsageTrackable {
     @PrimaryKey
+    private Long id = System.nanoTime();
+    @Required
     private String name;
     @Required
     private String streetName;
@@ -21,7 +23,7 @@ public class FavoriteLocation extends RealmObject {
     @Required
     private Double longitude;
     @Required
-    private Integer usageCount;
+    private Integer usageCount = 0;
 
     // Default constructor
     public FavoriteLocation() {
@@ -34,6 +36,10 @@ public class FavoriteLocation extends RealmObject {
         this.streetNumber = stNumber;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -79,6 +85,9 @@ public class FavoriteLocation extends RealmObject {
     public void setUsageCount(Integer usesCount) { this.usageCount = usesCount; }
 
     public Integer getUsageCount() { return usageCount; }
+
+    @Override
+    public void incrementUsageCount() { this.usageCount++; }
 
     // Used for testing.
     @Override
