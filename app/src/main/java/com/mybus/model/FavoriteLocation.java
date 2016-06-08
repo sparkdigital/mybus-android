@@ -1,5 +1,7 @@
 package com.mybus.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -38,9 +40,7 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable {
         this.longitude = longitude;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
     public String getName() {
         return name;
@@ -86,8 +86,12 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable {
 
     public Integer getUsageCount() { return usageCount; }
 
+    public LatLng getLatLng () {
+        return new LatLng(this.latitude, this.longitude);
+    }
+
     @Override
-    public void incrementUsageCount() { this.usageCount++; }
+    public void incrementUsageCount() { this.usageCount = this.usageCount + 1; }
 
     // Used for testing.
     @Override

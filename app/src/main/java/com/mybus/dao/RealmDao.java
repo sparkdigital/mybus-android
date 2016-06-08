@@ -15,7 +15,7 @@ import io.realm.RealmResults;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public abstract class RealmDao< T extends RealmObject> {
+public abstract class RealmDao<T extends RealmObject> {
     private Realm mRealm;
     private Class<T> mType;
 
@@ -27,26 +27,44 @@ public abstract class RealmDao< T extends RealmObject> {
         this.mType = clazz;
     }
 
-    public void save(T item) {
-        mRealm.beginTransaction();
-        mRealm.copyToRealm(item);
-        mRealm.commitTransaction();
-    };
-
-    public void update(T item, Long id) {
-        T current = getById(id);
-        mRealm.beginTransaction();
-        updateItem(current, item);
-        mRealm.commitTransaction();
+    /**
+     * Save or update the given item depends if it already exists or not.
+     * @param item
+     * @return The item updated or null if an error occurred
+     */
+    public T saveOrUpdate(T item) {
+        if (item == null) {
+            return null;
+        }
+        try {
+            mRealm.beginTransaction();
+            T updated = mRealm.copyToRealmOrUpdate(item);
+            mRealm.commitTransaction();
+            return updated;
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
-    protected abstract void updateItem(T current, T item);
-
-    public void remove(Long id) {
-        T item = getById(id);
-        item.deleteFromRealm();
+    /**
+     * Remove an item from realm
+     * @param id To find the item
+     * @return
+     */
+    public boolean remove(Long id) {
+        T item = mRealm.where(mType).equalTo("id", id).findFirst();
+        if (item != null) {
+            mRealm.beginTransaction();
+            item.deleteFromRealm();
+            mRealm.commitTransaction();
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * @return all items on realm
+     */
     public RealmResults<T> getAll() {
         return mRealm.where(mType).findAll();
     }
@@ -56,11 +74,10 @@ public abstract class RealmDao< T extends RealmObject> {
      * @param id
      */
     public void updateItemUsageCount(Long id) {
-        if (!mType.isAssignableFrom(UsageTrackable.class)) {
+        if (!(UsageTrackable.class).isAssignableFrom(mType)) {
             return;
         }
-        // This query is fast because "name" is an indexed field
-        UsageTrackable item = (UsageTrackable) getById(id);
+        UsageTrackable item = (UsageTrackable) mRealm.where(mType).equalTo("id", id).findFirst();
         if (item != null) {
             mRealm.beginTransaction();
             item.incrementUsageCount();
@@ -68,43 +85,92 @@ public abstract class RealmDao< T extends RealmObject> {
         }
     }
 
+    /**
+     * @param id
+     * @return a copy of a realObject item finding by id
+     */
     public T getById(Long id) {
         return getByField("id", id);
-    };
+    }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Boolean value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Byte value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Double value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Float value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Integer value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Long value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Short value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, String value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
+    /**
+     * @param field name of the field
+     * @param value of the field
+     * @return a copy of a realObject item finding by a field
+     */
     public T getByField(String field, Date value) {
-        return mRealm.where(mType).equalTo(field, value).findFirst();
+        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 }
