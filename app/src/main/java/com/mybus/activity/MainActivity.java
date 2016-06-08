@@ -175,10 +175,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ServiceFacade.getInstance().performGeocodeByLocation(latLng, MainActivity.this, mContext);
         }
         //Update searchButton status
-        if (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
-                || mEndLocationMarker != null && markerOptions == mStartLocationMarkerOptions) {
-            mCompoundSearchBox.setSearchEnabled(true);
-        }
+        boolean enableSearch = (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
+                || mEndLocationMarker != null && markerOptions == mStartLocationMarkerOptions);
+        mCompoundSearchBox.setSearchEnabled(enableSearch);
         return marker;
     }
 
