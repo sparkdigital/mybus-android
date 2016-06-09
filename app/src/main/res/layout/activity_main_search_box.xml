@@ -15,7 +15,8 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:cropToPadding="false"
-        android:focusable="false" />
+        android:focusable="false"
+        android:scaleType="center" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -73,9 +74,27 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/flipSearch"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_swap_vert_black_24dp" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/flipSearch"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_swap_vert_black_24dp"
+            android:layout_weight="1"
+            android:scaleType="center" />
+
+        <ImageView
+            android:id="@+id/searchBtn"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_icon_selector"
+            android:layout_weight="1"
+            android:scaleType="center" />
+
+    </LinearLayout>
+
 </LinearLayout>
