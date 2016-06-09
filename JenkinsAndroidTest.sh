@@ -23,7 +23,7 @@ adb devices
 #adb -e logcat -c
 #adb -e logcat > build/logcat.log &
 
-./gradlew clean test connectedAndroidTest -i
+./gradlew app:clean app:test app:connectedAndroidTest -i
 
 # Stop the background processes
 kill -9 $EMULATOR_PID
