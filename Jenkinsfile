@@ -11,5 +11,4 @@ node {
 
     echo "Publishing Unit Tests results"
     step([$class: 'JUnitResultArchiver', testResults: '**app/build/test-results/release/TEST-*.xml'])
-    step([$class: 'JUnitResultArchiver', testResults: '**app/build/reports/*.xml'])
 }
