@@ -68,9 +68,9 @@ check {
         // directory for report files
         report new File(project.buildDir, 'reports/checkstyle')
         // XML report file
-        reportXML new File(project.buildDir, 'reports/checkstyle.xml')
+        reportXML new File(project.buildDir, 'reports/checkstyle/checkstyle.xml')
         // HTML report file
-        reportHTML new File(project.buildDir, 'reports/checkstyle.html')
+        reportHTML new File(project.buildDir, 'reports/checkstyle/checkstyle.html')
     }
     // configuration of FindBugs checker
     findbugs {
@@ -86,9 +86,9 @@ check {
         // directory for report files
         report new File(project.buildDir, 'reports/findbugs')
         // XML report file
-        reportXML new File(project.buildDir, 'reports/findbugs.xml')
+        reportXML new File(project.buildDir, 'reports/findbugs/findbugs.xml')
         // HTML report file
-        reportHTML new File(project.buildDir, 'reports/findbugs.html')
+        reportHTML new File(project.buildDir, 'reports/findbugs/findbugs.html')
     }
     // configuration of PMD checker
     pmd {
@@ -104,8 +104,8 @@ check {
         // directory for report files
         report new File(project.buildDir, 'reports/pmd')
         // XML report file
-        reportXML new File(project.buildDir, 'reports/pmd.xml')
+        reportXML new File(project.buildDir, 'reports/pmd/pmd.xml')
         // HTML report file
-        reportHTML new File(project.buildDir, 'reports/pmd.html')
+        reportHTML new File(project.buildDir, 'reports/pmd/pmd.html')
     }
 }
