@@ -27,8 +27,8 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test1SaveRecent() {
-        RecentLocation recLocation = new RecentLocation(RecentType.ORIGIN.getValue(), STREET_VALUE, 1100, -37.3291053, -59.1336692);
-        RecentLocation recLocation2 = new RecentLocation(RecentType.ORIGIN.getValue(), STREET_VALUE_2, 2200, -37.3291053, -59.1336692);
+        RecentLocation recLocation = new RecentLocation(RecentType.ORIGIN, STREET_VALUE, 1100, -37.3291053, -59.1336692);
+        RecentLocation recLocation2 = new RecentLocation(RecentType.ORIGIN, STREET_VALUE_2, 2200, -37.3291053, -59.1336692);
         boolean success = RecentLocationDao.getInstance(mContext).saveOrUpdate(recLocation);
         boolean success2 = RecentLocationDao.getInstance(mContext).saveOrUpdate(recLocation2);
         assertTrue(success);
@@ -62,7 +62,7 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test5ListOriginHistory() {
-        RealmResults<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAllByField(TYPE_FIELD, RecentType.ORIGIN.getValue());
+        RealmResults<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAllByField(TYPE_FIELD, RecentType.ORIGIN);
         assertTrue(results.size() > 0);
         Log.i("TestOriginHistory", "Origin History");
         for (RecentLocation recent : results) {

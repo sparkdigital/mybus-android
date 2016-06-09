@@ -100,6 +100,6 @@ public class RecentLocation extends RealmObject implements UsageTrackable {
     // Used for testing.
     @Override
     public String toString() {
-        return "Type: " + RecentType.fromValue(type) + " ; Address: " + streetName + " " + streetNumber + " ; LatLong: (" + latitude + ", " + longitude + ")";
+        return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION") + " ; Address: " + streetName + " " + streetNumber + " ; LatLong: (" + latitude + ", " + longitude + ")";
     }
 }
