@@ -65,7 +65,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         if (mLastLocation != null) {
             showProgressDialog(getString(R.string.toast_searching_address));
             ServiceFacade.getInstance().performGeocodeByLocation(mLastLocation, this, this);
-        }else{
+        } else {
             Toast.makeText(this, R.string.cant_find_current_location, Toast.LENGTH_SHORT).show();
         }
     }
@@ -179,16 +179,16 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     private void geocodingComplete(String query, LatLng location) {
         cancelProgressDialog();
-        if (query == null || location == null) {
+        if (query != null && location != null) {
+            Intent intent = new Intent();
+            intent.putExtra(RESULT_STREET_EXTRA, query);
+            intent.putExtra(RESULT_LATLNG_EXTRA, location);
+            setResult(RESULT_OK, intent);
+            overridePendingTransition(0, 0);
+            finish();
+        } else {
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
-            return;
         }
-        Intent intent = new Intent();
-        intent.putExtra(RESULT_STREET_EXTRA, query);
-        intent.putExtra(RESULT_LATLNG_EXTRA, location);
-        setResult(RESULT_OK, intent);
-        overridePendingTransition(0, 0);
-        finish();
     }
 
     /**
