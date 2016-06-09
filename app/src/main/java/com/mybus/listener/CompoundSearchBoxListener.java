@@ -24,4 +24,9 @@ public interface CompoundSearchBoxListener {
      * Click on the Flip Search
      */
     void onFlipSearchClick();
+
+    /**
+     * Click on the Search Icon
+     */
+    void onSearchButtonClick();
 }

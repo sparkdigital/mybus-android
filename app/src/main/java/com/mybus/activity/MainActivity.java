@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int TO_SEARCH_RESULT_ID = 2;
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
-    @Bind(R.id.perform_search_action_button)
-    FloatingActionButton mPerformSearchButton;
     @Bind(R.id.compoundSearchBox)
     CompoundSearchBox mCompoundSearchBox;
     @Bind(R.id.drawer_layout)
@@ -177,11 +175,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ServiceFacade.getInstance().performGeocodeByLocation(latLng, MainActivity.this, mContext);
         }
         //Update searchButton status
-        if (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
-                || mEndLocationMarker != null && markerOptions == mStartLocationMarkerOptions) {
-            mPerformSearchButton.setAlpha(255);
-            mPerformSearchButton.setEnabled(true);
-        }
+        boolean enableSearch = (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
+                || mEndLocationMarker != null && markerOptions == mStartLocationMarkerOptions);
+        mCompoundSearchBox.setSearchEnabled(enableSearch);
         return marker;
     }
 
@@ -264,11 +260,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    @OnClick(R.id.perform_search_action_button)
-    public void onPerformSearchButtonClick(View view) {
-        performRoutesSearch();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -296,8 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .title(getString(R.string.current_location_marker))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
         //Disable the mPerformSearchButton action
-        mPerformSearchButton.setAlpha(50);
-        mPerformSearchButton.setEnabled(false);
+        mCompoundSearchBox.setSearchEnabled(false);
         resetLocalVariables();
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
@@ -741,5 +731,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mEndLocationMarker.setTitle(addressAux);
 
         zoomOutStartEndMarkers();
+    }
+
+    @Override
+    public void onSearchButtonClick() {
+        performRoutesSearch();
     }
 }

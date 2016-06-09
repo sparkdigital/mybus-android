@@ -80,9 +80,27 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/flipSearch"
+    <LinearLayout
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_swap_vert_black_24dp" />
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/flipSearch"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:src="@drawable/ic_swap_vert_black_24dp" />
+
+        <ImageView
+            android:id="@+id/searchBtn"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:src="@drawable/search_icon_selector" />
+
+    </LinearLayout>
+
 </LinearLayout>
