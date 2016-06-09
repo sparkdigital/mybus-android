@@ -43,6 +43,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
     public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
     public static final String RESULT_LATLNG_EXTRA = "RESULT_LATLNG_EXTRA";
+    public static final String ADD_FAVORITE = "ADD_FAVORITE";
 
     private static final String TAG = SearchActivity.class.getSimpleName();
 
