@@ -52,10 +52,14 @@ public abstract class RealmDao<T extends RealmObject> {
     public boolean remove(Long id) {
         T item = mRealm.where(mType).equalTo("id", id).findFirst();
         if (item != null) {
-            mRealm.beginTransaction();
-            item.deleteFromRealm();
-            mRealm.commitTransaction();
-            return true;
+            try {
+                mRealm.beginTransaction();
+                item.deleteFromRealm();
+                mRealm.commitTransaction();
+                return true;
+            } catch (IllegalStateException e) { //IllegalStateException if the corresponding Realm is closed or in an incorrect thread.
+                return false;
+            }
         }
         return false;
     }
@@ -85,6 +89,19 @@ public abstract class RealmDao<T extends RealmObject> {
     }
 
     /**
+     * If given object is not null, copy it from realm.
+     *
+     * @param item
+     * @return
+     */
+    private T copyFromRealm(T item) {
+        if (item == null) {
+            return null;
+        }
+        return mRealm.copyFromRealm(item);
+    }
+
+    /**
      * @param id
      * @return a copy of a realObject item finding by id
      */
@@ -98,7 +115,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Boolean value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -107,7 +124,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Byte value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -116,7 +133,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Double value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -125,7 +142,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Float value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -134,7 +151,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Integer value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -143,7 +160,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Long value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -152,7 +169,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Short value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -161,7 +178,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, String value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 
     /**
@@ -170,6 +187,6 @@ public abstract class RealmDao<T extends RealmObject> {
      * @return a copy of a realObject item finding by a field
      */
     public T getByField(String field, Date value) {
-        return mRealm.copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findFirst());
     }
 }
