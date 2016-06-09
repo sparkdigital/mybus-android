@@ -29,25 +29,23 @@ public abstract class RealmDao<T extends RealmObject> {
 
     /**
      * Save or update the given item depends if it already exists or not.
+     *
      * @param item
      * @return The item updated or null if an error occurred
      */
-    public T saveOrUpdate(T item) {
+    public boolean saveOrUpdate(T item) {
         if (item == null) {
-            return null;
+            return false;
         }
-        try {
-            mRealm.beginTransaction();
-            T updated = mRealm.copyToRealmOrUpdate(item);
-            mRealm.commitTransaction();
-            return updated;
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+        mRealm.beginTransaction();
+        T updated = mRealm.copyToRealmOrUpdate(item);
+        mRealm.commitTransaction();
+        return updated != null;
     }
 
     /**
      * Remove an item from realm
+     *
      * @param id To find the item
      * @return
      */
@@ -71,10 +69,11 @@ public abstract class RealmDao<T extends RealmObject> {
 
     /**
      * Increment the usage count for a given item.
+     *
      * @param id
      */
     public void updateItemUsageCount(Long id) {
-        if (!(UsageTrackable.class).isAssignableFrom(mType)) {
+        if (!UsageTrackable.class.isAssignableFrom(mType)) {
             return;
         }
         UsageTrackable item = (UsageTrackable) mRealm.where(mType).equalTo("id", id).findFirst();
