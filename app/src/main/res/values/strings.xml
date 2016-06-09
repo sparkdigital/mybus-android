@@ -30,4 +30,6 @@
     <string name="history_card_view_title">Recientes</string>
     <string name="favorite_card_view_title">Favoritos</string>
     <string name="invalidAddress">Direccion invalida</string>
+    <string name="use_current_location">Usar ubicacion actual</string>
+    <string name="cant_find_current_location">No es posible saber su ubicacion actual</string>
 </resources>
