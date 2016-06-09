@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -80,6 +81,9 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         mCurrentQuery = "";
         mLastLocation = null;
 
+        if (getIntent().getStringExtra(ADD_FAVORITE) != null) {
+            mHistoryCardView.setVisibility(View.GONE);
+        }
         if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
             mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
         }
