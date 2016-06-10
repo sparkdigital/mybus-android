@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -42,6 +41,7 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.RecentType;
 import com.mybus.model.Road.MapBusRoad;
 import com.mybus.model.Road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
             @Override
             public void onFocus() {
-                startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID);
+                startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID, RecentType.ORIGIN);
             }
 
             @Override
@@ -648,9 +648,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @param searchHint
      * @param requestCode
      */
-    private void startSearchActivity(int searchHint, int requestCode) {
+    private void startSearchActivity(int searchHint, int requestCode, int type) {
         Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_TITLE_EXTRA, getString(searchHint));
+        searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, type);
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
     }
@@ -694,12 +695,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onFromClick() {
-        startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID);
+        startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID, RecentType.ORIGIN);
     }
 
     @Override
     public void onToClick() {
-        startSearchActivity(R.string.floating_search_destination, TO_SEARCH_RESULT_ID);
+        startSearchActivity(R.string.floating_search_destination, TO_SEARCH_RESULT_ID, RecentType.DESTINATION);
     }
 
     @Override

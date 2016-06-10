@@ -3,7 +3,6 @@ package com.mybus.view;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mybus.R;
 import com.mybus.listener.FavoriteItemSelectedListener;
