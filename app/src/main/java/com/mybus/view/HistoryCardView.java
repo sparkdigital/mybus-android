@@ -26,6 +26,7 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
     private HistoryItemAdapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private TextView mNoRecentTextView;
+    private List<RecentLocation> mRecentLocationList;
 
     public void setHistoryItemSelectedListener(HistoryItemSelectedListener mHistoryItemSelectedListener) {
         this.mHistoryItemSelectedListener = mHistoryItemSelectedListener;
@@ -44,27 +45,15 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
     }
 
     @Override
-    public void onHistoryItemSelected(RecentLocation recentLocation) {
+    public void onHistoryItemSelected(int position) {
         if (mHistoryItemSelectedListener != null) {
-            mHistoryItemSelectedListener.onHistoryItemSelected(recentLocation);
+            mHistoryItemSelectedListener.onHistoryItemSelected(position);
         }
     }
 
-    /**
-     * Sets the type of the search so we can show the proper recent searches
-     *
-     * @param type
-     */
-    public void setType(int type) {
-        if (type < 0) {
-            //do nothing
-            return;
-        }
-        List<RecentLocation> recentLocations = RecentLocationDao.getInstance(getContext()).getAllByField("type", type);
-        if (recentLocations != null && recentLocations.size() > 0) {
-            //Sorting recent locations
-            Collections.sort(recentLocations, Collections.<RecentLocation>reverseOrder());
-
+    public void setList(List<RecentLocation> list) {
+        mRecentLocationList = list;
+        if (mRecentLocationList != null && mRecentLocationList.size() > 0) {
             mNoRecentTextView.setVisibility(GONE);
             mHistoryItemsList.setVisibility(VISIBLE);
 
@@ -75,7 +64,7 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
             mLayoutManager = new LinearLayoutManager(getContext());
             mHistoryItemsList.setLayoutManager(mLayoutManager);
 
-            mListAdapter = new HistoryItemAdapter(recentLocations);
+            mListAdapter = new HistoryItemAdapter(mRecentLocationList);
             mListAdapter.setItemSelectedListener(this);
             mHistoryItemsList.setAdapter(mListAdapter);
         } else {

@@ -30,6 +30,7 @@ import com.mybus.service.ServiceFacade;
 import com.mybus.view.FavoritesCardView;
 import com.mybus.view.HistoryCardView;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -62,6 +63,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     private ProgressDialog mDialog;
     private LatLng mLastLocation;
     private int mSearchType;
+    private List<RecentLocation> mRecentLocations;
 
     @OnClick(R.id.currentLocationCard)
     public void onCurrentLocationCardClick() {
@@ -85,7 +87,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         mLastLocation = null;
 
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
-        mHistoryCardView.setType(mSearchType);
 
         if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
             mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
@@ -95,7 +96,19 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);
 
+        initHistoryCardView();
+        initFavoriteCardView();
+    }
+
+    private void initHistoryCardView() {
+        mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
+        //Sorting recent locations
+        Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
+        mHistoryCardView.setList(mRecentLocations);
         mHistoryCardView.setHistoryItemSelectedListener(this);
+    }
+
+    private void initFavoriteCardView() {
         mFavoriteCardView.setFavoriteItemSelectedListener(this);
     }
 
@@ -236,10 +249,10 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     @Override
-    public void onHistoryItemSelected(RecentLocation recentLocation) {
-        if (recentLocation != null) {
-            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(recentLocation.getId());
-            setActivityResult(recentLocation.getAddress(), recentLocation.getLatLng());
+    public void onHistoryItemSelected(int position) {
+        if (position >= 0 && position < mRecentLocations.size()) {
+            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(mRecentLocations.get(position).getId());
+            setActivityResult(mRecentLocations.get(position).getAddress(), mRecentLocations.get(position).getLatLng());
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
         }
