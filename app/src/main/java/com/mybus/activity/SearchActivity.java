@@ -189,12 +189,27 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         cancelProgressDialog();
         if (query != null && location != null) {
             if (mSearchType >= 0) {
-                RecentLocation recentLocation = new RecentLocation(mSearchType, query, location.latitude, location.longitude);
-                RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
+                findOrCreateNewRecent(query, location);
             }
             setActivityResult(query, location);
         } else {
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Finds a recent for History Searches and increases it's usage, or creates a new one if no one found
+     *
+     * @param query
+     * @param latLng
+     */
+    private void findOrCreateNewRecent(String query, LatLng latLng) {
+        RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(mSearchType, latLng);
+        if (location != null) {
+            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(location.getId());
+        } else {
+            RecentLocation recentLocation = new RecentLocation(mSearchType, query, latLng.latitude, latLng.longitude);
+            RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
         }
     }
 

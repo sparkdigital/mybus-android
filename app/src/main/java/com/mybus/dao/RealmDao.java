@@ -2,6 +2,7 @@ package com.mybus.dao;
 
 import android.content.Context;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.UsageTrackable;
 
 import java.util.Date;
@@ -17,7 +18,7 @@ import io.realm.RealmResults;
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public abstract class RealmDao<T extends RealmObject> {
-    private Realm mRealm;
+    protected Realm mRealm;
     private Class<T> mType;
 
     protected RealmDao(Context c, Class<T> clazz) {
@@ -95,7 +96,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param item
      * @return
      */
-    private T copyFromRealm(T item) {
+    protected T copyFromRealm(T item) {
         if (item == null) {
             return null;
         }
@@ -108,7 +109,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param realmObjects
      * @return
      */
-    public <E extends RealmModel> List<E> copyFromRealm(Iterable<E> realmObjects) {
+    protected <E extends RealmModel> List<E> copyFromRealm(Iterable<E> realmObjects) {
         if (realmObjects == null) {
             return null;
         }
