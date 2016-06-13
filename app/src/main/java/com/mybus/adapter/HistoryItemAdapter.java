@@ -37,7 +37,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> 
 
     @Override
     public void onBindViewHolder(HistoryViewHolder holder, int position) {
-        holder.setRecentLocation(mDataset.get(position));
+        holder.historyAddress.setText(mDataset.get(position).getAddress());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -51,9 +51,9 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> 
     }
 
     @Override
-    public void onHistoryItemSelected(RecentLocation result) {
+    public void onHistoryItemSelected(int position) {
         if (mItemSelectedListener != null) {
-            mItemSelectedListener.onHistoryItemSelected(result);
+            mItemSelectedListener.onHistoryItemSelected(position);
         }
     }
 }

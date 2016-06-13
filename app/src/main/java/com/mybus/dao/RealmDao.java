@@ -68,8 +68,8 @@ public abstract class RealmDao<T extends RealmObject> {
     /**
      * @return all items on realm
      */
-    public RealmResults<T> getAll() {
-        return mRealm.where(mType).findAll();
+    public List<T> getAll() {
+        return copyFromRealm(mRealm.where(mType).findAll());
     }
 
     /**
