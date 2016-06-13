@@ -24,7 +24,7 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test1SaveFavorite() {
-        FavoriteLocation favLocation = new FavoriteLocation(NAME_VALUE, "4 de Abril", 1100, -37.3291053, -59.1336692);
+        FavoriteLocation favLocation = new FavoriteLocation(NAME_VALUE, "4 de Abril 1100", -37.3291053, -59.1336692);
         boolean success = FavoriteLocationDao.getInstance(mContext).saveOrUpdate(favLocation);
         assertTrue(success);
         Log.i("TestSaveFavorite", "Favorite save " + (success ? "success" : "failed"));

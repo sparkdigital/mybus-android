@@ -30,7 +30,7 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable {
     }
 
     // Constructor used for testing
-    public FavoriteLocation(String name, String address, Integer stNumber, Double latitude, Double longitude) {
+    public FavoriteLocation(String name, String address, Double latitude, Double longitude) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;
