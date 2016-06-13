@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class FavoritesCardView extends CardView implements FavoriteItemSelectedListener{
+public class FavoritesCardView extends CardView implements FavoriteItemSelectedListener {
 
     private FavoriteItemSelectedListener mFavoriteItemSelectedListener;
     private RecyclerView mRecyclerView;
@@ -41,7 +41,7 @@ public class FavoritesCardView extends CardView implements FavoriteItemSelectedL
         mNoFavoritesTextView = (TextView) findViewById(R.id.noFavorites);
     }
 
-    public void setItemList(List<FavoriteLocation> list){
+    public void setItemList(List<FavoriteLocation> list) {
         mFavoriteLocationList = list;
         if (mFavoriteLocationList != null && mFavoriteLocationList.size() > 0) {
             mNoFavoritesTextView.setVisibility(GONE);
