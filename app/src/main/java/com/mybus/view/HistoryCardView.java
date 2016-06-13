@@ -9,11 +9,9 @@ import android.widget.TextView;
 
 import com.mybus.R;
 import com.mybus.adapter.HistoryItemAdapter;
-import com.mybus.dao.RecentLocationDao;
 import com.mybus.listener.HistoryItemSelectedListener;
 import com.mybus.model.RecentLocation;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

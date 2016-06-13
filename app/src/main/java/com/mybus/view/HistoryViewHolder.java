@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.mybus.R;
 import com.mybus.listener.HistoryItemSelectedListener;
-import com.mybus.model.RecentLocation;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
