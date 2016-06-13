@@ -11,15 +11,13 @@ import io.realm.annotations.Required;
  * <p/>
  * RealmObject to persist recent locations
  */
-public class RecentLocation extends RealmObject implements UsageTrackable {
+public class RecentLocation extends RealmObject implements UsageTrackable, Comparable<RecentLocation> {
     @PrimaryKey
     private Long id = System.nanoTime();
     @Required
     private Integer type;
     @Required
-    private String streetName;
-    @Required
-    private Integer streetNumber;
+    private String address;
     @Required
     private Double latitude;
     @Required
@@ -32,10 +30,9 @@ public class RecentLocation extends RealmObject implements UsageTrackable {
     }
 
     // Constructor used for testing
-    public RecentLocation(int type, String stName, Integer stNumber, Double latitude, Double longitude) {
+    public RecentLocation(int type, String address, Double latitude, Double longitude) {
         this.type = type;
-        this.streetName = stName;
-        this.streetNumber = stNumber;
+        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -44,24 +41,20 @@ public class RecentLocation extends RealmObject implements UsageTrackable {
         return id;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public Integer getType() {
         return type;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public Integer getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(Integer streetNumber) {
-        this.streetNumber = streetNumber;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Double getLatitude() {
@@ -100,6 +93,11 @@ public class RecentLocation extends RealmObject implements UsageTrackable {
     // Used for testing.
     @Override
     public String toString() {
-        return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION") + " ; Address: " + streetName + " " + streetNumber + " ; LatLong: (" + latitude + ", " + longitude + ")";
+        return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION") + " ; Address: " + address + " ; LatLong: (" + latitude + ", " + longitude + ")" + "Usage Count: " + usageCount;
+    }
+
+    @Override
+    public int compareTo(RecentLocation another) {
+        return this.getUsageCount() < another.getUsageCount() ? -1 : 1;
     }
 }

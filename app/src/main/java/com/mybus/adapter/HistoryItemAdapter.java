@@ -7,32 +7,20 @@ import android.view.ViewGroup;
 
 import com.mybus.R;
 import com.mybus.listener.HistoryItemSelectedListener;
-import com.mybus.view.FavoriteViewHolder;
-import com.mybus.view.HistoryCardView;
+import com.mybus.model.RecentLocation;
 import com.mybus.view.HistoryViewHolder;
+
+import java.util.List;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> implements HistoryItemSelectedListener {
-    private String[] mDataset;
+    private List<RecentLocation> mDataset;
     private HistoryItemSelectedListener mItemSelectedListener;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public View mView;
-
-        public ViewHolder(View v) {
-            super(v);
-            mView = v;
-        }
-    }
-
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryItemAdapter(String[] myDataset) {
+    public HistoryItemAdapter(List<RecentLocation> myDataset) {
         mDataset = myDataset;
     }
 
@@ -49,13 +37,13 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> 
 
     @Override
     public void onBindViewHolder(HistoryViewHolder holder, int position) {
-        holder.historyAddress.setText(mDataset[position]);
+        holder.setRecentLocation(mDataset.get(position));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 
     public void setItemSelectedListener(HistoryItemSelectedListener listener) {
@@ -63,7 +51,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryViewHolder> 
     }
 
     @Override
-    public void onHistoryItemSelected(String result) {
+    public void onHistoryItemSelected(RecentLocation result) {
         if (mItemSelectedListener != null) {
             mItemSelectedListener.onHistoryItemSelected(result);
         }
