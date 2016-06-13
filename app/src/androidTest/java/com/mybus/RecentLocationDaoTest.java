@@ -18,7 +18,7 @@ import io.realm.RealmResults;
 public class RecentLocationDaoTest extends InstrumentationTestCase {
     private Context mContext;
     private static final String TYPE_FIELD = "type";
-    private static final String STREET_FIELD = "streetName";
+    private static final String STREET_FIELD = "address";
     private static final String STREET_VALUE = "Test_Address 1100";
     private static final String STREET_VALUE_2 = "Test_Address_2 2200";
 
