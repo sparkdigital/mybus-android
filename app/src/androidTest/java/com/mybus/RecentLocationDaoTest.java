@@ -10,8 +10,6 @@ import com.mybus.model.RecentType;
 
 import java.util.List;
 
-import io.realm.RealmResults;
-
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
@@ -55,7 +53,7 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test4ListHistory() {
-        RealmResults<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAll();
+        List<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAll();
         assertTrue(results.size() > 0);
         Log.i("TestListHistory", "History");
         for (RecentLocation recent : results) {

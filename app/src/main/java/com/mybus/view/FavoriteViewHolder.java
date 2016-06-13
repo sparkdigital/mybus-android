@@ -27,7 +27,7 @@ public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View view) {
         if (mItemSelectedListener != null) {
-            mItemSelectedListener.onFavoriteItemSelected(favAddress.getText().toString());
+            mItemSelectedListener.onFavoriteItemSelected(getAdapterPosition());
         }
     }
 }
