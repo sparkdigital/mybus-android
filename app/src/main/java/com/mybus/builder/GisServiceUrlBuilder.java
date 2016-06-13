@@ -2,8 +2,6 @@ package com.mybus.builder;
 
 import android.net.Uri;
 
-import okhttp3.Request;
-
 /**
  * GIS Service API url builder.
  *

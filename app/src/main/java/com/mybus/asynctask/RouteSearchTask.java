@@ -4,9 +4,7 @@ import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.BusRouteResult;
-import com.mybus.service.MyBusService;
 import com.mybus.service.MyBusServiceImpl;
-import com.mybus.service.ServiceFacade;
 
 import java.util.List;
 

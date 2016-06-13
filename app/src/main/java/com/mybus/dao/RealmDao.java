@@ -2,8 +2,6 @@ package com.mybus.dao;
 
 import android.content.Context;
 
-import com.arlib.floatingsearchview.FloatingSearchView;
-import com.mybus.model.FavoriteLocation;
 import com.mybus.model.UsageTrackable;
 
 import java.util.Date;
@@ -11,6 +9,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
@@ -101,6 +100,19 @@ public abstract class RealmDao<T extends RealmObject> {
             return null;
         }
         return mRealm.copyFromRealm(item);
+    }
+
+    /**
+     * Detachs the list from realm
+     *
+     * @param realmObjects
+     * @return
+     */
+    public <E extends RealmModel> List<E> copyFromRealm(Iterable<E> realmObjects) {
+        if (realmObjects == null) {
+            return null;
+        }
+        return mRealm.copyFromRealm(realmObjects);
     }
 
     /**
@@ -201,8 +213,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Boolean value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Boolean value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -210,8 +222,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Byte value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Byte value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -219,8 +231,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Double value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Double value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -228,8 +240,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Float value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Float value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -237,8 +249,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Integer value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Integer value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -246,8 +258,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Long value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Long value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -255,8 +267,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Short value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Short value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -264,8 +276,8 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, String value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, String value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 
     /**
@@ -273,7 +285,7 @@ public abstract class RealmDao<T extends RealmObject> {
      * @param value of the field
      * @return a RealmResults<T> of items finding by a field
      */
-    public RealmResults<T> getAllByField(String field, Date value) {
-        return mRealm.where(mType).equalTo(field, value).findAll();
+    public List<T> getAllByField(String field, Date value) {
+        return copyFromRealm(mRealm.where(mType).equalTo(field, value).findAll());
     }
 }

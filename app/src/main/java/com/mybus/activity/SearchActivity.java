@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,6 +16,7 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
+import com.mybus.dao.RecentLocationDao;
 import com.mybus.helper.SearchSuggestionsHelper;
 import com.mybus.listener.FavoriteItemSelectedListener;
 import com.mybus.listener.HistoryItemSelectedListener;
@@ -24,6 +24,7 @@ import com.mybus.listener.OnFindResultsListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.model.RecentLocation;
 import com.mybus.model.StreetSuggestion;
 import com.mybus.requirements.AddressValidator;
 import com.mybus.service.ServiceFacade;
@@ -42,9 +43,12 @@ import butterknife.OnClick;
 public class SearchActivity extends AppCompatActivity implements OnAddressGeocodingCompleteCallback, HistoryItemSelectedListener, FavoriteItemSelectedListener, OnLocationGeocodingCompleteCallback {
 
     public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
+    public static final String SEARCH_TYPE_EXTRA = "SEARCH_TYPE_EXTRA";
+
     public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
     public static final String RESULT_LATLNG_EXTRA = "RESULT_LATLNG_EXTRA";
     public static final String ADD_FAVORITE = "ADD_FAVORITE";
+
 
     private static final String TAG = SearchActivity.class.getSimpleName();
 
@@ -59,6 +63,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     private String mCurrentQuery;
     private ProgressDialog mDialog;
     private LatLng mLastLocation;
+    private int mSearchType;
 
     @OnClick(R.id.currentLocationCard)
     public void onCurrentLocationCardClick() {
@@ -84,6 +89,9 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         if (getIntent().getStringExtra(ADD_FAVORITE) != null) {
             mHistoryCardView.setVisibility(View.GONE);
         }
+        mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
+        mHistoryCardView.setType(mSearchType);
+
         if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
             mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
         }
@@ -185,15 +193,26 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     private void geocodingComplete(String query, LatLng location) {
         cancelProgressDialog();
         if (query != null && location != null) {
-            Intent intent = new Intent();
-            intent.putExtra(RESULT_STREET_EXTRA, query);
-            intent.putExtra(RESULT_LATLNG_EXTRA, location);
-            setResult(RESULT_OK, intent);
-            overridePendingTransition(0, 0);
-            finish();
+            if (mSearchType >= 0) {
+                RecentLocation recentLocation = new RecentLocation(mSearchType, query, location.latitude, location.longitude);
+                RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
+            }
+            setActivityResult(query, location);
         } else {
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Finishes this current activity and sends the result to the one witch has started it
+     */
+    private void setActivityResult(String query, LatLng location) {
+        Intent intent = new Intent();
+        intent.putExtra(RESULT_STREET_EXTRA, query);
+        intent.putExtra(RESULT_LATLNG_EXTRA, location);
+        setResult(RESULT_OK, intent);
+        overridePendingTransition(0, 0);
+        finish();
     }
 
     /**
@@ -222,11 +241,13 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     @Override
-    public void onHistoryItemSelected(String result) {
-        //TODO: Result should contain a valid LatLng and return it on the intent
-        showProgressDialog(getString(R.string.toast_searching_address));
-        mCurrentQuery = result;
-        ServiceFacade.getInstance().performGeocodeByAddress(result, SearchActivity.this, SearchActivity.this);
+    public void onHistoryItemSelected(RecentLocation recentLocation) {
+        if (recentLocation != null) {
+            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(recentLocation.getId());
+            setActivityResult(recentLocation.getAddress(), recentLocation.getLatLng());
+        } else {
+            Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

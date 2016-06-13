@@ -3,7 +3,6 @@ package com.mybus.service;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.PendingResult;
 import com.google.maps.model.DirectionsResult;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
@@ -12,8 +11,6 @@ import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.RoadSearch;
 
 import org.json.JSONException;
 

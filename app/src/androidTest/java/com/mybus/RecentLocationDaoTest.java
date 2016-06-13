@@ -8,6 +8,8 @@ import com.mybus.dao.RecentLocationDao;
 import com.mybus.model.RecentLocation;
 import com.mybus.model.RecentType;
 
+import java.util.List;
+
 import io.realm.RealmResults;
 
 /**
@@ -17,8 +19,8 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     private Context mContext;
     private static final String TYPE_FIELD = "type";
     private static final String STREET_FIELD = "streetName";
-    private static final String STREET_VALUE = "Test_Address";
-    private static final String STREET_VALUE_2 = "Test_Address_2";
+    private static final String STREET_VALUE = "Test_Address 1100";
+    private static final String STREET_VALUE_2 = "Test_Address_2 2200";
 
     @Override
     protected void setUp() throws Exception {
@@ -27,8 +29,8 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test1SaveRecent() {
-        RecentLocation recLocation = new RecentLocation(RecentType.ORIGIN, STREET_VALUE, 1100, -37.3291053, -59.1336692);
-        RecentLocation recLocation2 = new RecentLocation(RecentType.ORIGIN, STREET_VALUE_2, 2200, -37.3291053, -59.1336692);
+        RecentLocation recLocation = new RecentLocation(RecentType.ORIGIN, STREET_VALUE, -37.3291053, -59.1336692);
+        RecentLocation recLocation2 = new RecentLocation(RecentType.ORIGIN, STREET_VALUE_2, -37.3291053, -59.1336692);
         boolean success = RecentLocationDao.getInstance(mContext).saveOrUpdate(recLocation);
         boolean success2 = RecentLocationDao.getInstance(mContext).saveOrUpdate(recLocation2);
         assertTrue(success);
@@ -62,7 +64,7 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test5ListOriginHistory() {
-        RealmResults<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAllByField(TYPE_FIELD, RecentType.ORIGIN);
+        List<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAllByField(TYPE_FIELD, RecentType.ORIGIN);
         assertTrue(results.size() > 0);
         Log.i("TestOriginHistory", "Origin History");
         for (RecentLocation recent : results) {

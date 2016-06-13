@@ -4,10 +4,6 @@ import android.content.Context;
 
 import com.mybus.model.FavoriteLocation;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
-
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  * <p>
