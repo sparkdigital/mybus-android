@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.model.GeoLocation;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Locale;
 /**
  * Location Geocoding Class
  */
-public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, String> {
+public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocation> {
 
     private static final String TAG = "LocationGeocoding";
     private OnLocationGeocodingCompleteCallback callback;
@@ -28,7 +29,7 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, String> 
     }
 
     @Override
-    protected String doInBackground(LatLng... latLngs) {
+    protected GeoLocation doInBackground(LatLng... latLngs) {
         LatLng latLng = latLngs[0];
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
@@ -52,14 +53,15 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, String> 
             Log.i(TAG, "address_found");
             String addressThoroughfare = address.getThoroughfare() != null ? address.getThoroughfare() : "";
             String addressFeatureName = address.getFeatureName() != null ? address.getFeatureName() : "";
-            return addressThoroughfare + " " + addressFeatureName;
+            String fullAddress = addressThoroughfare + " " + addressFeatureName;
+            return new GeoLocation(fullAddress, latLng);
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(String address) {
-        super.onPostExecute(address);
-        callback.onLocationGeocodingComplete(address);
+    protected void onPostExecute(GeoLocation geoLocation) {
+        super.onPostExecute(geoLocation);
+        callback.onLocationGeocodingComplete(geoLocation);
     }
 }

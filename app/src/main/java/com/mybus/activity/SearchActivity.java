@@ -24,6 +24,7 @@ import com.mybus.listener.OnFindResultsListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.model.GeoLocation;
 import com.mybus.model.RecentLocation;
 import com.mybus.model.StreetSuggestion;
 import com.mybus.requirements.AddressValidator;
@@ -31,6 +32,7 @@ import com.mybus.service.ServiceFacade;
 import com.mybus.view.FavoritesCardView;
 import com.mybus.view.HistoryCardView;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -60,18 +62,17 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     HistoryCardView mHistoryCardView;
     @Bind(R.id.card_view_favorites)
     FavoritesCardView mFavoriteCardView;
-    private String mCurrentQuery;
     private ProgressDialog mDialog;
-    private LatLng mLastLocation;
     private int mSearchType;
+    private List<RecentLocation> mRecentLocations;
 
     @OnClick(R.id.currentLocationCard)
     public void onCurrentLocationCardClick() {
         LocationUpdater locationUpdater = new LocationUpdater(null, this);
-        mLastLocation = locationUpdater.getLastKnownLocation();
-        if (mLastLocation != null) {
+        LatLng knownLocation = locationUpdater.getLastKnownLocation();
+        if (knownLocation != null) {
             showProgressDialog(getString(R.string.toast_searching_address));
-            ServiceFacade.getInstance().performGeocodeByLocation(mLastLocation, this, this);
+            ServiceFacade.getInstance().performGeocodeByLocation(knownLocation, this, this);
         } else {
             Toast.makeText(this, R.string.cant_find_current_location, Toast.LENGTH_SHORT).show();
         }
@@ -83,14 +84,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        mCurrentQuery = "";
-        mLastLocation = null;
-
-        if (getIntent().getStringExtra(ADD_FAVORITE) != null) {
-            mHistoryCardView.setVisibility(View.GONE);
-        }
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
-        mHistoryCardView.setType(mSearchType);
 
         if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
             mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
@@ -100,7 +94,19 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);
 
+        initHistoryCardView();
+        initFavoriteCardView();
+    }
+
+    private void initHistoryCardView() {
+        mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
+        //Sorting recent locations
+        Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
+        mHistoryCardView.setList(mRecentLocations);
         mHistoryCardView.setHistoryItemSelectedListener(this);
+    }
+
+    private void initFavoriteCardView() {
         mFavoriteCardView.setFavoriteItemSelectedListener(this);
     }
 
@@ -156,7 +162,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                 }
                 Util.closeSoftKeyboard(SearchActivity.this);
                 showProgressDialog(getString(R.string.toast_searching_address));
-                mCurrentQuery = currentQuery;
                 ServiceFacade.getInstance().performGeocodeByAddress(currentQuery, SearchActivity.this, SearchActivity.this);
             }
         });
@@ -181,25 +186,40 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     @Override
-    public void onLocationGeocodingComplete(String address) {
-        geocodingComplete(address, mLastLocation);
+    public void onLocationGeocodingComplete(GeoLocation geoLocation) {
+        geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
     }
 
     @Override
-    public void onAddressGeocodingComplete(LatLng location) {
-        geocodingComplete(mCurrentQuery, location);
+    public void onAddressGeocodingComplete(GeoLocation geoLocation) {
+        geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
     }
 
     private void geocodingComplete(String query, LatLng location) {
         cancelProgressDialog();
         if (query != null && location != null) {
             if (mSearchType >= 0) {
-                RecentLocation recentLocation = new RecentLocation(mSearchType, query, location.latitude, location.longitude);
-                RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
+                findOrCreateNewRecent(query, location);
             }
             setActivityResult(query, location);
         } else {
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Finds a recent for History Searches and increases it's usage, or creates a new one if no one found
+     *
+     * @param query
+     * @param latLng
+     */
+    private void findOrCreateNewRecent(String query, LatLng latLng) {
+        RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(mSearchType, latLng);
+        if (location != null) {
+            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(location.getId());
+        } else {
+            RecentLocation recentLocation = new RecentLocation(mSearchType, query, latLng.latitude, latLng.longitude);
+            RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
         }
     }
 
@@ -241,10 +261,10 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     @Override
-    public void onHistoryItemSelected(RecentLocation recentLocation) {
-        if (recentLocation != null) {
-            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(recentLocation.getId());
-            setActivityResult(recentLocation.getAddress(), recentLocation.getLatLng());
+    public void onHistoryItemSelected(int position) {
+        if (position >= 0 && position < mRecentLocations.size()) {
+            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(mRecentLocations.get(position).getId());
+            setActivityResult(mRecentLocations.get(position).getAddress(), mRecentLocations.get(position).getLatLng());
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
         }
@@ -254,7 +274,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     public void onFavoriteItemSelected(String result) {
         //TODO: Result should contain a valid LatLng and return it on the intent
         showProgressDialog(getString(R.string.toast_searching_address));
-        mCurrentQuery = result;
         ServiceFacade.getInstance().performGeocodeByAddress(result, SearchActivity.this, SearchActivity.this);
     }
 
