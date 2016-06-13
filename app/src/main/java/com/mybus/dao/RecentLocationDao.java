@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.RecentLocation;
-import com.mybus.model.UsageTrackable;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>

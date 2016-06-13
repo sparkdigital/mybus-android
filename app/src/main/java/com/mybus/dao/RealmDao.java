@@ -2,7 +2,6 @@ package com.mybus.dao;
 
 import android.content.Context;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.UsageTrackable;
 
 import java.util.Date;
