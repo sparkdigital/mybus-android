@@ -41,6 +41,7 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.GeoLocation;
 import com.mybus.model.RecentType;
 import com.mybus.model.Road.MapBusRoad;
 import com.mybus.model.Road.RoadResult;
@@ -430,7 +431,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onAddressGeocodingComplete(LatLng location) {
+    public void onAddressGeocodingComplete(GeoLocation geoLocation) {
+        LatLng location = geoLocation.getLatLng();
         if (location != null) {
             if (lastAddressGeocodingType == mStartLocationMarkerOptions) {
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, location, false);
@@ -459,7 +461,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onLocationGeocodingComplete(String address) {
+    public void onLocationGeocodingComplete(GeoLocation geoLocation) {
+        String address = geoLocation.getAddress();
         if (address != null) {
             if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
@@ -728,8 +731,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String addressAux = mStartLocationMarker.getTitle();
         mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, mEndLocationMarker.getPosition(), false);
         mStartLocationMarker.setTitle(mEndLocationMarker.getTitle());
+        mStartLocationMarker.hideInfoWindow();
         mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLngAux, false);
         mEndLocationMarker.setTitle(addressAux);
+        mEndLocationMarker.hideInfoWindow();
 
         zoomOutStartEndMarkers();
     }
