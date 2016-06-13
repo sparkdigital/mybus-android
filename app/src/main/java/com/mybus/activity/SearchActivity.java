@@ -23,6 +23,7 @@ import com.mybus.listener.OnFindResultsListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.model.GeoLocation;
 import com.mybus.model.RecentLocation;
 import com.mybus.model.StreetSuggestion;
 import com.mybus.requirements.AddressValidator;
@@ -58,18 +59,16 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     HistoryCardView mHistoryCardView;
     @Bind(R.id.card_view_favorites)
     FavoritesCardView mFavoriteCardView;
-    private String mCurrentQuery;
     private ProgressDialog mDialog;
-    private LatLng mLastLocation;
     private int mSearchType;
 
     @OnClick(R.id.currentLocationCard)
     public void onCurrentLocationCardClick() {
         LocationUpdater locationUpdater = new LocationUpdater(null, this);
-        mLastLocation = locationUpdater.getLastKnownLocation();
-        if (mLastLocation != null) {
+        LatLng knownLocation = locationUpdater.getLastKnownLocation();
+        if (knownLocation != null) {
             showProgressDialog(getString(R.string.toast_searching_address));
-            ServiceFacade.getInstance().performGeocodeByLocation(mLastLocation, this, this);
+            ServiceFacade.getInstance().performGeocodeByLocation(knownLocation, this, this);
         } else {
             Toast.makeText(this, R.string.cant_find_current_location, Toast.LENGTH_SHORT).show();
         }
@@ -80,9 +79,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
-
-        mCurrentQuery = "";
-        mLastLocation = null;
 
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
         mHistoryCardView.setType(mSearchType);
@@ -151,7 +147,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                 }
                 Util.closeSoftKeyboard(SearchActivity.this);
                 showProgressDialog(getString(R.string.toast_searching_address));
-                mCurrentQuery = currentQuery;
                 ServiceFacade.getInstance().performGeocodeByAddress(currentQuery, SearchActivity.this, SearchActivity.this);
             }
         });
@@ -176,13 +171,13 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     @Override
-    public void onLocationGeocodingComplete(String address) {
-        geocodingComplete(address, mLastLocation);
+    public void onLocationGeocodingComplete(GeoLocation geoLocation) {
+        geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
     }
 
     @Override
-    public void onAddressGeocodingComplete(LatLng location) {
-        geocodingComplete(mCurrentQuery, location);
+    public void onAddressGeocodingComplete(GeoLocation geoLocation) {
+        geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
     }
 
     private void geocodingComplete(String query, LatLng location) {
@@ -264,7 +259,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     public void onFavoriteItemSelected(String result) {
         //TODO: Result should contain a valid LatLng and return it on the intent
         showProgressDialog(getString(R.string.toast_searching_address));
-        mCurrentQuery = result;
         ServiceFacade.getInstance().performGeocodeByAddress(result, SearchActivity.this, SearchActivity.this);
     }
 
