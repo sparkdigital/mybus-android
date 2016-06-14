@@ -24,8 +24,6 @@ public class GeocodingServiceImpl implements GeocodingService {
             callback.onAddressGeocodingComplete(null);
             return;
         }
-        //TODO remove this hardcoded city, used to filter Mar del Plata results
-        address += " mar del plata";
         AddressGeocodingAcyncTask addressGeocodingTask = new AddressGeocodingAcyncTask(context, callback);
         addressGeocodingTask.execute(new String[]{address});
     }

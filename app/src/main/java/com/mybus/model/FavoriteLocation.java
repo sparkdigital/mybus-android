@@ -37,6 +37,13 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
         this.longitude = longitude;
     }
 
+    public FavoriteLocation(String name, String address) {
+        this.name = name;
+        this.address = address;
+        this.latitude = 0d;
+        this.longitude = 0d;
+    }
+
     public Long getId() { return id; }
 
     public String getName() {

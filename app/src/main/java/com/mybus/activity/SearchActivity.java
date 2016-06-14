@@ -51,7 +51,8 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
     public static final String RESULT_LATLNG_EXTRA = "RESULT_LATLNG_EXTRA";
-    public static final String ADD_FAVORITE = "ADD_FAVORITE";
+    public static final String SEARCH_ADDRESS_EXTRA = "SEARCH_TITLE_EXTRA";
+    public static final String FAVORITES_EXTRA = "FAVORITE";
 
 
     private static final String TAG = SearchActivity.class.getSimpleName();
@@ -87,10 +88,16 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
+        if (getIntent().getStringExtra(FAVORITES_EXTRA) != null) {
+            mFavoriteCardView.setVisibility(View.GONE);
+        }
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
 
         if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
             mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
+        }
+        if (getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA) != null) {
+            mSearchView.setSearchText(getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA));
         }
 
         initSearchView();

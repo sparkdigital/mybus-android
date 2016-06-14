@@ -34,7 +34,8 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = geocoder.getFromLocationName(locationName, 4);
+            //TODO remove this hardcoded city, used to filter Mar del Plata results
+            addresses = geocoder.getFromLocationName(locationName+" mar del plata" , 4);
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             Log.e(TAG, "service_not_available", ioException);

@@ -2,6 +2,8 @@
     <string name="app_name">MyBus</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancelar</string>
     <string name="app_url">www.mybus.com.ar</string>
     <string name="powered_by">Powered by Devspark</string>
     <string name="from_hint">Ingresa tu Origen</string>
@@ -11,6 +13,7 @@
     <string name="stop_origin_title">Parada origen:</string>
     <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
     <string name="update_playservice">Se necesita el servicio de Google Play actualizado. Desea instalarlo?</string>
+    <string name="favorite_confirm_delete">Desea eliminar el favorito?</string>
     <string name="distance_to_origin">"Distancia desde el origen: "</string>
     <string name="distance_to_destination">"Distancia hasta el destino: "</string>
     <string name="toast_no_result_found">No se encontraron resultados</string>
