@@ -11,15 +11,13 @@ import io.realm.annotations.Required;
  * <p/>
  * RealmObject to persist favorite locations
  */
-public class FavoriteLocation extends RealmObject implements UsageTrackable {
+public class FavoriteLocation extends RealmObject implements UsageTrackable, Comparable<FavoriteLocation> {
     @PrimaryKey
     private Long id = System.nanoTime();
     @Required
     private String name;
     @Required
-    private String streetName;
-    @Required
-    private Integer streetNumber;
+    private String address;
     @Required
     private Double latitude;
     @Required
@@ -32,10 +30,9 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable {
     }
 
     // Constructor used for testing
-    public FavoriteLocation(String name, String stName, Integer stNumber, Double latitude, Double longitude) {
+    public FavoriteLocation(String name, String address, Double latitude, Double longitude) {
         this.name = name;
-        this.streetName = stName;
-        this.streetNumber = stNumber;
+        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -50,20 +47,12 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable {
         this.name = name;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public Integer getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(Integer streetNumber) {
-        this.streetNumber = streetNumber;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Double getLatitude() {
@@ -96,6 +85,11 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable {
     // Used for testing.
     @Override
     public String toString() {
-        return "Name: " + name + " ; Address: " + streetName + " " + streetNumber + " ; LatLong: (" + latitude + ", " + longitude + ")";
+        return "Name: " + name + " ; Address: " + address + " ; LatLong: (" + latitude + ", " + longitude + ")";
+    }
+
+    @Override
+    public int compareTo(FavoriteLocation another) {
+        return this.getUsageCount() < another.getUsageCount() ? -1 : 1;
     }
 }

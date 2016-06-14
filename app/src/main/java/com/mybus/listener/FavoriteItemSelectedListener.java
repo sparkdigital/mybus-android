@@ -5,5 +5,5 @@ package com.mybus.listener;
  */
 public interface FavoriteItemSelectedListener {
 
-    void onFavoriteItemSelected(String result);
+    void onFavoriteItemSelected(int position);
 }
