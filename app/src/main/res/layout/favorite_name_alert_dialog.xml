@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Nombre de favorito" />
+        android:text="@string/save_favorite_as" />
 
     <EditText
         android:id="@+id/favorite_name_edit_text"

@@ -27,6 +27,10 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
 
     // Default constructor
     public FavoriteLocation() {
+        this.name = "";
+        this.address = "";
+        this.latitude = 0d;
+        this.longitude = 0d;
     }
 
     // Constructor used for testing
@@ -35,13 +39,6 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-
-    public FavoriteLocation(String name, String address) {
-        this.name = name;
-        this.address = address;
-        this.latitude = 0d;
-        this.longitude = 0d;
     }
 
     public Long getId() { return id; }

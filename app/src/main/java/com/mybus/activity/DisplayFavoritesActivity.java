@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mybus.R;
 import com.mybus.adapter.FavoriteViewAdapter;
@@ -16,7 +15,9 @@ import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.listener.FavoriteDeleteListener;
 import com.mybus.listener.FavoriteEditListener;
 import com.mybus.listener.OnAddNewFavoriteListener;
+import com.mybus.listener.OnEditOldFavoriteListener;
 import com.mybus.model.FavoriteLocation;
+import com.mybus.model.SearchType;
 import com.mybus.view.FavoriteNameAlertDialog;
 
 import java.util.List;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteEditListener, FavoriteDeleteListener, OnAddNewFavoriteListener {
+public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteEditListener, FavoriteDeleteListener, OnAddNewFavoriteListener, OnEditOldFavoriteListener {
 
     @Bind(R.id.favorites_recycler_view)
     RecyclerView mFavoritesRecyclerView;
@@ -44,6 +45,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
 
     private FavoriteViewAdapter mFavoriteViewAdapter;
     private String newAddress;
+    private FavoriteLocation oldFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +73,14 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
 
     private void startSearchActivityToAddFavorite(int requestCode) {
         Intent searchIntent = new Intent(this, SearchActivity.class);
-        searchIntent.putExtra(SearchActivity.FAVORITES_EXTRA, "YES");
+        searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, SearchType.FAVORITE);
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
     }
 
     private void startSearchActivityToEditFavorite(int requestCode, String favoriteAddress) {
         Intent searchIntent = new Intent(this, SearchActivity.class);
-        searchIntent.putExtra(SearchActivity.FAVORITES_EXTRA, "YES");
+        searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, SearchType.FAVORITE);
         searchIntent.putExtra(SearchActivity.SEARCH_ADDRESS_EXTRA, favoriteAddress);
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
@@ -100,7 +102,6 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
         return R.string.displayFavoritesToolbarTittle;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
@@ -109,19 +110,18 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 break;
             case RESULT_OK:
                 newAddress = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
+                FavoriteNameAlertDialog favoriteNameAlertDialog = new FavoriteNameAlertDialog();
                 switch (requestCode) {
                     case ADD_SEARCH_RESULT_ID:
-                        FavoriteNameAlertDialog favoriteNameAlertDialog = new FavoriteNameAlertDialog();
-                        favoriteNameAlertDialog.setmOnAddNewFavoriteListener(this);
-                        favoriteNameAlertDialog.show(getFragmentManager(), "Favorite Name");
+                        favoriteNameAlertDialog.setActionAdding(this);
                         break;
                     case EDIT_SEARCH_RESULT_ID:
-                        FavoriteLocation oldFavorite = mFavorites.get(mFavoritePositionToEdit);
-                        Toast.makeText(this, "Edited " + oldFavorite.getAddress() + "to " + newAddress, Toast.LENGTH_LONG).show();
-                        oldFavorite.setAddress(newAddress);
-                        mFavoriteViewAdapter.notifyDataSetChanged();
+                        favoriteNameAlertDialog.setActionEditing(this);
+                        oldFavorite = mFavorites.get(mFavoritePositionToEdit);
+                        favoriteNameAlertDialog.setPreviousName(oldFavorite.getName());
                         break;
                 }
+                favoriteNameAlertDialog.show(getFragmentManager(), "Favorite Name");
         }
     }
 
@@ -155,10 +155,20 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
 
     @Override
     public void onAddNewFavorite(String favoriteName) {
-        FavoriteLocation newFavorite = new FavoriteLocation(favoriteName, newAddress);
+        FavoriteLocation newFavorite = new FavoriteLocation();
+        newFavorite.setName(favoriteName);
+        newFavorite.setAddress(newAddress);
         if (FavoriteLocationDao.getInstance(this).saveOrUpdate(newFavorite)) {
             mFavorites.add(newFavorite);
             mFavoriteViewAdapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public void onEditOldFavorite(String newName) {
+        oldFavorite.setAddress(newAddress);
+        oldFavorite.setName(newName);
+        mFavoriteViewAdapter.notifyDataSetChanged();
+    }
+
 }
