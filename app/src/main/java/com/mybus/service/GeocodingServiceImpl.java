@@ -7,7 +7,6 @@ import com.mybus.asynctask.AddressGeocodingAcyncTask;
 import com.mybus.asynctask.LocationGeocodingAcyncTask;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
-import com.mybus.requirements.AddressValidator;
 
 public class GeocodingServiceImpl implements GeocodingService {
 
@@ -20,10 +19,6 @@ public class GeocodingServiceImpl implements GeocodingService {
 
     @Override
     public void performGeocodeByAddress(String address, OnAddressGeocodingCompleteCallback callback, Context context) {
-        if (!AddressValidator.isValidAddress(address)) {
-            callback.onAddressGeocodingComplete(null);
-            return;
-        }
         //TODO remove this hardcoded city, used to filter Mar del Plata results
         address += " mar del plata";
         AddressGeocodingAcyncTask addressGeocodingTask = new AddressGeocodingAcyncTask(context, callback);

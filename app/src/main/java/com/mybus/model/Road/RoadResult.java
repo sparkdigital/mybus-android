@@ -30,7 +30,7 @@ public class RoadResult {
     private String mIdBusLine1;
     private String mIdBusLine2;
 
-    private final float POLYLINE_WIDTH = 15F;
+    private static final float POLYLINE_WIDTH = 15F;
 
     /**
      * @param jsonObject

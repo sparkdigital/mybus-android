@@ -19,7 +19,7 @@ public class WalkDistanceHelper {
         int cantidad = (int) (distance / BLOCK_LENGHT);
         if (cantidad < 1) {
             blocks += "Menos de una cuadra";
-        } else if (cantidad > 1 && cantidad < 2) {
+        } else if (cantidad == 1) {
             blocks += "Una cuadra";
         } else {
             if (cantidad > 1 && cantidad < 10) {

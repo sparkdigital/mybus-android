@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.model.GeoLocation;
+import com.mybus.requirements.AddressValidator;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +32,9 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
     @Override
     protected GeoLocation doInBackground(String... strings) {
         String locationName = strings[0];
+        if (!AddressValidator.isValidAddress(locationName)) {
+            return null;
+        }
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {

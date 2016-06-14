@@ -92,4 +92,31 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
     public int compareTo(FavoriteLocation another) {
         return this.getUsageCount() < another.getUsageCount() ? -1 : 1;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FavoriteLocation that = (FavoriteLocation) o;
+
+        if (!id.equals(that.id)) return false;
+        if (!name.equals(that.name)) return false;
+        if (!address.equals(that.address)) return false;
+        if (!latitude.equals(that.latitude)) return false;
+        if (!longitude.equals(that.longitude)) return false;
+        return usageCount.equals(that.usageCount);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + address.hashCode();
+        result = 31 * result + latitude.hashCode();
+        result = 31 * result + longitude.hashCode();
+        result = 31 * result + usageCount.hashCode();
+        return result;
+    }
 }

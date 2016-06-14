@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
-    private TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
@@ -636,6 +636,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(new Intent(MainActivity.this, DisplayFavoritesActivity.class));
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
+            default:
+                break;
         }
         return true;
     }
@@ -691,7 +693,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         zoomOutStartEndMarkers();
                         break;
+                    default:
+                        break;
                 }
+            default:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

@@ -22,12 +22,10 @@ public class ServiceFacade {
     private static ServiceFacade instance = null;
     private DirectionsServiceImpl directionsService;
     private GisService gisService;
-    private MyBusService myBusService;
     private GeocodingService geocodingService;
 
     private ServiceFacade() {
         gisService = new GisServiceImpl();
-        myBusService = new MyBusServiceImpl();
         geocodingService = new GeocodingServiceImpl();
         directionsService = new DirectionsServiceImpl();
     }

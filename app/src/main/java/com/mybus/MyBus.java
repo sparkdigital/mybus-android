@@ -13,7 +13,11 @@ public class MyBus extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = this;
+        setContext(this);
+    }
+
+    private void setContext(Context c){
+        this.mContext = c;
     }
 
     public static Context getContext(){

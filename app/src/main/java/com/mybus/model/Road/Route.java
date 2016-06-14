@@ -32,7 +32,6 @@ public class Route {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                route = null;
             }
         }
         route.setPointList(points);
