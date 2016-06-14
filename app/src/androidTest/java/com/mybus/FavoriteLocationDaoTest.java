@@ -7,7 +7,7 @@ import android.util.Log;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.model.FavoriteLocation;
 
-import io.realm.RealmResults;
+import java.util.List;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
@@ -16,6 +16,9 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
     private Context mContext;
     private final String NAME_FIELD = "name";
     private final String NAME_VALUE = "Test";
+    private final String NAME_VALUE_UPDATED = "Test_Updated";
+    private static final String STREET_VALUE = "Test_Address 1100";
+    private static final String STREET_VALUE_2 = "Test_Address_2 2200";
 
     @Override
     protected void setUp() throws Exception {
@@ -24,7 +27,7 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test1SaveFavorite() {
-        FavoriteLocation favLocation = new FavoriteLocation(NAME_VALUE, "4 de Abril", 1100, -37.3291053, -59.1336692);
+        FavoriteLocation favLocation = new FavoriteLocation(NAME_VALUE, STREET_VALUE, -37.3291053, -59.1336692);
         boolean success = FavoriteLocationDao.getInstance(mContext).saveOrUpdate(favLocation);
         assertTrue(success);
         Log.i("TestSaveFavorite", "Favorite save " + (success ? "success" : "failed"));
@@ -48,15 +51,14 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
 
     public void test4UpdateFavorite() {
         FavoriteLocation favLocation = FavoriteLocationDao.getInstance(mContext).getByField(NAME_FIELD, NAME_VALUE);
-        favLocation.setName("Test_Updated");
-        favLocation.setStreetName("9 de Julio");
-        favLocation.setStreetNumber(340);
+        favLocation.setName(NAME_VALUE_UPDATED);
+        favLocation.setAddress(STREET_VALUE_2);
         boolean success = FavoriteLocationDao.getInstance(mContext).saveOrUpdate(favLocation);
         assertTrue(success);
     }
 
     public void test5ListFavorites() {
-        RealmResults<FavoriteLocation> results = FavoriteLocationDao.getInstance(mContext).getAll();
+        List<FavoriteLocation> results = FavoriteLocationDao.getInstance(mContext).getAll();
         assertTrue(results.size() > 0);
         Log.i("TestListFavorites", "All Favorites");
         for (FavoriteLocation fav : results) {
@@ -65,7 +67,7 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test6RemoveFavoriteUsedForTests() {
-        FavoriteLocation fav = FavoriteLocationDao.getInstance(mContext).getByField(NAME_FIELD, "Test_Updated");
+        FavoriteLocation fav = FavoriteLocationDao.getInstance(mContext).getByField(NAME_FIELD, NAME_VALUE_UPDATED);
         assertNotNull(fav);
         assertTrue(FavoriteLocationDao.getInstance(mContext).remove(fav.getId()));
     }

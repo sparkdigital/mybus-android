@@ -17,5 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:fadeScrollbars="false"/>
+        android:fadeScrollbars="false"
+        android:visibility="gone" />
+    <TextView
+        android:id="@+id/noFavorites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/no_favorites_present" />
 </LinearLayout>

@@ -10,7 +10,7 @@ import com.mybus.model.FavoriteLocation;
  * DAO for favorites objects saved on realm
  */
 public class FavoriteLocationDao extends RealmDao<FavoriteLocation> {
-    private static RealmDao<FavoriteLocation> instance = null;
+    private static FavoriteLocationDao instance = null;
 
     private FavoriteLocationDao(Context context) {
         super(context, FavoriteLocation.class);
@@ -22,7 +22,7 @@ public class FavoriteLocationDao extends RealmDao<FavoriteLocation> {
      * @param context
      * @return
      */
-    public static RealmDao<FavoriteLocation> getInstance(Context context) {
+    public static FavoriteLocationDao getInstance(Context context) {
         if (instance == null) {
             instance = new FavoriteLocationDao(context);
         }

@@ -20,7 +20,7 @@ import java.util.List;
 public class HistoryCardView extends CardView implements HistoryItemSelectedListener {
 
     private HistoryItemSelectedListener mHistoryItemSelectedListener;
-    private RecyclerView mHistoryItemsList;
+    private RecyclerView mRecyclerView;
     private HistoryItemAdapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private TextView mNoRecentTextView;
@@ -38,7 +38,7 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
     private void init() {
         inflate(getContext(), R.layout.history_card_view, this);
 
-        mHistoryItemsList = (RecyclerView) findViewById(R.id.recent_list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recent_list);
         mNoRecentTextView = (TextView) findViewById(R.id.noRecentTv);
     }
 
@@ -53,21 +53,21 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
         mRecentLocationList = list;
         if (mRecentLocationList != null && mRecentLocationList.size() > 0) {
             mNoRecentTextView.setVisibility(GONE);
-            mHistoryItemsList.setVisibility(VISIBLE);
+            mRecyclerView.setVisibility(VISIBLE);
 
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
-            mHistoryItemsList.setHasFixedSize(true);
+            mRecyclerView.setHasFixedSize(true);
             // use a linear layout manager
             mLayoutManager = new LinearLayoutManager(getContext());
-            mHistoryItemsList.setLayoutManager(mLayoutManager);
+            mRecyclerView.setLayoutManager(mLayoutManager);
 
             mListAdapter = new HistoryItemAdapter(mRecentLocationList);
             mListAdapter.setItemSelectedListener(this);
-            mHistoryItemsList.setAdapter(mListAdapter);
+            mRecyclerView.setAdapter(mListAdapter);
         } else {
-            mHistoryItemsList.setVisibility(GONE);
             mNoRecentTextView.setVisibility(VISIBLE);
+            mRecyclerView.setVisibility(GONE);
         }
     }
 }

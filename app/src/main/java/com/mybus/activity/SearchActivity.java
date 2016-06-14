@@ -16,6 +16,7 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
+import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.dao.RecentLocationDao;
 import com.mybus.helper.SearchSuggestionsHelper;
 import com.mybus.listener.FavoriteItemSelectedListener;
@@ -24,6 +25,7 @@ import com.mybus.listener.OnFindResultsListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.RecentLocation;
 import com.mybus.model.StreetSuggestion;
@@ -65,6 +67,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     private ProgressDialog mDialog;
     private int mSearchType;
     private List<RecentLocation> mRecentLocations;
+    private List<FavoriteLocation> mFavoriteLocations;
 
     @OnClick(R.id.currentLocationCard)
     public void onCurrentLocationCardClick() {
@@ -100,13 +103,17 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     private void initHistoryCardView() {
         mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
-        //Sorting recent locations
+        //Sorting recent locations. (The list could be empty but never null)
         Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
         mHistoryCardView.setList(mRecentLocations);
         mHistoryCardView.setHistoryItemSelectedListener(this);
     }
 
     private void initFavoriteCardView() {
+        mFavoriteLocations = FavoriteLocationDao.getInstance(this).getAll();
+        //Sorting favorite locations by usage. (The list could be empty but never null)
+        Collections.sort(mFavoriteLocations, Collections.<FavoriteLocation>reverseOrder());
+        mFavoriteCardView.setItemList(mFavoriteLocations);
         mFavoriteCardView.setFavoriteItemSelectedListener(this);
     }
 
@@ -271,10 +278,12 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     @Override
-    public void onFavoriteItemSelected(String result) {
-        //TODO: Result should contain a valid LatLng and return it on the intent
-        showProgressDialog(getString(R.string.toast_searching_address));
-        ServiceFacade.getInstance().performGeocodeByAddress(result, SearchActivity.this, SearchActivity.this);
+    public void onFavoriteItemSelected(int position) {
+        if (position >= 0 && position < mFavoriteLocations.size()) {
+            setActivityResult(mFavoriteLocations.get(position).getAddress(), mFavoriteLocations.get(position).getLatLng());
+        } else {
+            Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
+        }
     }
 
 
