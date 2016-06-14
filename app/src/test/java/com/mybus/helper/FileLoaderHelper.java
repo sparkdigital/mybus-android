@@ -12,6 +12,9 @@ import java.io.InputStream;
  */
 public class FileLoaderHelper {
 
+    private FileLoaderHelper() {
+    }
+
     /**
      * Loads a JSONObject from Resources
      *

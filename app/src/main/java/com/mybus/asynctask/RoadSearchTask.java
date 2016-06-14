@@ -25,7 +25,7 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     private LatLng endLocation;
     private LatLng firstBusStop;
     private RoadSearchCallback roadSearchCallback;
-    RoadSearch roadSearch;
+    private RoadSearch roadSearch;
 
     /**
      * Private Default Constructor

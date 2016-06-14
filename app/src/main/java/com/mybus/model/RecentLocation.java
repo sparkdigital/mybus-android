@@ -12,6 +12,7 @@ import io.realm.annotations.Required;
  * RealmObject to persist recent locations
  */
 public class RecentLocation extends RealmObject implements UsageTrackable, Comparable<RecentLocation> {
+    public static final int HASH_MULTIPLIER = 31;
     @PrimaryKey
     private Long id = System.nanoTime();
     @Required
@@ -93,7 +94,9 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
     // Used for testing.
     @Override
     public String toString() {
-        return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION") + " ; Address: " + address + " ; LatLong: (" + latitude + ", " + longitude + ")" + "Usage Count: " + usageCount;
+        return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION")
+                + " ; Address: " + address
+                + " ; LatLong: (" + latitude + ", " + longitude + ")" + "Usage Count: " + usageCount;
     }
 
     @Override
@@ -103,28 +106,45 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         RecentLocation that = (RecentLocation) o;
 
-        if (!id.equals(that.id)) return false;
-        if (!type.equals(that.type)) return false;
-        if (!address.equals(that.address)) return false;
-        if (!latitude.equals(that.latitude)) return false;
-        if (!longitude.equals(that.longitude)) return false;
-        return usageCount.equals(that.usageCount);
+        if (!id.equals(that.id)) {
+            return false;
+        }
+        if (!type.equals(that.type)) {
+            return false;
+        }
+        if (!address.equals(that.address)) {
+            return false;
+        }
+        if (!latitude.equals(that.latitude)) {
+            return false;
+        }
+        if (!longitude.equals(that.longitude)) {
+            return false;
+        }
+        if (!usageCount.equals(that.usageCount)) {
+            return false;
+        }
 
+        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + type.hashCode();
-        result = 31 * result + address.hashCode();
-        result = 31 * result + latitude.hashCode();
-        result = 31 * result + longitude.hashCode();
-        result = 31 * result + usageCount.hashCode();
+        result = HASH_MULTIPLIER * result + type.hashCode();
+        result = HASH_MULTIPLIER * result + address.hashCode();
+        result = HASH_MULTIPLIER * result + latitude.hashCode();
+        result = HASH_MULTIPLIER * result + longitude.hashCode();
+        result = HASH_MULTIPLIER * result + usageCount.hashCode();
         return result;
     }
 }

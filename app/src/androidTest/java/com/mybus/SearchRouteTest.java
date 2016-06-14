@@ -42,7 +42,7 @@ public class SearchRouteTest extends InstrumentationTestCase implements RouteSea
             }
         });
         try {
-            signal.await();// wait for callback
+            signal.await(); // wait for callback
             assertTrue(mResults.size() > 0);
         } catch (InterruptedException e) {
             fail();

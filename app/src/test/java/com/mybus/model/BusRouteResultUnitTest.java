@@ -47,7 +47,8 @@ public class BusRouteResultUnitTest {
         // Gets unique BusRoute
         BusRoute busRouteReceived = busRouteResult.getBusRoutes().get(0);
         // Set BusRoute expected
-        BusRoute busRouteExpected = new BusRoute(1, "542", 0, "d60405", 24, "-38.013550", "-57.575436", "Dorrego", 4230, 214.24D, 39, "-38.010307", "-57.552765", "Santa Fe", 2930, 30.33D);
+        BusRoute busRouteExpected = new BusRoute(1, "542", 0, "d60405", 24, "-38.013550", "-57.575436",
+                "Dorrego", 4230, 214.24D, 39, "-38.010307", "-57.552765", "Santa Fe", 2930, 30.33D);
         // Checks objects:
         assertEquals(busRouteExpected, busRouteReceived);
     }
@@ -80,9 +81,13 @@ public class BusRouteResultUnitTest {
         assertTrue(busRouteResult.getBusRoutes().size() == 2);
 
         BusRoute firstBusRouteReceived = busRouteResult.getBusRoutes().get(0); // Gets first BusRoute
-        BusRoute firstBusRouteExpected = new BusRoute(2,"563a", 0, "00338e", 107, "-38.017799", "-57.572887", "Av Juan B Justo", 3385, 406.39D, 114, "-38.027122", "-57.560394", "Bernardo O Higgins", 2050, null); // Set first BusRoute expected
+        BusRoute firstBusRouteExpected = new BusRoute(2, "563a", 0, "00338e", 107, "-38.017799",
+                "-57.572887", "Av Juan B Justo", 3385, 406.39D, 114, "-38.027122", "-57.560394",
+                "Bernardo O Higgins", 2050, null); // Set first BusRoute expected
         BusRoute secondBusRouteReceived = busRouteResult.getBusRoutes().get(1); // Gets second BusRoute
-        BusRoute secondBusRouteExpected = new BusRoute(5, "523", 0, "d60405", 92, "-38.026207", "-57.560745", "Av Juan B Justo", 1975, null, 129, "-38.069633", "-57.555370", "Gral Pacheco", 2980, 365.23D); // Set second BusRoute expected
+        BusRoute secondBusRouteExpected = new BusRoute(5, "523", 0, "d60405", 92, "-38.026207",
+                "-57.560745", "Av Juan B Justo", 1975, null, 129, "-38.069633", "-57.555370",
+                "Gral Pacheco", 2980, 365.23D); // Set second BusRoute expected
         // Checks objects:
         assertEquals(firstBusRouteExpected, firstBusRouteReceived);
         assertEquals(secondBusRouteExpected, secondBusRouteReceived);

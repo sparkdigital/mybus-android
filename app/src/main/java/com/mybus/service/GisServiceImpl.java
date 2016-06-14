@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GisServiceImpl extends GenericService implements GisService{
+public class GisServiceImpl extends GenericService implements GisService {
 
     /**
      * @param constraint
@@ -18,7 +18,7 @@ public class GisServiceImpl extends GenericService implements GisService{
      * @throws JSONException
      */
     @Override
-    public List<String> findStreets(String constraint){
+    public List<String> findStreets(String constraint) {
 
         List<String> results = new ArrayList<>();
         String url = GisServiceUrlBuilder.buildFindStreetsUrl(constraint);

@@ -12,6 +12,9 @@ import com.mybus.R;
 
 public class PlayServicesChecker {
 
+    private PlayServicesChecker() {
+    }
+
     /**
      * @param context
      * @return

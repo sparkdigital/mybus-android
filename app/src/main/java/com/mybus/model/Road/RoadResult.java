@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class RoadResult {
 
+    public static final int HASH_MULTIPLIER = 31;
     private int mType;
     private float mTotalDistance;
     private int mTravelTime;
@@ -201,17 +202,29 @@ public class RoadResult {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         RoadResult that = (RoadResult) o;
 
-        if (mType != that.mType) return false;
-        if (Float.compare(that.mTotalDistance, mTotalDistance) != 0) return false;
-        if (mTravelTime != that.mTravelTime) return false;
-        if (mArrivalTime != that.mArrivalTime) return false;
+        if (mType != that.mType) {
+            return false;
+        }
+        if (Float.compare(that.mTotalDistance, mTotalDistance) != 0) {
+            return false;
+        }
+        if (mTravelTime != that.mTravelTime) {
+            return false;
+        }
+        if (mArrivalTime != that.mArrivalTime) {
+            return false;
+        }
         //TODO: Remove this comment When Route contains the equals method
-        //if (!mRouteList.equals(that.mRouteList)) return false;
+        //if (!mRouteList.equals(that.mRouteList)) {return false;}
         return true;
 
     }
@@ -219,10 +232,10 @@ public class RoadResult {
     @Override
     public int hashCode() {
         int result = mType;
-        result = 31 * result + (mTotalDistance != +0.0f ? Float.floatToIntBits(mTotalDistance) : 0);
-        result = 31 * result + mTravelTime;
-        result = 31 * result + mArrivalTime;
-        result = 31 * result + mRouteList.hashCode();
+        result = HASH_MULTIPLIER * result + (mTotalDistance != +0.0f ? Float.floatToIntBits(mTotalDistance) : 0);
+        result = HASH_MULTIPLIER * result + mTravelTime;
+        result = HASH_MULTIPLIER * result + mArrivalTime;
+        result = HASH_MULTIPLIER * result + mRouteList.hashCode();
         return result;
     }
 

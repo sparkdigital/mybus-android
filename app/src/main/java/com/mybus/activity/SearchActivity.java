@@ -43,7 +43,8 @@ import butterknife.OnClick;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class SearchActivity extends AppCompatActivity implements OnAddressGeocodingCompleteCallback, HistoryItemSelectedListener, FavoriteItemSelectedListener, OnLocationGeocodingCompleteCallback {
+public class SearchActivity extends AppCompatActivity implements OnAddressGeocodingCompleteCallback,
+        HistoryItemSelectedListener, FavoriteItemSelectedListener, OnLocationGeocodingCompleteCallback {
 
     public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
     public static final String SEARCH_TYPE_EXTRA = "SEARCH_TYPE_EXTRA";

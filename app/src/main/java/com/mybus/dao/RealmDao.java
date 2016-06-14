@@ -11,7 +11,6 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>

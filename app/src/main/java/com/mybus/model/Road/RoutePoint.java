@@ -10,10 +10,12 @@ import org.json.JSONObject;
  */
 public class RoutePoint {
 
+    public static final int HASH_MULTIPLIER = 31;
     private String mStopId, mLat, mLng, mAddress;
     private boolean isWaypoint;
 
-    public RoutePoint() {}
+    public RoutePoint() {
+    }
 
     public RoutePoint(String mStopId, String mLat, String mLng, String mAddress, boolean isWaypoint) {
         this.mStopId = mStopId;
@@ -47,32 +49,32 @@ public class RoutePoint {
         return mStopId;
     }
 
-    public void setStopId(String StopId) {
-        this.mStopId = StopId;
+    public void setStopId(String stopId) {
+        this.mStopId = stopId;
     }
 
     public String getLat() {
         return mLat;
     }
 
-    public void setLat(String Lat) {
-        this.mLat = Lat;
+    public void setLat(String lat) {
+        this.mLat = lat;
     }
 
     public String getLng() {
         return mLng;
     }
 
-    public void setLng(String Lng) {
-        this.mLng = Lng;
+    public void setLng(String lng) {
+        this.mLng = lng;
     }
 
     public String getAddress() {
         return mAddress;
     }
 
-    public void setAddress(String Address) {
-        this.mAddress = Address;
+    public void setAddress(String address) {
+        this.mAddress = address;
     }
 
     public boolean isWaypoint() {
@@ -90,14 +92,24 @@ public class RoutePoint {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         RoutePoint that = (RoutePoint) o;
 
-        if (isWaypoint != that.isWaypoint) return false;
-        if (!mStopId.equals(that.mStopId)) return false;
-        if (!mLat.equals(that.mLat)) return false;
-        if (!mLng.equals(that.mLng)) return false;
+        if (isWaypoint != that.isWaypoint) {
+            return false;
+        }
+        if (!mStopId.equals(that.mStopId)) {
+            return false;
+        }
+        if (!mLat.equals(that.mLat)) {
+            return false;
+        }
+        if (!mLng.equals(that.mLng)) {
+            return false;
+        }
         return mAddress.equals(that.mAddress);
 
     }
@@ -105,10 +117,10 @@ public class RoutePoint {
     @Override
     public int hashCode() {
         int result = mStopId.hashCode();
-        result = 31 * result + mLat.hashCode();
-        result = 31 * result + mLng.hashCode();
-        result = 31 * result + mAddress.hashCode();
-        result = 31 * result + (isWaypoint ? 1 : 0);
+        result = HASH_MULTIPLIER * result + mLat.hashCode();
+        result = HASH_MULTIPLIER * result + mLng.hashCode();
+        result = HASH_MULTIPLIER * result + mAddress.hashCode();
+        result = HASH_MULTIPLIER * result + (isWaypoint ? 1 : 0);
         return result;
     }
 }

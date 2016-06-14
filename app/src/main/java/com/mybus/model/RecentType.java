@@ -6,4 +6,8 @@ package com.mybus.model;
 public class RecentType {
     public static final int ORIGIN = 0;
     public static final int DESTINATION = 1;
+
+    private RecentType() {
+    }
+
 }

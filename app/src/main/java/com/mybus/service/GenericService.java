@@ -11,12 +11,11 @@ public abstract class GenericService {
 
     private OkHttpClient client;
 
-    public GenericService(){
+    public GenericService() {
         client = new OkHttpClient();
     }
 
     /**
-     *
      * @param url
      * @return
      * @throws IOException

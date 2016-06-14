@@ -16,11 +16,11 @@ public class MyBus extends Application {
         setContext(this);
     }
 
-    private void setContext(Context c){
+    private void setContext(Context c) {
         this.mContext = c;
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return mContext;
     }
 }

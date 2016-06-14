@@ -4,8 +4,10 @@ public class AddressValidator {
 
     private static final int MAX_NUMBER = 20000;
 
+    private AddressValidator() {
+    }
+
     /**
-     *
      * @param address
      * @return
      */
@@ -23,7 +25,6 @@ public class AddressValidator {
     }
 
     /**
-     *
      * @param text
      * @return
      */
@@ -37,7 +38,6 @@ public class AddressValidator {
     }
 
     /**
-     *
      * @param address
      * @return
      */

@@ -5,7 +5,6 @@ import android.net.Uri;
 import com.mybus.model.Road.RoadSearch;
 
 /**
- *
  * MyBus Service Public API url builder.
  *
  * @author Enrique Pennimpede <epennimpede@devspark.com>
@@ -19,8 +18,10 @@ public class MyBusServiceUrlBuilder {
     private static final String VERSION = "v1";
     private static final String TOKEN = "94a08da1fecbb6e8b46990538c7b50b2";
 
+    private MyBusServiceUrlBuilder() {
+    }
+
     /**
-     *
      * Creates the API url in order to get a single road.
      *
      * @param roadSearch
@@ -38,7 +39,6 @@ public class MyBusServiceUrlBuilder {
     }
 
     /**
-     *
      * Creates the API url in order to get a combined road.
      *
      * @param roadSearch
@@ -60,7 +60,6 @@ public class MyBusServiceUrlBuilder {
     }
 
     /**
-     *
      * Creates the API url in order to access the Nexus Service.
      *
      * @param originLatitude
@@ -82,7 +81,6 @@ public class MyBusServiceUrlBuilder {
     }
 
     /**
-     *
      * Creates the base API url
      *
      * @return base API url

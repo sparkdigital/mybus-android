@@ -24,8 +24,8 @@ public class SearchSingleRoadTest extends InstrumentationTestCase implements Roa
     protected void setUp() throws Exception {
         super.setUp();
         RoadSearch roadSearch = new RoadSearch("1", "0", "24", "39");
-        LatLng origin = new LatLng(-38.10821902246196,-57.59124767035246);
-        LatLng destiny = new LatLng(-37.954447126607825,-57.59074375033378);
+        LatLng origin = new LatLng(-38.10821902246196, -57.59124767035246);
+        LatLng destiny = new LatLng(-37.954447126607825, -57.59074375033378);
         mAsycTask = new RoadSearchTask(0, roadSearch, origin, destiny, this);
         signal = new CountDownLatch(1); //CountDownLatch used to perform wait-notify behaviour
     }
@@ -45,7 +45,7 @@ public class SearchSingleRoadTest extends InstrumentationTestCase implements Roa
             }
         });
         try {
-            signal.await();// wait for callback
+            signal.await(); // wait for callback
             assertTrue(mResult != null);
         } catch (InterruptedException e) {
             fail();

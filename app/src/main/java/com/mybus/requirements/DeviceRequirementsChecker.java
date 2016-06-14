@@ -12,6 +12,9 @@ import com.mybus.R;
 
 public class DeviceRequirementsChecker {
 
+    private DeviceRequirementsChecker() {
+    }
+
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

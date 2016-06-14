@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder> implements FavoriteItemSelectedListener{
+public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder> implements FavoriteItemSelectedListener {
     private List<FavoriteLocation> mDataset;
     private FavoriteItemSelectedListener mItemSelectedListener;
 

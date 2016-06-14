@@ -6,27 +6,34 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public class BusRoute {
-    Integer mIdBusLine;
-    String mBusLineName;
-    Integer mBusLineDirection;
-    String mBusLineColor;
-    Integer mStartBusStopNumber;
-    String mStartBusStopLat;
-    String mStartBusStopLng;
-    String mStartBusStopStreetName;
-    Integer mStartBusStopStreetNumber;
-    Double mStartBusStopDistanceToOrigin;
-    Integer mDestinationBusStopNumber;
-    String mDestinationBusStopLat;
-    String mDestinationBusStopLng;
-    String mDestinationBusStopStreetName;
-    Integer mDestinationBusStopStreetNumber;
-    Double mDestinationBusStopDistanceToDestination;
+    public static final int HASH_MULTIPLIER = 31;
+    private Integer mIdBusLine;
+    private String mBusLineName;
+    private Integer mBusLineDirection;
+    private String mBusLineColor;
+    private Integer mStartBusStopNumber;
+    private String mStartBusStopLat;
+    private String mStartBusStopLng;
+    private String mStartBusStopStreetName;
+    private Integer mStartBusStopStreetNumber;
+    private Double mStartBusStopDistanceToOrigin;
+    private Integer mDestinationBusStopNumber;
+    private String mDestinationBusStopLat;
+    private String mDestinationBusStopLng;
+    private String mDestinationBusStopStreetName;
+    private Integer mDestinationBusStopStreetNumber;
+    private Double mDestinationBusStopDistanceToDestination;
 
     public BusRoute() {
     }
 
-    public BusRoute(Integer mIdBusLine, String mBusLineName, Integer mBusLineDirection, String mBusLineColor, Integer mStartBusStopNumber, String mStartBusStopLat, String mStartBusStopLng, String mStartBusStopStreetName, Integer mStartBusStopStreetNumber, Double mStartBusStopDistanceToOrigin, Integer mDestinationBusStopNumber, String mDestinationBusStopLat, String mDestinationBusStopLng, String mDestinationBusStopStreetName, Integer mDestinationBusStopStreetNumber, Double mDestinationBusStopDistanceToDestination) {
+    public BusRoute(Integer mIdBusLine, String mBusLineName, Integer mBusLineDirection, String mBusLineColor,
+                    Integer mStartBusStopNumber, String mStartBusStopLat, String mStartBusStopLng,
+                    String mStartBusStopStreetName, Integer mStartBusStopStreetNumber,
+                    Double mStartBusStopDistanceToOrigin, Integer mDestinationBusStopNumber,
+                    String mDestinationBusStopLat, String mDestinationBusStopLng,
+                    String mDestinationBusStopStreetName, Integer mDestinationBusStopStreetNumber,
+                    Double mDestinationBusStopDistanceToDestination) {
         this.mIdBusLine = mIdBusLine;
         this.mBusLineName = mBusLineName;
         this.mBusLineDirection = mBusLineDirection;
@@ -187,51 +194,88 @@ public class BusRoute {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         BusRoute busRoute = (BusRoute) o;
 
-        if (!mIdBusLine.equals(busRoute.mIdBusLine)) return false;
-        if (!mBusLineName.equals(busRoute.mBusLineName)) return false;
-        if (!mBusLineDirection.equals(busRoute.mBusLineDirection)) return false;
-        if (!mBusLineColor.equals(busRoute.mBusLineColor)) return false;
-        if (!mStartBusStopNumber.equals(busRoute.mStartBusStopNumber)) return false;
-        if (!mStartBusStopLat.equals(busRoute.mStartBusStopLat)) return false;
-        if (!mStartBusStopLng.equals(busRoute.mStartBusStopLng)) return false;
-        if (!mStartBusStopStreetName.equals(busRoute.mStartBusStopStreetName)) return false;
-        if (!mStartBusStopStreetNumber.equals(busRoute.mStartBusStopStreetNumber)) return false;
-        if (mStartBusStopDistanceToOrigin != null ? !mStartBusStopDistanceToOrigin.equals(busRoute.mStartBusStopDistanceToOrigin) : busRoute.mStartBusStopDistanceToOrigin != null)
+        if (!mIdBusLine.equals(busRoute.mIdBusLine)) {
             return false;
-        if (!mDestinationBusStopNumber.equals(busRoute.mDestinationBusStopNumber)) return false;
-        if (!mDestinationBusStopLat.equals(busRoute.mDestinationBusStopLat)) return false;
-        if (!mDestinationBusStopLng.equals(busRoute.mDestinationBusStopLng)) return false;
-        if (!mDestinationBusStopStreetName.equals(busRoute.mDestinationBusStopStreetName))
+        }
+        if (!mBusLineName.equals(busRoute.mBusLineName)) {
             return false;
-        if (!mDestinationBusStopStreetNumber.equals(busRoute.mDestinationBusStopStreetNumber))
+        }
+        if (!mBusLineDirection.equals(busRoute.mBusLineDirection)) {
             return false;
-        return mDestinationBusStopDistanceToDestination != null ? mDestinationBusStopDistanceToDestination.equals(busRoute.mDestinationBusStopDistanceToDestination) : busRoute.mDestinationBusStopDistanceToDestination == null;
+        }
+        if (!mBusLineColor.equals(busRoute.mBusLineColor)) {
+            return false;
+        }
+        if (!mStartBusStopNumber.equals(busRoute.mStartBusStopNumber)) {
+            return false;
+        }
+        if (!mStartBusStopLat.equals(busRoute.mStartBusStopLat)) {
+            return false;
+        }
+        if (!mStartBusStopLng.equals(busRoute.mStartBusStopLng)) {
+            return false;
+        }
+        if (!mStartBusStopStreetName.equals(busRoute.mStartBusStopStreetName)) {
+            return false;
+        }
+        if (!mStartBusStopStreetNumber.equals(busRoute.mStartBusStopStreetNumber)) {
+            return false;
+        }
+        if (mStartBusStopDistanceToOrigin != null
+                ? !mStartBusStopDistanceToOrigin.equals(busRoute.mStartBusStopDistanceToOrigin)
+                : busRoute.mStartBusStopDistanceToOrigin != null) {
+            return false;
+        }
+        if (!mDestinationBusStopNumber.equals(busRoute.mDestinationBusStopNumber)) {
+            return false;
+        }
+        if (!mDestinationBusStopLat.equals(busRoute.mDestinationBusStopLat)) {
+            return false;
+        }
+        if (!mDestinationBusStopLng.equals(busRoute.mDestinationBusStopLng)) {
+            return false;
+        }
+        if (!mDestinationBusStopStreetName.equals(busRoute.mDestinationBusStopStreetName)) {
+            return false;
+        }
+        if (!mDestinationBusStopStreetNumber.equals(busRoute.mDestinationBusStopStreetNumber)) {
+            return false;
+        }
+        return mDestinationBusStopDistanceToDestination != null
+                ? mDestinationBusStopDistanceToDestination.equals(busRoute.mDestinationBusStopDistanceToDestination)
+                : busRoute.mDestinationBusStopDistanceToDestination == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = mIdBusLine.hashCode();
-        result = 31 * result + mBusLineName.hashCode();
-        result = 31 * result + mBusLineDirection.hashCode();
-        result = 31 * result + mBusLineColor.hashCode();
-        result = 31 * result + mStartBusStopNumber.hashCode();
-        result = 31 * result + mStartBusStopLat.hashCode();
-        result = 31 * result + mStartBusStopLng.hashCode();
-        result = 31 * result + mStartBusStopStreetName.hashCode();
-        result = 31 * result + mStartBusStopStreetNumber.hashCode();
-        result = 31 * result + (mStartBusStopDistanceToOrigin != null ? mStartBusStopDistanceToOrigin.hashCode() : 0);
-        result = 31 * result + mDestinationBusStopNumber.hashCode();
-        result = 31 * result + mDestinationBusStopLat.hashCode();
-        result = 31 * result + mDestinationBusStopLng.hashCode();
-        result = 31 * result + mDestinationBusStopStreetName.hashCode();
-        result = 31 * result + mDestinationBusStopStreetNumber.hashCode();
-        result = 31 * result + (mDestinationBusStopDistanceToDestination != null ? mDestinationBusStopDistanceToDestination.hashCode() : 0);
+        result = HASH_MULTIPLIER * result + mBusLineName.hashCode();
+        result = HASH_MULTIPLIER * result + mBusLineDirection.hashCode();
+        result = HASH_MULTIPLIER * result + mBusLineColor.hashCode();
+        result = HASH_MULTIPLIER * result + mStartBusStopNumber.hashCode();
+        result = HASH_MULTIPLIER * result + mStartBusStopLat.hashCode();
+        result = HASH_MULTIPLIER * result + mStartBusStopLng.hashCode();
+        result = HASH_MULTIPLIER * result + mStartBusStopStreetName.hashCode();
+        result = HASH_MULTIPLIER * result + mStartBusStopStreetNumber.hashCode();
+        result = HASH_MULTIPLIER * result + (mStartBusStopDistanceToOrigin != null
+                ? mStartBusStopDistanceToOrigin.hashCode() : 0);
+        result = HASH_MULTIPLIER * result + mDestinationBusStopNumber.hashCode();
+        result = HASH_MULTIPLIER * result + mDestinationBusStopLat.hashCode();
+        result = HASH_MULTIPLIER * result + mDestinationBusStopLng.hashCode();
+        result = HASH_MULTIPLIER * result + mDestinationBusStopStreetName.hashCode();
+        result = HASH_MULTIPLIER * result + mDestinationBusStopStreetNumber.hashCode();
+        result = HASH_MULTIPLIER * result + (mDestinationBusStopDistanceToDestination != null
+                ? mDestinationBusStopDistanceToDestination.hashCode() : 0);
         return result;
     }
 

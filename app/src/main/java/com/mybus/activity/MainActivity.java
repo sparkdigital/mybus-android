@@ -58,7 +58,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationChangedCallback,
-        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener, CompoundSearchBoxListener {
+        OnAddressGeocodingCompleteCallback, OnLocationGeocodingCompleteCallback, RouteSearchCallback,
+        RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener, CompoundSearchBoxListener {
 
     public static final String TAG = "MainActivity";
     public static final int FROM_SEARCH_RESULT_ID = 1;
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    private final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
+    private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     private ProgressDialog mDialog;
     private Context mContext;
 
@@ -506,7 +507,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
-        ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult, mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
+        ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult,
+                mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
     }
 
     @Override
