@@ -101,7 +101,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     private void initHistoryCardView() {
         mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
-        //Sorting recent locations
+        //Sorting recent locations. (The list could be empty but never null)
         Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
         mHistoryCardView.setList(mRecentLocations);
         mHistoryCardView.setHistoryItemSelectedListener(this);
@@ -109,6 +109,8 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     private void initFavoriteCardView() {
         mFavoriteLocations = FavoriteLocationDao.getInstance(this).getAll();
+        //Sorting favorite locations by usage. (The list could be empty but never null)
+        Collections.sort(mFavoriteLocations, Collections.<FavoriteLocation>reverseOrder());
         mFavoriteCardView.setItemList(mFavoriteLocations);
         mFavoriteCardView.setFavoriteItemSelectedListener(this);
     }

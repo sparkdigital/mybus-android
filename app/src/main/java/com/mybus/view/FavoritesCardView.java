@@ -57,6 +57,9 @@ public class FavoritesCardView extends CardView implements FavoriteItemSelectedL
             mListAdapter = new FavoriteItemAdapter(mFavoriteLocationList);
             mListAdapter.setItemSelectedListener(this);
             mRecyclerView.setAdapter(mListAdapter);
+        } else {
+            mNoFavoritesTextView.setVisibility(VISIBLE);
+            mRecyclerView.setVisibility(GONE);
         }
     }
 

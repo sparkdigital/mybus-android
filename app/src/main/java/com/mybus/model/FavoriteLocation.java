@@ -11,7 +11,7 @@ import io.realm.annotations.Required;
  * <p/>
  * RealmObject to persist favorite locations
  */
-public class FavoriteLocation extends RealmObject implements UsageTrackable {
+public class FavoriteLocation extends RealmObject implements UsageTrackable, Comparable<FavoriteLocation> {
     @PrimaryKey
     private Long id = System.nanoTime();
     @Required
@@ -86,5 +86,10 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable {
     @Override
     public String toString() {
         return "Name: " + name + " ; Address: " + address + " ; LatLong: (" + latitude + ", " + longitude + ")";
+    }
+
+    @Override
+    public int compareTo(FavoriteLocation another) {
+        return this.getUsageCount() < another.getUsageCount() ? -1 : 1;
     }
 }

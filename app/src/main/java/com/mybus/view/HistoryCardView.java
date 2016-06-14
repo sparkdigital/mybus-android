@@ -65,6 +65,9 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
             mListAdapter = new HistoryItemAdapter(mRecentLocationList);
             mListAdapter.setItemSelectedListener(this);
             mRecyclerView.setAdapter(mListAdapter);
+        } else {
+            mNoRecentTextView.setVisibility(VISIBLE);
+            mRecyclerView.setVisibility(GONE);
         }
     }
 }
