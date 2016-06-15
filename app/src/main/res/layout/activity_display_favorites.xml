@@ -22,13 +22,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/favorites_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/noFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/no_favorites_present" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_favorite_action_button"
@@ -37,7 +42,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="30dp"
             android:layout_marginRight="30dp"
-            android:src="@android:drawable/ic_input_add"
+            android:src="@drawable/ic_input_add"
             app:backgroundTint="@color/colorPrimary"
             app:rippleColor="@color/colorPrimaryDark" />
 

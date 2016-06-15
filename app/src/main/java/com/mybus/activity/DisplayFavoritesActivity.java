@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mybus.R;
 import com.mybus.adapter.FavoriteViewAdapter;
@@ -34,6 +35,9 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     RecyclerView mFavoritesRecyclerView;
     @Bind(R.id.add_favorite_action_button)
     FloatingActionButton mAddFavoriteActionButton;
+    @Bind(R.id.noFavorites)
+    TextView mNoFavoritesTextView;
+
 
     public static final int EDIT_SEARCH_RESULT_ID = 1;
     public static final int ADD_SEARCH_RESULT_ID = 2;
@@ -69,6 +73,9 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 DisplayFavoritesActivity.this.startSearchActivityToAddFavorite(ADD_SEARCH_RESULT_ID);
             }
         });
+        if (!mFavorites.isEmpty()) {
+            mNoFavoritesTextView.setVisibility(View.GONE);
+        }
     }
 
     private void startSearchActivityToAddFavorite(int requestCode) {
@@ -78,10 +85,12 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
         overridePendingTransition(0, 0);
     }
 
-    private void startSearchActivityToEditFavorite(int requestCode, String favoriteAddress) {
+    private void startSearchActivityForFavorite(int requestCode, String favoriteAddress) {
         Intent searchIntent = new Intent(this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, SearchType.FAVORITE);
-        searchIntent.putExtra(SearchActivity.SEARCH_ADDRESS_EXTRA, favoriteAddress);
+        if (favoriteAddress != null) {
+            searchIntent.putExtra(SearchActivity.SEARCH_ADDRESS_EXTRA, favoriteAddress);
+        }
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
     }
@@ -128,7 +137,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     @Override
     public void onFavoriteItemEdit(int position) {
         this.mFavoritePositionToEdit = position;
-        startSearchActivityToEditFavorite(EDIT_SEARCH_RESULT_ID, mFavorites.get(position).getAddress());
+        startSearchActivityForFavorite(EDIT_SEARCH_RESULT_ID, mFavorites.get(position).getAddress());
     }
 
     @Override
@@ -139,8 +148,15 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 .setPositiveButton(this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         Long favid = mFavorites.get(position).getId();
-                        FavoriteLocationDao.getInstance(DisplayFavoritesActivity.this).remove(favid);
-                        mFavorites.remove(position);
+                        //check if the favorite was successfully removed form the database
+                        if (FavoriteLocationDao.getInstance(DisplayFavoritesActivity.this).remove(favid)) {
+                            //remove it locally
+                            mFavorites.remove(position);
+                            //if there are no favorites, show the no favorites message
+                            if(mFavorites.isEmpty()){
+                                mNoFavoritesTextView.setVisibility(View.VISIBLE);
+                            }
+                        }
                         mFavoriteViewAdapter.notifyItemRemoved(position);
                     }
                 })
@@ -161,6 +177,8 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
         if (FavoriteLocationDao.getInstance(this).saveOrUpdate(newFavorite)) {
             mFavorites.add(newFavorite);
             mFavoriteViewAdapter.notifyDataSetChanged();
+            //hide the no favorites message
+            mNoFavoritesTextView.setVisibility(View.GONE);
         }
     }
 
