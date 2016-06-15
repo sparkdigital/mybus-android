@@ -64,8 +64,7 @@ check {
         // skip Checkstyle, false by deafult
         skip false
         // fails build if Checkstyle rule violation is found, false by default
-        abortOnError false
-        config easy()
+        abortOnError true
         // directory for report files
         report new File(project.buildDir, 'reports/checkstyle')
         // XML report file
