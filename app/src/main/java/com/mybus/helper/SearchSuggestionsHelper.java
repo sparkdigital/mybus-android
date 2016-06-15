@@ -5,7 +5,7 @@ import com.mybus.listener.OnFindResultsListener;
 /**
  * Helper for SearchSuggestions in autocomplete
  */
-public class SearchSuggestionsHelper {
+public final class SearchSuggestionsHelper {
 
     private SearchSuggestionsHelper() {
     }

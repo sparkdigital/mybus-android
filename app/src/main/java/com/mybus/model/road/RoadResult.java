@@ -1,6 +1,7 @@
-package com.mybus.model.Road;
+package com.mybus.model.road;
 
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -21,7 +22,8 @@ import java.util.List;
  */
 public class RoadResult {
 
-    public static final int HASH_MULTIPLIER = 31;
+    private static final String TAG = RoadResult.class.getSimpleName();
+    private static final int HASH_MULTIPLIER = 31;
     private int mType;
     private float mTotalDistance;
     private int mTravelTime;
@@ -51,7 +53,7 @@ public class RoadResult {
                 singleRoad.setIdBusLine2(jsonObject.getString("IdBusLine2"));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
             singleRoad = null;
         }
         return singleRoad;
@@ -211,21 +213,8 @@ public class RoadResult {
 
         RoadResult that = (RoadResult) o;
 
-        if (mType != that.mType) {
-            return false;
-        }
-        if (Float.compare(that.mTotalDistance, mTotalDistance) != 0) {
-            return false;
-        }
-        if (mTravelTime != that.mTravelTime) {
-            return false;
-        }
-        if (mArrivalTime != that.mArrivalTime) {
-            return false;
-        }
-        //TODO: Remove this comment When Route contains the equals method
-        //if (!mRouteList.equals(that.mRouteList)) {return false;}
-        return true;
+        return (mType == that.mType) && (Float.compare(that.mTotalDistance, mTotalDistance) == 0)
+                && (mTravelTime == that.mTravelTime) && (mArrivalTime == that.mArrivalTime);
 
     }
 

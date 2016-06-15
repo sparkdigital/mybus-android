@@ -1,8 +1,8 @@
 package com.mybus.model;
 
 import com.mybus.helper.FileLoaderHelper;
-import com.mybus.model.Road.Route;
-import com.mybus.model.Road.RoutePoint;
+import com.mybus.model.road.Route;
+import com.mybus.model.road.RoutePoint;
 
 import org.json.JSONArray;
 import org.json.JSONException;

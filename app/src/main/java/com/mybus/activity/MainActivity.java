@@ -34,7 +34,6 @@ import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.fragment.BusRouteFragment;
-import com.mybus.listener.AppBarStateChangeListener;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
@@ -43,8 +42,8 @@ import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.RecentType;
-import com.mybus.model.Road.MapBusRoad;
-import com.mybus.model.Road.RoadResult;
+import com.mybus.model.road.MapBusRoad;
+import com.mybus.model.road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
 import com.mybus.requirements.PlayServicesChecker;
 import com.mybus.service.ServiceFacade;
@@ -89,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     MarkerOptions mEndLocationMarkerOptions;
     /*---Bottom Sheet------*/
-    //Keeps the state of the app bar
-    private AppBarStateChangeListener.State mAppBarState;
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
     @Bind(R.id.bottom_sheet)
@@ -106,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Listener for Map Long Click Listener for setting start or end locations.
      */
-    private GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
+    private final GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
             if (mStartLocationMarker == null) {
@@ -177,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ServiceFacade.getInstance().performGeocodeByLocation(latLng, MainActivity.this, mContext);
         }
         //Update searchButton status
-        boolean enableSearch = (mStartLocationMarker != null && markerOptions == mEndLocationMarkerOptions
-                || mEndLocationMarker != null && markerOptions == mStartLocationMarkerOptions);
+        boolean enableSearch = mStartLocationMarker != null && markerOptions.equals(mEndLocationMarkerOptions)
+                || mEndLocationMarker != null && markerOptions.equals(mStartLocationMarkerOptions);
         mCompoundSearchBox.setSearchEnabled(enableSearch);
         return marker;
     }
@@ -186,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Listener for the marker drag
      */
-    private GoogleMap.OnMarkerDragListener mOnMarkerDragListener = new GoogleMap.OnMarkerDragListener() {
+    private final GoogleMap.OnMarkerDragListener mOnMarkerDragListener = new GoogleMap.OnMarkerDragListener() {
 
         @Override
         public void onMarkerDragStart(Marker marker) {
@@ -218,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
-    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+    private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
@@ -361,8 +358,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private int dpToPx(int dp) {
         DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
-        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        return px;
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     /**
@@ -435,13 +431,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onAddressGeocodingComplete(GeoLocation geoLocation) {
         LatLng location = geoLocation.getLatLng();
         if (location != null) {
-            if (lastAddressGeocodingType == mStartLocationMarkerOptions) {
+            if (lastAddressGeocodingType.equals(mStartLocationMarkerOptions)) {
                 mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, location, false);
                 if (mEndLocationMarker == null || !mEndLocationMarker.isVisible()) {
                     zoomTo(location);
                 }
             }
-            if (lastAddressGeocodingType == mEndLocationMarkerOptions) {
+            if (lastAddressGeocodingType.equals(mEndLocationMarkerOptions)) {
                 mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, location, false);
                 if (mStartLocationMarker == null || !mStartLocationMarker.isVisible()) {
                     zoomTo(location);
@@ -465,13 +461,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationGeocodingComplete(GeoLocation geoLocation) {
         String address = geoLocation.getAddress();
         if (address != null) {
-            if (lastLocationGeocodingType == mStartLocationMarkerOptions) {
+            if (lastLocationGeocodingType.equals(mStartLocationMarkerOptions)) {
                 setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
                 mToolbar.setVisibility(View.GONE);
                 mCompoundSearchBox.setVisible(true, !mCompoundSearchBox.isVisible());
                 mCompoundSearchBox.setFromAddress(address);
             }
-            if (lastLocationGeocodingType == mEndLocationMarkerOptions) {
+            if (lastLocationGeocodingType.equals(mEndLocationMarkerOptions)) {
                 setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
                 mToolbar.setVisibility(View.GONE);
                 mCompoundSearchBox.setVisible(true);

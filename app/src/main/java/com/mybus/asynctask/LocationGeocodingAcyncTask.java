@@ -47,7 +47,7 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocat
         }
 
         // Handle case where no address was found.
-        if (addresses == null || addresses.size() == 0) {
+        if (addresses == null || addresses.isEmpty()) {
             Log.e(TAG, "no_address_found");
         } else {
             Address address = addresses.get(0);

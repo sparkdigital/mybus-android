@@ -1,6 +1,6 @@
 package com.mybus.requirements;
 
-public class AddressValidator {
+public final class AddressValidator {
 
     private static final int MAX_NUMBER = 20000;
 

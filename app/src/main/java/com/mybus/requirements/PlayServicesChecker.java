@@ -10,7 +10,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mybus.R;
 
-public class PlayServicesChecker {
+public final class PlayServicesChecker {
 
     private PlayServicesChecker() {
     }

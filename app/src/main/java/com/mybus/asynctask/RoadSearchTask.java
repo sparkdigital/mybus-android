@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.RoadSearch;
+import com.mybus.model.road.RoadResult;
+import com.mybus.model.road.RoadSearch;
 import com.mybus.service.MyBusServiceImpl;
 import com.mybus.service.ServiceFacade;
 

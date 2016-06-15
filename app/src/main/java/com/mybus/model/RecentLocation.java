@@ -28,6 +28,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
 
     // Default constructor
     public RecentLocation() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
     // Constructor used for testing
@@ -115,26 +116,10 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
 
         RecentLocation that = (RecentLocation) o;
 
-        if (!id.equals(that.id)) {
-            return false;
-        }
-        if (!type.equals(that.type)) {
-            return false;
-        }
-        if (!address.equals(that.address)) {
-            return false;
-        }
-        if (!latitude.equals(that.latitude)) {
-            return false;
-        }
-        if (!longitude.equals(that.longitude)) {
-            return false;
-        }
-        if (!usageCount.equals(that.usageCount)) {
-            return false;
-        }
+        return id.equals(that.id) && type.equals(that.type) && address.equals(that.address)
+                && latitude.equals(that.latitude) && longitude.equals(that.longitude)
+                && usageCount.equals(that.usageCount);
 
-        return true;
     }
 
     @Override

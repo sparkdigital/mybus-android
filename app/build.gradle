@@ -19,6 +19,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -32,6 +33,9 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -47,25 +51,21 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'me.grantland:autofittextview:0.2.+'
+    compile 'me.grantland:autofittextview:0.2.1'
     compile project(path: ':FloatingSearchViewLib')
 }
 
 // configuration is optional
 check {
     // fails build if code style violation is found, false by default
-    abortOnError false
+    abortOnError true
     // configuration of Checkstyle checker
     checkstyle {
         // skip Checkstyle, false by deafult
         skip false
         // fails build if Checkstyle rule violation is found, false by default
         abortOnError false
-        // predefined configurations: easy and hard
-        config hard()
-        // by default plugin finds configuration file in <rootProject>/config/checkstyle.xml,
-        // after that in <project>/config/checkstyle.xml and if there are no configuration
-        // file, easy() configuration will be used.
+        config easy()
         // directory for report files
         report new File(project.buildDir, 'reports/checkstyle')
         // XML report file
@@ -78,12 +78,9 @@ check {
         // skip findbugs, false by deafult
         skip false
         // fails build if Checkstyle rule violation is found, false by default
-        abortOnError false
+        abortOnError true
         // predefined configurations: easy and hard
         config hard()
-        // by default plugin finds configuration file in <rootProject>/config/findbugs.xml,
-        // after that in <project>/config/findbugs.xml and if there are no configuration
-        // file, easy() configuration will be used.
         // directory for report files
         report new File(project.buildDir, 'reports/findbugs')
         // XML report file
@@ -96,13 +93,7 @@ check {
         // skip pmd, false by deafult
         skip false
         // fails build if Checkstyle rule violation is found, false by default
-        abortOnError false
-        // predefined configurations: easy and hard
-        config hard()
-        // by default plugin finds configuration file in <rootProject>/config/pmd.xml,
-        // after that in <project>/config/pmd.xml and if there are no configuration
-        // file, easy() configuration will be used.
-        // directory for report files
+        abortOnError true
         report new File(project.buildDir, 'reports/pmd')
         // XML report file
         reportXML new File(project.buildDir, 'reports/pmd/pmd.xml')

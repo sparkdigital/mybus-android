@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.mybus.R;
 import com.mybus.helper.WalkDistanceHelper;
 import com.mybus.model.BusRouteResult;
-import com.mybus.model.Road.MapBusRoad;
+import com.mybus.model.road.MapBusRoad;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

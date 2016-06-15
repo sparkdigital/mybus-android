@@ -1,5 +1,7 @@
 package com.mybus.model;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,16 +15,17 @@ import java.util.List;
  * This object represents a bus route between two locations (could be type 0: using 1 bus line or type 1: using 2 bus lines)
  */
 public class BusRouteResult {
+    private static final String TAG = BusRouteResult.class.getSimpleName();
     private int mType;
     private List<BusRoute> mBusRoutes = new ArrayList<BusRoute>();
     private double mCombinationDistance; //Only used when type is 1
 
     public static List<BusRouteResult> parseResults(JSONArray results, int type) {
-        List<BusRouteResult> list = new ArrayList<>();
         if (results == null) {
             return null;
         }
 
+        List<BusRouteResult> list = new ArrayList<>();
         JSONObject route = null;
 
         //NOTE: In a future we can read the type from each JSONObject and support multiples type results
@@ -31,7 +34,7 @@ public class BusRouteResult {
                 try {
                     route = results.getJSONObject(i);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
                 }
                 BusRouteResult busRoute = parseSingleRoute(route);
                 if (busRoute != null) {
@@ -46,7 +49,7 @@ public class BusRouteResult {
                 try {
                     route = results.getJSONObject(i);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
                 }
                 BusRouteResult busRoute = parseCombinedRoute(route);
                 if (busRoute != null) {

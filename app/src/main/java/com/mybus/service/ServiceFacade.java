@@ -14,7 +14,7 @@ import com.mybus.model.BusRouteResult;
 
 import java.util.List;
 
-public class ServiceFacade {
+public final class ServiceFacade {
 
     private static ServiceFacade instance = null;
     private DirectionsServiceImpl directionsService;

@@ -5,8 +5,8 @@ import android.test.InstrumentationTestCase;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.RoadSearch;
+import com.mybus.model.road.RoadResult;
+import com.mybus.model.road.RoadSearch;
 
 import java.util.concurrent.CountDownLatch;
 

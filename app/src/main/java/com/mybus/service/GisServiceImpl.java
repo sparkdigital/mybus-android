@@ -1,5 +1,7 @@
 package com.mybus.service;
 
+import android.util.Log;
+
 import com.mybus.builder.GisServiceUrlBuilder;
 
 import org.json.JSONArray;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GisServiceImpl extends GenericService implements GisService {
+
+    private static final String TAG = GisServiceImpl.class.getSimpleName();
 
     /**
      * @param constraint
@@ -28,7 +32,7 @@ public class GisServiceImpl extends GenericService implements GisService {
                 results.add(jsonArray.getJSONObject(i).getString("descripcion"));
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
         }
         return results;
     }

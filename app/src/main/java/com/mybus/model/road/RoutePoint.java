@@ -1,4 +1,6 @@
-package com.mybus.model.Road;
+package com.mybus.model.road;
+
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -10,11 +12,13 @@ import org.json.JSONObject;
  */
 public class RoutePoint {
 
-    public static final int HASH_MULTIPLIER = 31;
+    private static final int HASH_MULTIPLIER = 31;
+    private static final String TAG = RoutePoint.class.getSimpleName();
     private String mStopId, mLat, mLng, mAddress;
     private boolean isWaypoint;
 
     public RoutePoint() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
     public RoutePoint(String mStopId, String mLat, String mLng, String mAddress, boolean isWaypoint) {
@@ -38,7 +42,7 @@ public class RoutePoint {
             point.setAddress(jsonObject.getString("Address"));
             point.setWaypoint(jsonObject.getBoolean("isWaypoint"));
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
             point = null;
         }
 

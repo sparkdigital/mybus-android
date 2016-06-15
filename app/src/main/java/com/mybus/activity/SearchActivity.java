@@ -121,7 +121,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             @Override
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
 
-                if (!oldQuery.equals("") && newQuery.equals("")) {
+                if (oldQuery.isEmpty() && newQuery.isEmpty()) {
                     mSearchView.clearSuggestions();
                 } else {
                     //this shows the top left circular progress

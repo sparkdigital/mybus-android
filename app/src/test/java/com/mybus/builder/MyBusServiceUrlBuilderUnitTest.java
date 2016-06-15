@@ -1,6 +1,6 @@
 package com.mybus.builder;
 
-import com.mybus.model.Road.RoadSearch;
+import com.mybus.model.road.RoadSearch;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

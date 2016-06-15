@@ -31,8 +31,7 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteViewHolder
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favorite_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        FavoriteViewHolder vh = new FavoriteViewHolder(v, mItemSelectedListener);
-        return vh;
+        return new FavoriteViewHolder(v, mItemSelectedListener);
     }
 
     @Override

@@ -7,7 +7,7 @@ import android.net.Uri;
  *
  * @author Enrique Pennimpede <epennimpede@devspark.com>
  */
-public class GisServiceUrlBuilder {
+public final class GisServiceUrlBuilder {
 
     //TODO: Replace constants by system properties
     private static final String SCHEME = "http";

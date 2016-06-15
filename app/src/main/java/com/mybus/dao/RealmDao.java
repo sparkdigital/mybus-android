@@ -15,7 +15,7 @@ import io.realm.RealmObject;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public abstract class RealmDao<T extends RealmObject> {
+public class RealmDao<T extends RealmObject> {
     protected Realm mRealm;
     private Class<T> mType;
 

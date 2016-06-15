@@ -2,14 +2,14 @@ package com.mybus.builder;
 
 import android.net.Uri;
 
-import com.mybus.model.Road.RoadSearch;
+import com.mybus.model.road.RoadSearch;
 
 /**
  * MyBus Service Public API url builder.
  *
  * @author Enrique Pennimpede <epennimpede@devspark.com>
  */
-public class MyBusServiceUrlBuilder {
+public final class MyBusServiceUrlBuilder {
 
     //TODO: Replace constants by system properties
     private static final String SCHEME = "http";

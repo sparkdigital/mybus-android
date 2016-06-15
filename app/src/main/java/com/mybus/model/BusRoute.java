@@ -25,6 +25,7 @@ public class BusRoute {
     private Double mDestinationBusStopDistanceToDestination;
 
     public BusRoute() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
     public BusRoute(Integer mIdBusLine, String mBusLineName, Integer mBusLineDirection, String mBusLineColor,
@@ -182,7 +183,7 @@ public class BusRoute {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(150);
         result.append("BusLineName: ")
                 .append(getBusLineName())
                 .append(", StartBusStopStreetName: ")

@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class HistoryCardView extends CardView implements HistoryItemSelectedListener {
+public class
+HistoryCardView extends CardView implements HistoryItemSelectedListener {
 
     private HistoryItemSelectedListener mHistoryItemSelectedListener;
     private RecyclerView mRecyclerView;
@@ -51,7 +52,7 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
 
     public void setList(List<RecentLocation> list) {
         mRecentLocationList = list;
-        if (mRecentLocationList != null && mRecentLocationList.size() > 0) {
+        if (mRecentLocationList != null && !mRecentLocationList.isEmpty()) {
             mNoRecentTextView.setVisibility(GONE);
             mRecyclerView.setVisibility(VISIBLE);
 

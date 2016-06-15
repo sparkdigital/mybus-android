@@ -28,6 +28,7 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
 
     // Default constructor
     public FavoriteLocation() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
     // Constructor used for testing

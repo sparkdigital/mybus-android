@@ -59,7 +59,7 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
 
     public void test5ListFavorites() {
         List<FavoriteLocation> results = FavoriteLocationDao.getInstance(mContext).getAll();
-        assertTrue(results.size() > 0);
+        assertFalse(results.isEmpty());
         Log.i("TestListFavorites", "All Favorites");
         for (FavoriteLocation fav : results) {
             Log.i("TestListFavorites", "Favorite: " + fav.toString());

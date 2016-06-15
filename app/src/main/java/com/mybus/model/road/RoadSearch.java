@@ -1,4 +1,4 @@
-package com.mybus.model.Road;
+package com.mybus.model.road;
 
 public class RoadSearch {
     private String mIdLine = null;
@@ -11,6 +11,7 @@ public class RoadSearch {
     private String mStop2L2 = null;
 
     public RoadSearch() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
     public RoadSearch(String mIdLine, String mDirection, String mStop1, String mStop2) {

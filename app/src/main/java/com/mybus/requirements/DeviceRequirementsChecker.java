@@ -10,7 +10,7 @@ import android.net.NetworkInfo;
 
 import com.mybus.R;
 
-public class DeviceRequirementsChecker {
+public final class DeviceRequirementsChecker {
 
     private DeviceRequirementsChecker() {
     }
