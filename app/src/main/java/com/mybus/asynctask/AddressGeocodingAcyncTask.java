@@ -31,10 +31,12 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
 
     @Override
     protected GeoLocation doInBackground(String... strings) {
-        String locationName = strings[0];
-        if (!AddressValidator.isValidAddress(locationName)) {
+        String addressStr = strings[0];
+        if (!AddressValidator.isValidAddress(addressStr)) {
             return null;
         }
+        //TODO remove this hardcoded city, used to filter Mar del Plata results
+        String locationName = addressStr + " mar del plata";
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
@@ -54,14 +56,13 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
             Address address = addresses.get(0);
             Log.i(TAG, "address_found");
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            return new GeoLocation(locationName, latLng);
+            return new GeoLocation(addressStr, latLng);
         }
         return null;
     }
 
     @Override
     protected void onPostExecute(GeoLocation geoLocation) {
-        super.onPostExecute(geoLocation);
         callback.onAddressGeocodingComplete(geoLocation);
     }
 }
