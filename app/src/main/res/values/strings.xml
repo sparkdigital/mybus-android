@@ -11,14 +11,12 @@
     <string name="stop_origin_title">Parada origen:</string>
     <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
     <string name="update_playservice">Se necesita el servicio de Google Play actualizado. Desea instalarlo?</string>
-    <string name="distance_to_origin">"Distancia desde el origen: "</string>
-    <string name="distance_to_destination">"Distancia hasta el destino: "</string>
+    <string name="bus_route_distance_to_origin">"Distancia desde el origen: %1$s"</string>
+    <string name="bus_route_distance_to_destination">"Distancia hasta el destino: %1$s"</string>
     <string name="toast_no_result_found">No se encontraron resultados</string>
     <string name="toast_no_internet">No hay una conexion a Internet</string>
     <string name="toast_searching">Buscando rutas…</string>
     <string name="toast_searching_address">Buscando la direccion especificada…</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="bus_stop_origin"> Parada Origen %1$s</string>
     <string name="bus_stop_destination"> Parada Destino %1$s</string>
     <string name="dialog_searching_specific_route">Obteniendo ruta de colectivo</string>
@@ -34,5 +32,11 @@
     <string name="cant_find_current_location">No es posible saber su ubicacion actual</string>
     <string name="history_no_recent">No hay recientes…</string>
     <string name="search_activity_error_toast">Hubo un error inesperado</string>
-    <string name="no_favorites_present">No hay favoritos...</string>
+    <string name="no_favorites_present">No hay favoritos…</string>
+
+    <string name="bus_route_frag_concat_space">%1$s %2$s</string>
+    <string name="main_drawer_favorites">Lugares favoritos</string>
+    <string name="main_drawer_load_points">Puntos de carga</string>
+    <string name="main_drawer_tours">Recorridos</string>
+    <string name="main_drawer_fares">Tarifas</string>
 </resources>
