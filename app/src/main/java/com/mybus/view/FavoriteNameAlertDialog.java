@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 import com.mybus.R;
 import com.mybus.listener.FavoriteAddListener;
-import com.mybus.listener.FavoriteEditOldListener;
+import com.mybus.listener.FavoriteChangeNameListener;
 
 import butterknife.ButterKnife;
 
@@ -21,12 +21,13 @@ import butterknife.ButterKnife;
 public class FavoriteNameAlertDialog extends DialogFragment {
 
     private FavoriteAddListener mOnAddNewFavoriteListener;
-    private FavoriteEditOldListener mOnEditOldFavoriteListener;
+    private FavoriteChangeNameListener mFavoriteChangeNameListener;
     private String mDialogType;
-    public final static String TYPE_EDIT ="TYPE_EDIT";
-    public final static String TYPE_ADD  ="TYPE_ADD";
+    public static final String TYPE_EDIT = "TYPE_EDIT";
+    public static final String TYPE_ADD = "TYPE_ADD";
 
     private String mPreviousName;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -44,16 +45,17 @@ public class FavoriteNameAlertDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //callback to OnAdd or OnEdit if it's adding or editing the favorite
-                        switch (mDialogType){
-                            case TYPE_ADD:{
+                        switch (mDialogType) {
+                            case TYPE_ADD: {
                                 mOnAddNewFavoriteListener.onAddNewFavorite(mFavofiteNameEditText.getText().toString());
                                 break;
                             }
-                            case TYPE_EDIT:{
-                                mOnEditOldFavoriteListener.onEditOldFavorite(mFavofiteNameEditText.getText().toString());
+                            case TYPE_EDIT: {
+                                mFavoriteChangeNameListener.onChangeFavoriteName(mFavofiteNameEditText.getText().toString());
                                 break;
                             }
-                            default: break;
+                            default:
+                                break;
                         }
                     }
                 })
@@ -65,29 +67,28 @@ public class FavoriteNameAlertDialog extends DialogFragment {
     }
 
     /**
-     *
      * @param onAddNewFavoriteListener
      */
     public void setActionAdding(FavoriteAddListener onAddNewFavoriteListener) {
         this.mOnAddNewFavoriteListener = onAddNewFavoriteListener;
-        this.mDialogType = this.TYPE_ADD;
     }
 
     /**
-     *
      * @param favoriteEditOldListener
      */
-    public void setActionEditing(FavoriteEditOldListener favoriteEditOldListener) {
-        this.mOnEditOldFavoriteListener = favoriteEditOldListener;
-        this.mDialogType = this.TYPE_EDIT;
+    public void setActionEditing(FavoriteChangeNameListener favoriteEditOldListener) {
+        this.mFavoriteChangeNameListener = favoriteEditOldListener;
     }
 
     /**
-     *
      * @param previousName
      */
     public void setPreviousName(String previousName) {
         this.mPreviousName = previousName;
+    }
+
+    public void setDialogType(String type) {
+        this.mDialogType = type;
     }
 
 

@@ -16,7 +16,7 @@ import com.mybus.adapter.FavoriteViewAdapter;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.listener.FavoriteAddListener;
 import com.mybus.listener.FavoriteListItemListener;
-import com.mybus.listener.FavoriteEditOldListener;
+import com.mybus.listener.FavoriteChangeNameListener;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.SearchType;
 import com.mybus.view.FavoriteNameAlertDialog;
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteAddListener, FavoriteEditOldListener {
+public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteAddListener, FavoriteChangeNameListener {
 
     @Bind(R.id.favorites_recycler_view)
     RecyclerView mFavoritesRecyclerView;
@@ -117,9 +117,11 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 switch (requestCode) {
                     case ADD_SEARCH_RESULT_ID:
                         favoriteNameAlertDialog.setActionAdding(this);
+                        favoriteNameAlertDialog.setDialogType(favoriteNameAlertDialog.TYPE_ADD);
                         break;
                     case EDIT_SEARCH_RESULT_ID:
                         favoriteNameAlertDialog.setActionEditing(this);
+                        favoriteNameAlertDialog.setDialogType(favoriteNameAlertDialog.TYPE_EDIT);
                         oldFavorite = mFavorites.get(mFavoritePositionToEdit);
                         favoriteNameAlertDialog.setPreviousName(oldFavorite.getName());
                         break;
@@ -179,7 +181,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     }
 
     @Override
-    public void onEditOldFavorite(String newName) {
+    public void onChangeFavoriteName(String newName) {
         oldFavorite.setAddress(newAddress);
         oldFavorite.setLatitude(newLocation.latitude);
         oldFavorite.setLongitude(newLocation.longitude);
