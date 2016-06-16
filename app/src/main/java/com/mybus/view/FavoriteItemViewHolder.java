@@ -6,8 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mybus.R;
-import com.mybus.listener.FavoriteDeleteListener;
-import com.mybus.listener.FavoriteEditListener;
+import com.mybus.listener.FavoriteListItemListener;
 
 public class FavoriteItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -15,13 +14,11 @@ public class FavoriteItemViewHolder extends RecyclerView.ViewHolder {
     public TextView favAddress;
     public ImageView favoriteEditIcon;
     public ImageView favoriteDeleteIcon;
-    private FavoriteEditListener mFavoriteEditListener;
-    private FavoriteDeleteListener mFavoriteDeleteListener;
+    private FavoriteListItemListener mFavoriteEditListener;
 
-    public FavoriteItemViewHolder(View itemView, FavoriteDeleteListener favoriteDeleteListener, FavoriteEditListener favoriteEditListener) {
+    public FavoriteItemViewHolder(View itemView, FavoriteListItemListener favoriteEditListener) {
         super(itemView);
         this.mFavoriteEditListener = favoriteEditListener;
-        this.mFavoriteDeleteListener = favoriteDeleteListener;
         favName = (TextView) itemView.findViewById(R.id.favorite_name);
         favAddress = (TextView) itemView.findViewById(R.id.favorite_address);
         favoriteEditIcon = (ImageView) itemView.findViewById(R.id.favorite_edit);
@@ -29,7 +26,7 @@ public class FavoriteItemViewHolder extends RecyclerView.ViewHolder {
         favoriteDeleteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFavoriteDeleteListener.onFavoriteItemDelete(getAdapterPosition());
+                mFavoriteEditListener.onFavoriteItemDelete(getAdapterPosition());
             }
         });
         favoriteEditIcon.setOnClickListener(new View.OnClickListener() {

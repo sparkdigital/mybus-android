@@ -10,13 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.adapter.FavoriteViewAdapter;
 import com.mybus.dao.FavoriteLocationDao;
-import com.mybus.listener.FavoriteDeleteListener;
-import com.mybus.listener.FavoriteEditListener;
-import com.mybus.listener.OnAddNewFavoriteListener;
-import com.mybus.listener.OnEditOldFavoriteListener;
+import com.mybus.listener.FavoriteAddListener;
+import com.mybus.listener.FavoriteListItemListener;
+import com.mybus.listener.FavoriteEditOldListener;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.SearchType;
 import com.mybus.view.FavoriteNameAlertDialog;
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteEditListener, FavoriteDeleteListener, OnAddNewFavoriteListener, OnEditOldFavoriteListener {
+public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteAddListener, FavoriteEditOldListener {
 
     @Bind(R.id.favorites_recycler_view)
     RecyclerView mFavoritesRecyclerView;
@@ -49,6 +49,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
 
     private FavoriteViewAdapter mFavoriteViewAdapter;
     private String newAddress;
+    private LatLng newLocation;
     private FavoriteLocation oldFavorite;
 
     @Override
@@ -64,25 +65,18 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
         mLayoutManager = new LinearLayoutManager(this);
         mFavoritesRecyclerView.setLayoutManager(mLayoutManager);
 
-        mFavoriteViewAdapter = new FavoriteViewAdapter(mFavorites, this, this);
+        mFavoriteViewAdapter = new FavoriteViewAdapter(mFavorites, this);
         mFavoritesRecyclerView.setAdapter(mFavoriteViewAdapter);
 
         mAddFavoriteActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DisplayFavoritesActivity.this.startSearchActivityToAddFavorite(ADD_SEARCH_RESULT_ID);
+                DisplayFavoritesActivity.this.startSearchActivityForFavorite(ADD_SEARCH_RESULT_ID, null);
             }
         });
         if (!mFavorites.isEmpty()) {
             mNoFavoritesTextView.setVisibility(View.GONE);
         }
-    }
-
-    private void startSearchActivityToAddFavorite(int requestCode) {
-        Intent searchIntent = new Intent(this, SearchActivity.class);
-        searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, SearchType.FAVORITE);
-        startActivityForResult(searchIntent, requestCode);
-        overridePendingTransition(0, 0);
     }
 
     private void startSearchActivityForFavorite(int requestCode, String favoriteAddress) {
@@ -94,7 +88,6 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
     }
-
 
     @Override
     public int getLayoutToInflate() {
@@ -119,6 +112,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 break;
             case RESULT_OK:
                 newAddress = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
+                newLocation = data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA);
                 FavoriteNameAlertDialog favoriteNameAlertDialog = new FavoriteNameAlertDialog();
                 switch (requestCode) {
                     case ADD_SEARCH_RESULT_ID:
@@ -174,6 +168,8 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
         FavoriteLocation newFavorite = new FavoriteLocation();
         newFavorite.setName(favoriteName);
         newFavorite.setAddress(newAddress);
+        newFavorite.setLatitude(newLocation.latitude);
+        newFavorite.setLongitude(newLocation.longitude);
         if (FavoriteLocationDao.getInstance(this).saveOrUpdate(newFavorite)) {
             mFavorites.add(newFavorite);
             mFavoriteViewAdapter.notifyDataSetChanged();
@@ -185,6 +181,8 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     @Override
     public void onEditOldFavorite(String newName) {
         oldFavorite.setAddress(newAddress);
+        oldFavorite.setLatitude(newLocation.latitude);
+        oldFavorite.setLongitude(newLocation.longitude);
         oldFavorite.setName(newName);
         mFavoriteViewAdapter.notifyDataSetChanged();
     }
