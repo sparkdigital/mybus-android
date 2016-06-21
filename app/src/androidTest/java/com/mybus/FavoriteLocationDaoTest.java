@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class FavoriteLocationDaoTest extends InstrumentationTestCase {
     private Context mContext;
-    private final String NAME_FIELD = "name";
-    private final String NAME_VALUE = "Test";
-    private final String NAME_VALUE_UPDATED = "Test_Updated";
+    private static final String NAME_FIELD = "name";
+    private static final String NAME_VALUE = "Test";
+    private static final String NAME_VALUE_UPDATED = "Test_Updated";
     private static final String STREET_VALUE = "Test_Address 1100";
     private static final String STREET_VALUE_2 = "Test_Address_2 2200";
 
@@ -59,7 +59,7 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
 
     public void test5ListFavorites() {
         List<FavoriteLocation> results = FavoriteLocationDao.getInstance(mContext).getAll();
-        assertTrue(results.size() > 0);
+        assertFalse(results.isEmpty());
         Log.i("TestListFavorites", "All Favorites");
         for (FavoriteLocation fav : results) {
             Log.i("TestListFavorites", "Favorite: " + fav.toString());

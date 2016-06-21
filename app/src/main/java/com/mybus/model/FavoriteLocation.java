@@ -12,6 +12,7 @@ import io.realm.annotations.Required;
  * RealmObject to persist favorite locations
  */
 public class FavoriteLocation extends RealmObject implements UsageTrackable, Comparable<FavoriteLocation> {
+    public static final int HASH_MULTIPLIER = 31;
     @PrimaryKey
     private Long id = System.nanoTime();
     @Required
@@ -27,6 +28,7 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
 
     // Default constructor
     public FavoriteLocation() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
     // Constructor used for testing
@@ -37,7 +39,9 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
         this.longitude = longitude;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -71,16 +75,22 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
         this.longitude = longitude;
     }
 
-    public void setUsageCount(Integer usesCount) { this.usageCount = usesCount; }
+    public void setUsageCount(Integer usesCount) {
+        this.usageCount = usesCount;
+    }
 
-    public Integer getUsageCount() { return usageCount; }
+    public Integer getUsageCount() {
+        return usageCount;
+    }
 
-    public LatLng getLatLng () {
+    public LatLng getLatLng() {
         return new LatLng(this.latitude, this.longitude);
     }
 
     @Override
-    public void incrementUsageCount() { this.usageCount++; }
+    public void incrementUsageCount() {
+        this.usageCount++;
+    }
 
     // Used for testing.
     @Override
@@ -91,5 +101,46 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
     @Override
     public int compareTo(FavoriteLocation another) {
         return this.getUsageCount() < another.getUsageCount() ? -1 : 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FavoriteLocation that = (FavoriteLocation) o;
+
+        if (!id.equals(that.id)) {
+            return false;
+        }
+        if (!name.equals(that.name)) {
+            return false;
+        }
+        if (!address.equals(that.address)) {
+            return false;
+        }
+        if (!latitude.equals(that.latitude)) {
+            return false;
+        }
+        if (!longitude.equals(that.longitude)) {
+            return false;
+        }
+        return usageCount.equals(that.usageCount);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = HASH_MULTIPLIER * result + name.hashCode();
+        result = HASH_MULTIPLIER * result + address.hashCode();
+        result = HASH_MULTIPLIER * result + latitude.hashCode();
+        result = HASH_MULTIPLIER * result + longitude.hashCode();
+        result = HASH_MULTIPLIER * result + usageCount.hashCode();
+        return result;
     }
 }

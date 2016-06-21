@@ -5,23 +5,23 @@
         <item
             android:id="@+id/drawerFavorites"
             android:icon="@android:drawable/ic_menu_myplaces"
-            android:title="Lugares favoritos"
+            android:title="@string/main_drawer_favorites"
             android:checkable="false"/>
         <item
             android:id="@+id/drawerCharge"
             android:icon="@android:drawable/ic_dialog_map"
-            android:title="Puntos de carga"
+            android:title="@string/main_drawer_load_points"
             android:checkable="false"/>
         <item
             android:id="@+id/drawerRoads"
             android:icon="@android:drawable/ic_menu_mapmode"
-            android:title="Recorridos"
+            android:title="@string/main_drawer_tours"
             android:checkable="false"/>
 
         <item
             android:id="@+id/drawerCosts"
             android:icon="@android:drawable/ic_menu_rotate"
-            android:title="Tarifas"
+            android:title="@string/main_drawer_fares"
             android:checkable="false"/>
 
     </group>

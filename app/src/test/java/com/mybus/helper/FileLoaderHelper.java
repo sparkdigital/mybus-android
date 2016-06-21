@@ -1,5 +1,7 @@
 package com.mybus.helper;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +12,12 @@ import java.io.InputStream;
 /**
  * Created by ldimitroff on 12/05/16.
  */
-public class FileLoaderHelper {
+public final class FileLoaderHelper {
+
+    private static final String TAG = FileLoaderHelper.class.getSimpleName();
+
+    private FileLoaderHelper() {
+    }
 
     /**
      * Loads a JSONObject from Resources
@@ -24,7 +31,7 @@ public class FileLoaderHelper {
         try {
             result = new JSONObject(getStringFromResource(obj, fileName));
         } catch (IOException | JSONException ex) {
-            ex.printStackTrace();
+            Log.e(TAG, ex.toString());
             return null;
         }
         return result;
@@ -42,7 +49,7 @@ public class FileLoaderHelper {
         try {
             result = new JSONArray(getStringFromResource(obj, fileName));
         } catch (IOException | JSONException ex) {
-            ex.printStackTrace();
+            Log.e(TAG, ex.toString());
             return null;
         }
         return result;

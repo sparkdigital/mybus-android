@@ -1,6 +1,7 @@
-package com.mybus.model.Road;
+package com.mybus.model.road;
 
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -21,6 +22,8 @@ import java.util.List;
  */
 public class RoadResult {
 
+    private static final String TAG = RoadResult.class.getSimpleName();
+    private static final int HASH_MULTIPLIER = 31;
     private int mType;
     private float mTotalDistance;
     private int mTravelTime;
@@ -30,7 +33,7 @@ public class RoadResult {
     private String mIdBusLine1;
     private String mIdBusLine2;
 
-    private final float POLYLINE_WIDTH = 15F;
+    private static final float POLYLINE_WIDTH = 15F;
 
     /**
      * @param jsonObject
@@ -50,7 +53,7 @@ public class RoadResult {
                 singleRoad.setIdBusLine2(jsonObject.getString("IdBusLine2"));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
             singleRoad = null;
         }
         return singleRoad;
@@ -201,28 +204,27 @@ public class RoadResult {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         RoadResult that = (RoadResult) o;
 
-        if (mType != that.mType) return false;
-        if (Float.compare(that.mTotalDistance, mTotalDistance) != 0) return false;
-        if (mTravelTime != that.mTravelTime) return false;
-        if (mArrivalTime != that.mArrivalTime) return false;
-        //TODO: Remove this comment When Route contains the equals method
-        //if (!mRouteList.equals(that.mRouteList)) return false;
-        return true;
+        return (mType == that.mType) && (Float.compare(that.mTotalDistance, mTotalDistance) == 0)
+                && (mTravelTime == that.mTravelTime) && (mArrivalTime == that.mArrivalTime);
 
     }
 
     @Override
     public int hashCode() {
         int result = mType;
-        result = 31 * result + (mTotalDistance != +0.0f ? Float.floatToIntBits(mTotalDistance) : 0);
-        result = 31 * result + mTravelTime;
-        result = 31 * result + mArrivalTime;
-        result = 31 * result + mRouteList.hashCode();
+        result = HASH_MULTIPLIER * result + (mTotalDistance != +0.0f ? Float.floatToIntBits(mTotalDistance) : 0);
+        result = HASH_MULTIPLIER * result + mTravelTime;
+        result = HASH_MULTIPLIER * result + mArrivalTime;
+        result = HASH_MULTIPLIER * result + mRouteList.hashCode();
         return result;
     }
 

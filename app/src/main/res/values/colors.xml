@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="splashText">#454545</color>
     <color name="walkingLine">#00bfff</color>
+    <color name="mainSearchBoxColor">#006ad1</color>
+
 </resources>

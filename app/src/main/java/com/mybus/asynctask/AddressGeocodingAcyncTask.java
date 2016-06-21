@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.model.GeoLocation;
+import com.mybus.requirements.AddressValidator;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +31,12 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
 
     @Override
     protected GeoLocation doInBackground(String... strings) {
-        String locationName = strings[0];
+        String addressStr = strings[0];
+        if (!AddressValidator.isValidAddress(addressStr)) {
+            return null;
+        }
+        //TODO remove this hardcoded city, used to filter Mar del Plata results
+        String locationName = addressStr + " mar del plata";
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
@@ -44,20 +50,19 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         }
 
         // Handle case where no address was found.
-        if (addresses == null || addresses.size() == 0) {
+        if (addresses == null || addresses.isEmpty()) {
             Log.e(TAG, "no_address_found");
         } else {
             Address address = addresses.get(0);
             Log.i(TAG, "address_found");
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            return new GeoLocation(locationName, latLng);
+            return new GeoLocation(addressStr, latLng);
         }
         return null;
     }
 
     @Override
     protected void onPostExecute(GeoLocation geoLocation) {
-        super.onPostExecute(geoLocation);
         callback.onAddressGeocodingComplete(geoLocation);
     }
 }

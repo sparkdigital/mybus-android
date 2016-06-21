@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.LatLng;
 public class LocationUpdater implements LocationListener {
 
     private OnLocationChangedCallback mOnLocationChangedCallback;
-    private LocationUpdater mLocationUpdater;
     private LocationManager mLocationManager;
 
     public LocationUpdater(OnLocationChangedCallback onLocationChangedCallback, Context context) {

@@ -1,4 +1,4 @@
-package com.mybus.model.Road;
+package com.mybus.model.road;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;

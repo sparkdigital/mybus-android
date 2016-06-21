@@ -7,13 +7,16 @@ import android.net.Uri;
  *
  * @author Enrique Pennimpede <epennimpede@devspark.com>
  */
-public class GisServiceUrlBuilder {
+public final class GisServiceUrlBuilder {
 
     //TODO: Replace constants by system properties
     private static final String SCHEME = "http";
     private static final String AUTHORITY = "gis.mardelplata.gob.ar";
     private static final String API = "opendata";
     private static final String TOKEN = "rwef3253465htrt546dcasadg4343";
+
+    private GisServiceUrlBuilder() {
+    }
 
     /**
      * Creates the API url in order to get the street names that include
