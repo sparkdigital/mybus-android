@@ -31,16 +31,15 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
 
     @Override
     protected GeoLocation doInBackground(String... strings) {
-        String addressStr = strings[0];
-        if (!AddressValidator.isValidAddress(addressStr)) {
+        String locationName = strings[0];
+        if (!AddressValidator.isValidAddress(locationName)) {
             return null;
         }
-        //TODO remove this hardcoded city, used to filter Mar del Plata results
-        String locationName = addressStr + " mar del plata";
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = geocoder.getFromLocationName(locationName, 4);
+            //TODO remove this hardcoded city, used to filter Mar del Plata results
+            addresses = geocoder.getFromLocationName(locationName+" mar del plata" , 4);
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             Log.e(TAG, "service_not_available", ioException);
@@ -56,7 +55,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
             Address address = addresses.get(0);
             Log.i(TAG, "address_found");
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            return new GeoLocation(addressStr, latLng);
+            return new GeoLocation(locationName, latLng);
         }
         return null;
     }

@@ -41,7 +41,7 @@ import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.GeoLocation;
-import com.mybus.model.RecentType;
+import com.mybus.model.SearchType;
 import com.mybus.model.road.MapBusRoad;
 import com.mybus.model.road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
             @Override
             public void onFocus() {
-                startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID, RecentType.ORIGIN);
+                startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
             }
 
             @Override
@@ -648,12 +648,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * @param searchHint
      * @param requestCode
      */
-    private void startSearchActivity(int searchHint, int requestCode, int type) {
+    private void startSearchActivity(int requestCode, int type) {
         Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-        searchIntent.putExtra(SearchActivity.SEARCH_TITLE_EXTRA, getString(searchHint));
         searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, type);
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
@@ -702,12 +700,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onFromClick() {
-        startSearchActivity(R.string.floating_search_origin, FROM_SEARCH_RESULT_ID, RecentType.ORIGIN);
+        startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
     }
 
     @Override
     public void onToClick() {
-        startSearchActivity(R.string.floating_search_destination, TO_SEARCH_RESULT_ID, RecentType.DESTINATION);
+        startSearchActivity(TO_SEARCH_RESULT_ID, SearchType.DESTINATION);
     }
 
     @Override

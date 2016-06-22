@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.mybus.dao.RecentLocationDao;
 import com.mybus.model.RecentLocation;
-import com.mybus.model.RecentType;
+import com.mybus.model.SearchType;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test1SaveRecent() {
-        RecentLocation recLocation = new RecentLocation(RecentType.ORIGIN, STREET_VALUE, -37.3291053, -59.1336692);
-        RecentLocation recLocation2 = new RecentLocation(RecentType.ORIGIN, STREET_VALUE_2, -37.3291053, -59.1336692);
+        RecentLocation recLocation = new RecentLocation(SearchType.ORIGIN, STREET_VALUE, -37.3291053, -59.1336692);
+        RecentLocation recLocation2 = new RecentLocation(SearchType.ORIGIN, STREET_VALUE_2, -37.3291053, -59.1336692);
         boolean success = RecentLocationDao.getInstance(mContext).saveOrUpdate(recLocation);
         boolean success2 = RecentLocationDao.getInstance(mContext).saveOrUpdate(recLocation2);
         assertTrue(success);
@@ -62,7 +62,7 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
     }
 
     public void test5ListOriginHistory() {
-        List<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAllByField(TYPE_FIELD, RecentType.ORIGIN);
+        List<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAllByField(TYPE_FIELD, SearchType.ORIGIN);
         assertFalse(results.isEmpty());
         Log.i("TestOriginHistory", "Origin History");
         for (RecentLocation recent : results) {

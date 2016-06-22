@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -27,6 +28,7 @@ import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.RecentLocation;
+import com.mybus.model.SearchType;
 import com.mybus.model.StreetSuggestion;
 import com.mybus.requirements.AddressValidator;
 import com.mybus.service.ServiceFacade;
@@ -46,11 +48,11 @@ import butterknife.OnClick;
 public class SearchActivity extends AppCompatActivity implements OnAddressGeocodingCompleteCallback,
         HistoryItemSelectedListener, FavoriteItemSelectedListener, OnLocationGeocodingCompleteCallback {
 
-    public static final String SEARCH_TITLE_EXTRA = "SEARCH_TITLE_EXTRA";
     public static final String SEARCH_TYPE_EXTRA = "SEARCH_TYPE_EXTRA";
 
     public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
     public static final String RESULT_LATLNG_EXTRA = "RESULT_LATLNG_EXTRA";
+    public static final String SEARCH_ADDRESS_EXTRA = "SEARCH_TITLE_EXTRA";
 
 
     private static final String TAG = SearchActivity.class.getSimpleName();
@@ -86,25 +88,52 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
-
-        if (getIntent().getStringExtra(SEARCH_TITLE_EXTRA) != null) {
-            mSearchView.setSearchHint(getIntent().getStringExtra(SEARCH_TITLE_EXTRA));
-        }
-
         initSearchView();
         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);
 
+        mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
+        switch (mSearchType) {
+            case SearchType.ORIGIN:
+                mSearchView.setSearchHint(getString(R.string.floating_search_origin));
+                initFavoriteCardView();
+                break;
+            case SearchType.DESTINATION:
+                mSearchView.setSearchHint(getString(R.string.floating_search_destination));
+                initFavoriteCardView();
+                break;
+            case SearchType.FAVORITE:
+                if (getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA) != null) {
+                    mSearchView.setSearchText(getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA));
+                }
+                mSearchView.setSearchHint(getString(R.string.floating_search_favorite));
+                mFavoriteCardView.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+        }
+
         initHistoryCardView();
-        initFavoriteCardView();
     }
 
     private void initHistoryCardView() {
-        mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
-        //Sorting recent locations. (The list could be empty but never null)
-        Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
-        mHistoryCardView.setList(mRecentLocations);
+
+        switch (mSearchType) {
+            case SearchType.ORIGIN:
+            case SearchType.DESTINATION:
+                mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
+                break;
+            case SearchType.FAVORITE:
+                mRecentLocations = RecentLocationDao.getInstance(this).getAll();
+                break;
+            default:
+                break;
+        }
+        if (mRecentLocations != null) {
+            //Sorting recent locations. (The list could be empty but never null)
+            Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
+            mHistoryCardView.setList(mRecentLocations);
+        }
         mHistoryCardView.setHistoryItemSelectedListener(this);
     }
 
@@ -198,7 +227,11 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     @Override
     public void onAddressGeocodingComplete(GeoLocation geoLocation) {
-        geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
+        if (geoLocation != null) {
+            geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
+        } else {
+            geocodingComplete(null, null);
+        }
     }
 
     private void geocodingComplete(String query, LatLng location) {
