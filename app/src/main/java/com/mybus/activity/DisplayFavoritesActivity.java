@@ -109,22 +109,23 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
             case RESULT_OK:
                 newAddress = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
                 newLocation = data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA);
-                FavoriteNameAlertDialog favoriteNameAlertDialog = new FavoriteNameAlertDialog();
-                favoriteNameAlertDialog.setListener(this);
+                FavoriteNameAlertDialog favoriteNameAlertDialog = null;
                 switch (requestCode) {
                     case ADD_SEARCH_RESULT_ID:
-                        favoriteNameAlertDialog.setDialogType(FavoriteNameAlertDialog.TYPE_ADD);
+                        favoriteNameAlertDialog = FavoriteNameAlertDialog.
+                                newInstance(FavoriteNameAlertDialog.TYPE_ADD, null);
                         break;
                     case EDIT_SEARCH_RESULT_ID:
-                        favoriteNameAlertDialog.setDialogType(FavoriteNameAlertDialog.TYPE_EDIT);
                         oldFavorite = mFavorites.get(mFavoritePositionToEdit);
-                        favoriteNameAlertDialog.setPreviousName(oldFavorite.getName());
+                        favoriteNameAlertDialog = FavoriteNameAlertDialog.
+                                newInstance(FavoriteNameAlertDialog.TYPE_EDIT, oldFavorite.getName());
                         break;
                     default:
                         break;
                 }
-
-                favoriteNameAlertDialog.show(getFragmentManager(), "Favorite Name");
+                if (favoriteNameAlertDialog != null) {
+                    favoriteNameAlertDialog.show(getFragmentManager(), "Favorite Name Dialog");
+                }
         }
     }
 
@@ -141,9 +142,9 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 .setCancelable(false)
                 .setPositiveButton(this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        Long favid = mFavorites.get(position).getId();
+                        Long favId = mFavorites.get(position).getId();
                         //check if the favorite was successfully removed form the database
-                        if (FavoriteLocationDao.getInstance(DisplayFavoritesActivity.this).remove(favid)) {
+                        if (FavoriteLocationDao.getInstance(DisplayFavoritesActivity.this).remove(favId)) {
                             //remove it locally
                             mFavorites.remove(position);
                             //if there are no favorites, show the no favorites message
