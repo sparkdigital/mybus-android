@@ -120,6 +120,8 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                         oldFavorite = mFavorites.get(mFavoritePositionToEdit);
                         favoriteNameAlertDialog.setPreviousName(oldFavorite.getName());
                         break;
+                    default:
+                        break;
                 }
 
                 favoriteNameAlertDialog.show(getFragmentManager(), "Favorite Name");

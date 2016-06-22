@@ -44,14 +44,12 @@ public class FavoriteNameAlertDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         //callback to OnAdd or OnEdit if it's adding or editing the favorite
                         switch (mDialogType) {
-                            case TYPE_ADD: {
+                            case TYPE_ADD:
                                 mCallback.onAddNewFavorite(mFavofiteNameEditText.getText().toString());
                                 break;
-                            }
-                            case TYPE_EDIT: {
+                            case TYPE_EDIT:
                                 mCallback.onChangeFavoriteName(mFavofiteNameEditText.getText().toString());
                                 break;
-                            }
                             default:
                                 break;
                         }

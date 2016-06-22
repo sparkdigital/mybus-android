@@ -92,27 +92,25 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         mSearchContent.startAnimation(bottomUp);
 
-        mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA,-1);
-        switch (mSearchType){
-            case SearchType.ORIGIN: {
+        mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
+        switch (mSearchType) {
+            case SearchType.ORIGIN:
                 mSearchView.setSearchHint(getString(R.string.floating_search_origin));
                 initFavoriteCardView();
                 break;
-            }
-            case SearchType.DESTINATION: {
+            case SearchType.DESTINATION:
                 mSearchView.setSearchHint(getString(R.string.floating_search_destination));
                 initFavoriteCardView();
                 break;
-            }
-            case SearchType.FAVORITE: {
+            case SearchType.FAVORITE:
                 if (getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA) != null) {
                     mSearchView.setSearchText(getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA));
                 }
                 mSearchView.setSearchHint(getString(R.string.floating_search_favorite));
                 mFavoriteCardView.setVisibility(View.GONE);
                 break;
-            }
-            default: break;
+            default:
+                break;
         }
 
         initHistoryCardView();
@@ -120,17 +118,16 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     private void initHistoryCardView() {
 
-        switch (mSearchType){
+        switch (mSearchType) {
             case SearchType.ORIGIN:
-            case SearchType.DESTINATION: {
+            case SearchType.DESTINATION:
                 mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
                 break;
-            }
-            case SearchType.FAVORITE: {
+            case SearchType.FAVORITE:
                 mRecentLocations = RecentLocationDao.getInstance(this).getAll();
                 break;
-            }
-            default: break;
+            default:
+                break;
         }
         if (mRecentLocations != null) {
             //Sorting recent locations. (The list could be empty but never null)
