@@ -10,8 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.mybus.R;
-import com.mybus.listener.FavoriteAddListener;
-import com.mybus.listener.FavoriteChangeNameListener;
+import com.mybus.listener.FavoriteAddOrEditListener;
 
 import butterknife.ButterKnife;
 
@@ -20,13 +19,12 @@ import butterknife.ButterKnife;
  */
 public class FavoriteNameAlertDialog extends DialogFragment {
 
-    private FavoriteAddListener mOnAddNewFavoriteListener;
-    private FavoriteChangeNameListener mFavoriteChangeNameListener;
-    private String mDialogType;
-    public static final String TYPE_EDIT = "TYPE_EDIT";
-    public static final String TYPE_ADD = "TYPE_ADD";
+    public static final int TYPE_EDIT = 1;
+    public static final int TYPE_ADD = 2;
 
+    private int mDialogType;
     private String mPreviousName;
+    private FavoriteAddOrEditListener mCallback;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -47,11 +45,11 @@ public class FavoriteNameAlertDialog extends DialogFragment {
                         //callback to OnAdd or OnEdit if it's adding or editing the favorite
                         switch (mDialogType) {
                             case TYPE_ADD: {
-                                mOnAddNewFavoriteListener.onAddNewFavorite(mFavofiteNameEditText.getText().toString());
+                                mCallback.onAddNewFavorite(mFavofiteNameEditText.getText().toString());
                                 break;
                             }
                             case TYPE_EDIT: {
-                                mFavoriteChangeNameListener.onChangeFavoriteName(mFavofiteNameEditText.getText().toString());
+                                mCallback.onChangeFavoriteName(mFavofiteNameEditText.getText().toString());
                                 break;
                             }
                             default:
@@ -67,29 +65,17 @@ public class FavoriteNameAlertDialog extends DialogFragment {
     }
 
     /**
-     * @param onAddNewFavoriteListener
-     */
-    public void setActionAdding(FavoriteAddListener onAddNewFavoriteListener) {
-        this.mOnAddNewFavoriteListener = onAddNewFavoriteListener;
-    }
-
-    /**
-     * @param favoriteEditOldListener
-     */
-    public void setActionEditing(FavoriteChangeNameListener favoriteEditOldListener) {
-        this.mFavoriteChangeNameListener = favoriteEditOldListener;
-    }
-
-    /**
      * @param previousName
      */
     public void setPreviousName(String previousName) {
         this.mPreviousName = previousName;
     }
 
-    public void setDialogType(String type) {
+    public void setDialogType(int type) {
         this.mDialogType = type;
     }
 
-
+    public void setListener(FavoriteAddOrEditListener listener) {
+        this.mCallback = listener;
+    }
 }
