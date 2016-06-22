@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.adapter.FavoriteViewAdapter;
 import com.mybus.dao.FavoriteLocationDao;
-import com.mybus.listener.FavoriteAddOrEditListener;
 import com.mybus.listener.FavoriteListItemListener;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.SearchType;
@@ -24,16 +22,15 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteAddOrEditListener {
+public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener {
 
     @Bind(R.id.favorites_recycler_view)
     RecyclerView mFavoritesRecyclerView;
-    @Bind(R.id.add_favorite_action_button)
-    FloatingActionButton mAddFavoriteActionButton;
     @Bind(R.id.noFavorites)
     TextView mNoFavoritesTextView;
 
@@ -42,39 +39,42 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
 
     private List<FavoriteLocation> mFavorites;
     private int mFavoritePositionToEdit;
-    private RecyclerView.LayoutManager mLayoutManager;
     private FavoriteViewAdapter mFavoriteViewAdapter;
     private String newAddress;
     private LatLng newLocation;
     private FavoriteLocation oldFavorite;
+
+    @OnClick(R.id.add_favorite_action_button)
+    void onAddFavoriteButtonClicked(View view){
+        DisplayFavoritesActivity.this.startSearchActivityForFavorite(ADD_SEARCH_RESULT_ID, null);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        //get all the from real
+        //get all favorites from realm
         mFavorites = FavoriteLocationDao.getInstance(this).getAll();
 
         mFavoritesRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mFavoritesRecyclerView.setLayoutManager(mLayoutManager);
 
         mFavoriteViewAdapter = new FavoriteViewAdapter(mFavorites, this);
         mFavoritesRecyclerView.setAdapter(mFavoriteViewAdapter);
 
-        mAddFavoriteActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DisplayFavoritesActivity.this.startSearchActivityForFavorite(ADD_SEARCH_RESULT_ID, null);
-            }
-        });
         if (!mFavorites.isEmpty()) {
             mNoFavoritesTextView.setVisibility(View.GONE);
         }
     }
 
+    /**
+     * @param requestCode
+     * @param favoriteAddress
+     */
     private void startSearchActivityForFavorite(int requestCode, String favoriteAddress) {
         Intent searchIntent = new Intent(this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, SearchType.FAVORITE);
@@ -165,13 +165,13 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     }
 
     @Override
-    public void onAddNewFavorite(String favoriteName) {
+    public void onNewFavoriteName(String favoriteName) {
         FavoriteLocation newFavorite = new FavoriteLocation();
         saveOrUpdateFavorite(newFavorite, favoriteName, ADD_SEARCH_RESULT_ID);
     }
 
     @Override
-    public void onChangeFavoriteName(String favoriteName) {
+    public void onEditFavoriteName(String favoriteName) {
         saveOrUpdateFavorite(oldFavorite, favoriteName, EDIT_SEARCH_RESULT_ID);
     }
 

@@ -12,6 +12,9 @@ import com.mybus.view.FavoriteItemViewHolder;
 
 import java.util.List;
 
+/**
+ * Created by Lucas De Lio on 6/13/2016.
+ */
 public class FavoriteViewAdapter extends RecyclerView.Adapter<FavoriteItemViewHolder> implements FavoriteListItemListener {
 
     private List<FavoriteLocation> mDataset;
@@ -25,6 +28,10 @@ public class FavoriteViewAdapter extends RecyclerView.Adapter<FavoriteItemViewHo
         return new FavoriteItemViewHolder(v, this);
     }
 
+    /**
+     * @param dataSet
+     * @param mFavoriteListItemListener
+     */
     public FavoriteViewAdapter(List<FavoriteLocation> dataSet,FavoriteListItemListener mFavoriteListItemListener) {
         mDataset = dataSet;
         this.mFavoriteListItemListener = mFavoriteListItemListener;
@@ -50,6 +57,4 @@ public class FavoriteViewAdapter extends RecyclerView.Adapter<FavoriteItemViewHo
     public void onFavoriteItemEdit(int position) {
         mFavoriteListItemListener.onFavoriteItemEdit(position);
     }
-
-
 }

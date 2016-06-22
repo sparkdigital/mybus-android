@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.mybus.R;
-import com.mybus.listener.FavoriteAddOrEditListener;
 
 import butterknife.ButterKnife;
 
@@ -25,7 +24,23 @@ public class FavoriteNameAlertDialog extends DialogFragment {
     private static final String ARGUMENT_TYPE = "TYPE";
     private static final String ARGUMENT_NAME = "NAME";
 
-    private FavoriteAddOrEditListener mCallback;
+    private FavoriteAddOrEditNameListener mCallback;
+
+    /**
+     * Listener for FavoriteNameAlertDialog callbacks
+     */
+    public interface FavoriteAddOrEditNameListener {
+
+        /**
+         * @param favoriteName
+         */
+        void onNewFavoriteName(String favoriteName);
+
+        /**
+         * @param favoriteName
+         */
+        void onEditFavoriteName(String favoriteName);
+    }
 
     /**
      * @param type
@@ -64,12 +79,12 @@ public class FavoriteNameAlertDialog extends DialogFragment {
                         switch (dialogType) {
                             case TYPE_ADD:
                                 if (mCallback != null) {
-                                    mCallback.onAddNewFavorite(mFavofiteNameEditText.getText().toString());
+                                    mCallback.onNewFavoriteName(mFavofiteNameEditText.getText().toString());
                                 }
                                 break;
                             case TYPE_EDIT:
                                 if (mCallback != null) {
-                                    mCallback.onChangeFavoriteName(mFavofiteNameEditText.getText().toString());
+                                    mCallback.onEditFavoriteName(mFavofiteNameEditText.getText().toString());
                                 }
                                 break;
                             default:
@@ -91,10 +106,10 @@ public class FavoriteNameAlertDialog extends DialogFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (FavoriteAddOrEditListener) activity;
+            mCallback = (FavoriteAddOrEditNameListener) activity;
         } catch (ClassCastException e) {
             throw (ClassCastException) new ClassCastException(activity.toString()
-                    + " must implement FavoriteAddOrEditListener")
+                    + " must implement FavoriteAddOrEditNameListener")
                     .initCause(e);
         }
     }
