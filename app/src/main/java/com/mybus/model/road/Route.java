@@ -1,4 +1,6 @@
-package com.mybus.model.Road;
+package com.mybus.model.road;
+
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -14,6 +16,7 @@ import java.util.List;
  */
 public class Route {
 
+    private static final String TAG = Route.class.getSimpleName();
     private List<RoutePoint> mPointList = new ArrayList<>();
 
     /**
@@ -31,8 +34,7 @@ public class Route {
                     points.add(point);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
-                route = null;
+                Log.e(TAG, e.toString());
             }
         }
         route.setPointList(points);
@@ -57,8 +59,12 @@ public class Route {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Route route = (Route) o;
 

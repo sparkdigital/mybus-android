@@ -1,8 +1,8 @@
 package com.mybus.model;
 
 import com.mybus.helper.FileLoaderHelper;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.Route;
+import com.mybus.model.road.RoadResult;
+import com.mybus.model.road.Route;
 
 import org.json.JSONObject;
 import org.junit.Test;
@@ -10,7 +10,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by ldimitroff on 12/05/16.

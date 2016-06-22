@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.LatLng;
 public class LocationUpdater implements LocationListener {
 
     private OnLocationChangedCallback mOnLocationChangedCallback;
-    private LocationUpdater mLocationUpdater;
     private LocationManager mLocationManager;
 
     public LocationUpdater(OnLocationChangedCallback onLocationChangedCallback, Context context) {
@@ -40,7 +39,9 @@ public class LocationUpdater implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         // Called when a new location is found by the network location provider.
-        mOnLocationChangedCallback.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
+        if (mOnLocationChangedCallback != null) {
+            mOnLocationChangedCallback.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.mybus.location;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.mybus.model.GeoLocation;
 
 public interface OnAddressGeocodingCompleteCallback {
-    void onAddressGeocodingComplete(LatLng location);
+    void onAddressGeocodingComplete(GeoLocation geoLocation);
 }

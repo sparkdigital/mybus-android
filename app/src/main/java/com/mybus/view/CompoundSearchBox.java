@@ -3,7 +3,6 @@ package com.mybus.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -22,6 +21,7 @@ public class CompoundSearchBox extends FrameLayout {
     private TextView mFromTextView;
     private ImageView mDrawerToggle;
     private ImageView mFlipSearchBtn;
+    private ImageView mSearchBtn;
     private String mFromAddress = null;
     private String mToAddress = null;
     private CompoundSearchBoxListener mListener;
@@ -47,6 +47,7 @@ public class CompoundSearchBox extends FrameLayout {
         public void onClick(View v) {
             setFromAddress(null);
             setToAddress(null);
+            setSearchEnabled(false);
             if (mListener != null) {
                 mListener.onDrawerToggleClick();
             }
@@ -65,6 +66,15 @@ public class CompoundSearchBox extends FrameLayout {
             }
         }
     };
+    private OnClickListener mSearchBtnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mListener != null) {
+                mListener.onSearchButtonClick();
+            }
+        }
+    };
+
 
     public CompoundSearchBox(Context context) {
         super(context);
@@ -94,6 +104,10 @@ public class CompoundSearchBox extends FrameLayout {
 
         mFlipSearchBtn = (ImageView) findViewById(R.id.flipSearch);
         mFlipSearchBtn.setOnClickListener(mFlipSearchClickListener);
+
+        mSearchBtn = (ImageView) findViewById(R.id.searchBtn);
+        mSearchBtn.setOnClickListener(mSearchBtnClickListener);
+
     }
 
     /**
@@ -104,13 +118,14 @@ public class CompoundSearchBox extends FrameLayout {
         return getContext().getString(resId);
     }
 
+    /**
+     * @param listener
+     */
     public void setListener(CompoundSearchBoxListener listener) {
         this.mListener = listener;
     }
 
     /**
-
-     *
      * @param visible
      */
     public void setVisible(boolean visible) {
@@ -119,6 +134,7 @@ public class CompoundSearchBox extends FrameLayout {
 
     /**
      * * Show or hide the SearchBar
+     *
      * @param visible
      * @param animate
      */
@@ -152,7 +168,19 @@ public class CompoundSearchBox extends FrameLayout {
         mToTextView.setText(text);
     }
 
+    /**
+     * @return
+     */
     public boolean isVisible() {
         return getVisibility() == VISIBLE;
+    }
+
+    /**
+     * Enables or disables the search button
+     *
+     * @param enabled
+     */
+    public void setSearchEnabled(boolean enabled) {
+        mSearchBtn.setEnabled(enabled);
     }
 }

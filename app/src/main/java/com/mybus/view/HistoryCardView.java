@@ -5,20 +5,27 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import com.mybus.R;
 import com.mybus.adapter.HistoryItemAdapter;
 import com.mybus.listener.HistoryItemSelectedListener;
+import com.mybus.model.RecentLocation;
+
+import java.util.List;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class HistoryCardView extends CardView implements HistoryItemSelectedListener{
+public class
+HistoryCardView extends CardView implements HistoryItemSelectedListener {
 
     private HistoryItemSelectedListener mHistoryItemSelectedListener;
-    private RecyclerView mHistoryItemsList;
+    private RecyclerView mRecyclerView;
     private HistoryItemAdapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private TextView mNoRecentTextView;
+    private List<RecentLocation> mRecentLocationList;
 
     public void setHistoryItemSelectedListener(HistoryItemSelectedListener mHistoryItemSelectedListener) {
         this.mHistoryItemSelectedListener = mHistoryItemSelectedListener;
@@ -32,27 +39,36 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
     private void init() {
         inflate(getContext(), R.layout.history_card_view, this);
 
-        mHistoryItemsList = (RecyclerView) findViewById(R.id.recent_list);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mHistoryItemsList.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mHistoryItemsList.setLayoutManager(mLayoutManager);
-
-        //TODO: Should get the list of history
-        String[] myDataSet = {"Avenida Pedro Luro 2228", "Aristobulo del Valle 2248", "Avenida Constitucion 570"};
-        mListAdapter = new HistoryItemAdapter(myDataSet);
-        mListAdapter.setItemSelectedListener(this);
-        mHistoryItemsList.setAdapter(mListAdapter);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recent_list);
+        mNoRecentTextView = (TextView) findViewById(R.id.noRecentTv);
     }
 
     @Override
-    public void onHistoryItemSelected(String result) {
+    public void onHistoryItemSelected(int position) {
         if (mHistoryItemSelectedListener != null) {
-            mHistoryItemSelectedListener.onHistoryItemSelected(result);
+            mHistoryItemSelectedListener.onHistoryItemSelected(position);
+        }
+    }
+
+    public void setList(List<RecentLocation> list) {
+        mRecentLocationList = list;
+        if (mRecentLocationList != null && !mRecentLocationList.isEmpty()) {
+            mNoRecentTextView.setVisibility(GONE);
+            mRecyclerView.setVisibility(VISIBLE);
+
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            mRecyclerView.setHasFixedSize(true);
+            // use a linear layout manager
+            mLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+
+            mListAdapter = new HistoryItemAdapter(mRecentLocationList);
+            mListAdapter.setItemSelectedListener(this);
+            mRecyclerView.setAdapter(mListAdapter);
+        } else {
+            mNoRecentTextView.setVisibility(VISIBLE);
+            mRecyclerView.setVisibility(GONE);
         }
     }
 }

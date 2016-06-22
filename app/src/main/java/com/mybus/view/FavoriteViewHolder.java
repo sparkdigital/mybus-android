@@ -3,7 +3,6 @@ package com.mybus.view;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mybus.R;
 import com.mybus.listener.FavoriteItemSelectedListener;
@@ -28,7 +27,7 @@ public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View view) {
         if (mItemSelectedListener != null) {
-            mItemSelectedListener.onFavoriteItemSelected(favAddress.getText().toString());
+            mItemSelectedListener.onFavoriteItemSelected(getAdapterPosition());
         }
     }
 }

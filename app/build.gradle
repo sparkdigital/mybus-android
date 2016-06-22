@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+apply plugin: 'com.noveogroup.android.check'
 
 android {
     signingConfigs {
@@ -29,7 +31,13 @@ android {
         }
     }
     lintOptions {
-        abortOnError false
+        disable 'PrivateResource', 'InvalidPackage',
+                'AllowBackup', 'UseCompoundDrawables', 'Overdraw', 'GoogleAppIndexingWarning'
+        warning 'IconDensities', 'ContentDescription', 'RtlSymmetry', 'RtlHardcoded'
+        abortOnError true
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -45,5 +53,52 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.android.support:cardview-v7:23.4.0'
+    compile 'me.grantland:autofittextview:0.2.1'
     compile project(path: ':FloatingSearchViewLib')
+}
+
+// configuration is optional
+check {
+    // fails build if code style violation is found, false by default
+    abortOnError true
+    // configuration of Checkstyle checker
+    checkstyle {
+        // skip Checkstyle, false by deafult
+        skip false
+        // fails build if Checkstyle rule violation is found, false by default
+        abortOnError true
+        // directory for report files
+        report new File(project.buildDir, 'reports/checkstyle')
+        // XML report file
+        reportXML new File(project.buildDir, 'reports/checkstyle/checkstyle.xml')
+        // HTML report file
+        reportHTML new File(project.buildDir, 'reports/checkstyle/checkstyle.html')
+    }
+    // configuration of FindBugs checker
+    findbugs {
+        // skip findbugs, false by deafult
+        skip false
+        // fails build if Checkstyle rule violation is found, false by default
+        abortOnError true
+        // predefined configurations: easy and hard
+        config hard()
+        // directory for report files
+        report new File(project.buildDir, 'reports/findbugs')
+        // XML report file
+        reportXML new File(project.buildDir, 'reports/findbugs/findbugs.xml')
+        // HTML report file
+        reportHTML new File(project.buildDir, 'reports/findbugs/findbugs.html')
+    }
+    // configuration of PMD checker
+    pmd {
+        // skip pmd, false by deafult
+        skip false
+        // fails build if Checkstyle rule violation is found, false by default
+        abortOnError true
+        report new File(project.buildDir, 'reports/pmd')
+        // XML report file
+        reportXML new File(project.buildDir, 'reports/pmd/pmd.xml')
+        // HTML report file
+        reportHTML new File(project.buildDir, 'reports/pmd/pmd.html')
+    }
 }

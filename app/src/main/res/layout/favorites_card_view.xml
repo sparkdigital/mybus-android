@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
         android:id="@+id/favorites_cardView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,6 +16,14 @@
         android:id="@+id/favorites_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fadeScrollbars="false"
         android:scrollbars="vertical"
-        android:fadeScrollbars="false"/>
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/noFavorites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/no_favorites_present" />
 </LinearLayout>

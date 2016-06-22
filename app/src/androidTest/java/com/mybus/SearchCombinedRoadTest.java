@@ -5,8 +5,8 @@ import android.test.InstrumentationTestCase;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.RoadSearch;
+import com.mybus.model.road.RoadResult;
+import com.mybus.model.road.RoadSearch;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -24,8 +24,8 @@ public class SearchCombinedRoadTest extends InstrumentationTestCase implements R
     protected void setUp() throws Exception {
         super.setUp();
         RoadSearch roadSearch = new RoadSearch("31", "10", "1", "1", "39", "144", "47", "113");
-        LatLng origin = new LatLng(-38.10821902246196,-57.59124767035246);
-        LatLng destiny = new LatLng(-37.954447126607825,-57.59074375033378);
+        LatLng origin = new LatLng(-38.10821902246196, -57.59124767035246);
+        LatLng destiny = new LatLng(-37.954447126607825, -57.59074375033378);
         mAsycTask = new RoadSearchTask(1, roadSearch, origin, destiny, this);
         signal = new CountDownLatch(1); //CountDownLatch used to perform wait-notify behaviour
     }
@@ -45,7 +45,7 @@ public class SearchCombinedRoadTest extends InstrumentationTestCase implements R
             }
         });
         try {
-            signal.await();// wait for callback
+            signal.await(); // wait for callback
             assertTrue(mResult != null);
         } catch (InterruptedException e) {
             fail();

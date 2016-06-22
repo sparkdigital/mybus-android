@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
+import com.mybus.model.GeoLocation;
+import com.mybus.requirements.AddressValidator;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.Locale;
 /**
  * Address Geocoding Class
  */
-public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, LatLng> {
+public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocation> {
 
     private static final String TAG = "AddressGeocoding";
     private final Context mContext;
@@ -28,12 +30,16 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, LatLng> {
     }
 
     @Override
-    protected LatLng doInBackground(String... strings) {
+    protected GeoLocation doInBackground(String... strings) {
         String locationName = strings[0];
+        if (!AddressValidator.isValidAddress(locationName)) {
+            return null;
+        }
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = geocoder.getFromLocationName(locationName, 4);
+            //TODO remove this hardcoded city, used to filter Mar del Plata results
+            addresses = geocoder.getFromLocationName(locationName+" mar del plata" , 4);
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             Log.e(TAG, "service_not_available", ioException);
@@ -43,19 +49,19 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, LatLng> {
         }
 
         // Handle case where no address was found.
-        if (addresses == null || addresses.size() == 0) {
+        if (addresses == null || addresses.isEmpty()) {
             Log.e(TAG, "no_address_found");
         } else {
             Address address = addresses.get(0);
             Log.i(TAG, "address_found");
-            return new LatLng(address.getLatitude(), address.getLongitude());
+            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            return new GeoLocation(locationName, latLng);
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(LatLng location) {
-        super.onPostExecute(location);
-        callback.onAddressGeocodingComplete(location);
+    protected void onPostExecute(GeoLocation geoLocation) {
+        callback.onAddressGeocodingComplete(geoLocation);
     }
 }

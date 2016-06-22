@@ -7,16 +7,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class GenericService {
+public class GenericService {
 
     private OkHttpClient client;
 
-    public GenericService(){
+    public GenericService() {
         client = new OkHttpClient();
     }
 
     /**
-     *
      * @param url
      * @return
      * @throws IOException

@@ -3,7 +3,6 @@ package com.mybus.service;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.PendingResult;
 import com.google.maps.model.DirectionsResult;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
@@ -12,25 +11,18 @@ import com.mybus.asynctask.RouteSearchTask;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.RoadSearch;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
-public class ServiceFacade {
+public final class ServiceFacade {
 
     private static ServiceFacade instance = null;
     private DirectionsServiceImpl directionsService;
     private GisService gisService;
-    private MyBusService myBusService;
     private GeocodingService geocodingService;
 
     private ServiceFacade() {
         gisService = new GisServiceImpl();
-        myBusService = new MyBusServiceImpl();
         geocodingService = new GeocodingServiceImpl();
         directionsService = new DirectionsServiceImpl();
     }
@@ -45,8 +37,6 @@ public class ServiceFacade {
     /**
      * @param constraint
      * @return
-     * @throws IOException
-     * @throws JSONException
      */
     public List<String> findStreets(String constraint) {
         return gisService.findStreets(constraint);

@@ -43,15 +43,17 @@ public class StreetSuggestionFilter extends Filter {
 
     @Override
     public void publishResults(CharSequence constraint, FilterResults results) {
-        if (mListener != null)
+        if (mListener != null) {
             mListener.onResults((List<StreetSuggestion>) results.values);
+        }
     }
 
 
     /**
      * Get's the list of streets matching a constraint
      * <p/>
-     * Example url: //http://gis.mardelplata.gob.ar/opendata/ws.php?method=rest&endpoint=callejero_mgp&token=rwef3253465htrt546dcasadg4343&nombre_calle=ind
+     * Example url: //http://gis.mardelplata.gob.ar/opendata/ws.php?
+     * +      method=rest&endpoint=callejero_mgp&token=rwef3253465htrt546dcasadg4343&nombre_calle=ind
      *
      * @param constraint
      * @return list of streets
