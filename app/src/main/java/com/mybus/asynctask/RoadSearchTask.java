@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.RoadSearch;
+import com.mybus.model.road.RoadResult;
+import com.mybus.model.road.RoadSearch;
 import com.mybus.service.MyBusServiceImpl;
 import com.mybus.service.ServiceFacade;
 
@@ -25,7 +25,7 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     private LatLng endLocation;
     private LatLng firstBusStop;
     private RoadSearchCallback roadSearchCallback;
-    RoadSearch roadSearch;
+    private RoadSearch roadSearch;
 
     /**
      * Private Default Constructor

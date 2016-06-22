@@ -1,10 +1,12 @@
 package com.mybus.service;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.builder.MyBusServiceUrlBuilder;
 import com.mybus.model.BusRouteResult;
-import com.mybus.model.Road.RoadResult;
-import com.mybus.model.Road.RoadSearch;
+import com.mybus.model.road.RoadResult;
+import com.mybus.model.road.RoadSearch;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class MyBusServiceImpl extends GenericService implements MyBusService {
+
+    private static final String TAG = MyBusService.class.getSimpleName();
 
     /**
      * @param origin
@@ -30,7 +34,7 @@ public class MyBusServiceImpl extends GenericService implements MyBusService {
             JSONArray results = jsonObject.getJSONArray("Results"); //Gets result
             return BusRouteResult.parseResults(results, type); //Parse results from JSONA
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
             return null;
         }
     }
@@ -52,7 +56,7 @@ public class MyBusServiceImpl extends GenericService implements MyBusService {
             }
             jsonObject = new JSONObject(executeUrl(url));
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
             return null;
         }
         return RoadResult.parse(jsonObject);

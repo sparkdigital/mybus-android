@@ -54,7 +54,7 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
 
     public void test4ListHistory() {
         List<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAll();
-        assertTrue(results.size() > 0);
+        assertFalse(results.isEmpty());
         Log.i("TestListHistory", "History");
         for (RecentLocation recent : results) {
             Log.i("TestListHistory", "Recent: " + recent.toString());
@@ -63,7 +63,7 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
 
     public void test5ListOriginHistory() {
         List<RecentLocation> results = RecentLocationDao.getInstance(mContext).getAllByField(TYPE_FIELD, SearchType.ORIGIN);
-        assertTrue(results.size() > 0);
+        assertFalse(results.isEmpty());
         Log.i("TestOriginHistory", "Origin History");
         for (RecentLocation recent : results) {
             Log.i("TestOriginHistory", "Recent: " + recent.toString());

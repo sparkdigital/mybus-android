@@ -12,6 +12,7 @@ import io.realm.annotations.Required;
  * RealmObject to persist recent locations
  */
 public class RecentLocation extends RealmObject implements UsageTrackable, Comparable<RecentLocation> {
+    public static final int HASH_MULTIPLIER = 31;
     @PrimaryKey
     private Long id = System.nanoTime();
     @Required
@@ -27,6 +28,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
 
     // Default constructor
     public RecentLocation() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
     // Constructor used for testing
@@ -93,11 +95,41 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
     // Used for testing.
     @Override
     public String toString() {
-        return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION") + " ; Address: " + address + " ; LatLong: (" + latitude + ", " + longitude + ")" + "Usage Count: " + usageCount;
+        return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION")
+                + " ; Address: " + address
+                + " ; LatLong: (" + latitude + ", " + longitude + ")" + "Usage Count: " + usageCount;
     }
 
     @Override
     public int compareTo(RecentLocation another) {
         return this.getUsageCount() < another.getUsageCount() ? -1 : 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RecentLocation that = (RecentLocation) o;
+
+        return id.equals(that.id) && type.equals(that.type) && address.equals(that.address)
+                && latitude.equals(that.latitude) && longitude.equals(that.longitude)
+                && usageCount.equals(that.usageCount);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = HASH_MULTIPLIER * result + type.hashCode();
+        result = HASH_MULTIPLIER * result + address.hashCode();
+        result = HASH_MULTIPLIER * result + latitude.hashCode();
+        result = HASH_MULTIPLIER * result + longitude.hashCode();
+        result = HASH_MULTIPLIER * result + usageCount.hashCode();
+        return result;
     }
 }

@@ -40,13 +40,14 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocat
             Log.e(TAG, "service_not_available", ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
-            Log.e(TAG, "invalid_lat_long_used" + ". " +
-                    "Latitude = " + latLng.latitude +
-                    ", Longitude = " + latLng.longitude, illegalArgumentException);
+            Log.e(TAG, "invalid_lat_long_used" + ". "
+                    + "Latitude = " + latLng.latitude
+                    + ", Longitude = "
+                    + latLng.longitude, illegalArgumentException);
         }
 
         // Handle case where no address was found.
-        if (addresses == null || addresses.size() == 0) {
+        if (addresses == null || addresses.isEmpty()) {
             Log.e(TAG, "no_address_found");
         } else {
             Address address = addresses.get(0);

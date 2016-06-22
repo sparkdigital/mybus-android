@@ -16,8 +16,8 @@ public class GisServiceUrlBuilderUnitTest {
 
     @Test
     public void buildFindStreetsUrl() {
-        String expectedUrl = GisServiceUrlBuilder.buildBaseUri().build().toString() +
-                "/ws.php?method=rest&endpoint=callejero_mgp&nombre_calle=indep";
+        String expectedUrl = GisServiceUrlBuilder.buildBaseUri().build().toString()
+                + "/ws.php?method=rest&endpoint=callejero_mgp&nombre_calle=indep";
         String url = GisServiceUrlBuilder.buildFindStreetsUrl("indep");
         assertTrue(url.contains(expectedUrl));
     }

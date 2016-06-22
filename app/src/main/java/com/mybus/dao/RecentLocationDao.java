@@ -10,7 +10,7 @@ import com.mybus.model.RecentLocation;
  * <p/>
  * DAO for recent objects saved on realm
  */
-public class RecentLocationDao extends RealmDao<RecentLocation> {
+public final class RecentLocationDao extends RealmDao<RecentLocation> {
     private static RecentLocationDao instance = null;
 
     private RecentLocationDao(Context context) {

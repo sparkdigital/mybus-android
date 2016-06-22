@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="Dorrego 4230"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="15dp" />
+                android:textSize="@dimen/bus_route_text_size" />
 
             <TextView
                 android:id="@+id/route_walk_origin"
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="menos de 3 cuadras"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="15dp" />
+                android:textSize="@dimen/bus_route_text_size" />
         </LinearLayout>
 
     </LinearLayout>
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="Castelli 5798"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="15dp" />
+                android:textSize="@dimen/bus_route_text_size" />
 
             <TextView
                 android:id="@+id/route_walk_destination"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:text="menos de una cuadra"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="15dp" />
+                android:textSize="@dimen/bus_route_text_size" />
         </LinearLayout>
 
     </LinearLayout>

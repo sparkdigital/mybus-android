@@ -1,7 +1,7 @@
 package com.mybus.model;
 
 import com.mybus.helper.FileLoaderHelper;
-import com.mybus.model.Road.RoutePoint;
+import com.mybus.model.road.RoutePoint;
 
 import org.json.JSONObject;
 import org.junit.Test;

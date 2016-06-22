@@ -10,6 +10,7 @@ import com.mybus.model.FavoriteLocation;
  * DAO for favorites objects saved on realm
  */
 public class FavoriteLocationDao extends RealmDao<FavoriteLocation> {
+
     private static FavoriteLocationDao instance = null;
 
     private FavoriteLocationDao(Context context) {

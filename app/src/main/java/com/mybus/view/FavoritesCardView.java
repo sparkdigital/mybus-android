@@ -43,7 +43,7 @@ public class FavoritesCardView extends CardView implements FavoriteItemSelectedL
 
     public void setItemList(List<FavoriteLocation> list) {
         mFavoriteLocationList = list;
-        if (mFavoriteLocationList != null && mFavoriteLocationList.size() > 0) {
+        if (mFavoriteLocationList != null && !mFavoriteLocationList.isEmpty()) {
             mNoFavoritesTextView.setVisibility(GONE);
             mRecyclerView.setVisibility(VISIBLE);
 
