@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Temporary Marker
     MarkerOptions mStartLocationMarkerOptions;
     MarkerOptions mEndLocationMarkerOptions;
-    MarkerOptions lastLocationGeocodingType;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -195,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, OnLocationGeocodingCompleteCallback listener) {
         clearBusRouteOnMap();
         showBottomSheetResults(false);
-        lastLocationGeocodingType = markerOptions;
         if (marker == null) {
             markerOptions.position(latLng);
             marker = mMap.addMarker(markerOptions);
@@ -398,7 +396,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mUserLocationMarker = null;
         mStartLocationMarker = null;
         mEndLocationMarker = null;
-        lastLocationGeocodingType = null;
         mStartLocationMarkerOptions = new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
