@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @param bounds
      */
     private void zoomTo(LatLngBounds bounds) {
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, getResources().getInteger(R.integer.map_padding));
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(getResources().getInteger(R.integer.map_padding)));
         mMap.animateCamera(cu);
     }
 
