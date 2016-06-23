@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
         CompoundSearchBoxListener {
 
-    public static final String TAG = "MainActivity";
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
     private GoogleMap mMap;
@@ -367,15 +365,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mToolbar.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
             @Override
             public void onMenuOpened() {
-                Log.d(TAG, "onMenuOpened()");
-
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
 
             @Override
             public void onMenuClosed() {
-                Log.d(TAG, "onMenuClosed()");
-
                 mDrawerLayout.closeDrawer(GravityCompat.START);
             }
         });
