@@ -269,8 +269,8 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     /**
      * Finishes this current activity and sends the result to the one witch has started it
      */
-    private void setActivityResult(String query, LatLng location) {
-        GeoLocation geoLocation = new GeoLocation(query, location);
+    private void setActivityResult(String address, LatLng location) {
+        GeoLocation geoLocation = new GeoLocation(address, location);
         setActivityResult(geoLocation);
     }
 

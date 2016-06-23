@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.adapter.FavoriteViewAdapter;
 import com.mybus.dao.FavoriteLocationDao;
@@ -41,9 +40,8 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     private List<FavoriteLocation> mFavorites;
     private int mFavoritePositionToEdit;
     private FavoriteViewAdapter mFavoriteViewAdapter;
-    private String newAddress;
-    private LatLng newLocation;
     private FavoriteLocation oldFavorite;
+    private GeoLocation mGeoLocation;
 
     @OnClick(R.id.add_favorite_action_button)
     void onAddFavoriteButtonClicked(View view) {
@@ -108,9 +106,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 //The user canceled
                 break;
             case RESULT_OK:
-                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
-                newAddress = geoLocation.getAddress();
-                newLocation = geoLocation.getLatLng();
+                mGeoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
                 FavoriteNameAlertDialog favoriteNameAlertDialog = null;
                 switch (requestCode) {
                     case ADD_SEARCH_RESULT_ID:
@@ -183,9 +179,9 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
      */
     private void saveOrUpdateFavorite(FavoriteLocation favorite, String favoriteName, int type) {
         favorite.setName(favoriteName);
-        favorite.setAddress(newAddress);
-        favorite.setLatitude(newLocation.latitude);
-        favorite.setLongitude(newLocation.longitude);
+        favorite.setAddress(mGeoLocation.getAddress());
+        favorite.setLatitude(mGeoLocation.getLatLng().latitude);
+        favorite.setLongitude(mGeoLocation.getLatLng().longitude);
         if (FavoriteLocationDao.getInstance(this).saveOrUpdate(favorite)) {
             if (type == ADD_SEARCH_RESULT_ID) {
                 mFavorites.add(favorite);
