@@ -15,6 +15,7 @@ import com.mybus.adapter.FavoriteViewAdapter;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.listener.FavoriteListItemListener;
 import com.mybus.model.FavoriteLocation;
+import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
 import com.mybus.view.FavoriteNameAlertDialog;
 
@@ -45,7 +46,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     private FavoriteLocation oldFavorite;
 
     @OnClick(R.id.add_favorite_action_button)
-    void onAddFavoriteButtonClicked(View view){
+    void onAddFavoriteButtonClicked(View view) {
         DisplayFavoritesActivity.this.startSearchActivityForFavorite(ADD_SEARCH_RESULT_ID, null);
     }
 
@@ -107,8 +108,9 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 //The user canceled
                 break;
             case RESULT_OK:
-                newAddress = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
-                newLocation = data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA);
+                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
+                newAddress = geoLocation.getAddress();
+                newLocation = geoLocation.getLatLng();
                 FavoriteNameAlertDialog favoriteNameAlertDialog = null;
                 switch (requestCode) {
                     case ADD_SEARCH_RESULT_ID:

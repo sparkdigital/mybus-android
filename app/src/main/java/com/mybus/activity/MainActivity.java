@@ -664,28 +664,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //TODO: The user canceled
                 break;
             case RESULT_OK:
+                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
                 switch (requestCode) {
                     case FROM_SEARCH_RESULT_ID:
-                        String address = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
                         mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions,
-                                (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), false);
-                        setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
+                                geoLocation.getLatLng(), false);
+                        setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, geoLocation.getAddress());
 
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true, true);
-                        mCompoundSearchBox.setFromAddress(address);
+                        mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
 
                         zoomTo(mStartLocationMarker.getPosition());
                         break;
                     case TO_SEARCH_RESULT_ID:
-                        String addr = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
                         mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions,
-                                (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), false);
-                        setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, addr);
+                                geoLocation.getLatLng(), false);
+                        setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, geoLocation.getAddress());
 
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true);
-                        mCompoundSearchBox.setToAddress(addr);
+                        mCompoundSearchBox.setToAddress(geoLocation.getAddress());
 
                         zoomOutStartEndMarkers();
                         break;

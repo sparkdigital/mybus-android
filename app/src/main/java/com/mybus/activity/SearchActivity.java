@@ -49,11 +49,8 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         HistoryItemSelectedListener, FavoriteItemSelectedListener, OnLocationGeocodingCompleteCallback {
 
     public static final String SEARCH_TYPE_EXTRA = "SEARCH_TYPE_EXTRA";
-
-    public static final String RESULT_STREET_EXTRA = "RESULT_STREET_EXTRA";
-    public static final String RESULT_LATLNG_EXTRA = "RESULT_LATLNG_EXTRA";
     public static final String SEARCH_ADDRESS_EXTRA = "SEARCH_TITLE_EXTRA";
-
+    public static final String RESULT_GEOLOCATION_EXTRA = "RESULT_GEOLOCATION_EXTRA";
 
     private static final String TAG = SearchActivity.class.getSimpleName();
 
@@ -222,25 +219,21 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
     @Override
     public void onLocationGeocodingComplete(GeoLocation geoLocation) {
-        geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
+        geocodingComplete(geoLocation);
     }
 
     @Override
     public void onAddressGeocodingComplete(GeoLocation geoLocation) {
-        if (geoLocation != null) {
-            geocodingComplete(geoLocation.getAddress(), geoLocation.getLatLng());
-        } else {
-            geocodingComplete(null, null);
-        }
+        geocodingComplete(geoLocation);
     }
 
-    private void geocodingComplete(String query, LatLng location) {
+    private void geocodingComplete(GeoLocation geoLocation) {
         cancelProgressDialog();
-        if (query != null && location != null) {
+        if (geoLocation != null) {
             if (mSearchType >= 0) {
-                findOrCreateNewRecent(query, location);
+                findOrCreateNewRecent(geoLocation.getAddress(), geoLocation.getLatLng());
             }
-            setActivityResult(query, location);
+            setActivityResult(geoLocation);
         } else {
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
         }
@@ -265,13 +258,20 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     /**
      * Finishes this current activity and sends the result to the one witch has started it
      */
-    private void setActivityResult(String query, LatLng location) {
+    private void setActivityResult(GeoLocation geoLocation) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_STREET_EXTRA, query);
-        intent.putExtra(RESULT_LATLNG_EXTRA, location);
+        intent.putExtra(RESULT_GEOLOCATION_EXTRA, geoLocation);
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();
+    }
+
+    /**
+     * Finishes this current activity and sends the result to the one witch has started it
+     */
+    private void setActivityResult(String query, LatLng location) {
+        GeoLocation geoLocation = new GeoLocation(query, location);
+        setActivityResult(geoLocation);
     }
 
     /**
