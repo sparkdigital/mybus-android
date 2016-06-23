@@ -80,10 +80,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Marker mEndLocationMarker;
     //Temporary Marker
     MarkerOptions mStartLocationMarkerOptions;
-    MarkerOptions lastAddressGeocodingType;
-    MarkerOptions lastLocationGeocodingType;
-
     MarkerOptions mEndLocationMarkerOptions;
+    MarkerOptions lastLocationGeocodingType;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -400,7 +398,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mUserLocationMarker = null;
         mStartLocationMarker = null;
         mEndLocationMarker = null;
-        lastAddressGeocodingType = null;
         lastLocationGeocodingType = null;
         mStartLocationMarkerOptions = new MarkerOptions()
                 .draggable(true)
