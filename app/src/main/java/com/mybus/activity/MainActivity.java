@@ -117,8 +117,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             new OnLocationGeocodingCompleteCallback() {
                 @Override
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
-                    setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker, mStartLocationMarkerOptions);
-                    mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
+                    if (geoLocation != null) {
+                        setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker, mStartLocationMarkerOptions);
+                        mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
+                    }
                 }
             };
 
@@ -129,8 +131,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             new OnLocationGeocodingCompleteCallback() {
                 @Override
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
-                    setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker, mEndLocationMarkerOptions);
-                    mCompoundSearchBox.setToAddress(geoLocation.getAddress());
+                    if (geoLocation != null) {
+                        setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker, mEndLocationMarkerOptions);
+                        mCompoundSearchBox.setToAddress(geoLocation.getAddress());
+                    }
                 }
             };
 
