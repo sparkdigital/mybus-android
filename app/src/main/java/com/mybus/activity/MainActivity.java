@@ -101,10 +101,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onMapLongClick(LatLng latLng) {
             if (mStartLocationMarker == null) {
-                mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, mStartLocationGeocodingCompleted);
+                mStartLocationMarker = addOrUpdateMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, mStartLocationGeocodingCompleted);
                 zoomTo(mStartLocationMarker.getPosition());
             } else {
-                mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, mEndLocationGeocodingCompleted);
+                mEndLocationMarker = addOrUpdateMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, mEndLocationGeocodingCompleted);
                 zoomOutStartEndMarkers(); // Makes a zoom out in the map to see both markers at the same time.
             }
         }
@@ -191,7 +191,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private Marker positionMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, OnLocationGeocodingCompleteCallback listener) {
+    /**
+     * Add or update a specified marker on the map
+     *
+     * @param marker        the marker to be updated.
+     * @param markerOptions the marker options for this marker
+     * @param latLng        the LatLng where the marker is going to be
+     * @param listener      null if no Geocoding By Location needed.
+     * @return the marker from the map
+     */
+    private Marker addOrUpdateMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, OnLocationGeocodingCompleteCallback listener) {
         clearBusRouteOnMap();
         showBottomSheetResults(false);
         if (marker == null) {
@@ -651,7 +660,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (requestCode) {
                     case FROM_SEARCH_RESULT_ID:
                         String address = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
-                        mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions,
+                        mStartLocationMarker = addOrUpdateMarker(mStartLocationMarker, mStartLocationMarkerOptions,
                                 (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), null);
                         setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
 
@@ -663,7 +672,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case TO_SEARCH_RESULT_ID:
                         String addr = data.getStringExtra(SearchActivity.RESULT_STREET_EXTRA);
-                        mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions,
+                        mEndLocationMarker = addOrUpdateMarker(mEndLocationMarker, mEndLocationMarkerOptions,
                                 (LatLng) data.getParcelableExtra(SearchActivity.RESULT_LATLNG_EXTRA), null);
                         setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, addr);
 
@@ -715,10 +724,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         LatLng latLngAux = mStartLocationMarker.getPosition();
         String addressAux = mStartLocationMarker.getTitle();
-        mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions, mEndLocationMarker.getPosition(), null);
+        mStartLocationMarker = addOrUpdateMarker(mStartLocationMarker, mStartLocationMarkerOptions, mEndLocationMarker.getPosition(), null);
         mStartLocationMarker.setTitle(mEndLocationMarker.getTitle());
         mStartLocationMarker.hideInfoWindow();
-        mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLngAux, null);
+        mEndLocationMarker = addOrUpdateMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLngAux, null);
         mEndLocationMarker.setTitle(addressAux);
         mEndLocationMarker.hideInfoWindow();
 
