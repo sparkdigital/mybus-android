@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @param marker
      * @param markerOptions
      */
-    private synchronized void setAddressFromGeoCoding(String address, Marker marker, MarkerOptions markerOptions) {
+    private void setAddressFromGeoCoding(String address, Marker marker, MarkerOptions markerOptions) {
         setMarkerTitle(marker, markerOptions, address);
         mToolbar.setVisibility(View.GONE);
         mCompoundSearchBox.setVisible(true);
