@@ -52,10 +52,11 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         if (addresses == null || addresses.isEmpty()) {
             Log.e(TAG, "no_address_found");
         } else {
-            Address address = addresses.get(0);
             Log.i(TAG, "address_found");
+            Address address = addresses.get(0);
+            String addressString = address.getAddressLine(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            return new GeoLocation(locationName, latLng);
+            return new GeoLocation(addressString, latLng);
         }
         return null;
     }
