@@ -458,6 +458,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             marker.showInfoWindow();
         }
         markerOptions.title(title);
+        markerOptions.snippet(address);
     }
 
     @Override

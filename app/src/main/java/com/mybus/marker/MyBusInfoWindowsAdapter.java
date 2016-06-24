@@ -3,6 +3,7 @@ package com.mybus.marker;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -30,15 +31,17 @@ public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
     @Override
     public View getInfoContents(Marker marker) {
         String stopBusStr = mContext.getResources().getString(R.string.bus_stop_origin).split(" ")[0];
-        if (marker.getTitle().contains(stopBusStr)
-                || marker.getTitle().equals(mContext.getString(R.string.current_location_marker))) {
-            return null;
-        }
         TextView tvTitle = ((TextView) mContentsView.findViewById(R.id.marker_title));
         tvTitle.setText(marker.getTitle());
         TextView tvAddress = ((TextView) mContentsView.findViewById(R.id.marker_address));
         tvAddress.setText(marker.getSnippet());
-
+        ImageView ivFavIcon = ((ImageView) mContentsView.findViewById(R.id.marker_fav_icon));
+        if (marker.getTitle().contains(stopBusStr)
+                || marker.getTitle().equals(mContext.getString(R.string.current_location_marker))) {
+            ivFavIcon.setVisibility(View.GONE);
+        } else {
+            ivFavIcon.setVisibility(View.VISIBLE);
+        }
         return mContentsView;
     }
 }
