@@ -39,7 +39,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         List<Address> addresses = null;
         try {
             //TODO remove this hardcoded city, used to filter Mar del Plata results
-            addresses = geocoder.getFromLocationName(locationName+" mar del plata" , 4);
+            addresses = geocoder.getFromLocationName(locationName + ", mar del plata", 4);
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             Log.e(TAG, "service_not_available", ioException);
@@ -48,21 +48,33 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
             Log.e(TAG, "invalid_lat_long_used", illegalArgumentException);
         }
 
-        // Handle case where no address was found.
-        if (addresses == null || addresses.isEmpty()) {
-            Log.e(TAG, "no_address_found");
-        } else {
-            Log.i(TAG, "address_found");
-            Address address = addresses.get(0);
-            String addressString = address.getAddressLine(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            return new GeoLocation(addressString, latLng);
-        }
-        return null;
+        return getGeoLocationFromAdresses(addresses);
     }
 
     @Override
     protected void onPostExecute(GeoLocation geoLocation) {
         callback.onAddressGeocodingComplete(geoLocation);
+    }
+
+    /**
+     * Get's the first address with the same postal code as MDQ
+     *
+     * @param addresses
+     * @return
+     */
+    private GeoLocation getGeoLocationFromAdresses(List<Address> addresses) {
+        if (addresses == null || addresses.isEmpty()) {
+            Log.e(TAG, "no_address_found");
+            return null;
+        }
+        for (Address address : addresses) {
+            if (address.getPostalCode() != null && address.getPostalCode().equalsIgnoreCase("B7600")) {
+                Log.i(TAG, "address_found");
+                String addressString = address.getAddressLine(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                return new GeoLocation(addressString, latLng);
+            }
+        }
+        return null;
     }
 }
