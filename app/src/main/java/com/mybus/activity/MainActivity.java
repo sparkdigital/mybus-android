@@ -39,6 +39,7 @@ import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
@@ -394,6 +395,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationUpdater.startListening();
         centerToLastKnownLocation();
 
+        mMap.setInfoWindowAdapter(new MyBusInfoWindowsAdapter(mContext));
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
     }
@@ -449,9 +451,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void setMarkerTitle(Marker marker, MarkerOptions markerOptions, String title) {
+    private void setMarkerTitle(Marker marker, MarkerOptions markerOptions, String title, String address) {
         if (marker != null) {
             marker.setTitle(title);
+            marker.setSnippet(address);
             marker.showInfoWindow();
         }
         markerOptions.title(title);
@@ -462,13 +465,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String address = geoLocation.getAddress();
         if (address != null) {
             if (lastLocationGeocodingType.equals(mStartLocationMarkerOptions)) {
-                setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, address);
+                setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, getString(R.string.start_location_title), address);
                 mToolbar.setVisibility(View.GONE);
                 mCompoundSearchBox.setVisible(true, !mCompoundSearchBox.isVisible());
                 mCompoundSearchBox.setFromAddress(address);
             }
             if (lastLocationGeocodingType.equals(mEndLocationMarkerOptions)) {
-                setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, address);
+                setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, getString(R.string.end_location_title), address);
                 mToolbar.setVisibility(View.GONE);
                 mCompoundSearchBox.setVisible(true);
                 mCompoundSearchBox.setToAddress(address);
@@ -669,7 +672,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case FROM_SEARCH_RESULT_ID:
                         mStartLocationMarker = positionMarker(mStartLocationMarker, mStartLocationMarkerOptions,
                                 geoLocation.getLatLng(), false);
-                        setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, geoLocation.getAddress());
+                        setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, getString(R.string.start_location_title), geoLocation.getAddress());
 
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true, true);
@@ -680,7 +683,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case TO_SEARCH_RESULT_ID:
                         mEndLocationMarker = positionMarker(mEndLocationMarker, mEndLocationMarkerOptions,
                                 geoLocation.getLatLng(), false);
-                        setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, geoLocation.getAddress());
+                        setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, getString(R.string.end_location_title), geoLocation.getAddress());
 
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true);

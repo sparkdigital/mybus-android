@@ -10,8 +10,8 @@
     <string name="from_hint">Ingresa tu Origen</string>
     <string name="to_hint">Ingresa tu Destino</string>
     <string name="current_location_marker">Tu Ubicación</string>
-    <string name="stop_destination_title">Parada destino:</string>
-    <string name="stop_origin_title">Parada origen:</string>
+    <string name="stop_destination_title">Parada destino</string>
+    <string name="stop_origin_title">Parada origen</string>
     <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
     <string name="update_playservice">Se necesita el servicio de Google Play actualizado. Desea instalarlo?</string>
     <string name="favorite_confirm_delete">Desea eliminar el favorito?</string>
@@ -43,4 +43,6 @@
     <string name="main_drawer_load_points">Puntos de carga</string>
     <string name="main_drawer_tours">Recorridos</string>
     <string name="main_drawer_fares">Tarifas</string>
+    <string name="start_location_title">Origen</string>
+    <string name="end_location_title">Destino</string>
 </resources>
