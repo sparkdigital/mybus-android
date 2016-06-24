@@ -20,7 +20,8 @@ import java.util.Locale;
  */
 public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocation> {
 
-    private static final String TAG = "AddressGeocoding";
+    private static final String TAG = AddressGeocodingAcyncTask.class.getSimpleName();
+    private static final String MDQ_POSTAL_CODE = "B7600";
     private final Context mContext;
     private OnAddressGeocodingCompleteCallback callback;
 
@@ -68,7 +69,8 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
             return null;
         }
         for (Address address : addresses) {
-            if (address.getPostalCode() != null && address.getPostalCode().equalsIgnoreCase("B7600")) {
+            //TODO: Improve this by having a list of valid postal codes
+            if (address.getPostalCode() != null && MDQ_POSTAL_CODE.equalsIgnoreCase(address.getPostalCode())) {
                 Log.i(TAG, "address_found");
                 String addressString = address.getAddressLine(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
