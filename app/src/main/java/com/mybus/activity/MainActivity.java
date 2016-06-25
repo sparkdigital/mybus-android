@@ -38,6 +38,7 @@ import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.marker.MyBusInfoWindowsAdapter;
+import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
@@ -72,16 +73,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.mainActivityBar)
     FloatingSearchView mToolbar;
 
-    MarkerOptions mUserLocationMarkerOptions;
     //Marker used to update the location on the map
-    Marker mUserLocationMarker;
+    MyBusMarker mUserLocationMarker;
     //Marker used to show the Start Location
-    Marker mStartLocationMarker;
+    MyBusMarker mStartLocationMarker;
     //Marker used to show the End Location
-    Marker mEndLocationMarker;
-    //Temporary Marker
-    MarkerOptions mStartLocationMarkerOptions;
-    MarkerOptions mEndLocationMarkerOptions;
+    MyBusMarker mEndLocationMarker;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -101,11 +98,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            if (mStartLocationMarker == null) {
-                mStartLocationMarker = addOrUpdateMarker(mStartLocationMarker, mStartLocationMarkerOptions, latLng, mStartLocationGeocodingCompleted);
-                zoomTo(mStartLocationMarker.getPosition());
+            if (mStartLocationMarker.getMarker() == null) {
+                addOrUpdateMarker(mStartLocationMarker, latLng, mStartLocationGeocodingCompleted);
+                zoomTo(mStartLocationMarker.getMarker().getPosition());
             } else {
-                mEndLocationMarker = addOrUpdateMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLng, mEndLocationGeocodingCompleted);
+                addOrUpdateMarker(mEndLocationMarker, latLng, mEndLocationGeocodingCompleted);
                 zoomOutStartEndMarkers(); // Makes a zoom out in the map to see both markers at the same time.
             }
         }
@@ -119,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
                     if (geoLocation != null) {
-                        setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker, mStartLocationMarkerOptions);
+                        setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker);
                         mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
                     }
                 }
@@ -133,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
                     if (geoLocation != null) {
-                        setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker, mEndLocationMarkerOptions);
+                        setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker);
                         mCompoundSearchBox.setToAddress(geoLocation.getAddress());
                     }
                 }
@@ -145,10 +142,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      *
      * @param address
      * @param marker
-     * @param markerOptions
      */
-    private void setAddressFromGeoCoding(String address, Marker marker, MarkerOptions markerOptions) {
-        setMarkerTitle(marker, markerOptions, marker.getTitle(), address);
+    private void setAddressFromGeoCoding(String address, MyBusMarker marker) {
+        setMarkerTitle(marker, marker.getMarker().getTitle(), address);
         mToolbar.setVisibility(View.GONE);
         mCompoundSearchBox.setVisible(true);
     }
@@ -188,10 +184,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Makes a zoom out in the map to keep mStartLocationMarker and mEndLocationMarker visible.
      */
     private void zoomOutStartEndMarkers() {
-        if (mStartLocationMarker != null && mStartLocationMarker.isVisible() && mEndLocationMarker != null && mEndLocationMarker.isVisible()) {
+        if (mStartLocationMarker.getMarker() != null && mStartLocationMarker.getMarker().isVisible() && mEndLocationMarker.getMarker() != null && mEndLocationMarker.getMarker().isVisible()) {
             List<Marker> markerList = new ArrayList<>();
-            markerList.add(mStartLocationMarker);
-            markerList.add(mEndLocationMarker);
+            markerList.add(mStartLocationMarker.getMarker());
+            markerList.add(mEndLocationMarker.getMarker());
             zoomOut(markerList);
         }
     }
@@ -199,29 +195,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Add or update a specified marker on the map
      *
-     * @param marker        the marker to be updated.
-     * @param markerOptions the marker options for this marker
-     * @param latLng        the LatLng where the marker is going to be
-     * @param listener      null if no Geocoding By Location needed.
+     * @param marker   the marker to be updated.
+     * @param latLng   the LatLng where the marker is going to be
+     * @param listener null if no Geocoding By Location needed.
      * @return the marker from the map
      */
-    private Marker addOrUpdateMarker(Marker marker, MarkerOptions markerOptions, LatLng latLng, OnLocationGeocodingCompleteCallback listener) {
+    private void addOrUpdateMarker(MyBusMarker marker, LatLng latLng, OnLocationGeocodingCompleteCallback listener) {
         clearBusRouteOnMap();
         showBottomSheetResults(false);
-        if (marker == null) {
-            markerOptions.position(latLng);
-            marker = mMap.addMarker(markerOptions);
+        if (marker.getMarker() == null) {
+            marker.getMarkerOptions().position(latLng);
+            marker.setMarker(mMap.addMarker(marker.getMarkerOptions()));
         } else {
-            marker.setPosition(latLng);
+            marker.getMarker().setPosition(latLng);
         }
         if (listener != null) {
             ServiceFacade.getInstance().performGeocodeByLocation(latLng, listener, mContext);
         }
         //Update searchButton status
-        boolean enableSearch = mStartLocationMarker != null && markerOptions.equals(mEndLocationMarkerOptions)
-                || mEndLocationMarker != null && markerOptions.equals(mStartLocationMarkerOptions);
+        boolean enableSearch = mStartLocationMarker.getMarker() != null && mEndLocationMarker.getMarker() != null;
         mCompoundSearchBox.setSearchEnabled(enableSearch);
-        return marker;
     }
 
     /**
@@ -245,9 +238,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void onMarkerDragEnd(Marker marker) {
             marker.hideInfoWindow();
             OnLocationGeocodingCompleteCallback listener = null;
-            if (marker.getId().equals(mStartLocationMarker.getId())) {
+            if (marker.getId().equals(mStartLocationMarker.getMarker().getId())) {
                 listener = mStartLocationGeocodingCompleted;
-            } else if (marker.getId().equals(mEndLocationMarker.getId())) {
+            } else if (marker.getId().equals(mEndLocationMarker.getMarker().getId())) {
                 listener = mEndLocationGeocodingCompleted;
             }
             ServiceFacade.getInstance().performGeocodeByLocation(marker.getPosition(), listener, mContext);
@@ -276,8 +269,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
                     List<Marker> markerList = new ArrayList<>();
                     markerList.addAll(mapBusRoad.getMarkerList());
-                    markerList.add(mStartLocationMarker);
-                    markerList.add(mEndLocationMarker);
+                    markerList.add(mStartLocationMarker.getMarker());
+                    markerList.add(mEndLocationMarker.getMarker());
                     zoomOut(markerList);
                 } else {
                     BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
@@ -327,9 +320,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         mLocationUpdater = new LocationUpdater(this, this);
-        mUserLocationMarkerOptions = new MarkerOptions()
-                .title(getString(R.string.current_location_marker))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
         //Disable the mPerformSearchButton action
         mCompoundSearchBox.setSearchEnabled(false);
         resetLocalVariables();
@@ -406,18 +396,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * This method restart the local variables to avoid old apps's states
      */
     private void resetLocalVariables() {
-        mUserLocationMarkerOptions = null;
-        mUserLocationMarker = null;
-        mStartLocationMarker = null;
-        mEndLocationMarker = null;
-        mStartLocationMarkerOptions = new MarkerOptions()
+        mStartLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
-                .title(getString(R.string.start_location_title));
-        mEndLocationMarkerOptions = new MarkerOptions()
+                .title(getString(R.string.start_location_title)), false, null);
+        mEndLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
-                .title(getString(R.string.end_location_title));
+                .title(getString(R.string.end_location_title)), false, null);
     }
 
     /**
@@ -426,11 +412,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mUserLocationMarkerOptions = new MarkerOptions()
-                .title(getString(R.string.current_location_marker))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
         mMap = googleMap;
         mLocationUpdater.startListening();
+        mUserLocationMarker = new MyBusMarker(new MarkerOptions()
+                .title(getString(R.string.current_location_marker))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot)), false, null);
         centerToLastKnownLocation();
 
         mMap.setInfoWindowAdapter(new MyBusInfoWindowsAdapter(mContext));
@@ -442,10 +428,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //get the last gps location
         LatLng lastLocation = mLocationUpdater.getLastKnownLocation();
         if (lastLocation != null) {
-            mUserLocationMarkerOptions.position(lastLocation);
+            mUserLocationMarker.getMarkerOptions().position(lastLocation);
             //if the marker is not on the map, add it
-            if (mUserLocationMarker == null) {
-                mUserLocationMarker = mMap.addMarker(mUserLocationMarkerOptions);
+            if (mUserLocationMarker.getMarker() == null) {
+                mUserLocationMarker.setMarker(mMap.addMarker(mUserLocationMarker.getMarkerOptions()));
+            } else {
+                mUserLocationMarker.getMarker().setPosition(lastLocation);
             }
             zoomTo(mLocationUpdater.getLastKnownLocation());
         }
@@ -454,7 +442,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(LatLng latLng) {
         if (mUserLocationMarker != null) {
-            mUserLocationMarker.setPosition(latLng);
+            mUserLocationMarker.getMarker().setPosition(latLng);
         }
     }
 
@@ -467,28 +455,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onBackPressed();
     }
 
-    private void setMarkerTitle(Marker marker, MarkerOptions markerOptions, String title, String address) {
-        if (marker != null) {
-            marker.setTitle(title);
-            marker.setSnippet(address);
-            marker.showInfoWindow();
+    private void setMarkerTitle(MyBusMarker marker, String title, String address) {
+        if (marker.getMarker() != null) {
+            marker.getMarker().setTitle(title);
+            marker.getMarker().setSnippet(address);
+            marker.getMarker().showInfoWindow();
         }
-        markerOptions.title(title);
-        markerOptions.snippet(address);
+        marker.getMarkerOptions().title(title);
+        marker.getMarkerOptions().snippet(address);
     }
 
     /**
      * Searches between two points in the map
      */
     private void performRoutesSearch() {
-        if (mStartLocationMarker == null || mEndLocationMarker == null) {
+        if (mStartLocationMarker.getMarker() == null || mEndLocationMarker.getMarker() == null) {
             return;
         }
         if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
             clearBusRouteOnMap();
             showBottomSheetResults(false);
             showProgressDialog(getString(R.string.toast_searching));
-            ServiceFacade.getInstance().searchRoutes(mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), this);
+            ServiceFacade.getInstance().searchRoutes(mStartLocationMarker.getMarker().getPosition(), mEndLocationMarker.getMarker().getPosition(), this);
         } else {
             Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
@@ -505,7 +493,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
         ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult,
-                mStartLocationMarker.getPosition(), mEndLocationMarker.getPosition(), MainActivity.this);
+                mStartLocationMarker.getMarker().getPosition(), mEndLocationMarker.getMarker().getPosition(), MainActivity.this);
     }
 
     @Override
@@ -522,8 +510,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
             List<Marker> markerList = new ArrayList<>();
             markerList.addAll(mapBusRoad.getMarkerList());
-            markerList.add(mStartLocationMarker);
-            markerList.add(mEndLocationMarker);
+            markerList.add(mStartLocationMarker.getMarker());
+            markerList.add(mEndLocationMarker.getMarker());
             zoomOut(markerList);
         }
     }
@@ -668,20 +656,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
                 switch (requestCode) {
                     case FROM_SEARCH_RESULT_ID:
-                        mStartLocationMarker = addOrUpdateMarker(mStartLocationMarker, mStartLocationMarkerOptions,
-                                geoLocation.getLatLng(), null);
-                        setMarkerTitle(mStartLocationMarker, mStartLocationMarkerOptions, getString(R.string.start_location_title), geoLocation.getAddress());
+                        addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
+                        setMarkerTitle(mStartLocationMarker, getString(R.string.start_location_title), geoLocation.getAddress());
 
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true, true);
                         mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
 
-                        zoomTo(mStartLocationMarker.getPosition());
+                        zoomTo(mStartLocationMarker.getMarker().getPosition());
                         break;
                     case TO_SEARCH_RESULT_ID:
-                        mEndLocationMarker = addOrUpdateMarker(mEndLocationMarker, mEndLocationMarkerOptions,
-                                geoLocation.getLatLng(), null);
-                        setMarkerTitle(mEndLocationMarker, mEndLocationMarkerOptions, getString(R.string.end_location_title), geoLocation.getAddress());
+                        addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
+                        setMarkerTitle(mEndLocationMarker, getString(R.string.end_location_title), geoLocation.getAddress());
 
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true);
@@ -710,13 +696,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onDrawerToggleClick() {
-        if (mStartLocationMarker != null) {
-            mStartLocationMarker.remove();
-            mStartLocationMarker = null;
+        if (mStartLocationMarker.getMarker() != null) {
+            mStartLocationMarker.getMarker().remove();
+            mStartLocationMarker.setMarker(null);
         }
-        if (mEndLocationMarker != null) {
-            mEndLocationMarker.remove();
-            mEndLocationMarker = null;
+        if (mEndLocationMarker.getMarker() != null) {
+            mEndLocationMarker.getMarker().remove();
+            mEndLocationMarker.setMarker(null);
         }
         showBottomSheetResults(false);
         clearBusRouteOnMap();
@@ -726,17 +712,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onFlipSearchClick() {
-        if (mStartLocationMarker == null || mEndLocationMarker == null) {
+        if (mStartLocationMarker.getMarker() == null || mEndLocationMarker.getMarker() == null) {
             return;
         }
-        LatLng latLngAux = mStartLocationMarker.getPosition();
-        String addressAux = mStartLocationMarker.getTitle();
-        mStartLocationMarker = addOrUpdateMarker(mStartLocationMarker, mStartLocationMarkerOptions, mEndLocationMarker.getPosition(), null);
-        mStartLocationMarker.setTitle(mEndLocationMarker.getTitle());
-        mStartLocationMarker.hideInfoWindow();
-        mEndLocationMarker = addOrUpdateMarker(mEndLocationMarker, mEndLocationMarkerOptions, latLngAux, null);
-        mEndLocationMarker.setTitle(addressAux);
-        mEndLocationMarker.hideInfoWindow();
+        LatLng latLngAux = mStartLocationMarker.getMarker().getPosition();
+        String addressAux = mStartLocationMarker.getMarker().getTitle();
+        addOrUpdateMarker(mStartLocationMarker, mEndLocationMarker.getMarker().getPosition(), null);
+        mStartLocationMarker.getMarker().setTitle(mEndLocationMarker.getMarker().getTitle());
+        mStartLocationMarker.getMarker().hideInfoWindow();
+        addOrUpdateMarker(mEndLocationMarker, latLngAux, null);
+        mEndLocationMarker.getMarker().setTitle(addressAux);
+        mEndLocationMarker.getMarker().hideInfoWindow();
 
         zoomOutStartEndMarkers();
     }
