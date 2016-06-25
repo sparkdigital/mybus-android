@@ -38,6 +38,10 @@ public class MyBusMarker {
         return this.mIsFavorite;
     }
 
+    public void setFavoriteName(String favName){
+        this.mFavName = favName;
+    }
+
     public String getFavoriteName() {
         return this.mFavName;
     }

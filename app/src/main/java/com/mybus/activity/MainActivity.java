@@ -37,6 +37,7 @@ import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
+import com.mybus.marker.MarkerStorage;
 import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
@@ -116,7 +117,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
                     if (geoLocation != null) {
-                        setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker);
+                        mStartLocationMarker.setAsFavorite(false);
+                        mStartLocationMarker.setFavoriteName(null);
+                        setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker, getString(R.string.start_location_title));
                         mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
                     }
                 }
@@ -130,7 +133,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
                     if (geoLocation != null) {
-                        setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker);
+                        mEndLocationMarker.setAsFavorite(false);
+                        mEndLocationMarker.setFavoriteName(null);
+                        setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker, getString(R.string.end_location_title));
                         mCompoundSearchBox.setToAddress(geoLocation.getAddress());
                     }
                 }
@@ -142,9 +147,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      *
      * @param address
      * @param marker
+     * @param title
      */
-    private void setAddressFromGeoCoding(String address, MyBusMarker marker) {
-        setMarkerTitle(marker, marker.getMarker().getTitle(), address);
+    private void setAddressFromGeoCoding(String address, MyBusMarker marker, String title) {
+        setMarkerTitle(marker, title, address);
         mToolbar.setVisibility(View.GONE);
         mCompoundSearchBox.setVisible(true);
     }
@@ -400,10 +406,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
                 .title(getString(R.string.start_location_title)), false, null);
+        MarkerStorage.getInstance().setStartLocationMarker(mStartLocationMarker);
         mEndLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
                 .title(getString(R.string.end_location_title)), false, null);
+        MarkerStorage.getInstance().setEndLocationMarker(mEndLocationMarker);
     }
 
     /**
@@ -654,11 +662,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case RESULT_OK:
                 GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
+                boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
+                String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
                 switch (requestCode) {
                     case FROM_SEARCH_RESULT_ID:
                         addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
-                        setMarkerTitle(mStartLocationMarker, getString(R.string.start_location_title), geoLocation.getAddress());
-
+                        if (isFavorite) {
+                            mStartLocationMarker.setAsFavorite(true);
+                            mStartLocationMarker.setFavoriteName(favName);
+                            setMarkerTitle(mStartLocationMarker, favName, geoLocation.getAddress());
+                        } else {
+                            setMarkerTitle(mStartLocationMarker, getString(R.string.start_location_title), geoLocation.getAddress());
+                        }
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true, true);
                         mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
@@ -667,7 +682,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case TO_SEARCH_RESULT_ID:
                         addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
-                        setMarkerTitle(mEndLocationMarker, getString(R.string.end_location_title), geoLocation.getAddress());
+                        if (isFavorite) {
+                            mEndLocationMarker.setAsFavorite(true);
+                            mEndLocationMarker.setFavoriteName(favName);
+                            setMarkerTitle(mEndLocationMarker, favName, geoLocation.getAddress());
+                        } else {
+                            setMarkerTitle(mEndLocationMarker, getString(R.string.end_location_title), geoLocation.getAddress());
+                        }
 
                         mToolbar.setVisibility(View.GONE);
                         mCompoundSearchBox.setVisible(true);
@@ -699,10 +720,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mStartLocationMarker.getMarker() != null) {
             mStartLocationMarker.getMarker().remove();
             mStartLocationMarker.setMarker(null);
+            mStartLocationMarker.setAsFavorite(false);
+            mStartLocationMarker.setFavoriteName(null);
         }
         if (mEndLocationMarker.getMarker() != null) {
             mEndLocationMarker.getMarker().remove();
             mEndLocationMarker.setMarker(null);
+            mEndLocationMarker.setAsFavorite(false);
+            mEndLocationMarker.setFavoriteName(null);
         }
         showBottomSheetResults(false);
         clearBusRouteOnMap();

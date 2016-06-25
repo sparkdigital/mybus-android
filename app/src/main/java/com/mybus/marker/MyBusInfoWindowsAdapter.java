@@ -30,17 +30,21 @@ public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(Marker marker) {
-        String stopBusStr = mContext.getResources().getString(R.string.bus_stop_origin).split(" ")[0];
         TextView tvTitle = ((TextView) mContentsView.findViewById(R.id.marker_title));
         tvTitle.setText(marker.getTitle());
         TextView tvAddress = ((TextView) mContentsView.findViewById(R.id.marker_address));
         tvAddress.setText(marker.getSnippet());
         ImageView ivFavIcon = ((ImageView) mContentsView.findViewById(R.id.marker_fav_icon));
-        if (marker.getTitle().contains(stopBusStr)
-                || marker.getTitle().equals(mContext.getString(R.string.current_location_marker))) {
+        MyBusMarker myBusMarker = MarkerStorage.getInstance().isMarkerPresent(marker);
+        if (myBusMarker == null) {
             ivFavIcon.setVisibility(View.GONE);
         } else {
             ivFavIcon.setVisibility(View.VISIBLE);
+            if (myBusMarker.isFavorite()) {
+                ivFavIcon.setImageResource(R.drawable.favorite_remove_icon);
+            } else {
+                ivFavIcon.setImageResource(R.drawable.favorite_add_icon);
+            }
         }
         return mContentsView;
     }
