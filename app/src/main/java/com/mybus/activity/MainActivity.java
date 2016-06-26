@@ -1,7 +1,9 @@
 package com.mybus.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -32,6 +34,7 @@ import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
+import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
@@ -41,6 +44,7 @@ import com.mybus.marker.MarkerStorage;
 import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
 import com.mybus.model.road.MapBusRoad;
@@ -49,6 +53,7 @@ import com.mybus.requirements.DeviceRequirementsChecker;
 import com.mybus.requirements.PlayServicesChecker;
 import com.mybus.service.ServiceFacade;
 import com.mybus.view.CompoundSearchBox;
+import com.mybus.view.FavoriteNameAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +64,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
-        CompoundSearchBoxListener {
+        CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener{
 
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
@@ -80,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     MyBusMarker mStartLocationMarker;
     //Marker used to show the End Location
     MyBusMarker mEndLocationMarker;
+    //LatLng used to remove a favorite through markers
+    LatLng mFavoriteLatLngToRemove;
+    //FavoriteLocation used to add a favorite through markers
+    FavoriteLocation mNewFavorite;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -430,6 +439,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setInfoWindowAdapter(new MyBusInfoWindowsAdapter(mContext));
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     public void centerToLastKnownLocation() {
@@ -755,5 +765,93 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onSearchButtonClick() {
         performRoutesSearch();
+    }
+
+    @Override
+    public void onInfoWindowClick(final Marker marker) {
+        if ((mStartLocationMarker.getMarker() != null) && (mStartLocationMarker.getMarker().getId().equals(marker.getId()))) {
+            mStartLocationMarker.getMarker().hideInfoWindow();
+            if (mStartLocationMarker.isFavorite()) {
+                mFavoriteLatLngToRemove = mStartLocationMarker.getMarker().getPosition();
+                removeFavorite();
+                //TODO: Only modify marker on affirmative dialog
+                mStartLocationMarker.setAsFavorite(false);
+                setMarkerTitle(mStartLocationMarker,getString(R.string.start_location_title),mStartLocationMarker.getMarker().getSnippet());
+            } else {
+                mNewFavorite = new FavoriteLocation();
+                mNewFavorite.setAddress(mStartLocationMarker.getMarker().getSnippet());
+                mNewFavorite.setLatitude(mStartLocationMarker.getMarker().getPosition().latitude);
+                mNewFavorite.setLongitude(mStartLocationMarker.getMarker().getPosition().longitude);
+                addFavorite();
+            }
+        }
+        if ((mEndLocationMarker.getMarker() != null) && (mEndLocationMarker.getMarker().getId().equals(marker.getId()))) {
+            mEndLocationMarker.getMarker().hideInfoWindow();
+            if (mEndLocationMarker.isFavorite()) {
+                mFavoriteLatLngToRemove = mEndLocationMarker.getMarker().getPosition();
+                removeFavorite();
+                //TODO: Only modify marker on affirmative dialog
+                mEndLocationMarker.setAsFavorite(false);
+                setMarkerTitle(mEndLocationMarker,getString(R.string.end_location_title),mEndLocationMarker.getMarker().getSnippet());
+            } else {
+                mNewFavorite = new FavoriteLocation();
+                mNewFavorite.setAddress(mEndLocationMarker.getMarker().getSnippet());
+                mNewFavorite.setLatitude(mEndLocationMarker.getMarker().getPosition().latitude);
+                mNewFavorite.setLongitude(mEndLocationMarker.getMarker().getPosition().longitude);
+                addFavorite();
+            }
+        }
+    }
+
+    private void addFavorite() {
+        final AlertDialog.Builder adBuilderRemove = new AlertDialog.Builder(this);
+        adBuilderRemove.setMessage(this.getResources().getString(R.string.favorite_confirm_add))
+                .setCancelable(false)
+                .setPositiveButton(this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        FavoriteNameAlertDialog favoriteNameAlertDialog = FavoriteNameAlertDialog.
+                                newInstance(FavoriteNameAlertDialog.TYPE_ADD, null);
+                        favoriteNameAlertDialog.show(getFragmentManager(), "Favorite Name Dialog");
+                    }
+                })
+                .setNegativeButton(this.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = adBuilderRemove.create();
+        alert.show();
+    }
+
+    private void removeFavorite() {
+        final AlertDialog.Builder adBuilderRemove = new AlertDialog.Builder(this);
+        adBuilderRemove.setMessage(this.getResources().getString(R.string.favorite_confirm_delete))
+                .setCancelable(false)
+                .setPositiveButton(this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        FavoriteLocation favoriteLocation = FavoriteLocationDao.getInstance(mContext).getItemByLatLng(mFavoriteLatLngToRemove);
+                        if (favoriteLocation != null) {
+                            FavoriteLocationDao.getInstance(mContext).remove(favoriteLocation.getId());
+                        }
+                    }
+                })
+                .setNegativeButton(this.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = adBuilderRemove.create();
+        alert.show();
+    }
+
+    @Override
+    public void onNewFavoriteName(String favoriteName) {
+        mNewFavorite.setName(favoriteName);
+        FavoriteLocationDao.getInstance(this).saveOrUpdate(mNewFavorite);
+    }
+
+    @Override
+    public void onEditFavoriteName(String favoriteName) {
+        return;
     }
 }

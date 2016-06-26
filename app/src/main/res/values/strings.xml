@@ -45,4 +45,5 @@
     <string name="main_drawer_fares">Tarifas</string>
     <string name="start_location_title">Origen</string>
     <string name="end_location_title">Destino</string>
+    <string name="favorite_confirm_add">Desea agregar esta ubicación como favorito?</string>
 </resources>
