@@ -11,11 +11,16 @@ public class MyBusMarker {
     private MarkerOptions mMarkerOptions;
     private boolean mIsFavorite = false;
     private String mFavName;
+    private Integer mType;
+    public static final int ORIGIN = 1;
+    public static final int DESTINATION = 2;
+    public static final int USER_LOCATION = 2;
 
-    public MyBusMarker(MarkerOptions mOptions, boolean isFav, String favName) {
+    public MyBusMarker(MarkerOptions mOptions, boolean isFav, String favName, int type) {
         this.mMarkerOptions = mOptions;
         this.mIsFavorite = isFav;
         this.mFavName = favName;
+        this.mType = type;
     }
 
     public void setMarker(Marker marker) {
@@ -38,11 +43,15 @@ public class MyBusMarker {
         return this.mIsFavorite;
     }
 
-    public void setFavoriteName(String favName){
+    public void setFavoriteName(String favName) {
         this.mFavName = favName;
     }
 
     public String getFavoriteName() {
         return this.mFavName;
+    }
+
+    public Integer getType() {
+        return this.mType;
     }
 }

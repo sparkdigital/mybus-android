@@ -41,6 +41,7 @@ public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
         } else {
             ivFavIcon.setVisibility(View.VISIBLE);
             if (myBusMarker.isFavorite()) {
+                tvTitle.setText(myBusMarker.getFavoriteName());
                 ivFavIcon.setImageResource(R.drawable.favorite_remove_icon);
             } else {
                 ivFavIcon.setImageResource(R.drawable.favorite_add_icon);

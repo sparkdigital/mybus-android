@@ -136,7 +136,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     @Override
     public void onFavoriteItemDelete(final int position) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(this.getResources().getString(R.string.favorite_confirm_delete))
+        builder.setMessage(this.getResources().getString(R.string.favorite_confirm_delete_message))
                 .setCancelable(false)
                 .setPositiveButton(this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
