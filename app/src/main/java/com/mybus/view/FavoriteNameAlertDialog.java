@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.mybus.R;
+import com.mybus.model.FavoriteLocation;
 
 import butterknife.ButterKnife;
 
@@ -24,7 +25,13 @@ public class FavoriteNameAlertDialog extends DialogFragment {
     private static final String ARGUMENT_TYPE = "TYPE";
     private static final String ARGUMENT_NAME = "NAME";
 
+    private FavoriteLocation mFavoriteLocation;
+
     private FavoriteAddOrEditNameListener mCallback;
+
+    public FavoriteLocation getFavoriteLocation() {
+        return mFavoriteLocation;
+    }
 
     /**
      * Listener for FavoriteNameAlertDialog callbacks
@@ -32,14 +39,14 @@ public class FavoriteNameAlertDialog extends DialogFragment {
     public interface FavoriteAddOrEditNameListener {
 
         /**
-         * @param favoriteName
+         * @param favoriteLocation
          */
-        void onNewFavoriteName(String favoriteName);
+        void onNewFavoriteName(FavoriteLocation favoriteLocation);
 
         /**
-         * @param favoriteName
+         * @param favoriteLocation
          */
-        void onEditFavoriteName(String favoriteName);
+        void onEditFavoriteName(FavoriteLocation favoriteLocation);
     }
 
     /**
@@ -47,8 +54,9 @@ public class FavoriteNameAlertDialog extends DialogFragment {
      * @param previousName
      * @return
      */
-    public static FavoriteNameAlertDialog newInstance(int type, String previousName) {
+    public static FavoriteNameAlertDialog newInstance(int type, String previousName, FavoriteLocation favLocation) {
         FavoriteNameAlertDialog frag = new FavoriteNameAlertDialog();
+        frag.mFavoriteLocation = favLocation;
         Bundle args = new Bundle();
         args.putInt(ARGUMENT_TYPE, type);
         args.putString(ARGUMENT_NAME, previousName);
@@ -67,9 +75,9 @@ public class FavoriteNameAlertDialog extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         View view = inflater.inflate(R.layout.favorite_name_alert_dialog, null);
-        final EditText mFavofiteNameEditText = ButterKnife.findById(view, R.id.favorite_name_edit_text);
+        final EditText favofiteNameEditText = ButterKnife.findById(view, R.id.favorite_name_edit_text);
         if (previousName != null) {
-            mFavofiteNameEditText.setText(previousName);
+            favofiteNameEditText.setText(previousName);
         }
         builder.setView(view)
                 .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -79,12 +87,14 @@ public class FavoriteNameAlertDialog extends DialogFragment {
                         switch (dialogType) {
                             case TYPE_ADD:
                                 if (mCallback != null) {
-                                    mCallback.onNewFavoriteName(mFavofiteNameEditText.getText().toString());
+                                    mFavoriteLocation.setName(favofiteNameEditText.getText().toString());
+                                    mCallback.onNewFavoriteName(mFavoriteLocation);
                                 }
                                 break;
                             case TYPE_EDIT:
                                 if (mCallback != null) {
-                                    mCallback.onEditFavoriteName(mFavofiteNameEditText.getText().toString());
+                                    mFavoriteLocation.setName(favofiteNameEditText.getText().toString());
+                                    mCallback.onEditFavoriteName(mFavoriteLocation);
                                 }
                                 break;
                             default:

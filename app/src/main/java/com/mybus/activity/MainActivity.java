@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     MyBusMarker mStartLocationMarker;
     //Marker used to show the End Location
     MyBusMarker mEndLocationMarker;
-    FavoriteLocation mNewFavorite;
     //MyBusMarker reference used to update when a favorite is created
     MyBusMarker mMarkerFavoriteToUpdate;
     /*---Bottom Sheet------*/
@@ -781,31 +780,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         getString(R.string.favorite_confirm_delete_title), getString(R.string.favorite_confirm_delete_message), null, myBusMarker);
                 favAlert.show(getFragmentManager(), "Confirm Remove Dialog");
             } else {
-                mNewFavorite = new FavoriteLocation();
-                mNewFavorite.setAddress(myBusMarker.getMarker().getSnippet());
-                mNewFavorite.setLatitude(myBusMarker.getMarker().getPosition().latitude);
-                mNewFavorite.setLongitude(myBusMarker.getMarker().getPosition().longitude);
+                FavoriteLocation newFavorite = new FavoriteLocation();
+                newFavorite.setAddress(myBusMarker.getMarker().getSnippet());
+                newFavorite.setLatitude(myBusMarker.getMarker().getPosition().latitude);
+                newFavorite.setLongitude(myBusMarker.getMarker().getPosition().longitude);
                 FavoriteAlertDialogConfirm favAlert = FavoriteAlertDialogConfirm.newInstance(FavoriteAlertDialogConfirm.ADD,
-                        getString(R.string.favorite_confirm_add_title), getString(R.string.favorite_confirm_add_message), mNewFavorite, myBusMarker);
+                        getString(R.string.favorite_confirm_add_title), getString(R.string.favorite_confirm_add_message), newFavorite, myBusMarker);
                 favAlert.show(getFragmentManager(), "Confirm Add Dialog");
             }
         }
     }
 
     @Override
-    public void onNewFavoriteName(String favoriteName) {
-        mNewFavorite.setName(favoriteName);
-        FavoriteLocationDao.getInstance(this).saveOrUpdate(mNewFavorite);
+    public void onNewFavoriteName(FavoriteLocation favoriteLocation) {
+        FavoriteLocationDao.getInstance(this).saveOrUpdate(favoriteLocation);
         if (mMarkerFavoriteToUpdate != null) {
             mMarkerFavoriteToUpdate.setAsFavorite(true);
-            mMarkerFavoriteToUpdate.setFavoriteName(favoriteName);
+            mMarkerFavoriteToUpdate.setFavoriteName(favoriteLocation.getName());
             mMarkerFavoriteToUpdate.getMarker().showInfoWindow();
             mMarkerFavoriteToUpdate = null;
         }
     }
 
     @Override
-    public void onEditFavoriteName(String favoriteName) {
+    public void onEditFavoriteName(FavoriteLocation favoriteLocation) {
         return;
     }
 
@@ -822,7 +820,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addFavorite(MyBusMarker marker, FavoriteLocation favLocation) {
         mMarkerFavoriteToUpdate = marker;
         FavoriteNameAlertDialog favoriteNameAlertDialog = FavoriteNameAlertDialog.
-                newInstance(FavoriteNameAlertDialog.TYPE_ADD, null);
+                newInstance(FavoriteNameAlertDialog.TYPE_ADD, null, favLocation);
         favoriteNameAlertDialog.show(getFragmentManager(), "Favorite Name Dialog");
     }
 
