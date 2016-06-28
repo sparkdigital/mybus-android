@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
                     if (geoLocation != null) {
                         mStartLocationMarker.setAsFavorite(false);
-                        mStartLocationMarker.setFavoriteName(null);
                         setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker, getString(R.string.start_location_title));
                         mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
                     }
@@ -140,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onLocationGeocodingComplete(GeoLocation geoLocation) {
                     if (geoLocation != null) {
                         mEndLocationMarker.setAsFavorite(false);
-                        mEndLocationMarker.setFavoriteName(null);
                         setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker, getString(R.string.end_location_title));
                         mCompoundSearchBox.setToAddress(geoLocation.getAddress());
                     }
@@ -730,13 +728,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mStartLocationMarker.getMapMarker().remove();
             mStartLocationMarker.setMapMarker(null);
             mStartLocationMarker.setAsFavorite(false);
-            mStartLocationMarker.setFavoriteName(null);
         }
         if (mEndLocationMarker.getMapMarker() != null) {
             mEndLocationMarker.getMapMarker().remove();
             mEndLocationMarker.setMapMarker(null);
             mEndLocationMarker.setAsFavorite(false);
-            mEndLocationMarker.setFavoriteName(null);
         }
         showBottomSheetResults(false);
         clearBusRouteOnMap();
@@ -839,7 +835,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     setMarkerTitle(marker, getString(R.string.end_location_title), marker.getMapMarker().getSnippet());
                 }
                 marker.setAsFavorite(false);
-                marker.setFavoriteName(null);
                 marker.getMapMarker().showInfoWindow();
             }
         }

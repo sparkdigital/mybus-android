@@ -26,7 +26,11 @@ public class MyBusMarkerStorage {
         this.mEndLocationMarker = marker;
     }
 
-    //Checks if the given marker is StartLocation, EndLocation or other.
+    /**
+     * Checks if the given marker is StartLocation, EndLocation or other.
+     * @param marker
+     * @return a MyBusMarker (StartLocation/EndLocation) or null
+     */
     public MyBusMarker isMarkerPresent(Marker marker) {
         if (mStartLocationMarker != null && mStartLocationMarker.getMapMarker() != null && mStartLocationMarker.getMapMarker().getId().equals(marker.getId())) {
             return mStartLocationMarker;

@@ -39,6 +39,9 @@ public class MyBusMarker {
 
     public void setAsFavorite(boolean isFav) {
         this.mIsFavorite = isFav;
+        if (!isFav){
+            this.mFavName = null;
+        }
     }
 
     public boolean isFavorite() {
