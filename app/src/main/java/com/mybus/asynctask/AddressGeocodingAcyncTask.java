@@ -22,6 +22,9 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
 
     private static final String TAG = AddressGeocodingAcyncTask.class.getSimpleName();
     private static final String MDQ_POSTAL_CODE = "B7600";
+    //TODO remove this hardcoded city, use a preferences to detect city
+    private static final String MDQ_CITY_NAME = ", Mar Del Plata";
+
     private final Context mContext;
     private OnAddressGeocodingCompleteCallback callback;
 
@@ -39,8 +42,8 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
-            //TODO remove this hardcoded city, used to filter Mar del Plata results
-            addresses = geocoder.getFromLocationName(locationName + ", mar del plata", 4);
+
+            addresses = geocoder.getFromLocationName(locationName + MDQ_CITY_NAME, 4);
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             Log.e(TAG, "service_not_available", ioException);
@@ -49,7 +52,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
             Log.e(TAG, "invalid_lat_long_used", illegalArgumentException);
         }
 
-        return getGeoLocationFromAdresses(addresses);
+        return getGeoLocationFromAddresses(addresses);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
      * @param addresses
      * @return
      */
-    private GeoLocation getGeoLocationFromAdresses(List<Address> addresses) {
+    private GeoLocation getGeoLocationFromAddresses(List<Address> addresses) {
         if (addresses == null || addresses.isEmpty()) {
             Log.e(TAG, "no_address_found");
             return null;
