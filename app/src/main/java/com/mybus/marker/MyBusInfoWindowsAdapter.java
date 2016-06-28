@@ -1,6 +1,5 @@
 package com.mybus.marker;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,18 +8,19 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.mybus.R;
+import com.mybus.activity.MainActivity;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  * Custom infoWindows for markers
  */
 public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
-    private final Context mContext;
+    private final MainActivity mActivity;
     private final View mContentsView;
 
-    public MyBusInfoWindowsAdapter(Context context) {
-        mContext = context;
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+    public MyBusInfoWindowsAdapter(MainActivity activity) {
+        mActivity = activity;
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         mContentsView = inflater.inflate(R.layout.marker_info_window, null);
     }
 
@@ -37,7 +37,7 @@ public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
         tvAddress.setText(marker.getSnippet());
         ImageView ivFavIcon = ((ImageView) mContentsView.findViewById(R.id.marker_fav_icon));
         //Checks if the marker is a StartLocation, EndLocation or other
-        MyBusMarker myBusMarker = MyBusMarkerStorage.getInstance().isMarkerPresent(marker);
+        MyBusMarker myBusMarker = mActivity.isMarkerPresent(marker);
         if (myBusMarker == null) {
             //User location or Bus stop markers
             ivFavIcon.setVisibility(View.GONE);

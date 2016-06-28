@@ -38,7 +38,6 @@ import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
-import com.mybus.marker.MyBusMarkerStorage;
 import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
@@ -79,13 +78,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     FloatingSearchView mToolbar;
 
     //Marker used to update the location on the map
-    MyBusMarker mUserLocationMarker;
+    private MyBusMarker mUserLocationMarker;
     //Marker used to show the Start Location
-    MyBusMarker mStartLocationMarker;
+    private MyBusMarker mStartLocationMarker;
     //Marker used to show the End Location
-    MyBusMarker mEndLocationMarker;
+    private MyBusMarker mEndLocationMarker;
     //MyBusMarker reference used to update when a favorite is created
-    MyBusMarker mMarkerFavoriteToUpdate;
+    private MyBusMarker mMarkerFavoriteToUpdate;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -410,12 +409,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
                 .title(getString(R.string.start_location_title)), false, null, MyBusMarker.ORIGIN);
-        MyBusMarkerStorage.getInstance().setStartLocationMyBusMarker(mStartLocationMarker);
         mEndLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
                 .title(getString(R.string.end_location_title)), false, null, MyBusMarker.DESTINATION);
-        MyBusMarkerStorage.getInstance().setEndLocationMyBusMarker(mEndLocationMarker);
     }
 
     /**
@@ -431,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot)), false, null, MyBusMarker.USER_LOCATION);
         centerToLastKnownLocation();
 
-        mMap.setInfoWindowAdapter(new MyBusInfoWindowsAdapter(mContext));
+        mMap.setInfoWindowAdapter(new MyBusInfoWindowsAdapter(this));
         mMap.setOnMapLongClickListener(mMapOnLongClickListener);
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
         mMap.setOnInfoWindowClickListener(this);
@@ -838,5 +835,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 marker.getMapMarker().showInfoWindow();
             }
         }
+    }
+
+    /**
+     * Checks if the given marker is StartLocation, EndLocation or other.
+     * @param marker
+     * @return a MyBusMarker (StartLocation/EndLocation) or null
+     */
+    public MyBusMarker isMarkerPresent(Marker marker) {
+        if (mStartLocationMarker != null && mStartLocationMarker.getMapMarker() != null && mStartLocationMarker.getMapMarker().getId().equals(marker.getId())) {
+            return mStartLocationMarker;
+        }
+        if (mEndLocationMarker != null && mEndLocationMarker.getMapMarker() != null && mEndLocationMarker.getMapMarker().getId().equals(marker.getId())) {
+            return mEndLocationMarker;
+        }
+        return null;
     }
 }
