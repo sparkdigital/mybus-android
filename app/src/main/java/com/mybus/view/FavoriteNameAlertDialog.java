@@ -1,9 +1,7 @@
 package com.mybus.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,8 +15,9 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Lucas De Lio on 6/13/2016.
+ * Alert Dialog used to enter or edit a Favorite Name
  */
-public class FavoriteNameAlertDialog extends DialogFragment {
+public class FavoriteNameAlertDialog extends BaseDialogFragment<FavoriteNameAlertDialog.FavoriteAddOrEditNameListener> {
 
     public static final int TYPE_EDIT = 1;
     public static final int TYPE_ADD = 2;
@@ -27,24 +26,18 @@ public class FavoriteNameAlertDialog extends DialogFragment {
 
     private FavoriteLocation mFavoriteLocation;
 
-    private FavoriteAddOrEditNameListener mCallback;
-
-    public FavoriteLocation getFavoriteLocation() {
-        return mFavoriteLocation;
-    }
-
     /**
      * Listener for FavoriteNameAlertDialog callbacks
      */
     public interface FavoriteAddOrEditNameListener {
 
         /**
-         * @param favoriteLocation
+         * @param favoriteLocation with the name updated
          */
         void onNewFavoriteName(FavoriteLocation favoriteLocation);
 
         /**
-         * @param favoriteLocation
+         * @param favoriteLocation with the new name updated
          */
         void onEditFavoriteName(FavoriteLocation favoriteLocation);
     }
@@ -52,6 +45,7 @@ public class FavoriteNameAlertDialog extends DialogFragment {
     /**
      * @param type
      * @param previousName
+     * @param favLocation to modify
      * @return
      */
     public static FavoriteNameAlertDialog newInstance(int type, String previousName, FavoriteLocation favLocation) {
@@ -80,53 +74,29 @@ public class FavoriteNameAlertDialog extends DialogFragment {
             favofiteNameEditText.setText(previousName);
         }
         builder.setView(view)
-                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        //callback to OnAdd or OnEdit if it's adding or editing the favorite
-                        switch (dialogType) {
-                            case TYPE_ADD:
-                                if (mCallback != null) {
-                                    mFavoriteLocation.setName(favofiteNameEditText.getText().toString());
-                                    mCallback.onNewFavoriteName(mFavoriteLocation);
+                .setPositiveButton(getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                switch (dialogType) {
+                                    case TYPE_ADD:
+                                        mFavoriteLocation.setName(favofiteNameEditText.getText().toString());
+                                        getActivityInstance().onNewFavoriteName(mFavoriteLocation);
+                                        break;
+                                    case TYPE_EDIT:
+                                        mFavoriteLocation.setName(favofiteNameEditText.getText().toString());
+                                        getActivityInstance().onEditFavoriteName(mFavoriteLocation);
+                                        break;
+                                    default:
+                                        break;
                                 }
-                                break;
-                            case TYPE_EDIT:
-                                if (mCallback != null) {
-                                    mFavoriteLocation.setName(favofiteNameEditText.getText().toString());
-                                    mCallback.onEditFavoriteName(mFavoriteLocation);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                })
-                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
+                            }
+                        })
+                .setNegativeButton(getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
         return builder.create();
-    }
-
-    @Override
-    public void onAttach(Activity activity) throws ClassCastException {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (FavoriteAddOrEditNameListener) activity;
-        } catch (ClassCastException e) {
-            throw (ClassCastException) new ClassCastException(activity.toString()
-                    + " must implement FavoriteAddOrEditNameListener")
-                    .initCause(e);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallback = null;
     }
 }

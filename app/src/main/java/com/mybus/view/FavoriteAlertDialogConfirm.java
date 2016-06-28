@@ -11,10 +11,14 @@ import com.mybus.model.FavoriteLocation;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
+ * Alert dialog used to confirm a favorite addition or remove
  */
 public class FavoriteAlertDialogConfirm extends BaseDialogFragment<FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener> {
+    //FavoriteLocation associated to this alert
     private FavoriteLocation mFavLocation;
+    //MyBusMarker will be used to updated the marker after a favorite remove
     private MyBusMarker mMarker;
+    //Alert Type ADD or Remove
     private Integer mType;
     public static final int ADD = 0;
     public static final int REMOVE = 1;
@@ -24,7 +28,7 @@ public class FavoriteAlertDialogConfirm extends BaseDialogFragment<FavoriteAlert
         void onOkFavoriteAlertConfirmClicked(FavoriteAlertDialogConfirm dialog);
     }
 
-    // Create an instance of the Dialog with the input
+    // Create an instance of the Dialog
     public static FavoriteAlertDialogConfirm newInstance(int type, String title, String message, FavoriteLocation favLocation, MyBusMarker marker) {
         FavoriteAlertDialogConfirm frag = new FavoriteAlertDialogConfirm();
         frag.mType = type;
@@ -37,7 +41,7 @@ public class FavoriteAlertDialogConfirm extends BaseDialogFragment<FavoriteAlert
         return frag;
     }
 
-    // Create a Dialog using default AlertDialog builder , if not inflate custom view in onCreateView
+    // Create a Dialog using default AlertDialog builder
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 

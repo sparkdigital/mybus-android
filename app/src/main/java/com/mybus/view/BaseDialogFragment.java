@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
+ * BaseDialogFragment used to define the relationship between the activity and the dialog
  */
 public abstract class BaseDialogFragment<T> extends DialogFragment {
     private T mActivityInstance;

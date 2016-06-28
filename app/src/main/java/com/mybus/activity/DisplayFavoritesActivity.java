@@ -117,6 +117,9 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                         break;
                     case EDIT_SEARCH_RESULT_ID:
                         FavoriteLocation oldFavorite = mFavorites.get(mFavoritePositionToEdit);
+                        oldFavorite.setAddress(geoLocation.getAddress());
+                        oldFavorite.setLatitude(geoLocation.getLatLng().latitude);
+                        oldFavorite.setLongitude(geoLocation.getLatLng().longitude);
                         favoriteNameAlertDialog = FavoriteNameAlertDialog.
                                 newInstance(FavoriteNameAlertDialog.TYPE_EDIT, oldFavorite.getName(), oldFavorite);
                         break;
