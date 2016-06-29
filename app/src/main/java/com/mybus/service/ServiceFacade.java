@@ -91,7 +91,8 @@ public final class ServiceFacade {
     }
 
     /**
-     *
+     * 
+     * @param context
      * @param callback
      */
     public void getFares(Context context, FaresRequestCallback callback){

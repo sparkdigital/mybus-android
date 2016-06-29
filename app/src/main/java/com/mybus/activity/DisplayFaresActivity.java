@@ -3,7 +3,6 @@ package com.mybus.activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.mybus.R;
 import com.mybus.adapter.FareViewAdapter;
@@ -29,17 +28,17 @@ public class DisplayFaresActivity extends BaseDisplayActivity implements FaresRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-        ServiceFacade.getInstance().getFares(this, this);
         mFaresRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mFaresRecyclerView.setLayoutManager(mLayoutManager);
+        //start the fares request, view will be populated after the callback
+        ServiceFacade.getInstance().getFares(this, this);
     }
 
     @Override
     public void onFaresFound(List<Fare> fares) {
         mFareViewAdapter = new FareViewAdapter(fares);
         mFaresRecyclerView.setAdapter(mFareViewAdapter);
-        Toast.makeText(this, fares.toString(), Toast.LENGTH_LONG).show();
     }
 
     @Override

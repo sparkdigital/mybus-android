@@ -39,7 +39,7 @@ public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
     @Override
     public void onBindViewHolder(FareItemViewHolder holder, int position) {
         holder.mFareTitle.setText(mDataset.get(position).getTitle());
-        holder.mFareCost.setText("$"+mDataset.get(position).getCost());
+        holder.mFareCost.setText("$" + mDataset.get(position).getCost());
     }
 
     @Override

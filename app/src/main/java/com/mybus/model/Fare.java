@@ -15,7 +15,7 @@ public class Fare {
     private String mTitle;
     private String mCost;
 
-    public Fare(String title, String cost){
+    public Fare(String title, String cost) {
         this.mTitle = title;
         this.mCost = cost;
     }
@@ -42,7 +42,6 @@ public class Fare {
         }
         List<Fare> list = new ArrayList<>();
         JSONObject fareJsonObject = null;
-
         for (int i = 0; i < results.length(); i++) {
             try {
                 fareJsonObject = results.getJSONObject(i);
@@ -65,9 +64,8 @@ public class Fare {
         return new Fare(title, cost);
     }
 
-
     @Override
     public String toString() {
-        return "Title: "+mTitle+", Cost: "+mCost;
+        return "Title: " + mTitle + ", Cost: " + mCost;
     }
 }

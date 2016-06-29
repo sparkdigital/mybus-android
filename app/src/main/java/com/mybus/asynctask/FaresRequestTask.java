@@ -12,8 +12,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertNotNull;
-
 /**
  * Created by Lucas De Lio on 6/23/2016.
  */
@@ -30,15 +28,12 @@ public class FaresRequestTask extends AsyncTask<Void, Void, List<Fare>> {
     @Override
     protected List<Fare> doInBackground(Void... voids) {
         JSONObject jsonMockedResponse = FileLoaderHelper.loadJSONObjectFromAssets(mContext, "fares_mock.json");
-        //JSONObject jsonMockedResponse = FileLoaderHelper.loadJSONObjectFromResource(this, "bus_route_result/bus_route_result_combined.json");
         JSONArray faresFromJson = null;
         try {
             faresFromJson = jsonMockedResponse.getJSONArray("Fares");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // Checks results not null
-        assertNotNull(faresFromJson);
         List<Fare> busRoutesReceived = Fare.parseResults(faresFromJson);
         return busRoutesReceived;
     }

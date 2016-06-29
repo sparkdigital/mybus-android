@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * Created by ldimitroff on 12/05/16.
@@ -39,10 +38,10 @@ public final class FileLoaderHelper {
         return result;
     }
 
+
     /**
-     * Loads a JSONObject from Resources
-     *
-     * @param obj
+     * Loads a JSONObject from Assets
+     * @param context
      * @param fileName
      * @return
      */
@@ -93,10 +92,12 @@ public final class FileLoaderHelper {
         return new String(buffer, "UTF-8");
     }
 
+
+
     /**
-     * Gets a String from specific resource name
+     * Gets a String from specific assets name
      *
-     * @param obj
+     * @param context
      * @param filename
      * @return
      * @throws IOException
