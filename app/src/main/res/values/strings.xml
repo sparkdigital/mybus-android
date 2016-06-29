@@ -10,11 +10,11 @@
     <string name="from_hint">Ingresa tu Origen</string>
     <string name="to_hint">Ingresa tu Destino</string>
     <string name="current_location_marker">Tu Ubicación</string>
-    <string name="stop_destination_title">Parada destino:</string>
-    <string name="stop_origin_title">Parada origen:</string>
+    <string name="stop_destination_title">Parada destino</string>
+    <string name="stop_origin_title">Parada origen</string>
     <string name="gps_disabled">El GPS se encuentra deshabilitado, deseas habilitarlo?</string>
     <string name="update_playservice">Se necesita el servicio de Google Play actualizado. Desea instalarlo?</string>
-    <string name="favorite_confirm_delete">Desea eliminar el favorito?</string>
+    <string name="favorite_confirm_delete_message">Desea eliminar el favorito?</string>
     <string name="bus_route_distance_to_origin">"Distancia desde el origen: %1$s"</string>
     <string name="bus_route_distance_to_destination">"Distancia hasta el destino: %1$s"</string>
     <string name="toast_no_result_found">No se encontraron resultados</string>
@@ -43,4 +43,9 @@
     <string name="main_drawer_load_points">Puntos de carga</string>
     <string name="main_drawer_tours">Recorridos</string>
     <string name="main_drawer_fares">Tarifas</string>
+    <string name="start_location_title">Origen</string>
+    <string name="end_location_title">Destino</string>
+    <string name="favorite_confirm_add_message">Desea agregar esta ubicación como favorito?</string>
+    <string name="favorite_confirm_delete_title">Elimiar Favorito</string>
+    <string name="favorite_confirm_add_title">Agregar Favorito</string>
 </resources>

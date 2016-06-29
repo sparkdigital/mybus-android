@@ -20,7 +20,11 @@ import java.util.Locale;
  */
 public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocation> {
 
-    private static final String TAG = "AddressGeocoding";
+    private static final String TAG = AddressGeocodingAcyncTask.class.getSimpleName();
+    private static final String MDQ_POSTAL_CODE = "B7600";
+    //TODO remove this hardcoded city, use a preferences to detect city
+    private static final String MDQ_CITY_NAME = ", Mar Del Plata";
+
     private final Context mContext;
     private OnAddressGeocodingCompleteCallback callback;
 
@@ -38,8 +42,8 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
-            //TODO remove this hardcoded city, used to filter Mar del Plata results
-            addresses = geocoder.getFromLocationName(locationName+" mar del plata" , 4);
+
+            addresses = geocoder.getFromLocationName(locationName + MDQ_CITY_NAME, 4);
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             Log.e(TAG, "service_not_available", ioException);
@@ -48,20 +52,34 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
             Log.e(TAG, "invalid_lat_long_used", illegalArgumentException);
         }
 
-        // Handle case where no address was found.
-        if (addresses == null || addresses.isEmpty()) {
-            Log.e(TAG, "no_address_found");
-        } else {
-            Address address = addresses.get(0);
-            Log.i(TAG, "address_found");
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            return new GeoLocation(locationName, latLng);
-        }
-        return null;
+        return getGeoLocationFromAddresses(addresses);
     }
 
     @Override
     protected void onPostExecute(GeoLocation geoLocation) {
         callback.onAddressGeocodingComplete(geoLocation);
+    }
+
+    /**
+     * Get's the first address with the same postal code as MDQ
+     *
+     * @param addresses
+     * @return
+     */
+    private GeoLocation getGeoLocationFromAddresses(List<Address> addresses) {
+        if (addresses == null || addresses.isEmpty()) {
+            Log.e(TAG, "no_address_found");
+            return null;
+        }
+        for (Address address : addresses) {
+            //TODO: Improve this by having a list of valid postal codes
+            if (address.getPostalCode() != null && MDQ_POSTAL_CODE.equalsIgnoreCase(address.getPostalCode())) {
+                Log.i(TAG, "address_found");
+                String addressString = address.getAddressLine(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                return new GeoLocation(addressString, latLng);
+            }
+        }
+        return null;
     }
 }

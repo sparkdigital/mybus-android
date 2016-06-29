@@ -2,6 +2,7 @@ package com.mybus.dao;
 
 import android.content.Context;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.FavoriteLocation;
 
 /**
@@ -28,5 +29,18 @@ public final class FavoriteLocationDao extends RealmDao<FavoriteLocation> {
             instance = new FavoriteLocationDao(context);
         }
         return instance;
+    }
+
+    /**
+     * Gets the first item by a LatLng location
+     *
+     * @param latLng
+     */
+    public FavoriteLocation getItemByLatLng(LatLng latLng) {
+        return copyFromRealm(
+                mRealm.where(FavoriteLocation.class).equalTo("latitude", latLng.latitude)
+                        .equalTo("longitude", latLng.longitude)
+                        .findFirst()
+        );
     }
 }
