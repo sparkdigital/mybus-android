@@ -1,5 +1,7 @@
 package com.mybus.model;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +48,7 @@ public class Fare {
             try {
                 fareJsonObject = results.getJSONObject(i);
             } catch (JSONException e) {
+                Log.e("Fare", e.getMessage());
             }
             Fare fare = parseSingleFare(fareJsonObject);
             if (fare != null) {

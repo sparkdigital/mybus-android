@@ -1,5 +1,6 @@
 package com.mybus.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.List;
 public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
 
     private List<Fare> mDataset;
+    private Context mContext;
 
     @Override
     public FareItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -28,8 +30,9 @@ public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
     /**
      * @param dataSet
      */
-    public FareViewAdapter(List<Fare> dataSet) {
+    public FareViewAdapter(List<Fare> dataSet, Context context) {
         mDataset = dataSet;
+        this.mContext = context;
     }
 
     /**
@@ -39,7 +42,7 @@ public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
     @Override
     public void onBindViewHolder(FareItemViewHolder holder, int position) {
         holder.mFareTitle.setText(mDataset.get(position).getTitle());
-        holder.mFareCost.setText("$" + mDataset.get(position).getCost());
+        holder.mFareCost.setText(mContext.getString(R.string.bus_cost, mDataset.get(position).getCost()));
     }
 
     @Override

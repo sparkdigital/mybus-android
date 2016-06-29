@@ -2,6 +2,7 @@ package com.mybus.asynctask;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.mybus.helper.FileLoaderHelper;
 import com.mybus.model.Fare;
@@ -32,10 +33,9 @@ public class FaresRequestTask extends AsyncTask<Void, Void, List<Fare>> {
         try {
             faresFromJson = jsonMockedResponse.getJSONArray("Fares");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("FaresRequestTask", e.getMessage());
         }
-        List<Fare> busRoutesReceived = Fare.parseResults(faresFromJson);
-        return busRoutesReceived;
+        return Fare.parseResults(faresFromJson);
     }
 
     @Override

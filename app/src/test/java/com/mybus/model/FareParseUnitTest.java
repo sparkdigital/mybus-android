@@ -1,5 +1,7 @@
 package com.mybus.model;
 
+import android.util.Log;
+
 import com.mybus.helper.FileLoaderHelper;
 
 import org.json.JSONArray;
@@ -24,6 +26,7 @@ public class FareParseUnitTest {
         try {
             faresFromJson = jsonMockedResponse.getJSONArray("Fares");
         } catch (JSONException e) {
+            Log.e("FareParseUnitTest", e.getMessage());
             e.printStackTrace();
         }
         List<Fare> busRoutesReceived = Fare.parseResults(faresFromJson);

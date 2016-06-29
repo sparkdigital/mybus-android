@@ -37,7 +37,7 @@ public class DisplayFaresActivity extends BaseDisplayActivity implements FaresRe
 
     @Override
     public void onFaresFound(List<Fare> fares) {
-        mFareViewAdapter = new FareViewAdapter(fares);
+        mFareViewAdapter = new FareViewAdapter(fares, this);
         mFaresRecyclerView.setAdapter(mFareViewAdapter);
     }
 
