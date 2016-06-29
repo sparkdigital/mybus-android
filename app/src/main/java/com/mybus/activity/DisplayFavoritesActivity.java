@@ -40,8 +40,6 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     private List<FavoriteLocation> mFavorites;
     private int mFavoritePositionToEdit;
     private FavoriteViewAdapter mFavoriteViewAdapter;
-    private FavoriteLocation oldFavorite;
-    private GeoLocation mGeoLocation;
 
     @OnClick(R.id.add_favorite_action_button)
     void onAddFavoriteButtonClicked(View view) {
@@ -106,17 +104,24 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 //The user canceled
                 break;
             case RESULT_OK:
-                mGeoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
+                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
                 FavoriteNameAlertDialog favoriteNameAlertDialog = null;
                 switch (requestCode) {
                     case ADD_SEARCH_RESULT_ID:
+                        FavoriteLocation favorite = new FavoriteLocation();
+                        favorite.setAddress(geoLocation.getAddress());
+                        favorite.setLatitude(geoLocation.getLatLng().latitude);
+                        favorite.setLongitude(geoLocation.getLatLng().longitude);
                         favoriteNameAlertDialog = FavoriteNameAlertDialog.
-                                newInstance(FavoriteNameAlertDialog.TYPE_ADD, null);
+                                newInstance(FavoriteNameAlertDialog.TYPE_ADD, null, favorite);
                         break;
                     case EDIT_SEARCH_RESULT_ID:
-                        oldFavorite = mFavorites.get(mFavoritePositionToEdit);
+                        FavoriteLocation oldFavorite = mFavorites.get(mFavoritePositionToEdit);
+                        oldFavorite.setAddress(geoLocation.getAddress());
+                        oldFavorite.setLatitude(geoLocation.getLatLng().latitude);
+                        oldFavorite.setLongitude(geoLocation.getLatLng().longitude);
                         favoriteNameAlertDialog = FavoriteNameAlertDialog.
-                                newInstance(FavoriteNameAlertDialog.TYPE_EDIT, oldFavorite.getName());
+                                newInstance(FavoriteNameAlertDialog.TYPE_EDIT, oldFavorite.getName(), oldFavorite);
                         break;
                     default:
                         break;
@@ -136,7 +141,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     @Override
     public void onFavoriteItemDelete(final int position) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(this.getResources().getString(R.string.favorite_confirm_delete))
+        builder.setMessage(this.getResources().getString(R.string.favorite_confirm_delete_message))
                 .setCancelable(false)
                 .setPositiveButton(this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
@@ -163,25 +168,19 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     }
 
     @Override
-    public void onNewFavoriteName(String favoriteName) {
-        FavoriteLocation newFavorite = new FavoriteLocation();
-        saveOrUpdateFavorite(newFavorite, favoriteName, ADD_SEARCH_RESULT_ID);
+    public void onNewFavoriteName(FavoriteLocation favoriteLocation) {
+        saveOrUpdateFavorite(favoriteLocation, ADD_SEARCH_RESULT_ID);
     }
 
     @Override
-    public void onEditFavoriteName(String favoriteName) {
-        saveOrUpdateFavorite(oldFavorite, favoriteName, EDIT_SEARCH_RESULT_ID);
+    public void onEditFavoriteName(FavoriteLocation favoriteLocation) {
+        saveOrUpdateFavorite(favoriteLocation, EDIT_SEARCH_RESULT_ID);
     }
 
     /**
      * @param favorite
-     * @param favoriteName
      */
-    private void saveOrUpdateFavorite(FavoriteLocation favorite, String favoriteName, int type) {
-        favorite.setName(favoriteName);
-        favorite.setAddress(mGeoLocation.getAddress());
-        favorite.setLatitude(mGeoLocation.getLatLng().latitude);
-        favorite.setLongitude(mGeoLocation.getLatLng().longitude);
+    private void saveOrUpdateFavorite(FavoriteLocation favorite, int type) {
         if (FavoriteLocationDao.getInstance(this).saveOrUpdate(favorite)) {
             if (type == ADD_SEARCH_RESULT_ID) {
                 mFavorites.add(favorite);

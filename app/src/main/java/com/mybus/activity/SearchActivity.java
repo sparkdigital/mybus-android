@@ -51,7 +51,8 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     public static final String SEARCH_TYPE_EXTRA = "SEARCH_TYPE_EXTRA";
     public static final String SEARCH_ADDRESS_EXTRA = "SEARCH_TITLE_EXTRA";
     public static final String RESULT_GEOLOCATION_EXTRA = "RESULT_GEOLOCATION_EXTRA";
-
+    public static final String RESULT_ISFAVORITE_EXTRA = "RESULT_ISFAVORITE_EXTRA";
+    public static final String RESULT_FAVORITE_NAME_EXTRA = "RESULT_FAVORITE_NAME_EXTRA";
     private static final String TAG = SearchActivity.class.getSimpleName();
 
     @Bind(R.id.floating_search_view)
@@ -233,7 +234,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             if (mSearchType >= 0) {
                 findOrCreateNewRecent(geoLocation.getAddress(), geoLocation.getLatLng());
             }
-            setActivityResult(geoLocation);
+            setActivityResult(geoLocation, false, null);
         } else {
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
         }
@@ -258,9 +259,11 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     /**
      * Finishes this current activity and sends the result to the one witch has started it
      */
-    private void setActivityResult(GeoLocation geoLocation) {
+    private void setActivityResult(GeoLocation geoLocation, boolean isFavorite, String favName) {
         Intent intent = new Intent();
         intent.putExtra(RESULT_GEOLOCATION_EXTRA, geoLocation);
+        intent.putExtra(RESULT_ISFAVORITE_EXTRA, isFavorite);
+        intent.putExtra(RESULT_FAVORITE_NAME_EXTRA, favName);
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();
@@ -269,9 +272,9 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     /**
      * Finishes this current activity and sends the result to the one witch has started it
      */
-    private void setActivityResult(String address, LatLng location) {
+    private void setActivityResult(String address, LatLng location, boolean isFavorite, String favName) {
         GeoLocation geoLocation = new GeoLocation(address, location);
-        setActivityResult(geoLocation);
+        setActivityResult(geoLocation, isFavorite, favName);
     }
 
     /**
@@ -303,7 +306,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     public void onHistoryItemSelected(int position) {
         if (position >= 0 && position < mRecentLocations.size()) {
             RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(mRecentLocations.get(position).getId());
-            setActivityResult(mRecentLocations.get(position).getAddress(), mRecentLocations.get(position).getLatLng());
+            setActivityResult(mRecentLocations.get(position).getAddress(), mRecentLocations.get(position).getLatLng(), false, null);
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
         }
@@ -312,7 +315,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     @Override
     public void onFavoriteItemSelected(int position) {
         if (position >= 0 && position < mFavoriteLocations.size()) {
-            setActivityResult(mFavoriteLocations.get(position).getAddress(), mFavoriteLocations.get(position).getLatLng());
+            setActivityResult(mFavoriteLocations.get(position).getAddress(), mFavoriteLocations.get(position).getLatLng(), true, mFavoriteLocations.get(position).getName());
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
         }
