@@ -10,13 +10,14 @@ import com.mybus.model.StreetSuggestion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Filter for searching streets given a constraint
  * <p/>
  * Created by ldimitroff on 01/06/16.
  */
-public class StreetSuggestionFilter extends Filter {
+public final class StreetSuggestionFilter extends Filter {
 
     private static StreetSuggestionFilter instance;
     private final String[] mStreetList;
@@ -26,8 +27,8 @@ public class StreetSuggestionFilter extends Filter {
      * @param listener
      * @return
      */
-    public static StreetSuggestionFilter instance(OnFindResultsListener listener){
-        if (instance == null){
+    public static StreetSuggestionFilter instance(OnFindResultsListener listener) {
+        if (instance == null) {
             instance = new StreetSuggestionFilter(listener);
         }
         return instance;
@@ -44,7 +45,8 @@ public class StreetSuggestionFilter extends Filter {
         List<StreetSuggestion> suggestionList = new ArrayList<>();
         if (constraint != null && constraint.length() >= 2) {
             for (String street : mStreetList) {
-                if (street.toLowerCase().contains(constraint.toString().toLowerCase())) {
+                if (street.toLowerCase(Locale.getDefault())
+                        .contains(constraint.toString().toLowerCase(Locale.getDefault()))) {
                     suggestionList.add(new StreetSuggestion(street));
                 }
             }

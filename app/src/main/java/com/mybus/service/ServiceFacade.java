@@ -12,8 +12,6 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
 
-import java.util.List;
-
 public final class ServiceFacade {
 
     private static ServiceFacade instance = null;
