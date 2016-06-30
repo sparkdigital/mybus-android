@@ -18,11 +18,9 @@ public final class ServiceFacade {
 
     private static ServiceFacade instance = null;
     private DirectionsServiceImpl directionsService;
-    private GisService gisService;
     private GeocodingService geocodingService;
 
     private ServiceFacade() {
-        gisService = new GisServiceImpl();
         geocodingService = new GeocodingServiceImpl();
         directionsService = new DirectionsServiceImpl();
     }
@@ -32,14 +30,6 @@ public final class ServiceFacade {
             instance = new ServiceFacade();
         }
         return instance;
-    }
-
-    /**
-     * @param constraint
-     * @return
-     */
-    public List<String> findStreets(String constraint) {
-        return gisService.findStreets(constraint);
     }
 
     /**

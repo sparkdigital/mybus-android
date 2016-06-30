@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.dao.RecentLocationDao;
-import com.mybus.helper.SearchSuggestionsHelper;
+import com.mybus.helper.StreetSuggestionFilter;
 import com.mybus.listener.FavoriteItemSelectedListener;
 import com.mybus.listener.HistoryItemSelectedListener;
 import com.mybus.listener.OnFindResultsListener;
@@ -159,7 +159,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
                     //simulates a query call to a data source
                     //with a new query.
-                    SearchSuggestionsHelper.findStreets(newQuery, new OnFindResultsListener() {
+                    StreetSuggestionFilter.instance(new OnFindResultsListener() {
 
                         @Override
                         public void onResults(List<StreetSuggestion> results) {
@@ -172,7 +172,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                             //process has completed
                             mSearchView.hideProgress();
                         }
-                    });
+                    }).filter(newQuery);
                 }
 
                 Log.d(TAG, "onSearchTextChanged()");
