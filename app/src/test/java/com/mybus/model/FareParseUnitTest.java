@@ -27,7 +27,6 @@ public class FareParseUnitTest {
             faresFromJson = jsonMockedResponse.getJSONArray("Fares");
         } catch (JSONException e) {
             Log.e("FareParseUnitTest", e.getMessage());
-            e.printStackTrace();
         }
         List<Fare> busRoutesReceived = Fare.parseResults(faresFromJson);
         Fare fareFromMock = busRoutesReceived.get(0);
