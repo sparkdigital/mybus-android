@@ -19,23 +19,10 @@ import java.util.Locale;
  */
 public final class StreetSuggestionFilter extends Filter {
 
-    private static StreetSuggestionFilter instance;
     private final String[] mStreetList;
     private OnFindResultsListener mListener;
 
-    /**
-     * @param listener
-     * @return
-     */
-    public static StreetSuggestionFilter instance(OnFindResultsListener listener) {
-        if (instance == null) {
-            instance = new StreetSuggestionFilter(listener);
-        }
-        return instance;
-
-    }
-
-    private StreetSuggestionFilter(OnFindResultsListener listener) {
+    public StreetSuggestionFilter(OnFindResultsListener listener) {
         this.mListener = listener;
         this.mStreetList = MyBus.getContext().getResources().getStringArray(R.array.streetList);
     }
