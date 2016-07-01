@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mybus.R;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.dao.RecentLocationDao;
-import com.mybus.helper.SearchSuggestionsHelper;
+import com.mybus.helper.StreetSuggestionFilter;
 import com.mybus.listener.FavoriteItemSelectedListener;
 import com.mybus.listener.HistoryItemSelectedListener;
 import com.mybus.listener.OnFindResultsListener;
@@ -67,6 +67,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     private int mSearchType;
     private List<RecentLocation> mRecentLocations;
     private List<FavoriteLocation> mFavoriteLocations;
+    private StreetSuggestionFilter mStreetSuggestionFilter;
 
     @OnClick(R.id.currentLocationCard)
     public void onCurrentLocationCardClick() {
@@ -144,6 +145,20 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     private void initSearchView() {
+        mStreetSuggestionFilter = new StreetSuggestionFilter(new OnFindResultsListener() {
+
+            @Override
+            public void onResults(List<StreetSuggestion> results) {
+
+                //this will swap the data and
+                //render the collapse/expand animations as necessary
+                mSearchView.swapSuggestions(results);
+
+                //let the users know that the background
+                //process has completed
+                mSearchView.hideProgress();
+            }
+        });
         mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
@@ -159,20 +174,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
                     //simulates a query call to a data source
                     //with a new query.
-                    SearchSuggestionsHelper.findStreets(newQuery, new OnFindResultsListener() {
-
-                        @Override
-                        public void onResults(List<StreetSuggestion> results) {
-
-                            //this will swap the data and
-                            //render the collapse/expand animations as necessary
-                            mSearchView.swapSuggestions(results);
-
-                            //let the users know that the background
-                            //process has completed
-                            mSearchView.hideProgress();
-                        }
-                    });
+                    mStreetSuggestionFilter.filter(newQuery);
                 }
 
                 Log.d(TAG, "onSearchTextChanged()");
