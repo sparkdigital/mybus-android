@@ -28,10 +28,9 @@ public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
     }
 
     /**
-     * @param dataSet
+     * @param context
      */
-    public FareViewAdapter(List<Fare> dataSet, Context context) {
-        mDataset = dataSet;
+    public FareViewAdapter(Context context) {
         this.mContext = context;
     }
 
@@ -41,13 +40,24 @@ public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
      */
     @Override
     public void onBindViewHolder(FareItemViewHolder holder, int position) {
-        holder.mFareTitle.setText(mDataset.get(position).getTitle());
-        holder.mFareCost.setText(mContext.getString(R.string.bus_cost, mDataset.get(position).getCost()));
+        if (mDataset != null && !mDataset.isEmpty()) {
+            holder.mFareTitle.setText(mDataset.get(position).getTitle());
+            holder.mFareCost.setText(mContext.getString(R.string.bus_cost, mDataset.get(position).getCost()));
+        }
     }
 
     @Override
     public int getItemCount() {
+        if (mDataset == null){
+            return 0;
+        }
         return mDataset.size();
     }
 
+    /**
+     * @param dataSet
+     */
+    public void setDataSet(List<Fare> dataSet) {
+        this.mDataset = dataSet;
+    }
 }

@@ -10,7 +10,6 @@ import com.mybus.asynctask.FaresRequestCallback;
 import com.mybus.model.Fare;
 import com.mybus.service.ServiceFacade;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -23,13 +22,15 @@ public class DisplayFaresActivity extends BaseDisplayActivity implements FaresRe
 
     @Bind(R.id.fares_recycler_view)
     RecyclerView mFaresRecyclerView;
+    private FareViewAdapter mFaresAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         mFaresRecyclerView.setHasFixedSize(true);
-        mFaresRecyclerView.setAdapter(new FareViewAdapter(new ArrayList<Fare>(), this));
+        mFaresAdapter = new FareViewAdapter(this);
+        mFaresRecyclerView.setAdapter(mFaresAdapter);
         mFaresRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //start the fares request, view will be populated after the callback
         ServiceFacade.getInstance().getFares(this, this);
@@ -37,7 +38,8 @@ public class DisplayFaresActivity extends BaseDisplayActivity implements FaresRe
 
     @Override
     public void onFaresFound(List<Fare> fares) {
-        mFaresRecyclerView.setAdapter(new FareViewAdapter(fares, this));
+        mFaresAdapter.setDataSet(fares);
+        mFaresAdapter.notifyDataSetChanged();
     }
 
     @Override
