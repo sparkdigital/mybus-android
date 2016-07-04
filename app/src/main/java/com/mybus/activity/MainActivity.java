@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -25,7 +24,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -78,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     NavigationView navigationView;
     @Bind(R.id.mainActivityBar)
     FloatingSearchView mToolbar;
-    @Bind(R.id.center_location_action_button)
-    FloatingActionButton mCenterLocationActionButton;
 
     //Marker used to update the location on the map
     private MyBusMarker mUserLocationMarker;
@@ -147,18 +143,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
             };
-
-    /**
-     * Listener for Camera Changes, Hiding or Showing the CenterLocation Action Button
-     */
-    private GoogleMap.OnCameraChangeListener mMapOnCameraChangeListener = new GoogleMap.OnCameraChangeListener() {
-        @Override
-        public void onCameraChange(CameraPosition cameraPosition) {
-            LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-            boolean isInBounds = bounds.contains(mUserLocationMarker.getMapMarker().getPosition());
-            mCenterLocationActionButton.setVisibility(isInBounds ? View.INVISIBLE : View.VISIBLE);
-        }
-    };
 
     /**
      * Sets the marker title with the specified address
@@ -449,8 +433,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerDragListener(mOnMarkerDragListener);
         mMap.setOnInfoWindowClickListener(this);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-
-        mMap.setOnCameraChangeListener(mMapOnCameraChangeListener);
     }
 
     public void centerToLastKnownLocation() {
