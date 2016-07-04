@@ -57,6 +57,14 @@ public class Route {
         return mPointList.get(mPointList.size() - 1).getLatLng();
     }
 
+    public String getFirstAddress() {
+        return mPointList.get(0).getAddress();
+    }
+
+    public String getLastAddress() {
+        return mPointList.get(mPointList.size() - 1).getAddress();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

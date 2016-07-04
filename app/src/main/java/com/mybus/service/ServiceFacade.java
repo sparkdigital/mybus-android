@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.model.DirectionsResult;
+import com.mybus.asynctask.FaresRequestCallback;
+import com.mybus.asynctask.FaresRequestTask;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
@@ -12,17 +14,13 @@ import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
 
-import java.util.List;
-
 public final class ServiceFacade {
 
     private static ServiceFacade instance = null;
     private DirectionsServiceImpl directionsService;
-    private GisService gisService;
     private GeocodingService geocodingService;
 
     private ServiceFacade() {
-        gisService = new GisServiceImpl();
         geocodingService = new GeocodingServiceImpl();
         directionsService = new DirectionsServiceImpl();
     }
@@ -32,14 +30,6 @@ public final class ServiceFacade {
             instance = new ServiceFacade();
         }
         return instance;
-    }
-
-    /**
-     * @param constraint
-     * @return
-     */
-    public List<String> findStreets(String constraint) {
-        return gisService.findStreets(constraint);
     }
 
     /**
@@ -86,5 +76,14 @@ public final class ServiceFacade {
      */
     public DirectionsResult getDirection(LatLng origin, LatLng destination) {
         return directionsService.getDirections(origin, destination);
+    }
+
+    /**
+     * @param context
+     * @param callback
+     */
+    public void getFares(Context context, FaresRequestCallback callback) {
+        FaresRequestTask faresRequestTask = new FaresRequestTask(context, callback);
+        faresRequestTask.execute();
     }
 }

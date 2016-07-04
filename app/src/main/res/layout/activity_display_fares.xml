@@ -11,4 +11,11 @@
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fares_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
+
 </LinearLayout>
