@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p>
+     * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -693,6 +693,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Update myBusMarker's infoWindow with favorite name or default title.
+     *
      * @param myBusMarker
      * @param title
      * @param defaulTitle
@@ -839,6 +840,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Checks if the given marker is StartLocation, EndLocation or other.
+     *
      * @param marker
      * @return a MyBusMarker (StartLocation/EndLocation) or null
      */
