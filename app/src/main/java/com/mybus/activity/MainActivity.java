@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
+    public static final int DISPLAY_FAVORITES_RESULT = 3;
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
     @Bind(R.id.compoundSearchBox)
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MyBusMarker mEndLocationMarker;
     //MyBusMarker reference used to update when a favorite is created
     private MyBusMarker mMarkerFavoriteToUpdate;
+    //Favorite MyBusMarker List
+    private List<MyBusMarker> mFavoritesMarkers;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -407,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * This method restart the local variables to avoid old apps's states
      */
     private void resetLocalVariables() {
+        mFavoritesMarkers = new ArrayList<>();
         mStartLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
@@ -633,7 +637,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.drawerFavorites:
-                startActivity(new Intent(MainActivity.this, DisplayFavoritesActivity.class));
+                Intent favIntent = new Intent(MainActivity.this, DisplayFavoritesActivity.class);
+                startActivityForResult(favIntent, DISPLAY_FAVORITES_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             default:
@@ -675,18 +680,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         updateInfoWindows(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
                         mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
                         zoomTo(mStartLocationMarker.getMapMarker().getPosition());
+                        mToolbar.setVisibility(View.GONE);
+                        mCompoundSearchBox.setVisible(true, true);
                         break;
                     case TO_SEARCH_RESULT_ID:
                         addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
                         updateInfoWindows(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
                         mCompoundSearchBox.setToAddress(geoLocation.getAddress());
                         zoomOutStartEndMarkers();
+                        mToolbar.setVisibility(View.GONE);
+                        mCompoundSearchBox.setVisible(true, true);
+                        break;
+                    case DISPLAY_FAVORITES_RESULT:
+                        MyBusMarker favMarker = data.getParcelableExtra(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
+                        favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
+                        favMarker.getMapMarker().showInfoWindow();
+                        mFavoritesMarkers.add(favMarker); //TODO: Check if exists
+                        zoomTo(favMarker.getMapMarker().getPosition());
                         break;
                     default:
                         break;
                 }
-                mToolbar.setVisibility(View.GONE);
-                mCompoundSearchBox.setVisible(true, true);
             default:
                 break;
         }
@@ -773,7 +787,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             myBusMarker = mEndLocationMarker;
         } else if (mUserLocationMarker.getMapMarker() != null && (mUserLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
             myBusMarker = mUserLocationMarker;
-        } //TODO: Detect star markers (favorites points)
+        }//TODO: Detect star markers (favorites points)
 
         if (myBusMarker != null) {
             myBusMarker.getMapMarker().hideInfoWindow();
