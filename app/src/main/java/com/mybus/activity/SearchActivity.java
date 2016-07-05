@@ -120,8 +120,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         switch (mSearchType) {
             case SearchType.ORIGIN:
             case SearchType.DESTINATION:
-                mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
-                break;
             case SearchType.FAVORITE:
                 mRecentLocations = RecentLocationDao.getInstance(this).getAll();
                 break;
@@ -251,7 +249,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     private void findOrCreateNewRecent(String query, LatLng latLng) {
         RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(mSearchType, latLng);
         if (location != null) {
-            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(location.getId());
+            RecentLocationDao.getInstance(SearchActivity.this).updateUsage(location.getId());
         } else {
             RecentLocation recentLocation = new RecentLocation(mSearchType, query, latLng.latitude, latLng.longitude);
             RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
@@ -307,7 +305,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     @Override
     public void onHistoryItemSelected(int position) {
         if (position >= 0 && position < mRecentLocations.size()) {
-            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(mRecentLocations.get(position).getId());
+            RecentLocationDao.getInstance(SearchActivity.this).updateUsage(mRecentLocations.get(position).getId());
             setActivityResult(mRecentLocations.get(position).getAddress(), mRecentLocations.get(position).getLatLng(), false, null);
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
