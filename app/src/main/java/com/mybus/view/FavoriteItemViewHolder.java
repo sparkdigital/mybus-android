@@ -14,25 +14,35 @@ public class FavoriteItemViewHolder extends RecyclerView.ViewHolder {
     public TextView favAddress;
     public ImageView favoriteEditIcon;
     public ImageView favoriteDeleteIcon;
-    private FavoriteListItemListener mFavoriteEditListener;
+    private FavoriteListItemListener mFavoriteListener;
 
     public FavoriteItemViewHolder(View itemView, FavoriteListItemListener favoriteEditListener) {
         super(itemView);
-        this.mFavoriteEditListener = favoriteEditListener;
+        this.mFavoriteListener = favoriteEditListener;
         favName = (TextView) itemView.findViewById(R.id.favorite_name);
         favAddress = (TextView) itemView.findViewById(R.id.favorite_address);
         favoriteEditIcon = (ImageView) itemView.findViewById(R.id.favorite_edit);
         favoriteDeleteIcon = (ImageView) itemView.findViewById(R.id.favorite_delete);
+
+        //Set listeners
+        View.OnClickListener favClickedListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFavoriteListener.onFavoriteClicked(getAdapterPosition());
+            }
+        };
+        favName.setOnClickListener(favClickedListener);
+        favAddress.setOnClickListener(favClickedListener);
         favoriteDeleteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFavoriteEditListener.onFavoriteItemDelete(getAdapterPosition());
+                mFavoriteListener.onFavoriteItemDelete(getAdapterPosition());
             }
         });
         favoriteEditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFavoriteEditListener.onFavoriteItemEdit(getAdapterPosition());
+                mFavoriteListener.onFavoriteItemEdit(getAdapterPosition());
             }
         });
     }

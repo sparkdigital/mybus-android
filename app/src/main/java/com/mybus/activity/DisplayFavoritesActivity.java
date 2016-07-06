@@ -9,10 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
 import com.mybus.adapter.FavoriteViewAdapter;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.listener.FavoriteListItemListener;
+import com.mybus.marker.MyBusMarker;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
@@ -29,6 +32,7 @@ import butterknife.OnClick;
  */
 public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener {
 
+    public static final String RESULT_MYBUSMARKER = "FAVORITE_MARKER";
     @Bind(R.id.favorites_recycler_view)
     RecyclerView mFavoritesRecyclerView;
     @Bind(R.id.noFavorites)
@@ -168,6 +172,11 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     }
 
     @Override
+    public void onFavoriteClicked(int position) {
+        returnFavoriteMarker(mFavorites.get(position));
+    }
+
+    @Override
     public void onNewFavoriteName(FavoriteLocation favoriteLocation) {
         saveOrUpdateFavorite(favoriteLocation, ADD_SEARCH_RESULT_ID);
     }
@@ -190,5 +199,23 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
             mNoFavoritesTextView.setVisibility(View.GONE);
         }
         mFavoriteViewAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Return to map a favorite MyBusMarker
+     * @param favoriteLocation
+     */
+    private void returnFavoriteMarker(FavoriteLocation favoriteLocation) {
+        Intent intent = new Intent();
+        MyBusMarker myBusMarker = new MyBusMarker(new MarkerOptions()
+                .draggable(false)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.favorite_remove_icon))
+                .title(favoriteLocation.getName())
+                .snippet(favoriteLocation.getAddress())
+                .position(favoriteLocation.getLatLng()), false, null, MyBusMarker.FAVORITE);
+        intent.putExtra(RESULT_MYBUSMARKER, myBusMarker);
+        setResult(RESULT_OK, intent);
+        overridePendingTransition(0, 0);
+        finish();
     }
 }
