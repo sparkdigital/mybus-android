@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.builder.MyBusServiceUrlBuilder;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.ChargePoint;
 import com.mybus.model.road.RoadResult;
 import com.mybus.model.road.RoadSearch;
 
@@ -60,5 +61,18 @@ public class MyBusServiceImpl extends GenericService implements MyBusService {
             return null;
         }
         return RoadResult.parse(jsonObject);
+    }
+
+    @Override
+    public List<ChargePoint> getNearChargePoints(LatLng location) {
+        try {
+            String url = MyBusServiceUrlBuilder.buildRechargeCardUrl(location.latitude, location.longitude);
+            JSONObject jsonObject = new JSONObject(executeUrl(url));
+            JSONArray jsonArray = jsonObject.getJSONArray("Results");
+            return ChargePoint.parseResults(jsonArray);
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, e.toString());
+            return null;
+        }
     }
 }

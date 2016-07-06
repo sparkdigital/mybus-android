@@ -2,6 +2,7 @@ package com.mybus.builder;
 
 import android.net.Uri;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.road.RoadSearch;
 
 /**
@@ -76,6 +77,23 @@ public final class MyBusServiceUrlBuilder {
                 .appendQueryParameter("lng0", originLongitude.toString())
                 .appendQueryParameter("lat1", destinationLatitude.toString())
                 .appendQueryParameter("lng1", destinationLongitude.toString())
+                .appendQueryParameter("tk", TOKEN);
+        return builder.build().toString();
+    }
+
+    /**
+     * Creates the API url for recharge card on location
+     *
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    public static String buildRechargeCardUrl(Double latitude, Double longitude) {
+        Uri.Builder builder = buildBaseUri()
+                .appendPath("RechargeCardPointApi.php")
+                .appendQueryParameter("lat", latitude.toString())
+                .appendQueryParameter("lng", longitude.toString())
+                .appendQueryParameter("ra", "1")
                 .appendQueryParameter("tk", TOKEN);
         return builder.build().toString();
     }
