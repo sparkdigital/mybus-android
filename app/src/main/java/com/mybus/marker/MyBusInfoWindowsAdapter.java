@@ -36,21 +36,26 @@ public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
         TextView tvAddress = ((TextView) mContentsView.findViewById(R.id.marker_address));
         tvAddress.setText(marker.getSnippet());
         ImageView ivFavIcon = ((ImageView) mContentsView.findViewById(R.id.marker_fav_icon));
-        //Checks if the marker is a StartLocation, EndLocation or other
-        MyBusMarker myBusMarker = mActivity.isMarkerPresent(marker);
-        if (myBusMarker == null) {
-            //User location or Bus stop markers
-            ivFavIcon.setVisibility(View.GONE);
-        } else {
-            ivFavIcon.setVisibility(View.VISIBLE);
-            if (myBusMarker.isFavorite()) {
-                //Change title with favorite name
-                tvTitle.setText(myBusMarker.getFavoriteName());
-                //Put remove favorite icon
-                ivFavIcon.setImageResource(R.drawable.favorite_remove_icon);
-            } else {
-                ivFavIcon.setImageResource(R.drawable.favorite_add_icon);
+        //Detect which type of marker is:
+        MyBusMarker myBusMarker = mActivity.isMyBusMarker(marker);
+        if (myBusMarker != null) {
+            switch (myBusMarker.getType()) {
+                case MyBusMarker.ORIGIN:
+                case MyBusMarker.DESTINATION:
+                    ivFavIcon.setVisibility(View.VISIBLE);
+                    if (myBusMarker.isFavorite()) {
+                        tvTitle.setText(myBusMarker.getFavoriteName()); //Change title with favorite name
+                        ivFavIcon.setImageResource(R.drawable.favorite_remove_icon); //Put remove favorite icon
+                    } else {
+                        ivFavIcon.setImageResource(R.drawable.favorite_add_icon);
+                    }
+                    break;
+                default:
+                    ivFavIcon.setVisibility(View.GONE);
+                    break;
             }
+        } else { //Bus stop markers
+            ivFavIcon.setVisibility(View.GONE);
         }
         return mContentsView;
     }

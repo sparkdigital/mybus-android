@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MyBusMarker mEndLocationMarker;
     //MyBusMarker reference used to update when a favorite is created
     private MyBusMarker mMarkerFavoriteToUpdate;
-    //Favorite MyBusMarker List
+    //Favorite MyBusMarker List //TODO: will use for show all favorites
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -693,6 +693,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mCompoundSearchBox.setVisible(true, true);
                         break;
                     case DISPLAY_FAVORITES_RESULT:
+                        removeFavoritesMarkers();
                         MyBusMarker favMarker = data.getParcelableExtra(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
                         favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
                         favMarker.getMapMarker().showInfoWindow();
@@ -706,6 +707,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Remove all favorite markers present on the map and reset the HashMap
+     */
+    private void removeFavoritesMarkers() {
+        for (MyBusMarker myBusMarker : mFavoritesMarkers.values()) {
+            Marker marker = myBusMarker.getMapMarker();
+            if (marker != null) {
+                mFavoritesMarkers.remove(marker.getPosition());
+                marker.remove();
+            }
+        }
+        mFavoritesMarkers = new HashMap<>();
     }
 
     /**
@@ -780,17 +795,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onInfoWindowClick(final Marker marker) {
         //Some infoWindow was clicked
-        MyBusMarker myBusMarker = null;
         //Detect which type of marker is:
-        if ((mStartLocationMarker.getMapMarker() != null) && (mStartLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
-            myBusMarker = mStartLocationMarker;
-        } else if ((mEndLocationMarker.getMapMarker() != null) && (mEndLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
-            myBusMarker = mEndLocationMarker;
-        } else if ((mUserLocationMarker.getMapMarker() != null) && (mUserLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
-            myBusMarker = mUserLocationMarker;
-        } else if ((!mFavoritesMarkers.isEmpty()) && (mFavoritesMarkers.containsKey(marker.getPosition()))) {
-            myBusMarker = mFavoritesMarkers.get(marker.getPosition());
-        }
+        MyBusMarker myBusMarker = isMyBusMarker(marker);
 
         if (myBusMarker != null) {
             myBusMarker.getMapMarker().hideInfoWindow();
@@ -874,17 +880,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Checks if the given marker is StartLocation, EndLocation or other.
+     * Checks if the given marker is MyBusMarker (StartLocation, EndLocation, UserLocation or FavoriteMarker).
      *
      * @param marker
      * @return a MyBusMarker (StartLocation/EndLocation) or null
      */
-    public MyBusMarker isMarkerPresent(Marker marker) {
+    public MyBusMarker isMyBusMarker(Marker marker) {
         if (mStartLocationMarker != null && mStartLocationMarker.getMapMarker() != null && mStartLocationMarker.getMapMarker().getId().equals(marker.getId())) {
             return mStartLocationMarker;
         }
         if (mEndLocationMarker != null && mEndLocationMarker.getMapMarker() != null && mEndLocationMarker.getMapMarker().getId().equals(marker.getId())) {
             return mEndLocationMarker;
+        }
+        if (mUserLocationMarker != null && mUserLocationMarker.getMapMarker() != null && mUserLocationMarker.getMapMarker().getId().equals(marker.getId())) {
+            return mUserLocationMarker;
+        }
+        if (!mFavoritesMarkers.isEmpty() && mFavoritesMarkers.containsKey(marker.getPosition())) {
+            return mFavoritesMarkers.get(marker.getPosition());
         }
         return null;
     }
