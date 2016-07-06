@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MyBus</string>
     <string name="app_url">www.mybus.com.ar</string>
+    <string name="app_store_url">https://play.google.com/store/apps/details?id=org.globant.mybus</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
@@ -53,5 +54,11 @@
     <string name="user_location_dialog_message">Como desea usar su ubicación actual?</string>
     <string name="use_favorite_dialog_title">Usar favorito</string>
     <string name="use_favorite_dialog_message">Como desea usar el favorito?</string>
+    <string name="about">Acerca de</string>
+    <string name="about_text">MyBus</string>
+    <string name="version_number">1.0</string>
+    <string name="version_string">Versión 1.0</string>
+    <string name="rights">Rights text</string>
+    <string name="rate_this_app">Calificar la aplicación</string>
 
 </resources>

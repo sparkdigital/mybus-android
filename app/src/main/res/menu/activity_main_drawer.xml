@@ -24,6 +24,12 @@
             android:title="@string/main_drawer_fares"
             android:checkable="false"/>
 
+        <item
+            android:id="@+id/about"
+            android:icon="@android:drawable/ic_menu_help"
+            android:title="@string/about"
+            android:checkable="false"/>
+
     </group>
 
 </menu>
