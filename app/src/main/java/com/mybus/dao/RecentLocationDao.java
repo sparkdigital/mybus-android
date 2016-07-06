@@ -33,13 +33,11 @@ public final class RecentLocationDao extends RealmDao<RecentLocation> {
     /**
      * Gets the first item by a LatLng location
      *
-     * @param type
      * @param latLng
      */
-    public RecentLocation getItemByLatLng(int type, LatLng latLng) {
+    public RecentLocation getItemByLatLng(LatLng latLng) {
         return copyFromRealm(
-                mRealm.where(RecentLocation.class).equalTo("type", type)
-                        .equalTo("latitude", latLng.latitude)
+                mRealm.where(RecentLocation.class).equalTo("latitude", latLng.latitude)
                         .equalTo("longitude", latLng.longitude)
                         .findFirst()
         );

@@ -119,18 +119,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     private void initHistoryCardView() {
-
-        switch (mSearchType) {
-            case SearchType.ORIGIN:
-            case SearchType.DESTINATION:
-                mRecentLocations = RecentLocationDao.getInstance(this).getAllByField("type", mSearchType);
-                break;
-            case SearchType.FAVORITE:
-                mRecentLocations = RecentLocationDao.getInstance(this).getAll();
-                break;
-            default:
-                break;
-        }
+        mRecentLocations = RecentLocationDao.getInstance(this).getAll();
         if (mRecentLocations != null) {
             //Sorting recent locations. (The list could be empty but never null)
             Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
@@ -273,9 +262,9 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
      * @param latLng
      */
     private void findOrCreateNewRecent(String query, LatLng latLng) {
-        RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(mSearchType, latLng);
+        RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(latLng);
         if (location != null) {
-            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(location.getId());
+            RecentLocationDao.getInstance(SearchActivity.this).updateUsage(location.getId());
         } else {
             RecentLocation recentLocation = new RecentLocation(mSearchType, query, latLng.latitude, latLng.longitude);
             RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
@@ -331,7 +320,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     @Override
     public void onHistoryItemSelected(int position) {
         if (position >= 0 && position < mRecentLocations.size()) {
-            RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(mRecentLocations.get(position).getId());
+            RecentLocationDao.getInstance(SearchActivity.this).updateUsage(mRecentLocations.get(position).getId());
             setActivityResult(mRecentLocations.get(position).getAddress(), mRecentLocations.get(position).getLatLng(), false, null);
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
@@ -341,6 +330,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     @Override
     public void onFavoriteItemSelected(int position) {
         if (position >= 0 && position < mFavoriteLocations.size()) {
+            FavoriteLocationDao.getInstance(SearchActivity.this).updateUsage(mFavoriteLocations.get(position).getId());
             setActivityResult(mFavoriteLocations.get(position).getAddress(), mFavoriteLocations.get(position).getLatLng(), true, mFavoriteLocations.get(position).getName());
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();

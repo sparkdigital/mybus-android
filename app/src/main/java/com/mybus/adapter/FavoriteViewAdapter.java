@@ -54,6 +54,11 @@ public class FavoriteViewAdapter extends RecyclerView.Adapter<FavoriteItemViewHo
     }
 
     @Override
+    public void onFavoriteClicked(int position) {
+        mFavoriteListItemListener.onFavoriteClicked(position);
+    }
+
+    @Override
     public void onFavoriteItemEdit(int position) {
         mFavoriteListItemListener.onFavoriteItemEdit(position);
     }

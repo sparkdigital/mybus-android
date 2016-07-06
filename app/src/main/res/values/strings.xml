@@ -53,4 +53,7 @@
     <string name="dialog_searching_loading_points">Buscando puntos de carga cercanos a usted</string>
     <string name="user_location_dialog_title">Usar ubicación actual</string>
     <string name="user_location_dialog_message">Como desea usar su ubicación actual?</string>
+    <string name="use_favorite_dialog_title">Usar favorito</string>
+    <string name="use_favorite_dialog_message">Como desea usar el favorito?</string>
+
 </resources>

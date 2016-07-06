@@ -1,5 +1,8 @@
 package com.mybus.marker;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -7,7 +10,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  * This class is used to manage Google Maps markers and its relationship with a favorite
  */
-public class MyBusMarker {
+public class MyBusMarker implements Parcelable {
     private Marker mMapMarker;
     private MarkerOptions mMarkerOptions;
     private boolean mIsFavorite = false;
@@ -61,4 +64,36 @@ public class MyBusMarker {
     public Integer getType() {
         return this.mType;
     }
+
+    protected MyBusMarker(Parcel in){
+        mMarkerOptions = (MarkerOptions) in.readValue(MarkerOptions.class.getClassLoader());
+        mIsFavorite = (boolean) in.readValue(Boolean.class.getClassLoader());
+        mFavName = in.readString();
+        mType = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeValue(mMarkerOptions);
+        parcel.writeValue(mIsFavorite);
+        parcel.writeString(mFavName);
+        parcel.writeInt(mType);
+    }
+
+    public static final Parcelable.Creator<MyBusMarker> CREATOR = new Parcelable.Creator<MyBusMarker>() {
+        @Override
+        public MyBusMarker createFromParcel(Parcel in) {
+            return new MyBusMarker(in);
+        }
+
+        @Override
+        public MyBusMarker[] newArray(int size) {
+            return new MyBusMarker[size];
+        }
+    };
 }
