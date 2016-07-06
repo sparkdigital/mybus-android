@@ -273,7 +273,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
      * @param latLng
      */
     private void findOrCreateNewRecent(String query, LatLng latLng) {
-        RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(mSearchType, latLng);
+        RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(latLng);
         if (location != null) {
             RecentLocationDao.getInstance(SearchActivity.this).updateItemUsageCount(location.getId());
         } else {
