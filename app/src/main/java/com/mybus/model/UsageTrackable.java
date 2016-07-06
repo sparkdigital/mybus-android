@@ -5,5 +5,5 @@ package com.mybus.model;
  * Interface used to extract common behavior for some RealmObjects (Favorites & History)
  */
 public interface UsageTrackable {
-    void incrementUsageCount();
+    void updateUsage();
 }

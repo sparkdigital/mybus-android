@@ -88,7 +88,7 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
     }
 
     @Override
-    public void incrementUsageCount() {
+    public void updateUsage() {
         this.usageCount++;
     }
 
