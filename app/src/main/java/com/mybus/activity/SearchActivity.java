@@ -116,16 +116,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     private void initHistoryCardView() {
-
-        switch (mSearchType) {
-            case SearchType.ORIGIN:
-            case SearchType.DESTINATION:
-            case SearchType.FAVORITE:
-                mRecentLocations = RecentLocationDao.getInstance(this).getAll();
-                break;
-            default:
-                break;
-        }
+        mRecentLocations = RecentLocationDao.getInstance(this).getAll();
         if (mRecentLocations != null) {
             //Sorting recent locations. (The list could be empty but never null)
             Collections.sort(mRecentLocations, Collections.<RecentLocation>reverseOrder());
@@ -315,6 +306,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     @Override
     public void onFavoriteItemSelected(int position) {
         if (position >= 0 && position < mFavoriteLocations.size()) {
+            FavoriteLocationDao.getInstance(SearchActivity.this).updateUsage(mFavoriteLocations.get(position).getId());
             setActivityResult(mFavoriteLocations.get(position).getAddress(), mFavoriteLocations.get(position).getLatLng(), true, mFavoriteLocations.get(position).getName());
         } else {
             Toast.makeText(this, R.string.search_activity_error_toast, Toast.LENGTH_SHORT).show();
