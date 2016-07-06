@@ -45,8 +45,8 @@
         android:layout_marginBottom="@dimen/fab_margin_bottom"
         android:layout_marginRight="@dimen/fab_margin_right"
         android:src="@android:drawable/ic_menu_mylocation"
-        app:backgroundTint="@color/colorPrimary"
-        app:rippleColor="@color/colorPrimaryDark" />
+        app:backgroundTint="@color/actionButtonBgColor"
+        app:rippleColor="@color/actionButtonPressedColor" />
 
     <include layout="@layout/bottom_sheet_layout" />
 </android.support.design.widget.CoordinatorLayout>

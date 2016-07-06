@@ -8,10 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
 import com.google.android.gms.maps.model.LatLng;
@@ -145,20 +148,35 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     private void initSearchView() {
-        mStreetSuggestionFilter = new StreetSuggestionFilter(new OnFindResultsListener() {
+        mStreetSuggestionFilter = new StreetSuggestionFilter(SearchActivity.this, new OnFindResultsListener() {
 
             @Override
             public void onResults(List<StreetSuggestion> results) {
 
                 //this will swap the data and
                 //render the collapse/expand animations as necessary
-                mSearchView.swapSuggestions(results);
+                if (results != null) {
+                    mSearchView.swapSuggestions(results);
+                }
 
                 //let the users know that the background
                 //process has completed
                 mSearchView.hideProgress();
             }
         });
+
+        mSearchView.setOnBindSuggestionCallback(new SearchSuggestionsAdapter.OnBindSuggestionCallback() {
+            @Override
+            public void onBindSuggestion(View suggestionView, ImageView leftIcon, TextView textView, SearchSuggestion item, int itemPosition) {
+                StreetSuggestion suggestion = (StreetSuggestion) item;
+                if (suggestion.isFavorite()) {
+                    leftIcon.setImageResource(android.R.drawable.ic_menu_myplaces);
+                } else {
+                    leftIcon.setImageDrawable(null);
+                }
+            }
+        });
+
         mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
@@ -185,7 +203,13 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 Log.d(TAG, "onSuggestionClicked()");
-                mSearchView.setSearchTextFocused(searchSuggestion.getBody());
+                StreetSuggestion suggestion = (StreetSuggestion) searchSuggestion;
+                if (suggestion.isFavorite()) {
+                    FavoriteLocation fav = FavoriteLocationDao.getInstance(SearchActivity.this).getById(suggestion.getFavID());
+                    setActivityResult(fav.getAddress(), fav.getLatLng(), true, fav.getName());
+                } else {
+                    mSearchView.setSearchTextFocused(searchSuggestion.getBody());
+                }
             }
 
             @Override

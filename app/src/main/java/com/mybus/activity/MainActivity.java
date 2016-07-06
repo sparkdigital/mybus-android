@@ -1,7 +1,9 @@
 package com.mybus.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -780,26 +782,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onInfoWindowClick(final Marker marker) {
         //Some infoWindow was clicked
         MyBusMarker myBusMarker = null;
-        //Only matters the Start or End location markers
+        //Detect which type of marker is:
         if ((mStartLocationMarker.getMapMarker() != null) && (mStartLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
             myBusMarker = mStartLocationMarker;
         } else if ((mEndLocationMarker.getMapMarker() != null) && (mEndLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
             myBusMarker = mEndLocationMarker;
-        }
+        } else if (mUserLocationMarker.getMapMarker() != null && (mUserLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
+            myBusMarker = mUserLocationMarker;
+        } //TODO: Detect star markers (favorites points)
+
         if (myBusMarker != null) {
             myBusMarker.getMapMarker().hideInfoWindow();
-            if (myBusMarker.isFavorite()) { //Remove
-                FavoriteAlertDialogConfirm favAlert = FavoriteAlertDialogConfirm.newInstance(FavoriteAlertDialogConfirm.REMOVE,
-                        getString(R.string.favorite_confirm_delete_title), getString(R.string.favorite_confirm_delete_message), null, myBusMarker);
-                favAlert.show(getFragmentManager(), "Confirm Remove Dialog");
-            } else { //Add
-                FavoriteLocation newFavorite = new FavoriteLocation();
-                newFavorite.setAddress(myBusMarker.getMapMarker().getSnippet());
-                newFavorite.setLatitude(myBusMarker.getMapMarker().getPosition().latitude);
-                newFavorite.setLongitude(myBusMarker.getMapMarker().getPosition().longitude);
-                FavoriteAlertDialogConfirm favAlert = FavoriteAlertDialogConfirm.newInstance(FavoriteAlertDialogConfirm.ADD,
-                        getString(R.string.favorite_confirm_add_title), getString(R.string.favorite_confirm_add_message), newFavorite, myBusMarker);
-                favAlert.show(getFragmentManager(), "Confirm Add Dialog");
+            switch (myBusMarker.getType()) {
+                case MyBusMarker.ORIGIN: //Is a favorite creation or remove
+                case MyBusMarker.DESTINATION: //Is a favorite creation or remove
+                    if (myBusMarker.isFavorite()) { //Remove
+                        FavoriteAlertDialogConfirm favAlert = FavoriteAlertDialogConfirm.newInstance(FavoriteAlertDialogConfirm.REMOVE,
+                                getString(R.string.favorite_confirm_delete_title), getString(R.string.favorite_confirm_delete_message), null, myBusMarker);
+                        favAlert.show(getFragmentManager(), "Confirm Remove Dialog");
+                    } else { //Add
+                        FavoriteLocation newFavorite = new FavoriteLocation();
+                        newFavorite.setAddress(myBusMarker.getMapMarker().getSnippet());
+                        newFavorite.setLatitude(myBusMarker.getMapMarker().getPosition().latitude);
+                        newFavorite.setLongitude(myBusMarker.getMapMarker().getPosition().longitude);
+                        FavoriteAlertDialogConfirm favAlert = FavoriteAlertDialogConfirm.newInstance(FavoriteAlertDialogConfirm.ADD,
+                                getString(R.string.favorite_confirm_add_title), getString(R.string.favorite_confirm_add_message), newFavorite, myBusMarker);
+                        favAlert.show(getFragmentManager(), "Confirm Add Dialog");
+                    }
+                    break;
+                case MyBusMarker.USER_LOCATION:
+                    useKnownLocationForRoute(mUserLocationMarker.getMapMarker(), getString(R.string.user_location_dialog_title), getString(R.string.user_location_dialog_message));
+                    break;
+                case MyBusMarker.FAVORITE:
+                    //TODO: when user tap on star's infoWindow should call useKnownLocationForRoute (with different title and message)
+                default:
+                    break;
             }
         }
     }
@@ -907,5 +924,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             marker.getMapMarker().remove();
         }
         mChargingPointList.clear();
+    }
+    /**
+     * Asks to user how want to use the marker selected (Origin or Destination)
+     *
+     * @param marker
+     * @param title
+     * @param message
+     */
+    private void useKnownLocationForRoute(final Marker marker, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setNeutralButton(getString(R.string.start_location_title),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        addOrUpdateMarker(mStartLocationMarker, marker.getPosition(), mStartLocationGeocodingCompleted);
+                        zoomTo(mStartLocationMarker.getMapMarker().getPosition()); // Makes a zoom out in the map to see both markers at the same time.
+                    }
+                });
+        builder.setPositiveButton(getString(R.string.end_location_title),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        addOrUpdateMarker(mEndLocationMarker, marker.getPosition(), mEndLocationGeocodingCompleted);
+                        zoomOutStartEndMarkers(); // Makes a zoom out in the map to see both markers at the same time.
+                    }
+                });
+        builder.setNegativeButton(getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
     }
 }
