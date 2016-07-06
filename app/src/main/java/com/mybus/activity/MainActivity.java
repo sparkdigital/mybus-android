@@ -56,6 +56,7 @@ import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //MyBusMarker reference used to update when a favorite is created
     private MyBusMarker mMarkerFavoriteToUpdate;
     //Favorite MyBusMarker List
-    private List<MyBusMarker> mFavoritesMarkers;
+    private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -410,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * This method restart the local variables to avoid old apps's states
      */
     private void resetLocalVariables() {
-        mFavoritesMarkers = new ArrayList<>();
+        mFavoritesMarkers = new HashMap<>();
         mStartLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
@@ -695,7 +696,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         MyBusMarker favMarker = data.getParcelableExtra(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
                         favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
                         favMarker.getMapMarker().showInfoWindow();
-                        mFavoritesMarkers.add(favMarker); //TODO: Check if exists
+                        mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
                         zoomTo(favMarker.getMapMarker().getPosition());
                         break;
                     default:
@@ -785,9 +786,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             myBusMarker = mStartLocationMarker;
         } else if ((mEndLocationMarker.getMapMarker() != null) && (mEndLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
             myBusMarker = mEndLocationMarker;
-        } else if (mUserLocationMarker.getMapMarker() != null && (mUserLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
+        } else if ((mUserLocationMarker.getMapMarker() != null) && (mUserLocationMarker.getMapMarker().getId().equals(marker.getId()))) {
             myBusMarker = mUserLocationMarker;
-        }//TODO: Detect star markers (favorites points)
+        } else if ((!mFavoritesMarkers.isEmpty()) && (mFavoritesMarkers.containsKey(marker.getPosition()))) {
+            myBusMarker = mFavoritesMarkers.get(marker.getPosition());
+        }
 
         if (myBusMarker != null) {
             myBusMarker.getMapMarker().hideInfoWindow();
@@ -812,7 +815,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     useKnownLocationForRoute(mUserLocationMarker.getMapMarker(), getString(R.string.user_location_dialog_title), getString(R.string.user_location_dialog_message));
                     break;
                 case MyBusMarker.FAVORITE:
-                    //TODO: when user tap on star's infoWindow should call useKnownLocationForRoute (with different title and message)
+                    useKnownLocationForRoute(marker, getString(R.string.use_favorite_dialog_title), getString(R.string.use_favorite_dialog_message));
+                    break;
                 default:
                     break;
             }
