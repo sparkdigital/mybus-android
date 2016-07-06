@@ -177,25 +177,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Makes a zoom in the map using a LatLngBounds (created with one or several LatLng's)
-     *
-     * @param bounds
+     * Makes a zoom out in the map to keep all the markers received in view.
      */
-    private void zoomTo(LatLngBounds bounds) {
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(getResources().getInteger(R.integer.map_padding)));
-        mMap.animateCamera(cu);
+    private void zoomOut(List<Marker> markerList) {
+        zoomOut(markerList, getResources().getInteger(R.integer.map_padding));
     }
 
     /**
      * Makes a zoom out in the map to keep all the markers received in view.
      */
-    private void zoomOut(List<Marker> markerList) {
+    private void zoomOut(List<Marker> markerList, int padding) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Marker marker : markerList) {
             builder.include(marker.getPosition());
         }
         LatLngBounds bounds = builder.build();
-        zoomTo(bounds);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(padding));
+        mMap.animateCamera(cu);
     }
 
     /**
@@ -889,8 +887,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onChargingPointsFound(List<ChargePoint> chargePoints) {
-        removeChargingPointMarkers();
-
+        //Removing all markers and states
+        onDrawerToggleClick();
         cancelProgressDialog();
 
         if (chargePoints != null && !chargePoints.isEmpty()) {
@@ -908,7 +906,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 markerList.add(chargingPointMarker.getMapMarker());
             }
             markerList.add(mUserLocationMarker.getMapMarker());
-            zoomOut(markerList);
+            zoomOut(markerList, getResources().getInteger(R.integer.charging_point_padding));
         } else {
             Toast.makeText(this, R.string.toast_no_loading_point_found, Toast.LENGTH_LONG).show();
         }
@@ -923,6 +921,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         mChargingPointList.clear();
     }
+
     /**
      * Asks to user how want to use the marker selected (Origin or Destination)
      *
