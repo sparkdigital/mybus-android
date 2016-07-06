@@ -905,9 +905,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
                 mChargingPointList.add(chargingPointMarker);
 
-
                 markerList.add(chargingPointMarker.getMapMarker());
-
             }
             markerList.add(mUserLocationMarker.getMapMarker());
             zoomOut(markerList);

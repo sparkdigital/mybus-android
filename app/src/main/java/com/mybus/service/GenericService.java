@@ -41,6 +41,15 @@ public class GenericService {
         return execute(url, body);
     }
 
+
+    /**
+     * Executes either GET or POST if a body is given
+     *
+     * @param url
+     * @param body
+     * @return
+     * @throws IOException
+     */
     private String execute(String url, RequestBody body) throws IOException {
         Request.Builder builder = new Request.Builder().url(url);
         if (body != null) {

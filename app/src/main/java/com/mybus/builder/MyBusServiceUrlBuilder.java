@@ -94,6 +94,13 @@ public final class MyBusServiceUrlBuilder {
         return builder.build().toString();
     }
 
+    /**
+     * Creates the Body for the POST on ChargingPoints
+     *
+     * @param latitude
+     * @param longitude
+     * @return
+     */
     public static RequestBody buildRechargeCarForm(Double latitude, Double longitude) {
         RequestBody formBody = new FormBody.Builder()
                 .add("lat", latitude.toString())
