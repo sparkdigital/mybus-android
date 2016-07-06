@@ -16,6 +16,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
+import okhttp3.RequestBody;
+
 public class MyBusServiceImpl extends GenericService implements MyBusService {
 
     private static final String TAG = MyBusService.class.getSimpleName();
@@ -66,8 +68,9 @@ public class MyBusServiceImpl extends GenericService implements MyBusService {
     @Override
     public List<ChargePoint> getNearChargePoints(LatLng location) {
         try {
-            String url = MyBusServiceUrlBuilder.buildRechargeCardUrl(location.latitude, location.longitude);
-            JSONObject jsonObject = new JSONObject(executeUrl(url));
+            String url = MyBusServiceUrlBuilder.buildRechargeCardUrl();
+            RequestBody requestBody = MyBusServiceUrlBuilder.buildRechargeCarForm(location.latitude, location.longitude);
+            JSONObject jsonObject = new JSONObject(executePOST(url, requestBody));
             JSONArray jsonArray = jsonObject.getJSONArray("Results");
             return ChargePoint.parseResults(jsonArray);
         } catch (IOException | JSONException e) {

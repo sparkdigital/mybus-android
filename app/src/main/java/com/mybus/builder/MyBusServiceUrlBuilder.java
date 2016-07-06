@@ -2,8 +2,10 @@ package com.mybus.builder;
 
 import android.net.Uri;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.mybus.model.road.RoadSearch;
+
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 /**
  * MyBus Service Public API url builder.
@@ -84,18 +86,23 @@ public final class MyBusServiceUrlBuilder {
     /**
      * Creates the API url for recharge card on location
      *
-     * @param latitude
-     * @param longitude
      * @return
      */
-    public static String buildRechargeCardUrl(Double latitude, Double longitude) {
+    public static String buildRechargeCardUrl() {
         Uri.Builder builder = buildBaseUri()
-                .appendPath("RechargeCardPointApi.php")
-                .appendQueryParameter("lat", latitude.toString())
-                .appendQueryParameter("lng", longitude.toString())
-                .appendQueryParameter("ra", "1")
-                .appendQueryParameter("tk", TOKEN);
+                .appendPath("RechargeCardPointApi.php");
         return builder.build().toString();
+    }
+
+    public static RequestBody buildRechargeCarForm(Double latitude, Double longitude) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("lat", latitude.toString())
+                .add("lng", longitude.toString())
+                .add("ra", "1")
+                .add("tk", TOKEN)
+                .build();
+        return formBody;
+
     }
 
     /**

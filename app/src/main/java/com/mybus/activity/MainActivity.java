@@ -56,9 +56,7 @@ import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -520,6 +518,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
+        removeChargingPointMarkers();
         populateBottomSheet(results);
     }
 
@@ -647,6 +646,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.drawerCharge:
                 showProgressDialog(getString(R.string.dialog_searching_loading_points));
                 ServiceFacade.getInstance().getNearChargingPoints(mLocationUpdater.getLastKnownLocation(), MainActivity.this);
+                break;
             default:
                 break;
         }
@@ -747,6 +747,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mEndLocationMarker.setMapMarker(null);
             mEndLocationMarker.setAsFavorite(false);
         }
+        removeChargingPointMarkers();
         showBottomSheetResults(false);
         clearBusRouteOnMap();
         mCompoundSearchBox.setVisible(false);
@@ -872,8 +873,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onChargingPointsFound(List<ChargePoint> chargePoints) {
         removeChargingPointMarkers();
-        clearBusRouteOnMap();
-        showBottomSheetResults(false);
 
         cancelProgressDialog();
 
