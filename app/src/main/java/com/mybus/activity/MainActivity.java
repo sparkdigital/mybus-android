@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
     public static final int DISPLAY_FAVORITES_RESULT = 3;
+    private static final int DISPLAY_ROADS_RESULT = 4;
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
     @Bind(R.id.compoundSearchBox)
@@ -640,6 +641,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.drawerFavorites:
                 Intent favIntent = new Intent(MainActivity.this, DisplayFavoritesActivity.class);
                 startActivityForResult(favIntent, DISPLAY_FAVORITES_RESULT);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+            case R.id.drawerRoads:
+                Intent roadsIntent = new Intent(MainActivity.this, DisplayBusLinesActivity.class);
+                startActivityForResult(roadsIntent, DISPLAY_ROADS_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             default:
