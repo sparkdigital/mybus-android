@@ -60,5 +60,6 @@
     <string name="version_string">Versión 1.0</string>
     <string name="rights">Rights text</string>
     <string name="rate_this_app">Calificar la aplicación</string>
+    <string name="html_link">&lt;a href=%1$s&gt;%2$s</string>
 
 </resources>

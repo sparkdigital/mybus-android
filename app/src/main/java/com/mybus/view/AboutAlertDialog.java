@@ -29,7 +29,7 @@ public class AboutAlertDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.about_alert_dialog, null);
         //get the rate textView and set the link to GooglePlay
         TextView linkTextView = ButterKnife.findById(view, R.id.link_to_store);
-        linkTextView.setText(Html.fromHtml("<a href=" + getString(R.string.app_store_url) + ">" + getString(R.string.rate_this_app)));
+        linkTextView.setText(Html.fromHtml(String.format(getString(R.string.html_link), getString(R.string.app_store_url), getString(R.string.rate_this_app))));
         linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
         builder.setView(view)
                 .setPositiveButton(getString(R.string.ok),
