@@ -54,5 +54,6 @@
     <string name="use_favorite_dialog_title">Usar favorito</string>
     <string name="use_favorite_dialog_message">Como desea usar el favorito?</string>
     <string name="displayBusLinesToolbarTittle">Recorridos</string>
+    <string name="bus_line_color_text">Color</string>
 
 </resources>

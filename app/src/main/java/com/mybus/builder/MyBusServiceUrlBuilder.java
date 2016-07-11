@@ -93,4 +93,14 @@ public final class MyBusServiceUrlBuilder {
                 .appendPath(VERSION);
     }
 
+    /**
+     * Create the API url in order to get all the bus lines
+     */
+    public static String buildBusLinesUrl() {
+        Uri.Builder builder = buildBaseUri()
+                .appendPath("Lineas2.php")
+                .appendQueryParameter("tk", TOKEN);
+        return builder.build().toString();
+    }
+
 }

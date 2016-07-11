@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.model.DirectionsResult;
+import com.mybus.asynctask.BusLinesRequestCallback;
+import com.mybus.asynctask.BusLinesRequestTask;
 import com.mybus.asynctask.FaresRequestCallback;
 import com.mybus.asynctask.FaresRequestTask;
 import com.mybus.asynctask.RoadSearchCallback;
@@ -85,5 +87,13 @@ public final class ServiceFacade {
     public void getFares(Context context, FaresRequestCallback callback) {
         FaresRequestTask faresRequestTask = new FaresRequestTask(context, callback);
         faresRequestTask.execute();
+    }
+
+    /**
+     * @param callback
+     */
+    public void getBusLines(BusLinesRequestCallback callback) {
+        BusLinesRequestTask busLinesRequestTask = new BusLinesRequestTask(callback);
+        busLinesRequestTask.execute();
     }
 }
