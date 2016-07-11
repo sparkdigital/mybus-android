@@ -10,6 +10,8 @@ import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.asynctask.RouteSearchTask;
+import com.mybus.asynctask.TouristicPlacesRequestCallback;
+import com.mybus.asynctask.TouristicPlacesRequestTask;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
@@ -85,5 +87,14 @@ public final class ServiceFacade {
     public void getFares(Context context, FaresRequestCallback callback) {
         FaresRequestTask faresRequestTask = new FaresRequestTask(context, callback);
         faresRequestTask.execute();
+    }
+
+    /**
+     * @param context
+     * @param callback
+     */
+    public void getTouristicPlaces(Context context, TouristicPlacesRequestCallback callback) {
+        TouristicPlacesRequestTask touristicPlacesRequestTask = new TouristicPlacesRequestTask(context, callback);
+        touristicPlacesRequestTask.execute();
     }
 }
