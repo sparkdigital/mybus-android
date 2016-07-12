@@ -27,17 +27,10 @@
                 android:id="@+id/bus_line_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:textSize="16sp"
+                android:textAlignment="center"
+                android:textSize="20sp"
                 android:textColor="@color/abc_search_url_text_selected"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/bus_line_color"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="@string/bus_line_color_text" />
         </LinearLayout>
     </LinearLayout>
 
