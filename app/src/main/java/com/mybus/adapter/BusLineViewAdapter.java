@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mybus.R;
+import com.mybus.listener.BusLineListItemListener;
 import com.mybus.model.BusLine;
 import com.mybus.view.BusLineItemViewHolder;
 
@@ -15,15 +16,20 @@ import java.util.List;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class BusLineViewAdapter extends RecyclerView.Adapter<BusLineItemViewHolder> {
+public class BusLineViewAdapter extends RecyclerView.Adapter<BusLineItemViewHolder> implements BusLineListItemListener {
 
     private List<BusLine> mDataset;
+    private BusLineListItemListener mItemClickListener;
+
+    public BusLineViewAdapter(BusLineListItemListener listener) {
+        this.mItemClickListener = listener;
+    }
 
     @Override
     public BusLineItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.bus_line_item, parent, false);
-        return new BusLineItemViewHolder(v);
+        return new BusLineItemViewHolder(v, this);
     }
 
     /**
@@ -51,5 +57,10 @@ public class BusLineViewAdapter extends RecyclerView.Adapter<BusLineItemViewHold
      */
     public void setDataSet(List<BusLine> dataSet) {
         this.mDataset = dataSet;
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        mItemClickListener.onItemClicked(position);
     }
 }

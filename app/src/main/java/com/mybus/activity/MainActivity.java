@@ -706,6 +706,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
                         zoomTo(favMarker.getMapMarker().getPosition());
                         break;
+                    case DISPLAY_ROADS_RESULT:
+                        int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
+                        //TODO: Use CompleteRoad API to show the complete road for the given bus line id
+                        Toast.makeText(this, "Fue seleccionada la linea con el id: " + busLineId, Toast.LENGTH_LONG).show();
                     default:
                         break;
                 }
