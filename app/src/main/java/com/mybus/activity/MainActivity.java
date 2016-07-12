@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
+import com.mybus.asynctask.ChargePointSearchCallback;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
@@ -43,6 +44,7 @@ import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.ChargePoint;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
@@ -65,7 +67,9 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
-        CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener {
+        CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener,
+        FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
+        ChargePointSearchCallback {
 
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
@@ -89,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MyBusMarker mEndLocationMarker;
     //MyBusMarker reference used to update when a favorite is created
     private MyBusMarker mMarkerFavoriteToUpdate;
+    //List of chargingPoint markers
+    private List<MyBusMarker> mChargingPointList = new ArrayList<>();
     //Favorite MyBusMarker List //TODO: will use for show all favorites
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     /*---Bottom Sheet------*/
@@ -110,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
+            removeChargingPointMarkers();
             if (mStartLocationMarker.getMapMarker() == null) {
                 addOrUpdateMarker(mStartLocationMarker, latLng, mStartLocationGeocodingCompleted);
                 zoomTo(mStartLocationMarker.getMapMarker().getPosition());
@@ -174,25 +181,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Makes a zoom in the map using a LatLngBounds (created with one or several LatLng's)
-     *
-     * @param bounds
+     * Makes a zoom out in the map to keep all the markers received in view.
      */
-    private void zoomTo(LatLngBounds bounds) {
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(getResources().getInteger(R.integer.map_padding)));
-        mMap.animateCamera(cu);
+    private void zoomOut(List<Marker> markerList) {
+        zoomOut(markerList, getResources().getInteger(R.integer.map_padding));
     }
 
     /**
      * Makes a zoom out in the map to keep all the markers received in view.
      */
-    private void zoomOut(List<Marker> markerList) {
+    private void zoomOut(List<Marker> markerList, int padding) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Marker marker : markerList) {
             builder.include(marker.getPosition());
         }
         LatLngBounds bounds = builder.build();
-        zoomTo(bounds);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(padding));
+        mMap.animateCamera(cu);
     }
 
     /**
@@ -240,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onMarkerDragStart(Marker marker) {
             marker.hideInfoWindow();
+            removeChargingPointMarkers();
             clearBusRouteOnMap();
             showBottomSheetResults(false);
         }
@@ -517,6 +523,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
+        removeChargingPointMarkers();
         populateBottomSheet(results);
     }
 
@@ -642,6 +649,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivityForResult(favIntent, DISPLAY_FAVORITES_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
+            case R.id.drawerCharge:
+                showProgressDialog(getString(R.string.dialog_searching_loading_points));
+                ServiceFacade.getInstance().getNearChargingPoints(mLocationUpdater.getLastKnownLocation(), MainActivity.this);
+                break;
             default:
                 break;
         }
@@ -672,6 +683,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //TODO: The user canceled
                 break;
             case RESULT_OK:
+                removeChargingPointMarkers();
+
                 GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
                 boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
                 String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
@@ -764,6 +777,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mEndLocationMarker.setMapMarker(null);
             mEndLocationMarker.setAsFavorite(false);
         }
+        removeChargingPointMarkers();
         showBottomSheetResults(false);
         clearBusRouteOnMap();
         mCompoundSearchBox.setVisible(false);
@@ -899,6 +913,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return mFavoritesMarkers.get(marker.getPosition());
         }
         return null;
+    }
+
+    @Override
+    public void onChargingPointsFound(List<ChargePoint> chargePoints) {
+        //Removing all markers and states
+        onDrawerToggleClick();
+        cancelProgressDialog();
+
+        if (chargePoints != null && !chargePoints.isEmpty()) {
+            List<Marker> markerList = new ArrayList<>();
+            MarkerOptions options = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.punto_de_carga));
+            for (ChargePoint chargePoint : chargePoints) {
+                options.title(chargePoint.getName());
+                options.snippet(chargePoint.getAddress());
+
+                MyBusMarker chargingPointMarker = new MyBusMarker(options, false, null, MyBusMarker.CHARGING_POINT);
+                addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
+                mChargingPointList.add(chargingPointMarker);
+
+                markerList.add(chargingPointMarker.getMapMarker());
+            }
+            markerList.add(mUserLocationMarker.getMapMarker());
+            zoomOut(markerList, getResources().getInteger(R.integer.charging_point_padding));
+        } else {
+            Toast.makeText(this, R.string.toast_no_loading_point_found, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Removes all charging point markers and clears the list
+     */
+    private void removeChargingPointMarkers() {
+        for (MyBusMarker marker : mChargingPointList) {
+            marker.getMapMarker().remove();
+        }
+        mChargingPointList.clear();
     }
 
     /**

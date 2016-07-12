@@ -21,6 +21,7 @@ public class MyBusMarker implements Parcelable {
     public static final int DESTINATION = 2;
     public static final int USER_LOCATION = 3;
     public static final int FAVORITE = 4;
+    public static final int CHARGING_POINT = 5;
 
     public MyBusMarker(MarkerOptions mOptions, boolean isFav, String favName, int type) {
         this.mMarkerOptions = mOptions;
@@ -43,7 +44,7 @@ public class MyBusMarker implements Parcelable {
 
     public void setAsFavorite(boolean isFav) {
         this.mIsFavorite = isFav;
-        if (!isFav){
+        if (!isFav) {
             this.mFavName = null;
         }
     }

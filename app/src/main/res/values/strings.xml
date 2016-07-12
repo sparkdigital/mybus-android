@@ -49,6 +49,8 @@
     <string name="favorite_confirm_delete_title">Elimiar Favorito</string>
     <string name="favorite_confirm_add_title">Agregar Favorito</string>
     <string name="bus_cost">$%1$s</string>
+    <string name="toast_no_loading_point_found">No se encontraron puntos de carga</string>
+    <string name="dialog_searching_loading_points">Buscando puntos de carga cercanos a usted</string>
     <string name="user_location_dialog_title">Usar ubicación actual</string>
     <string name="user_location_dialog_message">Como desea usar su ubicación actual?</string>
     <string name="use_favorite_dialog_title">Usar favorito</string>
