@@ -55,5 +55,8 @@
     <string name="user_location_dialog_message">Como desea usar su ubicación actual?</string>
     <string name="use_favorite_dialog_title">Usar favorito</string>
     <string name="use_favorite_dialog_message">Como desea usar el favorito?</string>
+    <string name="charge_point_address">"Direccion: %1$s"</string>
+    <string name="charge_point_distance">"Distancia: %1$s metros"</string>
+    <string name="charge_point_open_time">"Horario: %1$s"</string>
 
 </resources>
