@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.builder.MyBusServiceUrlBuilder;
 import com.mybus.model.BusRouteResult;
+import com.mybus.model.ChargePoint;
 import com.mybus.model.road.RoadResult;
 import com.mybus.model.road.RoadSearch;
 
@@ -14,6 +15,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+
+import okhttp3.RequestBody;
 
 public class MyBusServiceImpl extends GenericService implements MyBusService {
 
@@ -60,5 +63,19 @@ public class MyBusServiceImpl extends GenericService implements MyBusService {
             return null;
         }
         return RoadResult.parse(jsonObject);
+    }
+
+    @Override
+    public List<ChargePoint> getNearChargePoints(LatLng location) {
+        try {
+            String url = MyBusServiceUrlBuilder.buildRechargeCardUrl();
+            RequestBody requestBody = MyBusServiceUrlBuilder.buildRechargeCarForm(location.latitude, location.longitude);
+            JSONObject jsonObject = new JSONObject(executePOST(url, requestBody));
+            JSONArray jsonArray = jsonObject.getJSONArray("Results");
+            return ChargePoint.parseResults(jsonArray);
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, e.toString());
+            return null;
+        }
     }
 }
