@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //MyBusMarker reference used to update when a favorite is created
     private MyBusMarker mMarkerFavoriteToUpdate;
     //List of chargingPoint markers
-    private List<MyBusMarker> mChargingPointList = new ArrayList<>();
+    private HashMap<LatLng, MyBusMarker> mChargingPointMarkers;
+    private HashMap<MyBusMarker, ChargePoint> mChargingPoints;
     //Favorite MyBusMarker List //TODO: will use for show all favorites
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     /*---Bottom Sheet------*/
@@ -418,6 +419,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void resetLocalVariables() {
         mFavoritesMarkers = new HashMap<>();
+        mChargingPointMarkers = new HashMap<>();
+        mChargingPoints = new HashMap<>();
         mStartLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
@@ -837,6 +840,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case MyBusMarker.FAVORITE:
                     useKnownLocationForRoute(marker, getString(R.string.use_favorite_dialog_title), getString(R.string.use_favorite_dialog_message));
                     break;
+                case MyBusMarker.CHARGING_POINT:
+                    marker.showInfoWindow();
+                    break;
                 default:
                     break;
             }
@@ -912,6 +918,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (!mFavoritesMarkers.isEmpty() && mFavoritesMarkers.containsKey(marker.getPosition())) {
             return mFavoritesMarkers.get(marker.getPosition());
         }
+        if (!mChargingPointMarkers.isEmpty() && mChargingPointMarkers.containsKey(marker.getPosition())) {
+            return mChargingPointMarkers.get(marker.getPosition());
+        }
+        return null;
+    }
+
+    /**
+     * Checks if given a MyBusMarker corresponds into a ChargePoint displayed in the Map
+     *
+     * @param myBusMarker
+     * @return corresponding ChargePoint or null
+     */
+    public ChargePoint getChargePointPresent(MyBusMarker myBusMarker) {
+        if (!mChargingPoints.isEmpty() && mChargingPoints.containsKey(myBusMarker)) {
+            return mChargingPoints.get(myBusMarker);
+        }
         return null;
     }
 
@@ -931,7 +953,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 MyBusMarker chargingPointMarker = new MyBusMarker(options, false, null, MyBusMarker.CHARGING_POINT);
                 addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
-                mChargingPointList.add(chargingPointMarker);
+                mChargingPointMarkers.put(chargePoint.getLatLng(), chargingPointMarker);
+                mChargingPoints.put(chargingPointMarker, chargePoint);
 
                 markerList.add(chargingPointMarker.getMapMarker());
             }
@@ -946,10 +969,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Removes all charging point markers and clears the list
      */
     private void removeChargingPointMarkers() {
-        for (MyBusMarker marker : mChargingPointList) {
+        for (MyBusMarker marker : mChargingPointMarkers.values()) {
             marker.getMapMarker().remove();
         }
-        mChargingPointList.clear();
+        mChargingPointMarkers.clear();
+        mChargingPoints.clear();
     }
 
     /**
