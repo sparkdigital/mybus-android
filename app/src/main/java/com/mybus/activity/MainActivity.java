@@ -53,6 +53,7 @@ import com.mybus.model.road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
 import com.mybus.requirements.PlayServicesChecker;
 import com.mybus.service.ServiceFacade;
+import com.mybus.view.AboutAlertDialog;
 import com.mybus.view.CompoundSearchBox;
 import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
@@ -657,6 +658,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent roadsIntent = new Intent(MainActivity.this, DisplayBusLinesActivity.class);
                 startActivityForResult(roadsIntent, DISPLAY_ROADS_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+            case R.id.about:
+                AboutAlertDialog aboutAlertDialog = new AboutAlertDialog();
+                aboutAlertDialog.show(getFragmentManager(), "");
                 break;
             case R.id.drawerCharge:
                 showProgressDialog(getString(R.string.dialog_searching_loading_points));
