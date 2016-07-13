@@ -1,0 +1,5 @@
+<resources>
+    <integer name="default_map_zoom">14</integer>
+    <integer name="map_padding">70</integer>
+    <integer name="charging_point_padding">90</integer>
+</resources>

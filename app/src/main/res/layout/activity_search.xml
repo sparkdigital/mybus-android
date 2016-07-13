@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/searchContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E7E7E7"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/search_bar_height" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/currentLocationCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_view_margin"
+            android:layout_marginLeft="@dimen/card_view_margin"
+            android:layout_marginRight="@dimen/card_view_margin"
+            card_view:cardCornerRadius="4dp">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/card_view_title_padding"
+                android:paddingTop="@dimen/card_view_title_padding">
+
+                <ImageView
+                    android:id="@+id/favorite_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:src="@android:drawable/ic_menu_mylocation" />
+
+                <TextView
+                    android:id="@+id/history_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="5"
+                    android:text="@string/use_current_location" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <com.mybus.view.HistoryCardView
+            android:id="@+id/card_view_recent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/card_view_margin"
+            android:layout_marginLeft="@dimen/card_view_margin"
+            android:layout_marginRight="@dimen/card_view_margin"
+            android:layout_marginTop="@dimen/card_view_margin"
+            android:layout_weight="1"
+            card_view:cardCornerRadius="4dp" />
+
+        <com.mybus.view.FavoritesCardView
+            android:id="@+id/card_view_favorites"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/card_view_margin"
+            android:layout_marginLeft="@dimen/card_view_margin"
+            android:layout_marginRight="@dimen/card_view_margin"
+            android:layout_marginTop="@dimen/card_view_margin"
+            android:layout_weight="1"
+            card_view:cardCornerRadius="4dp" />
+    </LinearLayout>
+
+    <com.arlib.floatingsearchview.FloatingSearchView
+        android:id="@+id/floating_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:floatingSearch_dismissOnOutsideTouch="true"
+        app:floatingSearch_leftActionMode="showHome"
+        app:floatingSearch_searchBarMarginLeft="@dimen/search_view_inset"
+        app:floatingSearch_searchBarMarginRight="@dimen/search_view_inset"
+        app:floatingSearch_searchBarMarginTop="@dimen/search_view_inset"
+        app:floatingSearch_searchHint="@string/floating_search_origin" />
+</RelativeLayout>

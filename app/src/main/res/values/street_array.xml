@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="streetList">
+        <item>1 de Mayo</item>
+        <item>10 de Febrero</item>
+        <item>11 de Septiembre</item>
+        <item>12 de Octubre</item>
+        <item>14 de Julio</item>
+        <item>20 de Septiembre</item>
+        <item>25 de Mayo</item>
+        <item>Calle 252</item>
+        <item>Calle 254</item>
+        <item>3 de Febrero</item>
+        <item>9 de Julio</item>
+        <item>A Amaya</item>
+        <item>A Courel</item>
+        <item>A Galeana</item>
+        <item>A Martinez</item>
+        <item>A Saenz</item>
+        <item>A Sandino</item>
+        <item>Acevedo MA</item>
+        <item>Acha</item>
+        <item>Agote</item>
+        <item>Agua Blanca</item>
+        <item>Aguado</item>
+        <item>Alberti</item>
+        <item>Alejandro Korn</item>
+        <item>Alfonsina Storni</item>
+        <item>Alfredo Lepera</item>
+        <item>Algarrobos</item>
+        <item>Almafuerte</item>
+        <item>Almirante Brown</item>
+        <item>Alsina</item>
+        <item>Alvarado</item>
+        <item>Alvarez</item>
+        <item>Alvarez Condarco</item>
+        <item>Angelelli</item>
+        <item>Antonio Alice</item>
+        <item>AR Canosa</item>
+        <item>Araña y Goiri</item>
+        <item>Aragon</item>
+        <item>Araoz</item>
+        <item>ARENALES</item>
+        <item>Aristobulo del Valle</item>
+        <item>Armenia</item>
+        <item>Arolas</item>
+        <item>Aromos</item>
+        <item>Arrue</item>
+        <item>Artigas</item>
+        <item>Asturias</item>
+        <item>Av Antartida Argentina</item>
+        <item>Av Bosque Grande</item>
+        <item>Av Carlos Gardel</item>
+        <item>Av Centenario</item>
+        <item>Av Cervantes Saavedra</item>
+        <item>Av Champagnat</item>
+        <item>Av Coelho de Meyrelles</item>
+        <item>Av Colon</item>
+        <item>Av Constitucion</item>
+        <item>Av de Circunvalacion Mario Bravo</item>
+        <item>Av de Las Olimpiadas</item>
+        <item>Av de los Pescadores</item>
+        <item>Av Della Paolera</item>
+        <item>Av Dr Arturo Alio</item>
+        <item>Av Felix U Camet</item>
+        <item>Av Fermin Errera</item>
+        <item>Av Fortunato de la Plaza</item>
+        <item>Av Fray Luis Beltran</item>
+        <item>Av Independencia</item>
+        <item>Av Jorge Newbery</item>
+        <item>Av Jose Manuel Estrada</item>
+        <item>Av Juan B Justo</item>
+        <item>Av Juan H Jara</item>
+        <item>Av Juan Jose Paso</item>
+        <item>Av Libertad</item>
+        <item>Av Martinez de Hoz</item>
+        <item>Av Monseñor Zabala</item>
+        <item>Av Patricio Peralta Ramos</item>
+        <item>Av Pedro Luro</item>
+        <item>Av Peralta Ramos</item>
+        <item>Av Polonia</item>
+        <item>Av Tejedor</item>
+        <item>Avellaneda</item>
+        <item>Ayacucho</item>
+        <item>Ayelep</item>
+        <item>Ayolas</item>
+        <item>Azcuenaga</item>
+        <item>Azcuenaga Maizani</item>
+        <item>Azopardo</item>
+        <item>B Goñi</item>
+        <item>Bahia Blanca</item>
+        <item>Bahia Thetis</item>
+        <item>Balcarce</item>
+        <item>Bartolome Mitre</item>
+        <item>Bayley</item>
+        <item>Belgica</item>
+        <item>Belgrano</item>
+        <item>Belisario Roldan</item>
+        <item>Beltrami</item>
+        <item>Benito Juarez</item>
+        <item>Benito Lynch</item>
+        <item>Benito Quinquela Martin</item>
+        <item>Bermejo</item>
+        <item>Bernardo de Irigoyen</item>
+        <item>Bernardo O Higgins</item>
+        <item>Beruti</item>
+        <item>Bestoso</item>
+        <item>Biedma</item>
+        <item>Blas Parera</item>
+        <item>Bolivar</item>
+        <item>Bolivia</item>
+        <item>Bordabehere</item>
+        <item>Bormida</item>
+        <item>Bouchard</item>
+        <item>Brandsen</item>
+        <item>Brasil</item>
+        <item>Buenos Aires</item>
+        <item>Buque pesquero Dorrego</item>
+        <item>C Arenal</item>
+        <item>C Daglio</item>
+        <item>C Rodriiguez</item>
+        <item>Cabo Corrientes</item>
+        <item>Cabo de Hornos</item>
+        <item>Cabrera</item>
+        <item>Cacique Catriel</item>
+        <item>Cacique Chuyantuya</item>
+        <item>Calabria</item>
+        <item>Calle 1</item>
+        <item>Calle 224</item>
+        <item>Calle 415</item>
+        <item>Calle 415</item>
+        <item>Calle 445</item>
+        <item>Calle 461</item>
+        <item>Calle 493</item>
+        <item>Calle 6</item>
+        <item>Calle 663</item>
+        <item>Calle 8</item>
+        <item>Calle A</item>
+        <item>Calle C</item>
+        <item>Camino parque hermoso</item>
+        <item>Campaña</item>
+        <item>Canada</item>
+        <item>Candelaria</item>
+        <item>Canesa</item>
+        <item>Carasa</item>
+        <item>Carlos Pellegrini</item>
+        <item>Carmen de Las Flores</item>
+        <item>Carriego</item>
+        <item>Carrillo</item>
+        <item>Caseros</item>
+        <item>Castelli</item>
+        <item>Castex</item>
+        <item>Castro Barros</item>
+        <item>Catalina Daprotis</item>
+        <item>Cataluña</item>
+        <item>Catamarca</item>
+        <item>Ceferino Namuncura</item>
+        <item>Ceretti</item>
+        <item>Cerrito</item>
+        <item>Chacabuco</item>
+        <item>Chaco</item>
+        <item>Chapeau Rouge</item>
+        <item>Charlone</item>
+        <item>Chilabert M</item>
+        <item>Chile</item>
+        <item>Chubut</item>
+        <item>Cipriano</item>
+        <item>Ciudad de Bragado</item>
+        <item>Ciudad de Dolores</item>
+        <item>Ciudad de Oneglia</item>
+        <item>Ciudad de Roma</item>
+        <item>Ciudad de Rosario</item>
+        <item>Ciudad de Toscana</item>
+        <item>Cnel de Marina David Jewett</item>
+        <item>Cnel Suarez</item>
+        <item>Cnel Vidal</item>
+        <item>Colombia</item>
+        <item>Colombres</item>
+        <item>Comodoro Rivadavia</item>
+        <item>Corbeta Uruguay</item>
+        <item>Cordoba</item>
+        <item>Corrientes</item>
+        <item>Costa</item>
+        <item>Costa Atlantica</item>
+        <item>Costa Azul</item>
+        <item>Costa Pampeana</item>
+        <item>Cramer</item>
+        <item>Croce</item>
+        <item>Cuba</item>
+        <item>D Sciocco</item>
+        <item>Daireaux</item>
+        <item>Dardo Rocha</item>
+        <item>Darragueyra</item>
+        <item>David Ortega</item>
+        <item>De Anchorena</item>
+        <item>De la Maza</item>
+        <item>De Los Inmigrantes</item>
+        <item>De Los Reservistas</item>
+        <item>Dean Funes</item>
+        <item>Del Lago</item>
+        <item>Dellepiane</item>
+        <item>Derqui</item>
+        <item>Diag del Hipodromo</item>
+        <item>Diag Elpidio Gonzalez</item>
+        <item>Diag Estados Unidos Norte</item>
+        <item>Diag Jose Garibaldi</item>
+        <item>Diag Juan Bautista Alberdi</item>
+        <item>Diag Leopoldo Lugones</item>
+        <item>Diag A Firpo</item>
+        <item>Diag Canata</item>
+        <item>Diag Pueyrredon</item>
+        <item>Dieckmann</item>
+        <item>Don Bosco</item>
+        <item>Don Orione</item>
+        <item>Dorrego</item>
+        <item>E Bradley</item>
+        <item>E Calabrese</item>
+        <item>E Wilde</item>
+        <item>Echeverria</item>
+        <item>Ecuador</item>
+        <item>Einstein Albert</item>
+        <item>El Benteveo</item>
+        <item>El Cano</item>
+        <item>El Carpintero</item>
+        <item>El Chaja</item>
+        <item>El Chaja</item>
+        <item>El Chingolo</item>
+        <item>El Churrinche</item>
+        <item>El Corbatita</item>
+        <item>El Flamenco</item>
+        <item>El Gaviotin</item>
+        <item>El Gorrion</item>
+        <item>El Hornero</item>
+        <item>El Jilgero</item>
+        <item>El Leñatero</item>
+        <item>El Mixto</item>
+        <item>El Pampero</item>
+        <item>El Pirincho</item>
+        <item>El Tero</item>
+        <item>El Tordo</item>
+        <item>Elisa A. de Bosch</item>
+        <item>Entre Rios</item>
+        <item>España</item>
+        <item>Esperanto</item>
+        <item>Esquivel</item>
+        <item>Estado de Israel</item>
+        <item>Estancia Chapadmalal</item>
+        <item>Estancia Corona</item>
+        <item>Estancia El Boqueron</item>
+        <item>Estancia la Armonia</item>
+        <item>Estancia la Peregrina</item>
+        <item>Estancia Vivorata</item>
+        <item>Estanislao Zeballos</item>
+        <item>Etchegaray</item>
+        <item>Eusebione</item>
+        <item>F Ferrer</item>
+        <item>F Juan Cetz</item>
+        <item>F Outes</item>
+        <item>Falucho</item>
+        <item>Federico Rauch</item>
+        <item>Felipe de Araña</item>
+        <item>Fernandez JN</item>
+        <item>Fernando Bonet</item>
+        <item>Ferrari</item>
+        <item>Figueroa Alcorta</item>
+        <item>Fitte</item>
+        <item>Fleming</item>
+        <item>Florencio Sanchez</item>
+        <item>Florentino Ameghino</item>
+        <item>Florisbelo Acosta</item>
+        <item>Formosa</item>
+        <item>Fragata Libertad</item>
+        <item>Fragata Sarmiento</item>
+        <item>Francia</item>
+        <item>Francisco Canaro</item>
+        <item>Fray Mamerto Esquiu</item>
+        <item>French</item>
+        <item>Friuli</item>
+        <item>Gaboto</item>
+        <item>Galicia</item>
+        <item>Garagiola</item>
+        <item>Garay</item>
+        <item>Garcia Lorca</item>
+        <item>Gascon</item>
+        <item>Genova</item>
+        <item>Geronimo Rejon</item>
+        <item>Giacobini</item>
+        <item>Gianelli</item>
+        <item>Godoy Cruz</item>
+        <item>Gonzalez Chavez</item>
+        <item>Gonzalez Guerrico</item>
+        <item>Gral Alvear</item>
+        <item>Gral de Riego</item>
+        <item>Gral Madariaga</item>
+        <item>Gral Mosconi</item>
+        <item>Gral Pacheco</item>
+        <item>Gral Paz</item>
+        <item>Gral Rivas</item>
+        <item>Gral Roca</item>
+        <item>Gral Savio</item>
+        <item>Grecia</item>
+        <item>Guanahani</item>
+        <item>Guardacostas Islas Malvinas</item>
+        <item>Guardacostas Rio Iguazu</item>
+        <item>Guayana</item>
+        <item>Guernica</item>
+        <item>Guido</item>
+        <item>Guiraldes</item>
+        <item>Gutemberg</item>
+        <item>Heguilor</item>
+        <item>Herminia Brumana</item>
+        <item>Hernandarias</item>
+        <item>Hipolito Yrigoyen</item>
+        <item>Homero Manzi</item>
+        <item>Houssay</item>
+        <item>Hudson</item>
+        <item>Ignacio Olan</item>
+        <item>Int Camusso</item>
+        <item>Int India</item>
+        <item>Int Mac Gaull</item>
+        <item>Irala</item>
+        <item>Isla Baleares</item>
+        <item>Isla de Los Estados</item>
+        <item>Isla de Serdeña</item>
+        <item>Italia</item>
+        <item>Ituzaingo</item>
+        <item>J Frenguelli</item>
+        <item>J Peña</item>
+        <item>J Pedroni</item>
+        <item>J Pujia</item>
+        <item>J Yahaty</item>
+        <item>Jauretche</item>
+        <item>JB Ambrosetti</item>
+        <item>Joaquin Acevedo</item>
+        <item>Joaquun V Gonzalez</item>
+        <item>Jose Ingenieros</item>
+        <item>Jose Maria Calaza</item>
+        <item>Jose Marmol</item>
+        <item>Jose Marti</item>
+        <item>Josee Hernandez</item>
+        <item>Jovellanos</item>
+        <item>Juan Calchaqui</item>
+        <item>Juan de Dios Filiberto</item>
+        <item>Juan de Solis</item>
+        <item>Juan Jose Valle</item>
+        <item>Juana Azurduy</item>
+        <item>Juana Gorriti</item>
+        <item>Juana Manso</item>
+        <item>Jujuy</item>
+        <item>Julian Aguirre</item>
+        <item>Juncal</item>
+        <item>Juramento</item>
+        <item>Kraglievich</item>
+        <item>L Bautista</item>
+        <item>L Parodi</item>
+        <item>L Scaglia</item>
+        <item>La Aurora</item>
+        <item>La Calandria</item>
+        <item>La Cigueña</item>
+        <item>La Golondrina</item>
+        <item>La Primavera</item>
+        <item>La Ratonera</item>
+        <item>La Rioja</item>
+        <item>La Torcacita</item>
+        <item>Labarden</item>
+        <item>Laguna de Los Padres</item>
+        <item>Lahille</item>
+        <item>Lamadrid</item>
+        <item>Lanzilota</item>
+        <item>Laprida</item>
+        <item>Larrea</item>
+        <item>Las Cabrillas</item>
+        <item>Las Casuarinas</item>
+        <item>Las Dalias</item>
+        <item>Las Fresias</item>
+        <item>Las Heras</item>
+        <item>Las Higueras</item>
+        <item>Las Maravillas</item>
+        <item>Las Margaritas</item>
+        <item>Las Palmeras</item>
+        <item>Las Talas</item>
+        <item>Las Violetas</item>
+        <item>Lavalle</item>
+        <item>Leandro N Alem</item>
+        <item>Lebensohn</item>
+        <item>Leguizamon O</item>
+        <item>Libres del Sud</item>
+        <item>Lijo Lopez</item>
+        <item>Liniers</item>
+        <item>Lisandro de la Torre</item>
+        <item>Lituania</item>
+        <item>Loberia</item>
+        <item>Lombardia</item>
+        <item>Lopez de Gomara</item>
+        <item>Lopez y Planes</item>
+        <item>Lorenzini</item>
+        <item>Los Alamos</item>
+        <item>Los Arrayanes</item>
+        <item>Los Caldenes</item>
+        <item>Los Cedros</item>
+        <item>Los Ceibos</item>
+        <item>Los Cerezos</item>
+        <item>Los Chañares</item>
+        <item>Los Duraznos</item>
+        <item>Los Eucaliptos</item>
+        <item>Los Granados</item>
+        <item>Los Limoneros</item>
+        <item>Los Manzanos</item>
+        <item>Los Naranjos</item>
+        <item>Los Nogales</item>
+        <item>Los Olmos</item>
+        <item>Los Pinos</item>
+        <item>Los Platanos</item>
+        <item>Los Quebrachos</item>
+        <item>Los Robles</item>
+        <item>Los Sauces</item>
+        <item>Lucio Mansilla</item>
+        <item>Luzuriaga</item>
+        <item>M. Baigorria</item>
+        <item>Magallanes</item>
+        <item>Magnasco</item>
+        <item>Maipu</item>
+        <item>Malabia</item>
+        <item>Malvinas</item>
+        <item>Manuela Pedraza</item>
+        <item>Manuwal</item>
+        <item>Marcelo T de Alvear</item>
+        <item>Marchi</item>
+        <item>Marconi</item>
+        <item>Marcos Sastre</item>
+        <item>Maria Curie</item>
+        <item>Mariani</item>
+        <item>Mariano Acosta</item>
+        <item>Mariano Rosa</item>
+        <item>Mariano Rosas</item>
+        <item>Martin Miguel de Guemes</item>
+        <item>Martin Rodriguez</item>
+        <item>Martinez Zuviria</item>
+        <item>Mascias</item>
+        <item>Matheu</item>
+        <item>Medrano</item>
+        <item>Mendez Funes de Millan</item>
+        <item>Mendoza</item>
+        <item>Mexico</item>
+        <item>MF Origone</item>
+        <item>Miguel Sagastizabal</item>
+        <item>Misiones</item>
+        <item>Monsalvo</item>
+        <item>Monseñor de Andrea</item>
+        <item>Monseñor Enrique Rau</item>
+        <item>Montes</item>
+        <item>Montes Carballo</item>
+        <item>Moreno</item>
+        <item>N Romano</item>
+        <item>Napoles</item>
+        <item>NAVARRA</item>
+        <item>Necochea</item>
+        <item>Neuquen</item>
+        <item>Newbery</item>
+        <item>Ojo de Agua</item>
+        <item>Olavarria</item>
+        <item>Olazabal</item>
+        <item>Olazar</item>
+        <item>Olegario Andrade</item>
+        <item>Ombu</item>
+        <item>Ombues</item>
+        <item>Ortega y Gasset</item>
+        <item>Ortiz de Zarate</item>
+        <item>P Groeber</item>
+        <item>Pablo Neruda</item>
+        <item>Pacheco de Melo</item>
+        <item>Padre Cardiel</item>
+        <item>Padre Dutto</item>
+        <item>Padre Luis Varetto</item>
+        <item>Palma</item>
+        <item>Pampa</item>
+        <item>Paraguay</item>
+        <item>Pascuala Mugaburu</item>
+        <item>Paseo Jesus de Galindez</item>
+        <item>Pasteur</item>
+        <item>Patagones</item>
+        <item>Paula Albarracin</item>
+        <item>Paunero</item>
+        <item>Pedro Ferre</item>
+        <item>Pehuajo</item>
+        <item>Pelayo</item>
+        <item>Perez Bulnes</item>
+        <item>Peru</item>
+        <item>Pescadores</item>
+        <item>Pesquero Halcon</item>
+        <item>Pesquero Palma Madre</item>
+        <item>Pesquero Pumara</item>
+        <item>Piñacal</item>
+        <item>Piedrabuena</item>
+        <item>Pigue</item>
+        <item>Piran</item>
+        <item>Plus Ultra</item>
+        <item>Portugal</item>
+        <item>Posadas</item>
+        <item>Primera Junta</item>
+        <item>Pringles</item>
+        <item>Puan</item>
+        <item>Quintana</item>
+        <item>Quiroga</item>
+        <item>R Arlt</item>
+        <item>Racedo</item>
+        <item>Ramirez</item>
+        <item>Ratery</item>
+        <item>Rawson</item>
+        <item>Razzano</item>
+        <item>Reforma Universitaria</item>
+        <item>Remedios de Escalada</item>
+        <item>Remolcado Guarani</item>
+        <item>Rep Arabe Siria</item>
+        <item>Rep del Libano</item>
+        <item>Republica de Nicaragua</item>
+        <item>Ricardo Gutierrez</item>
+        <item>Ricardo Rojas</item>
+        <item>Ringuelet</item>
+        <item>Rio Negro</item>
+        <item>Rivadavia</item>
+        <item>Rizzutto</item>
+        <item>Roberto Payro</item>
+        <item>Rodolfo Walsh</item>
+        <item>Rodriguez Peña</item>
+        <item>Roffo</item>
+        <item>Romero</item>
+        <item>Rondeau</item>
+        <item>Roque Saenz Peña</item>
+        <item>Rosales</item>
+        <item>S Cabral</item>
+        <item>Saavedra</item>
+        <item>Salta</item>
+        <item>San Antonio</item>
+        <item>SAN CAYETANO</item>
+        <item>San Francisco de Asis</item>
+        <item>San Jose de Calasanz</item>
+        <item>San Juan</item>
+        <item>San Lorenzo</item>
+        <item>San Luis</item>
+        <item>San Martin</item>
+        <item>San Salvador</item>
+        <item>Sanchez de Bustamante</item>
+        <item>Sanchez Labrador</item>
+        <item>Santa Cecilia</item>
+        <item>Santa Cruz</item>
+        <item>Santa Fe</item>
+        <item>Santa Maria de Oro</item>
+        <item>Santiago del Estero</item>
+        <item>Santiago Lacamtu</item>
+        <item>Sarmiento</item>
+        <item>Serrano</item>
+        <item>Sicilia</item>
+        <item>Silvestre Tohel</item>
+        <item>Soler</item>
+        <item>Strobel</item>
+        <item>Submarino Ara Santa Fe</item>
+        <item>T Stegagnini</item>
+        <item>Talcahuano</item>
+        <item>Tandil</item>
+        <item>Tapia</item>
+        <item>Teodoro Bronzini</item>
+        <item>Termas de Rio Hondo</item>
+        <item>Tetamanti</item>
+        <item>Thames</item>
+        <item>Tierra del Fuego</item>
+        <item>Tomas Edison</item>
+        <item>Tomas Falkner</item>
+        <item>Torres de Vera y Aragon</item>
+        <item>Tres Arroyos</item>
+        <item>Trinidad Tobago</item>
+        <item>Tripulantes del Fournier</item>
+        <item>Triunvirato</item>
+        <item>Tucuman</item>
+        <item>Udine</item>
+        <item>Unamuno</item>
+        <item>Urquiza</item>
+        <item>Uruguay</item>
+        <item>V Sayhueque</item>
+        <item>Valencia</item>
+        <item>Valentini</item>
+        <item>Velez</item>
+        <item>Velez Sarsfield</item>
+        <item>Venezuela</item>
+        <item>Vergara</item>
+        <item>Vernet</item>
+        <item>Vertiz</item>
+        <item>Viña del Mar</item>
+        <item>Viamonte</item>
+        <item>Vicente Lopez</item>
+        <item>Vieytes</item>
+        <item>Vignolo</item>
+        <item>Villar</item>
+        <item>Vucetich</item>
+        <item>Vuelta de Obligado</item>
+        <item>Vulcan</item>
+        <item>William Morris</item>
+        <item>Yapeyu</item>
+        <item>Zacagnini</item>
+        <item>Zanni</item>
+        <item>Zarate</item>
+    </string-array>
+</resources>
