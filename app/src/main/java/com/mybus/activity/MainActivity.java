@@ -53,6 +53,7 @@ import com.mybus.model.road.RoadResult;
 import com.mybus.requirements.DeviceRequirementsChecker;
 import com.mybus.requirements.PlayServicesChecker;
 import com.mybus.service.ServiceFacade;
+import com.mybus.view.AboutAlertDialog;
 import com.mybus.view.CompoundSearchBox;
 import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
     public static final int DISPLAY_FAVORITES_RESULT = 3;
+    private static final int DISPLAY_ROADS_RESULT = 4;
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
     @Bind(R.id.compoundSearchBox)
@@ -652,6 +654,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivityForResult(favIntent, DISPLAY_FAVORITES_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
+            case R.id.drawerRoads:
+                Intent roadsIntent = new Intent(MainActivity.this, DisplayBusLinesActivity.class);
+                startActivityForResult(roadsIntent, DISPLAY_ROADS_RESULT);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+            case R.id.about:
+                AboutAlertDialog aboutAlertDialog = new AboutAlertDialog();
+                aboutAlertDialog.show(getFragmentManager(), "");
+                break;
             case R.id.drawerCharge:
                 showProgressDialog(getString(R.string.dialog_searching_loading_points));
                 ServiceFacade.getInstance().getNearChargingPoints(mLocationUpdater.getLastKnownLocation(), MainActivity.this);
@@ -715,6 +726,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         favMarker.getMapMarker().showInfoWindow();
                         mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
                         zoomTo(favMarker.getMapMarker().getPosition());
+                        break;
+                    case DISPLAY_ROADS_RESULT:
+                        int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
+                        //TODO: Use CompleteRoad API to show the complete road for the given bus line id
+                        Toast.makeText(this, "Fue seleccionada la linea con el id: " + busLineId, Toast.LENGTH_LONG).show();
                         break;
                     default:
                         break;
