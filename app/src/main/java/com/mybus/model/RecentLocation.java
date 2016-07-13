@@ -2,6 +2,8 @@ package com.mybus.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -24,7 +26,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
     @Required
     private Double longitude;
     @Required
-    private Integer usageCount = 0;
+    private Long lastUsage;
 
     // Default constructor
     public RecentLocation() {
@@ -37,6 +39,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.lastUsage = System.currentTimeMillis();
     }
 
     public Long getId() {
@@ -75,12 +78,12 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
         this.longitude = longitude;
     }
 
-    public void setUsageCount(Integer usesCount) {
-        this.usageCount = usesCount;
+    public void setUsageTime(Long usageTime) {
+        this.lastUsage = usageTime;
     }
 
-    public Integer getUsageCount() {
-        return usageCount;
+    public Long getUsageTime() {
+        return lastUsage;
     }
 
     public LatLng getLatLng() {
@@ -88,8 +91,8 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
     }
 
     @Override
-    public void incrementUsageCount() {
-        this.usageCount++;
+    public void updateUsage() {
+        this.lastUsage = System.currentTimeMillis();
     }
 
     // Used for testing.
@@ -97,12 +100,13 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
     public String toString() {
         return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION")
                 + " ; Address: " + address
-                + " ; LatLong: (" + latitude + ", " + longitude + ")" + "Usage Count: " + usageCount;
+                + " ; LatLong: (" + latitude + ", " + longitude + ")"
+                + " ; LastUsage: " + new Date(lastUsage).toString();
     }
 
     @Override
     public int compareTo(RecentLocation another) {
-        return this.getUsageCount() < another.getUsageCount() ? -1 : 1;
+        return this.getUsageTime() < another.getUsageTime() ? -1 : 1;
     }
 
     @Override
@@ -118,7 +122,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
 
         return id.equals(that.id) && type.equals(that.type) && address.equals(that.address)
                 && latitude.equals(that.latitude) && longitude.equals(that.longitude)
-                && usageCount.equals(that.usageCount);
+                && lastUsage.equals(that.lastUsage);
 
     }
 
@@ -129,7 +133,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
         result = HASH_MULTIPLIER * result + address.hashCode();
         result = HASH_MULTIPLIER * result + latitude.hashCode();
         result = HASH_MULTIPLIER * result + longitude.hashCode();
-        result = HASH_MULTIPLIER * result + usageCount.hashCode();
+        result = HASH_MULTIPLIER * result + lastUsage.hashCode();
         return result;
     }
 }
