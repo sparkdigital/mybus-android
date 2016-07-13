@@ -1,6 +1,5 @@
 package com.mybus.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +26,6 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
     RecyclerView mBusLinesRecyclerView;
     private BusLineViewAdapter mBusLineAdapter;
     private List<BusLine> mBusLines;
-    private ProgressDialog mDialog = null;
     public static final String RESULT_BUS_LINE_ID = "BUS_LINE_ID";
 
     @Override
@@ -38,6 +36,7 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
         mBusLineAdapter = new BusLineViewAdapter(this);
         mBusLinesRecyclerView.setAdapter(mBusLineAdapter);
         mBusLinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //Show a progress dialog while bus lines are loading
         showProgressDialog(getString(R.string.toast_bus_lines_searching));
         ServiceFacade.getInstance().getBusLines(this);
     }
@@ -67,6 +66,7 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
 
     @Override
     public void onItemClicked(int position) {
+        //Return the bus line id to the MainActivity
         Intent intent = new Intent();
         intent.putExtra(RESULT_BUS_LINE_ID, mBusLines.get(position).getId());
         setResult(RESULT_OK, intent);
