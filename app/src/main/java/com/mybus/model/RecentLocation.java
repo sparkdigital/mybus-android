@@ -2,6 +2,8 @@ package com.mybus.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -37,7 +39,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.lastUsage = System.nanoTime();
+        this.lastUsage = System.currentTimeMillis();
     }
 
     public Long getId() {
@@ -90,7 +92,7 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
 
     @Override
     public void updateUsage() {
-        this.lastUsage = System.nanoTime();
+        this.lastUsage = System.currentTimeMillis();
     }
 
     // Used for testing.
@@ -98,7 +100,8 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
     public String toString() {
         return "Type: " + (type == 0 ? "ORIGIN" : "DESTINATION")
                 + " ; Address: " + address
-                + " ; LatLong: (" + latitude + ", " + longitude + ")";
+                + " ; LatLong: (" + latitude + ", " + longitude + ")"
+                + " ; LastUsage: " + new Date(lastUsage).toString();
     }
 
     @Override

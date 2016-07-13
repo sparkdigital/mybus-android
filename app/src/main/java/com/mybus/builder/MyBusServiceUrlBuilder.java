@@ -4,6 +4,9 @@ import android.net.Uri;
 
 import com.mybus.model.road.RoadSearch;
 
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+
 /**
  * MyBus Service Public API url builder.
  *
@@ -78,6 +81,35 @@ public final class MyBusServiceUrlBuilder {
                 .appendQueryParameter("lng1", destinationLongitude.toString())
                 .appendQueryParameter("tk", TOKEN);
         return builder.build().toString();
+    }
+
+    /**
+     * Creates the API url for recharge card on location
+     *
+     * @return
+     */
+    public static String buildRechargeCardUrl() {
+        Uri.Builder builder = buildBaseUri()
+                .appendPath("RechargeCardPointApi.php");
+        return builder.build().toString();
+    }
+
+    /**
+     * Creates the Body for the POST on ChargingPoints
+     *
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    public static RequestBody buildRechargeCarForm(Double latitude, Double longitude) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("lat", latitude.toString())
+                .add("lng", longitude.toString())
+                .add("ra", "1")
+                .add("tk", TOKEN)
+                .build();
+        return formBody;
+
     }
 
     /**

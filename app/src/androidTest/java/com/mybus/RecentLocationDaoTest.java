@@ -8,6 +8,7 @@ import com.mybus.dao.RecentLocationDao;
 import com.mybus.model.RecentLocation;
 import com.mybus.model.SearchType;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,8 +49,8 @@ public class RecentLocationDaoTest extends InstrumentationTestCase {
         Long id = recLocation.getId();
         RecentLocationDao.getInstance(mContext).updateUsage(id);
         RecentLocation recUpdated = RecentLocationDao.getInstance(mContext).getById(id);
-        Log.i("TestUpdateUsageCount", "UsageCount: " + recUpdated.getUsageCount());
-        assertTrue(recUpdated.getUsageCount() > 0);
+        Log.i("TestUpdateUsageCount", "LastUsage: " + new Date(recUpdated.getUsageTime()).toString());
+        assertTrue(recUpdated.getUsageTime() > 0);
     }
 
     public void test4ListHistory() {
