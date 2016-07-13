@@ -28,6 +28,8 @@
 
         <activity android:name=".activity.DisplayFavoritesActivity" />
 
+        <activity android:name=".activity.DisplayBusLinesActivity" />
+
         <activity android:name=".activity.SearchActivity"
             android:theme="@style/Theme.Transparent" />
 

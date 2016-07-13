@@ -56,6 +56,8 @@
     <string name="user_location_dialog_message">Como desea usar su ubicación actual?</string>
     <string name="use_favorite_dialog_title">Usar favorito</string>
     <string name="use_favorite_dialog_message">Como desea usar el favorito?</string>
+    <string name="displayBusLinesToolbarTittle">Recorridos</string>
+    <string name="toast_bus_lines_searching">Obteniendo las lineas de colectivo...</string>
     <string name="about">Acerca de</string>
     <string name="about_text">MyBus</string>
     <string name="version_number">1.0</string>
