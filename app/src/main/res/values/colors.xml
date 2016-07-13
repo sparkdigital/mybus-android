@@ -8,5 +8,7 @@
     <color name="mainSearchBoxColor">#006ad1</color>
     <color name="actionButtonBgColor">#FFFFFF</color>
     <color name="actionButtonPressedColor">#bbbbbb</color>
+    <color name="background_blue">#0089D1</color>
+    <color name="white_text">#FFFFFFFF</color>
 
 </resources>

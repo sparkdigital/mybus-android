@@ -715,11 +715,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case DISPLAY_FAVORITES_RESULT:
                         removeFavoritesMarkers();
-                        MyBusMarker favMarker = data.getParcelableExtra(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
-                        favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
-                        favMarker.getMapMarker().showInfoWindow();
-                        mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
-                        zoomTo(favMarker.getMapMarker().getPosition());
+                        ArrayList<MyBusMarker> favoriteMarkers = data.getExtras().getParcelableArrayList(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
+                        for(MyBusMarker favMarker: favoriteMarkers){
+                            favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
+                            favMarker.getMapMarker().showInfoWindow();
+                            mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
+                            //zoomTo(favMarker.getMapMarker().getPosition());
+                        }
                         break;
                     default:
                         break;
