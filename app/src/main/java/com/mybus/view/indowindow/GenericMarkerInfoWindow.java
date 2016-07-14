@@ -1,4 +1,4 @@
-package com.mybus.view;
+package com.mybus.view.indowindow;
 
 import android.content.Context;
 import android.util.AttributeSet;

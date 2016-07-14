@@ -116,6 +116,23 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         }
 
         initHistoryCardView();
+
+        mStreetSuggestionFilter = new StreetSuggestionFilter(SearchActivity.this, new OnFindResultsListener() {
+
+            @Override
+            public void onResults(List<StreetSuggestion> results) {
+
+                //this will swap the data and
+                //render the collapse/expand animations as necessary
+                if (results != null) {
+                    mSearchView.swapSuggestions(results);
+                }
+
+                //let the users know that the background
+                //process has completed
+                mSearchView.hideProgress();
+            }
+        });
     }
 
     private void initHistoryCardView() {
@@ -137,32 +154,23 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     }
 
     private void initSearchView() {
-        mStreetSuggestionFilter = new StreetSuggestionFilter(SearchActivity.this, new OnFindResultsListener() {
-
-            @Override
-            public void onResults(List<StreetSuggestion> results) {
-
-                //this will swap the data and
-                //render the collapse/expand animations as necessary
-                if (results != null) {
-                    mSearchView.swapSuggestions(results);
-                }
-
-                //let the users know that the background
-                //process has completed
-                mSearchView.hideProgress();
-            }
-        });
 
         mSearchView.setOnBindSuggestionCallback(new SearchSuggestionsAdapter.OnBindSuggestionCallback() {
             @Override
             public void onBindSuggestion(View suggestionView, ImageView leftIcon, TextView textView, SearchSuggestion item, int itemPosition) {
                 StreetSuggestion suggestion = (StreetSuggestion) item;
-                if (suggestion.isFavorite()) {
-                    leftIcon.setImageResource(android.R.drawable.ic_menu_myplaces);
-                } else {
-                    leftIcon.setImageDrawable(null);
+                switch (suggestion.getType()) {
+                    case StreetSuggestion.TYPE_FAVORITE:
+                        leftIcon.setImageResource(android.R.drawable.ic_menu_myplaces);
+                        break;
+                    case StreetSuggestion.TYPE_TOURISTIC_PLACE:
+                        leftIcon.setImageResource(android.R.drawable.ic_dialog_map);
+                        break;
+                    default:
+                        leftIcon.setImageDrawable(null);
+                        break;
                 }
+                textView.setText(item.getBody());
             }
         });
 
@@ -193,11 +201,18 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 Log.d(TAG, "onSuggestionClicked()");
                 StreetSuggestion suggestion = (StreetSuggestion) searchSuggestion;
-                if (suggestion.isFavorite()) {
-                    FavoriteLocation fav = FavoriteLocationDao.getInstance(SearchActivity.this).getById(suggestion.getFavID());
-                    setActivityResult(fav.getAddress(), fav.getLatLng(), true, fav.getName());
-                } else {
-                    mSearchView.setSearchTextFocused(searchSuggestion.getBody());
+                switch (suggestion.getType()) {
+                    case StreetSuggestion.TYPE_FAVORITE:
+                        FavoriteLocation fav = FavoriteLocationDao.getInstance(SearchActivity.this).getById(suggestion.getFavID());
+                        setActivityResult(fav.getAddress(), fav.getLatLng(), true, fav.getName());
+                        break;
+                    case StreetSuggestion.TYPE_TOURISTIC_PLACE:
+                        //TODO: Go to the activity without a favorite, but a touristic place instead
+                        setActivityResult(suggestion.getTouristicPlace().getAddress(), suggestion.getTouristicPlace().getLatLng(), false, null);
+                        break;
+                    default:
+                        mSearchView.setSearchTextFocused(searchSuggestion.getBody());
+                        break;
                 }
             }
 

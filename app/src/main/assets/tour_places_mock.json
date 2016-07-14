@@ -1,0 +1,20 @@
+{
+  "Places": [
+    {
+      "name": "Casino",
+      "description": "Casino",
+      "address": "Av Patricio Peralta Ramos 2656",
+      "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Casino_Central_de_Mar_del_Plata.jpg/250px-Casino_Central_de_Mar_del_Plata.jpg",
+      "lat": -38.0041782,
+      "lng": -57.5420009
+    },
+    {
+      "name": "Rotonda Del Golf",
+      "description": "Rotonda Del Golf",
+      "address": "Av Patricio Peralta Ramos 5921",
+      "photoUrl": "http://www.radiobrisas.com/wp-content/uploads/2014/03/rotonda-del-golf.jpg",
+      "lat": -38.0308249,
+      "lng": -57.5349531
+    }
+  ]
+}
