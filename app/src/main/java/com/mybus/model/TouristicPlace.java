@@ -107,7 +107,7 @@ public class TouristicPlace implements Parcelable {
             place.setDescription(jsonObject.optString("description"));
             place.setAddress(jsonObject.optString("address"));
             place.setLatitude(jsonObject.getDouble("lat"));
-            place.setLongitude(jsonObject.getDouble("lon"));
+            place.setLongitude(jsonObject.getDouble("lng"));
             place.setPhotoUrl(jsonObject.getString("photoUrl"));
         } catch (JSONException e) {
             place = null;
