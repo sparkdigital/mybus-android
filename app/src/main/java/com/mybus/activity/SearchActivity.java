@@ -208,7 +208,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                         break;
                     case StreetSuggestion.TYPE_TOURISTIC_PLACE:
                         //TODO: Go to the activity without a favorite, but a touristic place instead
-                        setActivityResult(suggestion.getTouristicPlace().getDescription(), suggestion.getTouristicPlace().getLatLng(), false, null);
+                        setActivityResult(suggestion.getTouristicPlace().getAddress(), suggestion.getTouristicPlace().getLatLng(), false, null);
                         break;
                     default:
                         mSearchView.setSearchTextFocused(searchSuggestion.getBody());

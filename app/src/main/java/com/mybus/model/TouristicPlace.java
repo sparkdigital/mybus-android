@@ -21,6 +21,7 @@ public class TouristicPlace implements Parcelable {
     private static final String TAG = TouristicPlace.class.getSimpleName();
     private String mName;
     private String mDescription;
+    private String mAddress;
     private String mPhotoUrl;
     private Double mLatitude;
     private Double mLongitude;
@@ -28,6 +29,7 @@ public class TouristicPlace implements Parcelable {
     protected TouristicPlace(Parcel in) {
         mName = in.readString();
         mDescription = in.readString();
+        mAddress = in.readString();
         mPhotoUrl = in.readString();
         mLatitude = in.readByte() == 0x00 ? null : in.readDouble();
         mLongitude = in.readByte() == 0x00 ? null : in.readDouble();
@@ -42,6 +44,7 @@ public class TouristicPlace implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mName);
         dest.writeString(mDescription);
+        dest.writeString(mAddress);
         dest.writeString(mPhotoUrl);
         if (mLatitude == null) {
             dest.writeByte((byte) (0x00));
@@ -102,6 +105,7 @@ public class TouristicPlace implements Parcelable {
         try {
             place.setName(jsonObject.getString("name"));
             place.setDescription(jsonObject.optString("description"));
+            place.setAddress(jsonObject.optString("address"));
             place.setLatitude(jsonObject.getDouble("lat"));
             place.setLongitude(jsonObject.getDouble("lon"));
             place.setPhotoUrl(jsonObject.getString("photoUrl"));
@@ -154,5 +158,13 @@ public class TouristicPlace implements Parcelable {
 
     public void setPhotoUrl(String mPhotoUrl) {
         this.mPhotoUrl = mPhotoUrl;
+    }
+
+    public String getAddress() {
+        return mAddress;
+    }
+
+    public void setAddress(String mAddress) {
+        this.mAddress = mAddress;
     }
 }
