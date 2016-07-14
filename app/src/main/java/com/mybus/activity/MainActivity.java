@@ -190,6 +190,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
+     *
+     * @param markerList
+     */
+    private void zoomOutFavorites(List<MyBusMarker> markerList) {
+        List<Marker> markers = new ArrayList<Marker>();
+        for (MyBusMarker myBusMarker : markerList) {
+            markers.add(myBusMarker.getMapMarker());
+        }
+        zoomOut(markers);
+    }
+
+    /**
      * Makes a zoom out in the map to keep all the markers received in view.
      */
     private void zoomOut(List<Marker> markerList, int padding) {
@@ -718,10 +730,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         ArrayList<MyBusMarker> favoriteMarkers = data.getExtras().getParcelableArrayList(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
                         for(MyBusMarker favMarker: favoriteMarkers){
                             favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
-                            favMarker.getMapMarker().showInfoWindow();
+                            //favMarker.getMapMarker().showInfoWindow();
                             mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
-                            //zoomTo(favMarker.getMapMarker().getPosition());
                         }
+                        zoomOutFavorites(favoriteMarkers);
                         break;
                     default:
                         break;
