@@ -214,7 +214,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
      * @param favoriteLocations
      */
     private void returnFavoriteMarker(List<FavoriteLocation> favoriteLocations) {
-        if (favoriteLocations != null && favoriteLocations.size() > 0) {
+        if (favoriteLocations != null && !favoriteLocations.isEmpty()) {
             ArrayList<MyBusMarker> favoriteMarkers = new ArrayList<>();
             for (FavoriteLocation favoriteLocation : favoriteLocations) {
                 MyBusMarker myBusMarker = new MyBusMarker(new MarkerOptions()
