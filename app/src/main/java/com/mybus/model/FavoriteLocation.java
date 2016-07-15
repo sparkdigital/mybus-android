@@ -2,8 +2,6 @@ package com.mybus.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.Serializable;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -13,7 +11,7 @@ import io.realm.annotations.Required;
  * <p/>
  * RealmObject to persist favorite locations
  */
-public class FavoriteLocation extends RealmObject implements UsageTrackable, Comparable<FavoriteLocation>, Serializable {
+public class FavoriteLocation extends RealmObject implements UsageTrackable, Comparable<FavoriteLocation> {
     public static final int HASH_MULTIPLIER = 31;
     @PrimaryKey
     private Long id = System.nanoTime();

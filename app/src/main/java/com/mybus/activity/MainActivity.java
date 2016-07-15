@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (MyBusMarker myBusMarker : markerList) {
             markers.add(myBusMarker.getMapMarker());
         }
-        zoomOut(markers);
+        zoomOut(markers, getResources().getInteger(R.integer.map_padding_favorites));
     }
 
     /**
@@ -520,6 +520,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
+        //when performing a search remove all the favorites in the map
+        removeFavoritesMarkers();
     }
 
     /**
@@ -751,7 +753,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (MyBusMarker myBusMarker : mFavoritesMarkers.values()) {
             Marker marker = myBusMarker.getMapMarker();
             if (marker != null) {
-                mFavoritesMarkers.remove(marker.getPosition());
                 marker.remove();
             }
         }
