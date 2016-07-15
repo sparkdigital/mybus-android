@@ -522,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
         }
         //when performing a search remove all the favorites in the map
-        removeFavoritesMarkers();
+        removeAllFavoritesMarkers();
     }
 
     /**
@@ -734,7 +734,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mCompoundSearchBox.setVisible(true, true);
                         break;
                     case DISPLAY_FAVORITES_RESULT:
-                        removeFavoritesMarkers();
+                        onDrawerToggleClick();
                         ArrayList<MyBusMarker> favoriteMarkers = data.getExtras().getParcelableArrayList(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
                         for(MyBusMarker favMarker: favoriteMarkers){
                             favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
@@ -763,6 +763,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void removeFavoriteMarker(MyBusMarker favoriteMarker) {
         Marker marker = favoriteMarker.getMapMarker();
         if (marker != null) {
+            mFavoritesMarkers.remove(marker.getPosition());
             marker.remove();
         }
     }
@@ -770,9 +771,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Remove all favorite markers present on the map and reset the HashMap
      */
-    private void removeFavoritesMarkers() {
+    private void removeAllFavoritesMarkers() {
         for (MyBusMarker myBusMarker : mFavoritesMarkers.values()) {
-            removeFavoriteMarker(myBusMarker);
+            Marker marker = myBusMarker.getMapMarker();
+            if (marker != null) {
+                marker.remove();
+            }
         }
         mFavoritesMarkers = new HashMap<>();
     }
@@ -823,6 +827,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         clearBusRouteOnMap();
         mCompoundSearchBox.setVisible(false);
         mToolbar.setVisibility(View.VISIBLE);
+        removeAllFavoritesMarkers();
     }
 
     @Override
@@ -1032,6 +1037,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (myBusMarker.isFavorite()) {
                             addOrUpdateMarker(mStartLocationMarker, newLatLng, null);
                             updateMyBusMarkerInfo(mStartLocationMarker, myBusMarker.getFavoriteName(), null, myBusMarker.getMapMarker().getSnippet(), true);
+                            mCompoundSearchBox.setFromAddress(myBusMarker.getMapMarker().getSnippet());
+                            mToolbar.setVisibility(View.GONE);
+                            mCompoundSearchBox.setVisible(true);
                             removeFavoriteMarker(myBusMarker);
                         } else {
                             addOrUpdateMarker(mStartLocationMarker, newLatLng, mStartLocationGeocodingCompleted);
@@ -1046,6 +1054,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (myBusMarker.isFavorite()) {
                             addOrUpdateMarker(mEndLocationMarker, newLatLng, null);
                             updateMyBusMarkerInfo(mEndLocationMarker, myBusMarker.getFavoriteName(), null, myBusMarker.getMapMarker().getSnippet(), true);
+                            mCompoundSearchBox.setToAddress(myBusMarker.getMapMarker().getSnippet());
+                            mToolbar.setVisibility(View.GONE);
+                            mCompoundSearchBox.setVisible(true);
                             removeFavoriteMarker(myBusMarker);
                         } else {
                             addOrUpdateMarker(mEndLocationMarker, newLatLng, mEndLocationGeocodingCompleted);
