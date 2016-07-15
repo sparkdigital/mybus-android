@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.model.DirectionsResult;
+import com.mybus.asynctask.BusLinesRequestCallback;
+import com.mybus.asynctask.BusLinesRequestTask;
 import com.mybus.asynctask.ChargePointSearchTask;
 import com.mybus.asynctask.ChargePointSearchCallback;
 import com.mybus.asynctask.FaresRequestCallback;
@@ -12,6 +14,8 @@ import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RoadSearchTask;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.asynctask.RouteSearchTask;
+import com.mybus.asynctask.TouristicPlacesRequestCallback;
+import com.mybus.asynctask.TouristicPlacesRequestTask;
 import com.mybus.location.OnAddressGeocodingCompleteCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.BusRouteResult;
@@ -90,9 +94,27 @@ public final class ServiceFacade {
     }
 
     /**
+     * @param context
+     * @param callback
+     */
+    public void getTouristicPlaces(Context context, TouristicPlacesRequestCallback callback) {
+        TouristicPlacesRequestTask touristicPlacesRequestTask = new TouristicPlacesRequestTask(context, callback);
+        touristicPlacesRequestTask.execute();
+    }
+
+    /**
+     * @param callback
+     */
+    public void getBusLines(BusLinesRequestCallback callback) {
+        BusLinesRequestTask busLinesRequestTask = new BusLinesRequestTask(callback);
+        busLinesRequestTask.execute();
+    }
+
+    /**
      * @param location
      * @param callback
      */
+
     public void getNearChargingPoints(LatLng location, ChargePointSearchCallback callback) {
         ChargePointSearchTask chargePointSearchTask = new ChargePointSearchTask(location, callback);
         chargePointSearchTask.execute();

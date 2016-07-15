@@ -5,8 +5,8 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.mybus.activity.MainActivity;
-import com.mybus.view.ChargePointMarkerInfoWindow;
-import com.mybus.view.GenericMarkerInfoWindow;
+import com.mybus.view.indowindow.ChargePointMarkerInfoWindow;
+import com.mybus.view.indowindow.GenericMarkerInfoWindow;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
