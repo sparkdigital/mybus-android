@@ -212,7 +212,7 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.favorite_remove_icon))
                 .title(favoriteLocation.getName())
                 .snippet(favoriteLocation.getAddress())
-                .position(favoriteLocation.getLatLng()), false, null, MyBusMarker.FAVORITE);
+                .position(favoriteLocation.getLatLng()), true, favoriteLocation.getName(), MyBusMarker.FAVORITE);
         intent.putExtra(RESULT_MYBUSMARKER, myBusMarker);
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
