@@ -32,6 +32,7 @@ Severity: EASY
         <exclude name="StdCyclomaticComplexity" />
         <exclude name="ModifiedCyclomaticComplexity" />
         <exclude name="TooManyMethods" />
+        <exclude name="ExcessiveClassLength" />
     </rule>
 
     <rule ref="rulesets/java/comments.xml">

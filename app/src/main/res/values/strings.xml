@@ -68,4 +68,6 @@
     <string name="charge_point_address">"Direccion: %1$s"</string>
     <string name="charge_point_distance">"Distancia: %1$s metros"</string>
     <string name="charge_point_open_time">"Horario: %1$s"</string>
+    <string name="show_all_favorites_on_map">Ver todos en el mapa</string>
+
 </resources>

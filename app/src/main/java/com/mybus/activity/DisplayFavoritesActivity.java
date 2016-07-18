@@ -21,6 +21,7 @@ import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
 import com.mybus.view.FavoriteNameAlertDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -48,6 +49,11 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     @OnClick(R.id.add_favorite_action_button)
     void onAddFavoriteButtonClicked(View view) {
         DisplayFavoritesActivity.this.startSearchActivityForFavorite(ADD_SEARCH_RESULT_ID, null);
+    }
+
+    @OnClick(R.id.show_all_favorites_layout)
+    void onShowAllFavoritesLayout(View view) {
+        returnFavoriteMarker(mFavorites);
     }
 
 
@@ -173,7 +179,9 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
 
     @Override
     public void onFavoriteClicked(int position) {
-        returnFavoriteMarker(mFavorites.get(position));
+        ArrayList<FavoriteLocation> favoriteLocations = new ArrayList<>();
+        favoriteLocations.add(mFavorites.get(position));
+        returnFavoriteMarker(favoriteLocations);
     }
 
     @Override
@@ -203,17 +211,23 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
 
     /**
      * Return to map a favorite MyBusMarker
-     * @param favoriteLocation
+     * @param favoriteLocations
      */
-    private void returnFavoriteMarker(FavoriteLocation favoriteLocation) {
+    private void returnFavoriteMarker(List<FavoriteLocation> favoriteLocations) {
+        ArrayList<MyBusMarker> favoriteMarkers = new ArrayList<>();
+        if (favoriteLocations != null && !favoriteLocations.isEmpty()) {
+            for (FavoriteLocation favoriteLocation : favoriteLocations) {
+                MyBusMarker myBusMarker = new MyBusMarker(new MarkerOptions()
+                        .draggable(false)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.favorite_remove_icon))
+                        .title(favoriteLocation.getName())
+                        .snippet(favoriteLocation.getAddress())
+                        .position(favoriteLocation.getLatLng()), true, favoriteLocation.getName(), MyBusMarker.FAVORITE);
+                favoriteMarkers.add(myBusMarker);
+            }
+        }
         Intent intent = new Intent();
-        MyBusMarker myBusMarker = new MyBusMarker(new MarkerOptions()
-                .draggable(false)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.favorite_remove_icon))
-                .title(favoriteLocation.getName())
-                .snippet(favoriteLocation.getAddress())
-                .position(favoriteLocation.getLatLng()), true, favoriteLocation.getName(), MyBusMarker.FAVORITE);
-        intent.putExtra(RESULT_MYBUSMARKER, myBusMarker);
+        intent.putExtra(RESULT_MYBUSMARKER, favoriteMarkers);
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();

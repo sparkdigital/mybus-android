@@ -8,5 +8,7 @@
     <color name="mainSearchBoxColor">#006ad1</color>
     <color name="actionButtonBgColor">#FFFFFF</color>
     <color name="actionButtonPressedColor">#bbbbbb</color>
+    <color name="showAllFavoritesBackground">#0089D1</color>
+    <color name="showAllFavoritesTextColor">#FFFFFFFF</color>
 
 </resources>
