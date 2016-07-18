@@ -214,8 +214,8 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
      * @param favoriteLocations
      */
     private void returnFavoriteMarker(List<FavoriteLocation> favoriteLocations) {
+        ArrayList<MyBusMarker> favoriteMarkers = new ArrayList<>();
         if (favoriteLocations != null && !favoriteLocations.isEmpty()) {
-            ArrayList<MyBusMarker> favoriteMarkers = new ArrayList<>();
             for (FavoriteLocation favoriteLocation : favoriteLocations) {
                 MyBusMarker myBusMarker = new MyBusMarker(new MarkerOptions()
                         .draggable(false)
@@ -225,10 +225,10 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
                         .position(favoriteLocation.getLatLng()), true, favoriteLocation.getName(), MyBusMarker.FAVORITE);
                 favoriteMarkers.add(myBusMarker);
             }
-            Intent intent = new Intent();
-            intent.putExtra(RESULT_MYBUSMARKER, favoriteMarkers);
-            setResult(RESULT_OK, intent);
         }
+        Intent intent = new Intent();
+        intent.putExtra(RESULT_MYBUSMARKER, favoriteMarkers);
+        setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();
     }

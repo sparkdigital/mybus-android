@@ -734,14 +734,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mCompoundSearchBox.setVisible(true, true);
                         break;
                     case DISPLAY_FAVORITES_RESULT:
-                        onDrawerToggleClick();
                         ArrayList<MyBusMarker> favoriteMarkers = data.getExtras().getParcelableArrayList(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
-                        for(MyBusMarker favMarker: favoriteMarkers){
-                            favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
-                            //favMarker.getMapMarker().showInfoWindow();
-                            mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
+                        if (favoriteMarkers != null && !favoriteMarkers.isEmpty()) {
+                            onDrawerToggleClick();
+                            for (MyBusMarker favMarker : favoriteMarkers) {
+                                favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
+                                //favMarker.getMapMarker().showInfoWindow();
+                                mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
+                            }
+                            zoomOutFavorites(favoriteMarkers);
                         }
-                        zoomOutFavorites(favoriteMarkers);
                         break;
                     case DISPLAY_ROADS_RESULT:
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
