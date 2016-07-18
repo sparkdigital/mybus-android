@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/show_all_favorites_layout"
-                android:background="@color/layoutBackground"
+                android:background="@color/showAllFavoritesBackground"
                 android:orientation="horizontal">
 
                 <TextView
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textSize="20sp"
-                    android:textColor="@color/layoutText"
+                    android:textColor="@color/showAllFavoritesTextColor"
                     android:layout_margin="10dp"
                     android:text="@string/show_all_favorites_on_map"/>
             </LinearLayout>
