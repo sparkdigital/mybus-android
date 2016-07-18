@@ -734,16 +734,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mCompoundSearchBox.setVisible(true, true);
                         break;
                     case DISPLAY_FAVORITES_RESULT:
-                        ArrayList<MyBusMarker> favoriteMarkers = data.getExtras().getParcelableArrayList(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
-                        if (favoriteMarkers != null && !favoriteMarkers.isEmpty()) {
-                            onDrawerToggleClick();
-                            for (MyBusMarker favMarker : favoriteMarkers) {
-                                favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
-                                //favMarker.getMapMarker().showInfoWindow();
-                                mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
-                            }
-                            zoomOutFavorites(favoriteMarkers);
-                        }
+                        disPlayFavoritesResults(data);
                         break;
                     case DISPLAY_ROADS_RESULT:
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
@@ -757,6 +748,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void disPlayFavoritesResults(Intent data) {
+        ArrayList<MyBusMarker> favoriteMarkers = data.getExtras().getParcelableArrayList(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
+        if (favoriteMarkers != null && !favoriteMarkers.isEmpty()) {
+            onDrawerToggleClick();
+            for (MyBusMarker favMarker : favoriteMarkers) {
+                favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
+                //favMarker.getMapMarker().showInfoWindow();
+                mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
+            }
+            zoomOutFavorites(favoriteMarkers);
+        }
     }
 
     /**
