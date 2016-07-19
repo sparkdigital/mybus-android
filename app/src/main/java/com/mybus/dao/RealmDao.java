@@ -76,14 +76,14 @@ public class RealmDao<T extends RealmObject> {
      *
      * @param id
      */
-    public void updateItemUsageCount(Long id) {
+    public void updateUsage(Long id) {
         if (!UsageTrackable.class.isAssignableFrom(mType)) {
             return;
         }
         UsageTrackable item = (UsageTrackable) mRealm.where(mType).equalTo("id", id).findFirst();
         if (item != null) {
             mRealm.beginTransaction();
-            item.incrementUsageCount();
+            item.updateUsage();
             mRealm.commitTransaction();
         }
     }

@@ -1,27 +1,24 @@
 package com.mybus.marker;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.mybus.R;
 import com.mybus.activity.MainActivity;
+import com.mybus.view.indowindow.ChargePointMarkerInfoWindow;
+import com.mybus.view.indowindow.GenericMarkerInfoWindow;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  * Custom infoWindows for markers
  */
 public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
+
     private final MainActivity mActivity;
-    private final View mContentsView;
+
 
     public MyBusInfoWindowsAdapter(MainActivity activity) {
         mActivity = activity;
-        LayoutInflater inflater = LayoutInflater.from(mActivity);
-        mContentsView = inflater.inflate(R.layout.marker_info_window, null);
     }
 
     @Override
@@ -31,27 +28,31 @@ public class MyBusInfoWindowsAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(Marker marker) {
-        TextView tvTitle = ((TextView) mContentsView.findViewById(R.id.marker_title));
-        tvTitle.setText(marker.getTitle());
-        TextView tvAddress = ((TextView) mContentsView.findViewById(R.id.marker_address));
-        tvAddress.setText(marker.getSnippet());
-        ImageView ivFavIcon = ((ImageView) mContentsView.findViewById(R.id.marker_fav_icon));
-        //Checks if the marker is a StartLocation, EndLocation or other
-        MyBusMarker myBusMarker = mActivity.isMarkerPresent(marker);
-        if (myBusMarker == null) {
-            //User location or Bus stop markers
-            ivFavIcon.setVisibility(View.GONE);
-        } else {
-            ivFavIcon.setVisibility(View.VISIBLE);
-            if (myBusMarker.isFavorite()) {
-                //Change title with favorite name
-                tvTitle.setText(myBusMarker.getFavoriteName());
-                //Put remove favorite icon
-                ivFavIcon.setImageResource(R.drawable.favorite_remove_icon);
-            } else {
-                ivFavIcon.setImageResource(R.drawable.favorite_add_icon);
+        View resultView;
+        //Detect which type of marker is:
+        MyBusMarker myBusMarker = mActivity.isMyBusMarker(marker);
+        if (myBusMarker != null) {
+            switch (myBusMarker.getType()) {
+                case MyBusMarker.ORIGIN:
+                case MyBusMarker.DESTINATION:
+                    resultView = new GenericMarkerInfoWindow(mActivity)
+                            .setMyBusMarker(myBusMarker);
+                    break;
+                case MyBusMarker.CHARGING_POINT:
+                    resultView = new ChargePointMarkerInfoWindow(mActivity)
+                            .setChargePoint(mActivity.getChargePointPresent(myBusMarker));
+                    break;
+                default:
+                    resultView = new GenericMarkerInfoWindow(mActivity)
+                            .setMapMarker(marker)
+                            .setFavIconVisible(false);
+                    break;
             }
+        } else {
+            resultView = new GenericMarkerInfoWindow(mActivity)
+                    .setMapMarker(marker)
+                    .setFavIconVisible(false);
         }
-        return mContentsView;
+        return resultView;
     }
 }

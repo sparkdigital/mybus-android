@@ -43,7 +43,7 @@ public class FavoriteLocationDaoTest extends InstrumentationTestCase {
         FavoriteLocation favLocation = FavoriteLocationDao.getInstance(mContext).getByField(NAME_FIELD, NAME_VALUE);
         assertNotNull(favLocation);
         Long id = favLocation.getId();
-        FavoriteLocationDao.getInstance(mContext).updateItemUsageCount(id);
+        FavoriteLocationDao.getInstance(mContext).updateUsage(id);
         FavoriteLocation favUpdated = FavoriteLocationDao.getInstance(mContext).getById(id);
         Log.i("TestUpdateUsageCount", "UsageCount: " + favUpdated.getUsageCount());
         assertTrue(favUpdated.getUsageCount() > 0);

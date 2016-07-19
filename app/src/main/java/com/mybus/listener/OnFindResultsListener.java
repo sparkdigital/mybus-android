@@ -8,3 +8,4 @@ public interface OnFindResultsListener {
 
     void onResults(List<StreetSuggestion> results);
 }
+

@@ -9,15 +9,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
 import com.mybus.adapter.FavoriteViewAdapter;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.listener.FavoriteListItemListener;
+import com.mybus.marker.MyBusMarker;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
 import com.mybus.view.FavoriteNameAlertDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -29,6 +33,7 @@ import butterknife.OnClick;
  */
 public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener {
 
+    public static final String RESULT_MYBUSMARKER = "FAVORITE_MARKER";
     @Bind(R.id.favorites_recycler_view)
     RecyclerView mFavoritesRecyclerView;
     @Bind(R.id.noFavorites)
@@ -44,6 +49,11 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     @OnClick(R.id.add_favorite_action_button)
     void onAddFavoriteButtonClicked(View view) {
         DisplayFavoritesActivity.this.startSearchActivityForFavorite(ADD_SEARCH_RESULT_ID, null);
+    }
+
+    @OnClick(R.id.show_all_favorites_layout)
+    void onShowAllFavoritesLayout(View view) {
+        returnFavoriteMarker(mFavorites);
     }
 
 
@@ -168,6 +178,13 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
     }
 
     @Override
+    public void onFavoriteClicked(int position) {
+        ArrayList<FavoriteLocation> favoriteLocations = new ArrayList<>();
+        favoriteLocations.add(mFavorites.get(position));
+        returnFavoriteMarker(favoriteLocations);
+    }
+
+    @Override
     public void onNewFavoriteName(FavoriteLocation favoriteLocation) {
         saveOrUpdateFavorite(favoriteLocation, ADD_SEARCH_RESULT_ID);
     }
@@ -190,5 +207,29 @@ public class DisplayFavoritesActivity extends BaseDisplayActivity implements Fav
             mNoFavoritesTextView.setVisibility(View.GONE);
         }
         mFavoriteViewAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Return to map a favorite MyBusMarker
+     * @param favoriteLocations
+     */
+    private void returnFavoriteMarker(List<FavoriteLocation> favoriteLocations) {
+        ArrayList<MyBusMarker> favoriteMarkers = new ArrayList<>();
+        if (favoriteLocations != null && !favoriteLocations.isEmpty()) {
+            for (FavoriteLocation favoriteLocation : favoriteLocations) {
+                MyBusMarker myBusMarker = new MyBusMarker(new MarkerOptions()
+                        .draggable(false)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.favorite_remove_icon))
+                        .title(favoriteLocation.getName())
+                        .snippet(favoriteLocation.getAddress())
+                        .position(favoriteLocation.getLatLng()), true, favoriteLocation.getName(), MyBusMarker.FAVORITE);
+                favoriteMarkers.add(myBusMarker);
+            }
+        }
+        Intent intent = new Intent();
+        intent.putExtra(RESULT_MYBUSMARKER, favoriteMarkers);
+        setResult(RESULT_OK, intent);
+        overridePendingTransition(0, 0);
+        finish();
     }
 }

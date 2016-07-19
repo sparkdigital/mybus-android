@@ -1,5 +1,6 @@
 package com.mybus.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import com.mybus.R;
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public abstract class BaseDisplayActivity extends AppCompatActivity {
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,4 +56,25 @@ public abstract class BaseDisplayActivity extends AppCompatActivity {
     public abstract int getToolbarId();
 
     protected abstract int getToolbarTittle();
+
+    /**
+     * Shows a progress dialog with specified text
+     *
+     * @param text
+     */
+    protected void showProgressDialog(String text) {
+        cancelProgressDialog();
+        mDialog = ProgressDialog.show(this, "", text, true, false);
+
+    }
+
+    /**
+     * Cancels the current progress dialog if any
+     */
+    protected void cancelProgressDialog() {
+        if (mDialog != null) {
+            mDialog.cancel();
+            mDialog = null;
+        }
+    }
 }
