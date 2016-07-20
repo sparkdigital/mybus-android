@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="splashText">#454545</color>
-    <color name="walkingLine">#00bfff</color>
+    <color name="walkingLine">#bbbbbb</color>
     <color name="mainSearchBoxColor">#006ad1</color>
     <color name="actionButtonBgColor">#FFFFFF</color>
     <color name="actionButtonPressedColor">#bbbbbb</color>
