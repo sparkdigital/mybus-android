@@ -1,5 +1,6 @@
 package com.mybus.model.road;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -32,8 +33,10 @@ public class RoadResult {
     private List<DirectionsResult> mWalkingList = new ArrayList<>();
     private String mIdBusLine1;
     private String mIdBusLine2;
+    private String mBusLine1Color;
+    private String mBusLine2Color;
 
-    private static final float POLYLINE_WIDTH = 15F;
+    private static final float POLYLINE_WIDTH = 7F;
 
     /**
      * @param jsonObject
@@ -174,7 +177,7 @@ public class RoadResult {
         List<PolylineOptions> list = new ArrayList<>();
 
         PolylineOptions rectOptions = new PolylineOptions();
-        rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.colorPrimary));
+        rectOptions.color(Color.parseColor("#" + mBusLine1Color));
         rectOptions.width(POLYLINE_WIDTH);
         rectOptions.geodesic(true);
         Route route = mRouteList.get(0);
@@ -185,7 +188,7 @@ public class RoadResult {
 
         if (mType == 1) {
             rectOptions = new PolylineOptions();
-            rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.colorAccent));
+            rectOptions.color(Color.parseColor("#" + mBusLine2Color));
             rectOptions.width(POLYLINE_WIDTH);
             rectOptions.geodesic(true);
             route = mRouteList.get(1);
@@ -241,5 +244,13 @@ public class RoadResult {
         if (walkingDirection != null) {
             mWalkingList.add(walkingDirection);
         }
+    }
+
+    public void setBusLine1Color(String busLine1Color) {
+        this.mBusLine1Color = busLine1Color;
+    }
+
+    public void setBusLine2Color(String busLine2Color) {
+        this.mBusLine2Color = busLine2Color;
     }
 }
