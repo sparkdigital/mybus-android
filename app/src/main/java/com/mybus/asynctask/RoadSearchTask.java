@@ -26,6 +26,8 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     private LatLng firstBusStop;
     private RoadSearchCallback roadSearchCallback;
     private RoadSearch roadSearch;
+    private String mBusLine1Color;
+    private String mBusLine2Color;
 
     /**
      * Private Default Constructor
@@ -64,6 +66,7 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
             roadSearch.setmStop2(String.valueOf(busRoute.getDestinationBusStopNumber()));
             firstBusStop = busRoute.getStartBusStopLatLng();
             endBusStop = busRoute.getEndBusStopLatLng();
+            mBusLine1Color = busRoute.getBusLineColor();
             if (type == 1) {
                 midStartStop = busRoute.getEndBusStopLatLng();
                 busRoute = route.getBusRoutes().get(1);
@@ -73,6 +76,7 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
                 roadSearch.setmDirection2(String.valueOf(busRoute.getBusLineDirection()));
                 roadSearch.setmStop1L2(String.valueOf(busRoute.getStartBusStopNumber()));
                 roadSearch.setmStop2L2(String.valueOf(busRoute.getDestinationBusStopNumber()));
+                mBusLine2Color = busRoute.getBusLineColor();
             }
         }
     }
@@ -81,11 +85,13 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     @Override
     protected RoadResult doInBackground(Void... params) {
         RoadResult result = new MyBusServiceImpl().searchRoads(mType, roadSearch);
+        result.setBusLine1Color(mBusLine1Color);
         if (startLocation != null && firstBusStop != null) {
             result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
         }
         if (midStartStop != null && midEndStop != null) {
             result.addWalkingDirection(ServiceFacade.getInstance().getDirection(midStartStop, midEndStop));
+            result.setBusLine2Color(mBusLine2Color);
         }
         if (endLocation != null && endBusStop != null) {
             result.addWalkingDirection(ServiceFacade.getInstance().getDirection(endLocation, endBusStop));
