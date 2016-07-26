@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.ChargePointSearchCallback;
+import com.mybus.asynctask.CompleteBusRouteCallback;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
@@ -45,6 +47,7 @@ import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.ChargePoint;
+import com.mybus.model.CompleteBusRoute;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
         CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener,
         FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
-        ChargePointSearchCallback {
+        ChargePointSearchCallback, CompleteBusRouteCallback {
 
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
@@ -738,8 +741,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case DISPLAY_ROADS_RESULT:
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
-                        //TODO: Use CompleteRoad API to show the complete road for the given bus line id
                         Toast.makeText(this, "Fue seleccionada la linea con el id: " + busLineId, Toast.LENGTH_LONG).show();
+                        ServiceFacade.getInstance().getCompleteBusRoute(busLineId, this);
                         break;
                     default:
                         break;
@@ -1077,5 +1080,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
         builder.create().show();
+    }
+
+    @Override
+    public void onCompleteRouteFound(CompleteBusRoute completeBusRoute) {
+        Log.i("Complete Route Found", completeBusRoute.toString());
     }
 }

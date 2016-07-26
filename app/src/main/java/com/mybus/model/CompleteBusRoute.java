@@ -17,14 +17,14 @@ import java.util.List;
 public class CompleteBusRoute {
 
     private static final String TAG = CompleteBusRoute.class.getSimpleName();
-    private int mType;
     private String mColor;
+    private RoutePoint mMidStopBus;
+
     private List<RoutePoint> mPointList;
 
     public static CompleteBusRoute parseCompleteBusRoute(JSONObject jsonObject) {
         CompleteBusRoute completeBusRoute = new CompleteBusRoute();
         try {
-            completeBusRoute.setType(jsonObject.getInt("Type"));
             completeBusRoute.setColor("#" + jsonObject.getString("Color"));
             List<RoutePoint> points = new ArrayList<>();
             JSONArray results = jsonObject.getJSONArray("Results");
@@ -43,14 +43,6 @@ public class CompleteBusRoute {
         return completeBusRoute;
     }
 
-    public int getType() {
-        return mType;
-    }
-
-    public void setType(int type) {
-        this.mType = type;
-    }
-
     public String getColor() {
         return mColor;
     }
@@ -65,5 +57,20 @@ public class CompleteBusRoute {
 
     public List<RoutePoint> getPointList(){
         return this.mPointList;
+    }
+
+    /**
+     * @return the stop bus where the bus change its direction
+     */
+    public RoutePoint getMidStopBus() {
+        return mMidStopBus;
+    }
+
+    /**
+     * Sets the stop bus where the bus change its direction
+     * @param midStopBus
+     */
+    public void setMidStopBus(RoutePoint midStopBus) {
+        this.mMidStopBus = midStopBus;
     }
 }

@@ -6,8 +6,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.model.DirectionsResult;
 import com.mybus.asynctask.BusLinesRequestCallback;
 import com.mybus.asynctask.BusLinesRequestTask;
-import com.mybus.asynctask.ChargePointSearchTask;
 import com.mybus.asynctask.ChargePointSearchCallback;
+import com.mybus.asynctask.ChargePointSearchTask;
+import com.mybus.asynctask.CompleteBusRouteCallback;
+import com.mybus.asynctask.CompleteBusRouteTask;
 import com.mybus.asynctask.FaresRequestCallback;
 import com.mybus.asynctask.FaresRequestTask;
 import com.mybus.asynctask.RoadSearchCallback;
@@ -118,5 +120,10 @@ public final class ServiceFacade {
     public void getNearChargingPoints(LatLng location, ChargePointSearchCallback callback) {
         ChargePointSearchTask chargePointSearchTask = new ChargePointSearchTask(location, callback);
         chargePointSearchTask.execute();
+    }
+
+    public void getCompleteBusRoute(int budLineId, CompleteBusRouteCallback callback) {
+        CompleteBusRouteTask completeBusRouteTask = new CompleteBusRouteTask(budLineId, callback);
+        completeBusRouteTask.execute();
     }
 }
