@@ -1,11 +1,14 @@
 package com.mybus.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class BusRoute {
+public class BusRoute implements Parcelable {
     public static final int HASH_MULTIPLIER = 31;
     private Integer mIdBusLine;
     private String mBusLineName;
@@ -52,6 +55,50 @@ public class BusRoute {
         this.mDestinationBusStopStreetNumber = mDestinationBusStopStreetNumber;
         this.mDestinationBusStopDistanceToDestination = mDestinationBusStopDistanceToDestination;
     }
+
+    protected BusRoute(Parcel in) {
+        mBusLineName = in.readString();
+        mBusLineColor = in.readString();
+        mStartBusStopLat = in.readString();
+        mStartBusStopLng = in.readString();
+        mStartBusStopStreetName = in.readString();
+        mDestinationBusStopLat = in.readString();
+        mDestinationBusStopLng = in.readString();
+        mDestinationBusStopStreetName = in.readString();
+        mDestinationBusStopStreetNumber = in.readInt();
+        mStartBusStopStreetNumber = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mBusLineName);
+        dest.writeString(mBusLineColor);
+        dest.writeString(mStartBusStopLat);
+        dest.writeString(mStartBusStopLng);
+        dest.writeString(mStartBusStopStreetName);
+        dest.writeString(mDestinationBusStopLat);
+        dest.writeString(mDestinationBusStopLng);
+        dest.writeString(mDestinationBusStopStreetName);
+        dest.writeInt(mDestinationBusStopStreetNumber);
+        dest.writeInt(mStartBusStopStreetNumber);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<BusRoute> CREATOR = new Creator<BusRoute>() {
+        @Override
+        public BusRoute createFromParcel(Parcel in) {
+            return new BusRoute(in);
+        }
+
+        @Override
+        public BusRoute[] newArray(int size) {
+            return new BusRoute[size];
+        }
+    };
 
     public Integer getIdBusLine() {
         return mIdBusLine;

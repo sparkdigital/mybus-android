@@ -1,5 +1,7 @@
 package com.mybus.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -14,11 +16,43 @@ import java.util.List;
  * <p/>
  * This object represents a bus route between two locations (could be type 0: using 1 bus line or type 1: using 2 bus lines)
  */
-public class BusRouteResult {
+public class BusRouteResult implements Parcelable {
     private static final String TAG = BusRouteResult.class.getSimpleName();
     private int mType;
     private List<BusRoute> mBusRoutes = new ArrayList<BusRoute>();
     private double mCombinationDistance; //Only used when type is 1
+
+    public BusRouteResult(){}
+
+    protected BusRouteResult(Parcel in) {
+        mType = in.readInt();
+        mBusRoutes = in.createTypedArrayList(BusRoute.CREATOR);
+        mCombinationDistance = in.readDouble();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mType);
+        dest.writeTypedList(mBusRoutes);
+        dest.writeDouble(mCombinationDistance);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<BusRouteResult> CREATOR = new Creator<BusRouteResult>() {
+        @Override
+        public BusRouteResult createFromParcel(Parcel in) {
+            return new BusRouteResult(in);
+        }
+
+        @Override
+        public BusRouteResult[] newArray(int size) {
+            return new BusRouteResult[size];
+        }
+    };
 
     public static List<BusRouteResult> parseResults(JSONArray results, int type) {
         if (results == null) {
