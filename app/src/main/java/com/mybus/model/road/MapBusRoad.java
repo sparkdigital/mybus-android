@@ -24,13 +24,14 @@ public class MapBusRoad {
     /**
      * Adds the Specific road result into the map
      *  @param map
-     * @param roadResult
+     *  @param markerOptionsList
+     *  @param polylineOptionsList
      */
-    public MapBusRoad addBusRoadOnMap(GoogleMap map, RoadResult roadResult) {
-        for (MarkerOptions markerOptions : roadResult.getMarkerOptions()) {
+    public MapBusRoad addBusRoadOnMap(GoogleMap map, List<MarkerOptions> markerOptionsList, List<PolylineOptions> polylineOptionsList) {
+        for (MarkerOptions markerOptions : markerOptionsList) {
             mMarkerList.add(map.addMarker(markerOptions));
         }
-        for (PolylineOptions polylineOptions : roadResult.getPolylineOptions()) {
+        for (PolylineOptions polylineOptions : polylineOptionsList) {
             mPolylineList.add(map.addPolyline(polylineOptions));
         }
         return this;

@@ -7,5 +7,5 @@ import com.mybus.model.CompleteBusRoute;
  */
 public interface CompleteBusRouteCallback {
 
-    void onCompleteRouteFound(CompleteBusRoute completeBusRoute);
+    void onCompleteRouteFound(int busLineId, CompleteBusRoute completeBusRoute);
 }

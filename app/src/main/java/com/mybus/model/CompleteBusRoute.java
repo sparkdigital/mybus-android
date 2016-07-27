@@ -1,7 +1,13 @@
 package com.mybus.model;
 
+import android.graphics.Color;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.mybus.MyBus;
+import com.mybus.R;
 import com.mybus.model.road.RoutePoint;
 
 import org.json.JSONArray;
@@ -17,12 +23,12 @@ import java.util.List;
 public class CompleteBusRoute {
 
     private static final String TAG = CompleteBusRoute.class.getSimpleName();
+    private static final float POLYLINE_WIDTH = 7F;
     private String mColor;
-    private RoutePoint mMidStopBus;
+    private List<RoutePoint> mGoingPointList;
+    private List<RoutePoint> mReturnPointList;
 
-    private List<RoutePoint> mPointList;
-
-    public static CompleteBusRoute parseCompleteBusRoute(JSONObject jsonObject) {
+    public static CompleteBusRoute parseOneWayBusRoute(JSONObject jsonObject) {
         CompleteBusRoute completeBusRoute = new CompleteBusRoute();
         try {
             completeBusRoute.setColor("#" + jsonObject.getString("Color"));
@@ -35,7 +41,7 @@ public class CompleteBusRoute {
                     points.add(point);
                 }
             }
-            completeBusRoute.setPointList(points);
+            completeBusRoute.setGoingPointList(points);
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
             completeBusRoute = null;
@@ -51,26 +57,74 @@ public class CompleteBusRoute {
         this.mColor = color;
     }
 
-    public void setPointList(List<RoutePoint> pointList) {
-        this.mPointList = pointList;
+    public void setGoingPointList(List<RoutePoint> pointList) {
+        this.mGoingPointList = pointList;
     }
 
-    public List<RoutePoint> getPointList(){
-        return this.mPointList;
+    public List<RoutePoint> getGoingPointList() {
+        return this.mGoingPointList;
+    }
+
+    public List<RoutePoint> getReturnPointList() {
+        return mReturnPointList;
+    }
+
+    public void setReturnPointList(List<RoutePoint> returnPointList) {
+        this.mReturnPointList = returnPointList;
     }
 
     /**
-     * @return the stop bus where the bus change its direction
+     * @return a list of Marker options to be drawed on the map
      */
-    public RoutePoint getMidStopBus() {
-        return mMidStopBus;
+    public List<MarkerOptions> getMarkerOptions() {
+        List<MarkerOptions> list = new ArrayList<>();
+        //TODO: Icono ida:
+        list.add(new MarkerOptions()
+                .title(MyBus.getContext().getString(R.string.start_complete_route))
+                .snippet(mGoingPointList.get(0).getAddress())
+                .position(mGoingPointList.get(0).getLatLng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+        //TODO: Icono intermedio:
+        list.add(new MarkerOptions()
+                .title(MyBus.getContext().getString(R.string.mid_complete_route))
+                .snippet(mGoingPointList.get(mGoingPointList.size() - 1).getAddress())
+                .position(mGoingPointList.get(mGoingPointList.size() - 1).getLatLng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+        //TODO: Icono Fin de recorrido:
+        list.add(new MarkerOptions()
+                .title(MyBus.getContext().getString(R.string.end_complete_route))
+                .snippet(mReturnPointList.get(mReturnPointList.size() - 1).getAddress())
+                .position(mReturnPointList.get(mReturnPointList.size() - 1).getLatLng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+        return list;
     }
 
     /**
-     * Sets the stop bus where the bus change its direction
-     * @param midStopBus
+     * @return a list of polyline options to be drawed on the map
      */
-    public void setMidStopBus(RoutePoint midStopBus) {
-        this.mMidStopBus = midStopBus;
+    public List<PolylineOptions> getPolylineOptions() {
+        List<PolylineOptions> list = new ArrayList<>();
+
+        //Going route:
+        PolylineOptions rectOptions = new PolylineOptions();
+        rectOptions.color(Color.parseColor(mColor));
+        rectOptions.width(POLYLINE_WIDTH);
+        rectOptions.geodesic(true);
+        for (RoutePoint point : mGoingPointList) {
+            rectOptions.add(point.getLatLng());
+        }
+        list.add(rectOptions);
+
+        //Return route:
+        rectOptions = new PolylineOptions();
+        rectOptions.color(Color.parseColor(mColor));
+        rectOptions.width(POLYLINE_WIDTH);
+        rectOptions.geodesic(true);
+        for (RoutePoint point : mReturnPointList) {
+            rectOptions.add(point.getLatLng());
+        }
+        list.add(rectOptions);
+
+        return list;
     }
 }

@@ -25,6 +25,6 @@ public class CompleteBusRouteTask extends AsyncTask<Void, Void, CompleteBusRoute
 
     @Override
     protected void onPostExecute(CompleteBusRoute completeBusRoute) {
-        mCompleteBusRouteCallback.onCompleteRouteFound(completeBusRoute);
+        mCompleteBusRouteCallback.onCompleteRouteFound(mBusLineId, completeBusRoute);
     }
 }

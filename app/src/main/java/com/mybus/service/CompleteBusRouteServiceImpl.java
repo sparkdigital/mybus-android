@@ -24,22 +24,15 @@ public class CompleteBusRouteServiceImpl extends GenericService implements Compl
             //Create request to get the first direction for the complete route.
             String url = MyBusServiceUrlBuilder.buildCompleteBusRouteUrl(busLineId, 0);
             JSONObject jsonObject = new JSONObject(executeUrl(url)); //Gets the first direction
-            CompleteBusRoute completeBusRoute = CompleteBusRoute.parseCompleteBusRoute(jsonObject); //Parse JSON for the first direction
-
-            //Gets the first half of the complete route
-            List<RoutePoint> initialPointList = completeBusRoute.getPointList();
-            //Set middle stop bus
-            completeBusRoute.setMidStopBus(initialPointList.get(initialPointList.size() - 1));
+            CompleteBusRoute completeBusRoute = CompleteBusRoute.parseOneWayBusRoute(jsonObject); //Parse JSON for the first direction
 
             url = MyBusServiceUrlBuilder.buildCompleteBusRouteUrl(busLineId, 1); // Url for the second direction
             jsonObject = new JSONObject(executeUrl(url)); // Gets the second half of the complete route
 
             //Extract the point list for the second half
-            List<RoutePoint> sndPointList = CompleteBusRoute.parseCompleteBusRoute(jsonObject).getPointList();
-            // Combine both lists
-            initialPointList.addAll(sndPointList);
-            // Sets the complete point list to the result object
-            completeBusRoute.setPointList(initialPointList);
+            List<RoutePoint> returnPointList = CompleteBusRoute.parseOneWayBusRoute(jsonObject).getGoingPointList();
+            //Sets the other way point list
+            completeBusRoute.setReturnPointList(returnPointList);
             return completeBusRoute;
         } catch (IOException | JSONException e) {
             Log.e(TAG, e.toString());

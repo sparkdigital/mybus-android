@@ -69,5 +69,9 @@
     <string name="charge_point_distance">"Distancia: %1$s metros"</string>
     <string name="charge_point_open_time">"Horario: %1$s"</string>
     <string name="show_all_favorites_on_map">Ver todos en el mapa</string>
+    <string name="start_complete_route">Inicio del recorrido</string>
+    <string name="mid_complete_route">Retorno</string>
+    <string name="end_complete_route">Fin del recorrido</string>
+    <string name="searching_complete_route">Cargando recorrido...</string>
 
 </resources>
