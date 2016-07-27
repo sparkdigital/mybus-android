@@ -20,8 +20,6 @@ public class CompleteRouteUnitTest {
     public void parseCompleteRouteTest() throws JSONException {
         JSONObject jsonMockedResponse = FileLoaderHelper.loadJSONObjectFromResource(this, "complete_routes/complete_route_id_line_2.json");
         CompleteBusRoute parsedCompleteRoute = CompleteBusRoute.parseOneWayBusRoute(jsonMockedResponse, "");
-        // Checks fields
-        assertEquals(parsedCompleteRoute.getColor(), "#00338e");
 
         // Checks PointList
         assertNotNull(parsedCompleteRoute.getGoingPointList());

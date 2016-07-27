@@ -25,7 +25,6 @@ public class CompleteBusRoute {
     private static final String TAG = CompleteBusRoute.class.getSimpleName();
     private static final float POLYLINE_WIDTH = 7F;
     private String mBusLineName;
-    private String mColor;
     private List<RoutePoint> mGoingPointList;
     private List<RoutePoint> mReturnPointList;
 
@@ -33,7 +32,6 @@ public class CompleteBusRoute {
         CompleteBusRoute completeBusRoute = new CompleteBusRoute();
         completeBusRoute.setBusLineName(busLineName);
         try {
-            completeBusRoute.setColor("#" + jsonObject.getString("Color"));
             List<RoutePoint> points = new ArrayList<>();
             JSONArray results = jsonObject.getJSONArray("Results");
             for (int i = 0; i < results.length(); i++) {
@@ -57,14 +55,6 @@ public class CompleteBusRoute {
 
     public void setBusLineName(String busLineName) {
         this.mBusLineName = busLineName;
-    }
-
-    public String getColor() {
-        return mColor;
-    }
-
-    public void setColor(String color) {
-        this.mColor = color;
     }
 
     public void setGoingPointList(List<RoutePoint> pointList) {
