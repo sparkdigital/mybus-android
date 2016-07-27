@@ -744,11 +744,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case DISPLAY_ROADS_RESULT:
                         clearBusRouteOnMap();
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
+                        String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
                         if (mCompleteRoutes.containsKey(busLineId)) {
                             mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
                         } else {
                             showProgressDialog(getString(R.string.searching_complete_route));
-                            ServiceFacade.getInstance().getCompleteBusRoute(busLineId, this);
+                            ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
                         }
                         break;
                     default:

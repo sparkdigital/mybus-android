@@ -7,5 +7,5 @@ import com.mybus.model.CompleteBusRoute;
  */
 public interface CompleteBusRouteService {
 
-    CompleteBusRoute getCompleteRoute(int busLineId);
+    CompleteBusRoute getCompleteRoute(int busLineId, String busLineName);
 }

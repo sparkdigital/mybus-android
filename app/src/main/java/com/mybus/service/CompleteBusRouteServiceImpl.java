@@ -19,18 +19,18 @@ public class CompleteBusRouteServiceImpl extends GenericService implements Compl
     private static final String TAG = CompleteBusRouteService.class.getSimpleName();
 
     @Override
-    public CompleteBusRoute getCompleteRoute(int busLineId) {
+    public CompleteBusRoute getCompleteRoute(int busLineId, String busLineName) {
         try {
             //Create request to get the first direction for the complete route.
             String url = MyBusServiceUrlBuilder.buildCompleteBusRouteUrl(busLineId, 0);
             JSONObject jsonObject = new JSONObject(executeUrl(url)); //Gets the first direction
-            CompleteBusRoute completeBusRoute = CompleteBusRoute.parseOneWayBusRoute(jsonObject); //Parse JSON for the first direction
+            CompleteBusRoute completeBusRoute = CompleteBusRoute.parseOneWayBusRoute(jsonObject, busLineName); //Parse JSON for the first direction
 
             url = MyBusServiceUrlBuilder.buildCompleteBusRouteUrl(busLineId, 1); // Url for the second direction
             jsonObject = new JSONObject(executeUrl(url)); // Gets the second half of the complete route
 
             //Extract the point list for the second half
-            List<RoutePoint> returnPointList = CompleteBusRoute.parseOneWayBusRoute(jsonObject).getGoingPointList();
+            List<RoutePoint> returnPointList = CompleteBusRoute.parseOneWayBusRoute(jsonObject, busLineName).getGoingPointList();
             //Sets the other way point list
             completeBusRoute.setReturnPointList(returnPointList);
             return completeBusRoute;

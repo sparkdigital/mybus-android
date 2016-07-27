@@ -12,15 +12,17 @@ public class CompleteBusRouteTask extends AsyncTask<Void, Void, CompleteBusRoute
 
     private CompleteBusRouteCallback mCompleteBusRouteCallback;
     private Integer mBusLineId;
+    private final String mBusLineName;
 
-    public CompleteBusRouteTask(int busLineId, CompleteBusRouteCallback callback) {
+    public CompleteBusRouteTask(int busLineId, String busLineName, CompleteBusRouteCallback callback) {
         this.mCompleteBusRouteCallback = callback;
         this.mBusLineId = busLineId;
+        this.mBusLineName = busLineName;
     }
 
     @Override
     protected CompleteBusRoute doInBackground(Void... voids) {
-        return new CompleteBusRouteServiceImpl().getCompleteRoute(mBusLineId);
+        return new CompleteBusRouteServiceImpl().getCompleteRoute(mBusLineId, mBusLineName);
     }
 
     @Override

@@ -122,8 +122,8 @@ public final class ServiceFacade {
         chargePointSearchTask.execute();
     }
 
-    public void getCompleteBusRoute(int budLineId, CompleteBusRouteCallback callback) {
-        CompleteBusRouteTask completeBusRouteTask = new CompleteBusRouteTask(budLineId, callback);
+    public void getCompleteBusRoute(int budLineId, String busLineName, CompleteBusRouteCallback callback) {
+        CompleteBusRouteTask completeBusRouteTask = new CompleteBusRouteTask(budLineId, busLineName, callback);
         completeBusRouteTask.execute();
     }
 }

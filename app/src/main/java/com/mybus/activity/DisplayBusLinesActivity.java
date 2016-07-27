@@ -27,6 +27,7 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
     private BusLineViewAdapter mBusLineAdapter;
     private List<BusLine> mBusLines;
     public static final String RESULT_BUS_LINE_ID = "BUS_LINE_ID";
+    public static final String RESULT_BUS_LINE_NAME = "BUS_LINE_NAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
         //Return the bus line id to the MainActivity
         Intent intent = new Intent();
         intent.putExtra(RESULT_BUS_LINE_ID, mBusLines.get(position).getId());
+        intent.putExtra(RESULT_BUS_LINE_NAME, mBusLines.get(position).getName());
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();
