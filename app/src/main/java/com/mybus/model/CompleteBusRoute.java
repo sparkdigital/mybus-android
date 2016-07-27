@@ -107,7 +107,7 @@ public class CompleteBusRoute {
                     .title(MyBus.getContext().getString(R.string.end_complete_route, mBusLineName))
                     .snippet(mReturnPointList.get(mReturnPointList.size() - 1).getAddress())
                     .position(mReturnPointList.get(mReturnPointList.size() - 1).getLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
         }
         //TODO: Icono intermedio:
         list.add(new MarkerOptions()
