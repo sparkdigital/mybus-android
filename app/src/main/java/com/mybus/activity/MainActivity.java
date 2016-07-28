@@ -747,16 +747,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         disPlayFavoritesResults(data);
                         break;
                     case DISPLAY_ROADS_RESULT:
-                        clearBusRouteOnMap();
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                         String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
-                        //Check if the complete route is present in cache.
-                        if (mCompleteRoutes.containsKey(busLineId)) {
-                            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
-                        } else {
-                            showProgressDialog(getString(R.string.searching_complete_route));
-                            ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
-                        }
+                        showCompleteBusRoute(busLineId, busLineName);
                         break;
                     default:
                         break;
@@ -765,6 +758,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showCompleteBusRoute(int busLineId, String busLineName) {
+        clearBusRouteOnMap();
+        //Check if the complete route is present in cache.
+        if (mCompleteRoutes.containsKey(busLineId)) {
+            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+            zoomOutCompleteBusRoute(busLineId);
+        } else {
+            showProgressDialog(getString(R.string.searching_complete_route));
+            ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
+        }
     }
 
     private void disPlayFavoritesResults(Intent data) {
@@ -1106,10 +1111,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
             //Draw complete route:
             mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
-            //Zoom out:
-            List<Marker> markerList = new ArrayList<>();
-            markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
-            zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
+            zoomOutCompleteBusRoute(busLineId);
         }
     }
+
+    private void zoomOutCompleteBusRoute(int busLineId) {
+        List<Marker> markerList = new ArrayList<>();
+        markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
+        zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
+    }
+
 }
