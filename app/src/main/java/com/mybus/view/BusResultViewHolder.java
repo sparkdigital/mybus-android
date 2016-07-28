@@ -21,6 +21,10 @@ public class BusResultViewHolder extends RecyclerView.ViewHolder {
     public TextView mStartAddress;
     @Bind(R.id.stop_address)
     public TextView mStopAddress;
+    @Bind(R.id.start_distance)
+    public TextView mStartDistance;
+    @Bind(R.id.stop_distance)
+    public TextView mStopDistance;
 
     private BusLineListItemListener mItemClickListener;
 

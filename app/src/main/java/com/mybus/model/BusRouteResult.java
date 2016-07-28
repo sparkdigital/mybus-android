@@ -17,6 +17,7 @@ import java.util.List;
  * This object represents a bus route between two locations (could be type 0: using 1 bus line or type 1: using 2 bus lines)
  */
 public class BusRouteResult implements Parcelable {
+
     private static final String TAG = BusRouteResult.class.getSimpleName();
     private int mType;
     private List<BusRoute> mBusRoutes = new ArrayList<BusRoute>();

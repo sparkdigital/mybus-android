@@ -1,7 +1,9 @@
 package com.mybus.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -20,7 +22,9 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusLinesRequestCallback, BusLineListItemListener{
+public class DisplayBusLinesActivity extends AppCompatActivity implements BusLinesRequestCallback, BusLineListItemListener{
+
+    private ProgressDialog mDialog;
 
     @Bind(R.id.bus_lines_recycler_view)
     RecyclerView mBusLinesRecyclerView;
@@ -31,6 +35,7 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display_bus_lines);
         ButterKnife.bind(this);
         mBusLinesRecyclerView.setHasFixedSize(true);
         mBusLineAdapter = new BusLineViewAdapter(this);
@@ -50,21 +55,6 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
     }
 
     @Override
-    public int getLayoutToInflate() {
-        return R.layout.activity_display_bus_lines;
-    }
-
-    @Override
-    public int getToolbarId() {
-        return R.id.displayBusLinesToolbar;
-    }
-
-    @Override
-    protected int getToolbarTittle() {
-        return R.string.displayBusLinesToolbarTittle;
-    }
-
-    @Override
     public void onItemClicked(int position) {
         //Return the bus line id to the MainActivity
         Intent intent = new Intent();
@@ -72,5 +62,18 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();
+    }
+
+    protected void showProgressDialog(String text) {
+        cancelProgressDialog();
+        mDialog = ProgressDialog.show(this, "", text, true, false);
+
+    }
+
+    protected void cancelProgressDialog() {
+        if (mDialog != null) {
+            mDialog.cancel();
+            mDialog = null;
+        }
     }
 }
