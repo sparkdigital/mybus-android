@@ -122,6 +122,12 @@ public final class ServiceFacade {
         chargePointSearchTask.execute();
     }
 
+    /**
+     * Return the complete bus line route in both directions.
+     * @param budLineId
+     * @param busLineName
+     * @param callback
+     */
     public void getCompleteBusRoute(int budLineId, String busLineName, CompleteBusRouteCallback callback) {
         CompleteBusRouteTask completeBusRouteTask = new CompleteBusRouteTask(budLineId, busLineName, callback);
         completeBusRouteTask.execute();

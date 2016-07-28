@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Model object to parse the complete route, allows save the complete route in both directions.
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public class CompleteBusRoute {

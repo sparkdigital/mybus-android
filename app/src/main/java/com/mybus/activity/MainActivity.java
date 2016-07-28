@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int TO_SEARCH_RESULT_ID = 2;
     public static final int DISPLAY_FAVORITES_RESULT = 3;
     private static final int DISPLAY_ROADS_RESULT = 4;
-    private GoogleMap mMap;
-    private LocationUpdater mLocationUpdater;
     @Bind(R.id.compoundSearchBox)
     CompoundSearchBox mCompoundSearchBox;
     @Bind(R.id.drawer_layout)
@@ -89,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.mainActivityBar)
     FloatingSearchView mToolbar;
 
+    /*-- Local Variables --*/
+    private GoogleMap mMap;
+    private LocationUpdater mLocationUpdater;
     //Marker used to update the location on the map
     private MyBusMarker mUserLocationMarker;
     //Marker used to show the Start Location
@@ -100,8 +101,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //List of chargingPoint markers
     private HashMap<LatLng, MyBusMarker> mChargingPointMarkers;
     private HashMap<MyBusMarker, ChargePoint> mChargingPoints;
-    //Favorite MyBusMarker List //TODO: will use for show all favorites
+    //Favorite MyBusMarker List
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
+    //HashMap used as cache for complete bus routes
+    private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
+    private ProgressDialog mDialog;
+    private Context mContext;
+
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -112,9 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
     private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
-    private ProgressDialog mDialog;
-    private Context mContext;
-    private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
+    /*---Bottom Sheet------*/
 
     /**
      * Listener for Map Long Click Listener for setting start or end locations.
@@ -629,6 +633,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mViewPagerAdapter != null) {
             mViewPagerAdapter.clearBusRoutes();
         }
+        //Hide complete bus routes
         for (MapBusRoad route : mCompleteRoutes.values()) {
             route.showBusRoadFromMap(false);
         }
@@ -745,6 +750,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         clearBusRouteOnMap();
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                         String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
+                        //Check if the complete route is present in cache.
                         if (mCompleteRoutes.containsKey(busLineId)) {
                             mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
                         } else {
@@ -1093,10 +1099,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onCompleteRouteFound(int busLineId, CompleteBusRoute completeBusRoute) {
         cancelProgressDialog();
-        mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
-        List<Marker> markerList = new ArrayList<>();
-        markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
-        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
-        zoomOut(markerList);
+        if (completeBusRoute.getGoingPointList().size() == 0 || completeBusRoute.getReturnPointList().size() == 0) {
+            Toast.makeText(this, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
+        } else {
+            //Save in the local HashMap
+            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
+            //Draw complete route:
+            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+            //Zoom out:
+            List<Marker> markerList = new ArrayList<>();
+            markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
+            zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
+        }
     }
 }

@@ -74,4 +74,5 @@
     <string name="end_complete_route">Fin del recorrido - Linea: %1$s</string>
     <string name="searching_complete_route">Cargando recorrido...</string>
     <string name="start_end_complete_route">Inicio/Fin del recorrido - Linea: %1$s</string>
+    <string name="toast_no_complete_route">Recorrido no disponible</string>
 </resources>

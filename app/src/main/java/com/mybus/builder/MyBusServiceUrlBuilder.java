@@ -136,7 +136,7 @@ public final class MyBusServiceUrlBuilder {
     }
 
     /**
-     * Create the API url in order to get the bus line complete route
+     * Create the API url in order to get the bus line complete route for one direction
      */
     public static String buildCompleteBusRouteUrl(Integer idLine, Integer direction) {
         Uri.Builder builder = buildBaseUri()
