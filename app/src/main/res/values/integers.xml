@@ -3,5 +3,5 @@
     <integer name="map_padding">70</integer>
     <integer name="map_padding_favorites">90</integer>
     <integer name="charging_point_padding">90</integer>
-    <integer name="complete_route_padding">120</integer>
+    <integer name="complete_route_padding">90</integer>
 </resources>
