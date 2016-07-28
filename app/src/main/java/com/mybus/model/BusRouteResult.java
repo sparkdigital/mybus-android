@@ -20,12 +20,15 @@ public class BusRouteResult implements Parcelable {
 
     private static final String TAG = BusRouteResult.class.getSimpleName();
     private int mType;
-    private List<BusRoute> mBusRoutes = new ArrayList<BusRoute>();
+    private List<BusRoute> mBusRoutes;
     private double mCombinationDistance; //Only used when type is 1
 
-    public BusRouteResult(){}
+    public BusRouteResult(){
+        mBusRoutes = new ArrayList();
+    }
 
     protected BusRouteResult(Parcel in) {
+        mBusRoutes = new ArrayList();
         mType = in.readInt();
         mBusRoutes = in.createTypedArrayList(BusRoute.CREATOR);
         mCombinationDistance = in.readDouble();

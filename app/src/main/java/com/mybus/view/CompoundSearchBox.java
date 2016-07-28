@@ -23,10 +23,9 @@ public class CompoundSearchBox extends FrameLayout {
     private ImageView mFlipSearchBtn;
     private ImageView mSearchBtn;
     private String mFromAddress = null;
-
     private String mToAddress = null;
-
     private CompoundSearchBoxListener mListener;
+
     private OnClickListener mFromClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -35,7 +34,6 @@ public class CompoundSearchBox extends FrameLayout {
             }
         }
     };
-
     private OnClickListener mToClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -76,11 +74,12 @@ public class CompoundSearchBox extends FrameLayout {
             }
         }
     };
+
+
     public CompoundSearchBox(Context context) {
         super(context);
         initView();
     }
-
 
     public CompoundSearchBox(Context context, AttributeSet attrs) {
         super(context, attrs);
