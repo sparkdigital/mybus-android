@@ -19,13 +19,13 @@ public class BusRoute implements Parcelable {
     private String mStartBusStopLng;
     private String mStartBusStopStreetName;
     private Integer mStartBusStopStreetNumber;
-    private Double mStartBusStopDistanceToOrigin;
+    private Double mStartBusStopDistanceToOrigin = -1d;
     private Integer mDestinationBusStopNumber;
     private String mDestinationBusStopLat;
     private String mDestinationBusStopLng;
     private String mDestinationBusStopStreetName;
     private Integer mDestinationBusStopStreetNumber;
-    private Double mDestinationBusStopDistanceToDestination;
+    private Double mDestinationBusStopDistanceToDestination = -1d;
 
     public BusRoute() {
         // This constructor is intentionally empty. Nothing special is needed here.

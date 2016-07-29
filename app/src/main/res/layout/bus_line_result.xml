@@ -13,7 +13,7 @@
             android:id="@+id/bus_line_icon"
             android:layout_width="0dp"
             android:layout_height="110dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
             android:layout_gravity="top"
             android:layout_weight="1"
             android:src="@drawable/bus_line" />
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="6dp"
                 android:text="Distancia desde el origen: 1 cuadra" />
 
             <TextView
