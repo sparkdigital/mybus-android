@@ -19,13 +19,13 @@ public class BusRoute implements Parcelable {
     private String mStartBusStopLng;
     private String mStartBusStopStreetName;
     private Integer mStartBusStopStreetNumber;
-    private Double mStartBusStopDistanceToOrigin = -1d;
+    private Double mStartBusStopDistanceToOrigin;
     private Integer mDestinationBusStopNumber;
     private String mDestinationBusStopLat;
     private String mDestinationBusStopLng;
     private String mDestinationBusStopStreetName;
     private Integer mDestinationBusStopStreetNumber;
-    private Double mDestinationBusStopDistanceToDestination = -1d;
+    private Double mDestinationBusStopDistanceToDestination;
 
     public BusRoute() {
         // This constructor is intentionally empty. Nothing special is needed here.
@@ -83,6 +83,12 @@ public class BusRoute implements Parcelable {
         dest.writeString(mDestinationBusStopStreetName);
         dest.writeInt(mDestinationBusStopStreetNumber);
         dest.writeInt(mStartBusStopStreetNumber);
+        if (mDestinationBusStopDistanceToDestination == null) {
+            mDestinationBusStopDistanceToDestination = -1d;
+        }
+        if (mStartBusStopDistanceToOrigin == null) {
+            mStartBusStopDistanceToOrigin = -1d;
+        }
         dest.writeDouble(mDestinationBusStopDistanceToDestination);
         dest.writeDouble(mStartBusStopDistanceToOrigin);
     }
