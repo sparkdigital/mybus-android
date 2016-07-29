@@ -1,0 +1,888 @@
+{
+  "Type": 1,
+  "Color": "00338e",
+  "Results": [
+    {
+      "StopId": "3743",
+      "Lat": "-38.049778",
+      "Lng": "-57.539436",
+      "Address": "Calle A 1",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3744",
+      "Lat": "-38.049320",
+      "Lng": "-57.539360",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3745",
+      "Lat": "-38.049397",
+      "Lng": "-57.540905",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3746",
+      "Lat": "-38.049389",
+      "Lng": "-57.541176",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3747",
+      "Lat": "-38.046440",
+      "Lng": "-57.541721",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3748",
+      "Lat": "-38.046314",
+      "Lng": "-57.541916",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3749",
+      "Lat": "-38.044544",
+      "Lng": "-57.544159",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3750",
+      "Lat": "-38.043369",
+      "Lng": "-57.545738",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3751",
+      "Lat": "-38.041779",
+      "Lng": "-57.547867",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3752",
+      "Lat": "-38.040417",
+      "Lng": "-57.549683",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3753",
+      "Lat": "-38.039143",
+      "Lng": "-57.551388",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3754",
+      "Lat": "-38.038956",
+      "Lng": "-57.551636",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3755",
+      "Lat": "-38.037872",
+      "Lng": "-57.550350",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3756",
+      "Lat": "-38.036430",
+      "Lng": "-57.548725",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3757",
+      "Lat": "-38.036144",
+      "Lng": "-57.548389",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3758",
+      "Lat": "-38.035168",
+      "Lng": "-57.549644",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3759",
+      "Lat": "-38.033863",
+      "Lng": "-57.551392",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3760",
+      "Lat": "-38.032574",
+      "Lng": "-57.553169",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3761",
+      "Lat": "-38.031307",
+      "Lng": "-57.554863",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3762",
+      "Lat": "-38.029949",
+      "Lng": "-57.556656",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3763",
+      "Lat": "-38.028736",
+      "Lng": "-57.558361",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3764",
+      "Lat": "-38.027317",
+      "Lng": "-57.560139",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3765",
+      "Lat": "-38.026028",
+      "Lng": "-57.561848",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3766",
+      "Lat": "-38.024746",
+      "Lng": "-57.563564",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3767",
+      "Lat": "-38.023346",
+      "Lng": "-57.565422",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3768",
+      "Lat": "-38.022011",
+      "Lng": "-57.567223",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3769",
+      "Lat": "-38.020744",
+      "Lng": "-57.568855",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3770",
+      "Lat": "-38.019424",
+      "Lng": "-57.570744",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3771",
+      "Lat": "-38.018070",
+      "Lng": "-57.572502",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3772",
+      "Lat": "-38.016651",
+      "Lng": "-57.574364",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3773",
+      "Lat": "-38.015350",
+      "Lng": "-57.576084",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3774",
+      "Lat": "-38.013824",
+      "Lng": "-57.578102",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3775",
+      "Lat": "-38.011784",
+      "Lng": "-57.580784",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3776",
+      "Lat": "-38.010319",
+      "Lng": "-57.582726",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3777",
+      "Lat": "-38.008823",
+      "Lng": "-57.584755",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3778",
+      "Lat": "-38.007477",
+      "Lng": "-57.586624",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3779",
+      "Lat": "-38.006611",
+      "Lng": "-57.587715",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3780",
+      "Lat": "-38.005325",
+      "Lng": "-57.589432",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3781",
+      "Lat": "-38.003166",
+      "Lng": "-57.592373",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3782",
+      "Lat": "-38.001892",
+      "Lng": "-57.593933",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3783",
+      "Lat": "-38.000454",
+      "Lng": "-57.595699",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3785",
+      "Lat": "-37.998718",
+      "Lng": "-57.598240",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3786",
+      "Lat": "-37.997478",
+      "Lng": "-57.599712",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3788",
+      "Lat": "-37.996189",
+      "Lng": "-57.601490",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3789",
+      "Lat": "-37.995014",
+      "Lng": "-57.603054",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3790",
+      "Lat": "-37.993866",
+      "Lng": "-57.604671",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3791",
+      "Lat": "-37.992596",
+      "Lng": "-57.603634",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3792",
+      "Lat": "-37.991028",
+      "Lng": "-57.602364",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3793",
+      "Lat": "-37.990738",
+      "Lng": "-57.602146",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3794",
+      "Lat": "-37.991463",
+      "Lng": "-57.600571",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3795",
+      "Lat": "-37.992580",
+      "Lng": "-57.598656",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3796",
+      "Lat": "-37.992817",
+      "Lng": "-57.598228",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3797",
+      "Lat": "-37.991467",
+      "Lng": "-57.597176",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3798",
+      "Lat": "-37.989937",
+      "Lng": "-57.595932",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3799",
+      "Lat": "-37.988312",
+      "Lng": "-57.594597",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3800",
+      "Lat": "-37.986702",
+      "Lng": "-57.593292",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3801",
+      "Lat": "-37.985092",
+      "Lng": "-57.591972",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3802",
+      "Lat": "-37.983963",
+      "Lng": "-57.591057",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3803",
+      "Lat": "-37.983780",
+      "Lng": "-57.591457",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3804",
+      "Lat": "-37.983479",
+      "Lng": "-57.592064",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3805",
+      "Lat": "-37.982658",
+      "Lng": "-57.591408",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3806",
+      "Lat": "-37.982922",
+      "Lng": "-57.590904",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3807",
+      "Lat": "-37.983921",
+      "Lng": "-57.588894",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3808",
+      "Lat": "-37.984756",
+      "Lng": "-57.587364",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3809",
+      "Lat": "-37.984325",
+      "Lng": "-57.585587",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3810",
+      "Lat": "-37.983818",
+      "Lng": "-57.585136",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3811",
+      "Lat": "-37.982269",
+      "Lng": "-57.583988",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3812",
+      "Lat": "-37.980888",
+      "Lng": "-57.582863",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3813",
+      "Lat": "-37.979015",
+      "Lng": "-57.581459",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3814",
+      "Lat": "-37.977325",
+      "Lng": "-57.580200",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3815",
+      "Lat": "-37.976055",
+      "Lng": "-57.579208",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3816",
+      "Lat": "-37.974194",
+      "Lng": "-57.577591",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3817",
+      "Lat": "-37.972401",
+      "Lng": "-57.576496",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3818",
+      "Lat": "-37.970169",
+      "Lng": "-57.576389",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3819",
+      "Lat": "-37.967884",
+      "Lng": "-57.576962",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3820",
+      "Lat": "-37.965111",
+      "Lng": "-57.577805",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3821",
+      "Lat": "-37.962589",
+      "Lng": "-57.578506",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3822",
+      "Lat": "-37.960052",
+      "Lng": "-57.579258",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3823",
+      "Lat": "-37.957462",
+      "Lng": "-57.579967",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3824",
+      "Lat": "-37.954910",
+      "Lng": "-57.580715",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3825",
+      "Lat": "-37.953014",
+      "Lng": "-57.581230",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3826",
+      "Lat": "-37.952118",
+      "Lng": "-57.581383",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3827",
+      "Lat": "-37.951885",
+      "Lng": "-57.580761",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3828",
+      "Lat": "-37.952518",
+      "Lng": "-57.579536",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3829",
+      "Lat": "-37.952843",
+      "Lng": "-57.578899",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3831",
+      "Lat": "-37.952091",
+      "Lng": "-57.578449",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3832",
+      "Lat": "-37.951015",
+      "Lng": "-57.577785",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3833",
+      "Lat": "-37.951561",
+      "Lng": "-57.576664",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3834",
+      "Lat": "-37.951698",
+      "Lng": "-57.576389",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3835",
+      "Lat": "-37.950478",
+      "Lng": "-57.575439",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3836",
+      "Lat": "-37.948830",
+      "Lng": "-57.574139",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3837",
+      "Lat": "-37.947197",
+      "Lng": "-57.572849",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3838",
+      "Lat": "-37.945660",
+      "Lng": "-57.571636",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3839",
+      "Lat": "-37.944057",
+      "Lng": "-57.570370",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3840",
+      "Lat": "-37.943741",
+      "Lng": "-57.570114",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3841",
+      "Lat": "-37.944710",
+      "Lng": "-57.568260",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3842",
+      "Lat": "-37.945740",
+      "Lng": "-57.566257",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3843",
+      "Lat": "-37.946796",
+      "Lng": "-57.564198",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3844",
+      "Lat": "-37.947987",
+      "Lng": "-57.561909",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3845",
+      "Lat": "-37.947639",
+      "Lng": "-57.561649",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3846",
+      "Lat": "-37.946033",
+      "Lng": "-57.560390",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3847",
+      "Lat": "-37.944202",
+      "Lng": "-57.558865",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3848",
+      "Lat": "-37.943661",
+      "Lng": "-57.558434",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3849",
+      "Lat": "-37.943531",
+      "Lng": "-57.557701",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3850",
+      "Lat": "-37.942764",
+      "Lng": "-57.556770",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3851",
+      "Lat": "-37.941078",
+      "Lng": "-57.554733",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3852",
+      "Lat": "-37.939247",
+      "Lng": "-57.552517",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3853",
+      "Lat": "-37.937447",
+      "Lng": "-57.550343",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3854",
+      "Lat": "-37.935650",
+      "Lng": "-57.548168",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3855",
+      "Lat": "-37.934402",
+      "Lng": "-57.546658",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3856",
+      "Lat": "-37.933247",
+      "Lng": "-57.545258",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3857",
+      "Lat": "-37.932392",
+      "Lng": "-57.544228",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3858",
+      "Lat": "-37.932049",
+      "Lng": "-57.544659",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3859",
+      "Lat": "-37.931671",
+      "Lng": "-57.544201",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3860",
+      "Lat": "-37.929802",
+      "Lng": "-57.541931",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3861",
+      "Lat": "-37.929268",
+      "Lng": "-57.541283",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3862",
+      "Lat": "-37.929932",
+      "Lng": "-57.540504",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3863",
+      "Lat": "-37.929516",
+      "Lng": "-57.540131",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3864",
+      "Lat": "-37.928051",
+      "Lng": "-57.538361",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3865",
+      "Lat": "-37.927608",
+      "Lng": "-57.537827",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3866",
+      "Lat": "-37.928478",
+      "Lng": "-57.536697",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3867",
+      "Lat": "-37.930393",
+      "Lng": "-57.534172",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3868",
+      "Lat": "-37.931637",
+      "Lng": "-57.532532",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3869",
+      "Lat": "-37.932354",
+      "Lng": "-57.531582",
+      "Address": "",
+      "isWaypoint": true
+    },
+    {
+      "StopId": "3870",
+      "Lat": "-37.932842",
+      "Lng": "-57.531685",
+      "Address": "",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3871",
+      "Lat": "-37.935753",
+      "Lng": "-57.532585",
+      "Address": "Kraglievich 5299",
+      "isWaypoint": false
+    }
+  ]
+}
