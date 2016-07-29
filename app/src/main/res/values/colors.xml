@@ -13,4 +13,6 @@
     <color name="searchLayoutBackground">#0288D1</color>
     <color name="searchLayoutText">#000000</color>
     <color name="searchLayoutTextBackground">#FFFFFF</color>
+    <color name="returnRouteColor">#FF4081</color>
+    <color name="goingRouteColor">#77006ad1</color>
 </resources>
