@@ -135,4 +135,16 @@ public final class MyBusServiceUrlBuilder {
         return builder.build().toString();
     }
 
+    /**
+     * Create the API url in order to get the bus line complete route for one direction
+     */
+    public static String buildCompleteBusRouteUrl(Integer idLine, Integer direction) {
+        Uri.Builder builder = buildBaseUri()
+                .appendPath("CompleteRoadsApi.php")
+                .appendQueryParameter("idline", idLine.toString())
+                .appendQueryParameter("direction", direction.toString())
+                .appendQueryParameter("tk", TOKEN);
+        return builder.build().toString();
+    }
+
 }

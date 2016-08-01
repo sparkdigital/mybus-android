@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.ChargePointSearchCallback;
+import com.mybus.asynctask.CompleteBusRouteCallback;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
@@ -45,6 +46,7 @@ import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.ChargePoint;
+import com.mybus.model.CompleteBusRoute;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.SearchType;
@@ -70,14 +72,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
         CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener,
         FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
-        ChargePointSearchCallback {
+        ChargePointSearchCallback, CompleteBusRouteCallback {
 
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
     public static final int DISPLAY_FAVORITES_RESULT = 3;
     private static final int DISPLAY_ROADS_RESULT = 4;
-    private GoogleMap mMap;
-    private LocationUpdater mLocationUpdater;
+    public static final int DISPLAY_BUS_LINES_RESULT = 5;
+
     @Bind(R.id.compoundSearchBox)
     CompoundSearchBox mCompoundSearchBox;
     @Bind(R.id.drawer_layout)
@@ -87,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.mainActivityBar)
     FloatingSearchView mToolbar;
 
+    /*-- Local Variables --*/
+    private GoogleMap mMap;
+    private LocationUpdater mLocationUpdater;
     //Marker used to update the location on the map
     private MyBusMarker mUserLocationMarker;
     //Marker used to show the Start Location
@@ -98,8 +103,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //List of chargingPoint markers
     private HashMap<LatLng, MyBusMarker> mChargingPointMarkers;
     private HashMap<MyBusMarker, ChargePoint> mChargingPoints;
-    //Favorite MyBusMarker List //TODO: will use for show all favorites
+    //Favorite MyBusMarker List
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
+    //HashMap used as cache for complete bus routes
+    private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
+    private ProgressDialog mDialog;
+
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -110,9 +119,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
     private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
-    private ProgressDialog mDialog;
     private Context mContext;
 
+    /*---Bottom Sheet------*/
     /**
      * Listener for Map Long Click Listener for setting start or end locations.
      */
@@ -191,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     *
      * @param markerList
      */
     private void zoomOutFavorites(List<MyBusMarker> markerList) {
@@ -542,14 +550,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
+        //onDrawerToggleClick();
         removeChargingPointMarkers();
-        populateBottomSheet(results);
+        if (results == null || results.isEmpty()) {
+            showBottomSheetResults(false);
+            mViewPagerAdapter = null;
+            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
+            return;
+        }
+        else{
+            startResultsActivity(results);
+        }
     }
 
     @Override
     public void onRoadFound(RoadResult roadResult) {
         cancelProgressDialog();
-        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult);
+        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult.getMarkerOptions(), roadResult.getPolylineOptions());
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
             List<Marker> markerList = new ArrayList<>();
@@ -562,16 +579,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Populates the bottom sheet with the Routes found
-     *
-     * @param results
      */
-    private void populateBottomSheet(List<BusRouteResult> results) {
-        if (results == null || results.isEmpty()) {
-            showBottomSheetResults(false);
-            mViewPagerAdapter = null;
-            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
-            return;
-        }
+    private void populateBottomSheet(List<BusRouteResult> results, int busResultId) {
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this.getLayoutInflater());
         for (BusRouteResult route : results) {
             BusRouteFragment fragment = new BusRouteFragment();
@@ -585,10 +594,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
         }
         showBottomSheetResults(true);
-        //After populating the bottom sheet, show the first result
-        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(0).getBusRouteResult();
+        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
         performRoadSearch(busRouteResult);
-
     }
 
     /**
@@ -626,6 +633,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void clearBusRouteOnMap() {
         if (mViewPagerAdapter != null) {
             mViewPagerAdapter.clearBusRoutes();
+        }
+        //Hide complete bus routes
+        for (MapBusRoad route : mCompleteRoutes.values()) {
+            route.showBusRoadFromMap(false);
         }
     }
 
@@ -738,8 +749,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case DISPLAY_ROADS_RESULT:
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
-                        //TODO: Use CompleteRoad API to show the complete road for the given bus line id
-                        Toast.makeText(this, "Fue seleccionada la linea con el id: " + busLineId, Toast.LENGTH_LONG).show();
+                        String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
+                        showCompleteBusRoute(busLineId, busLineName);
+                        break;
+                    case DISPLAY_BUS_LINES_RESULT:
+                        int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
+                        List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
+                        if (busResultId != -1 && results != null) {
+                                populateBottomSheet(results, busResultId);
+                        }
                         break;
                     default:
                         break;
@@ -748,6 +766,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showCompleteBusRoute(int busLineId, String busLineName) {
+        clearBusRouteOnMap();
+        //Check if the complete route is present in cache.
+        if (mCompleteRoutes.containsKey(busLineId)) {
+            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+            zoomOutCompleteBusRoute(busLineId);
+        } else {
+            showProgressDialog(getString(R.string.searching_complete_route));
+            ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
+        }
     }
 
     private void disPlayFavoritesResults(Intent data) {
@@ -1078,4 +1108,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
         builder.create().show();
     }
+
+    /**
+     *
+     * @param results
+     */
+    private void startResultsActivity(List<BusRouteResult> results) {
+        Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
+        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
+        busResultsIntent.putExtra(BusResultsActivity.ORIGIN_ADDRESS_EXTRA, mCompoundSearchBox.getFromAddress());
+        busResultsIntent.putExtra(BusResultsActivity.DESTINATION_ADDRESS_EXTRA, mCompoundSearchBox.getToAddress());
+        startActivityForResult(busResultsIntent, DISPLAY_BUS_LINES_RESULT);
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void onCompleteRouteFound(int busLineId, CompleteBusRoute completeBusRoute) {
+        cancelProgressDialog();
+        if (completeBusRoute.getGoingPointList().size() == 0 || completeBusRoute.getReturnPointList().size() == 0) {
+            Toast.makeText(this, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
+        } else {
+            //Save in the local HashMap
+            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
+            //Draw complete route:
+            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+            zoomOutCompleteBusRoute(busLineId);
+        }
+    }
+
+    private void zoomOutCompleteBusRoute(int busLineId) {
+        List<Marker> markerList = new ArrayList<>();
+        markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
+        zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
+    }
+
 }
