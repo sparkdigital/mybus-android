@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/bondi_circulo" />
+            android:src="@drawable/bus" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,7 +59,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/bondi_circulo" />
+            android:src="@drawable/bus" />
 
         <LinearLayout
             android:layout_width="match_parent"
