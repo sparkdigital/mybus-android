@@ -754,11 +754,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case DISPLAY_BUS_LINES_RESULT:
                         int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
-                        if(busResultId != -1){
-                            List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
-                            if (results != null) {
+                        List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
+                        if (busResultId != -1 && results != null) {
                                 populateBottomSheet(results, busResultId);
-                            }
                         }
                         break;
                     default:
