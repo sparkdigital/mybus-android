@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int TO_SEARCH_RESULT_ID = 2;
     public static final int DISPLAY_FAVORITES_RESULT = 3;
     private static final int DISPLAY_ROADS_RESULT = 4;
+    public static final int DISPLAY_BUS_LINES_RESULT = 5;
+
     @Bind(R.id.compoundSearchBox)
     CompoundSearchBox mCompoundSearchBox;
     @Bind(R.id.drawer_layout)
@@ -106,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //HashMap used as cache for complete bus routes
     private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
     private ProgressDialog mDialog;
-    private Context mContext;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -118,8 +119,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
     private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
-    /*---Bottom Sheet------*/
+    private Context mContext;
 
+    /*---Bottom Sheet------*/
     /**
      * Listener for Map Long Click Listener for setting start or end locations.
      */
@@ -548,8 +550,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
+        //onDrawerToggleClick();
         removeChargingPointMarkers();
-        populateBottomSheet(results);
+        if (results == null || results.isEmpty()) {
+            showBottomSheetResults(false);
+            mViewPagerAdapter = null;
+            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
+            return;
+        }
+        else{
+            startResultsActivity(results);
+        }
     }
 
     @Override
@@ -568,16 +579,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Populates the bottom sheet with the Routes found
-     *
-     * @param results
      */
-    private void populateBottomSheet(List<BusRouteResult> results) {
-        if (results == null || results.isEmpty()) {
-            showBottomSheetResults(false);
-            mViewPagerAdapter = null;
-            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
-            return;
-        }
+    private void populateBottomSheet(List<BusRouteResult> results, int busResultId) {
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this.getLayoutInflater());
         for (BusRouteResult route : results) {
             BusRouteFragment fragment = new BusRouteFragment();
@@ -591,10 +594,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
         }
         showBottomSheetResults(true);
-        //After populating the bottom sheet, show the first result
-        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(0).getBusRouteResult();
+        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
         performRoadSearch(busRouteResult);
-
     }
 
     /**
@@ -750,6 +751,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                         String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
                         showCompleteBusRoute(busLineId, busLineName);
+                        break;
+                    case DISPLAY_BUS_LINES_RESULT:
+                        int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
+                        List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
+                        if (busResultId != -1 && results != null) {
+                                populateBottomSheet(results, busResultId);
+                        }
                         break;
                     default:
                         break;
@@ -1099,6 +1107,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
         builder.create().show();
+    }
+
+    /**
+     *
+     * @param results
+     */
+    private void startResultsActivity(List<BusRouteResult> results) {
+        Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
+        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
+        busResultsIntent.putExtra(BusResultsActivity.ORIGIN_ADDRESS_EXTRA, mCompoundSearchBox.getFromAddress());
+        busResultsIntent.putExtra(BusResultsActivity.DESTINATION_ADDRESS_EXTRA, mCompoundSearchBox.getToAddress());
+        startActivityForResult(busResultsIntent, DISPLAY_BUS_LINES_RESULT);
+        overridePendingTransition(0, 0);
     }
 
     @Override

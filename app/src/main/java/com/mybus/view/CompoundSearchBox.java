@@ -183,4 +183,12 @@ public class CompoundSearchBox extends FrameLayout {
     public void setSearchEnabled(boolean enabled) {
         mSearchBtn.setEnabled(enabled);
     }
+
+    public String getToAddress() {
+        return mToAddress;
+    }
+
+    public String getFromAddress() {
+        return mFromAddress;
+    }
 }
