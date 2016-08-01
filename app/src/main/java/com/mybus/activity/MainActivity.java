@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     //HashMap used as cache for complete bus routes
     private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
+    private ProgressDialog mDialog;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -118,9 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
     private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
-    private ProgressDialog mDialog;
     private Context mContext;
-    private List<BusRouteResult> mBusResults;
 
     /*---Bottom Sheet------*/
     /**
@@ -553,8 +552,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         cancelProgressDialog();
         //onDrawerToggleClick();
         removeChargingPointMarkers();
-        mBusResults = results;
-        if (mBusResults == null || mBusResults.isEmpty()) {
+        if (results == null || results.isEmpty()) {
             showBottomSheetResults(false);
             mViewPagerAdapter = null;
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
@@ -582,9 +580,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Populates the bottom sheet with the Routes found
      */
-    private void populateBottomSheet(int busResultId) {
+    private void populateBottomSheet(List<BusRouteResult> results, int busResultId) {
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this.getLayoutInflater());
-        for (BusRouteResult route : mBusResults) {
+        for (BusRouteResult route : results) {
             BusRouteFragment fragment = new BusRouteFragment();
             fragment.setBusRouteResult(route);
             mViewPagerAdapter.addFragment(fragment);
@@ -593,7 +591,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-            mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, mBusResults.get(i)));
+            mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
         }
         showBottomSheetResults(true);
         BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
@@ -757,7 +755,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case DISPLAY_BUS_LINES_RESULT:
                         int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
                         if(busResultId != -1){
-                            populateBottomSheet(busResultId);
+                            List<BusRouteResult> results = getIntent().getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
+                            populateBottomSheet(results, busResultId);
                         }
                         break;
                     default:
@@ -1116,7 +1115,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void startResultsActivity(List<BusRouteResult> results) {
         Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
-        busResultsIntent.putParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
+        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
         busResultsIntent.putExtra(BusResultsActivity.ORIGIN_ADDRESS_EXTRA, mCompoundSearchBox.getFromAddress());
         busResultsIntent.putExtra(BusResultsActivity.DESTINATION_ADDRESS_EXTRA, mCompoundSearchBox.getToAddress());
         startActivityForResult(busResultsIntent, DISPLAY_BUS_LINES_RESULT);

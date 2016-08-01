@@ -6,76 +6,130 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/bus_line_icon"
-            android:layout_width="0dp"
-            android:layout_height="110dp"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="top"
-            android:layout_weight="1"
-            android:src="@drawable/bus_line" />
+            android:layout_width="60dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/bus" />
+        <TextView
+            android:id="@+id/bus_line_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="562"
+            android:textSize="30sp"
+            android:layout_marginBottom="2dp"
+            android:textColor="@color/abc_search_url_text_selected" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/to_circle" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parada origen:"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/abc_search_url_text_selected" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/bus_line_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="562"
-                android:textSize="30sp"
-                android:layout_marginBottom="2dp"
-                android:textColor="@color/abc_search_url_text_selected" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Parada origen:"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:textColor="@color/abc_search_url_text_selected" />
-
-            <TextView
-                android:id="@+id/start_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Santiago del Estero 2659" />
-            <TextView
-                android:id="@+id/start_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:layout_marginBottom="6dp"
-                android:text="Distancia desde el origen: 1 cuadra" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Parada destino:"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:textColor="@color/abc_search_url_text_selected" />
-
-            <TextView
-                android:id="@+id/stop_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Padre Dutto 356" />
-            <TextView
-                android:id="@+id/stop_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Distancia hasta el destino: 3 cuadras" />
+            android:orientation="horizontal">
         </LinearLayout>
+        <TextView
+            android:id="@+id/start_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Santiago del Estero 2659" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="6dp">
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        </LinearLayout>
+        <TextView
+            android:id="@+id/start_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Distancia desde el origen: 1 cuadra" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/from_circle" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Parada destino:"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/abc_search_url_text_selected" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        </LinearLayout>
+        <TextView
+            android:id="@+id/stop_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Padre Dutto 356" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="6dp">
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        </LinearLayout>
+        <TextView
+            android:id="@+id/stop_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Distancia hasta el destino: 3 cuadras" />
     </LinearLayout>
 
     <View

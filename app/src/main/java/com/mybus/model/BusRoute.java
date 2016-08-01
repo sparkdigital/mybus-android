@@ -67,8 +67,8 @@ public class BusRoute implements Parcelable {
         mDestinationBusStopStreetName = in.readString();
         mDestinationBusStopStreetNumber = in.readInt();
         mStartBusStopStreetNumber = in.readInt();
-        mDestinationBusStopDistanceToDestination = in.readDouble();
-        mStartBusStopDistanceToOrigin = in.readDouble();
+        mDestinationBusStopDistanceToDestination = (Double) in.readValue(Double.class.getClassLoader());
+        mStartBusStopDistanceToOrigin = (Double) in.readValue(Double.class.getClassLoader());
     }
 
     @Override
@@ -83,14 +83,8 @@ public class BusRoute implements Parcelable {
         dest.writeString(mDestinationBusStopStreetName);
         dest.writeInt(mDestinationBusStopStreetNumber);
         dest.writeInt(mStartBusStopStreetNumber);
-        if (mDestinationBusStopDistanceToDestination == null) {
-            mDestinationBusStopDistanceToDestination = -1d;
-        }
-        if (mStartBusStopDistanceToOrigin == null) {
-            mStartBusStopDistanceToOrigin = -1d;
-        }
-        dest.writeDouble(mDestinationBusStopDistanceToDestination);
-        dest.writeDouble(mStartBusStopDistanceToOrigin);
+        dest.writeValue(mDestinationBusStopDistanceToDestination);
+        dest.writeValue(mStartBusStopDistanceToOrigin);
     }
 
     @Override

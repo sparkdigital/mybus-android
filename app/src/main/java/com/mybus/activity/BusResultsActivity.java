@@ -14,6 +14,7 @@ import com.mybus.adapter.BusResultViewAdapter;
 import com.mybus.listener.BusLineListItemListener;
 import com.mybus.model.BusRouteResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -62,9 +63,9 @@ public class BusResultsActivity extends AppCompatActivity implements BusLineList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_results);
         ButterKnife.bind(this);
-        mSearchOriginTextView.setText(getIntent().getStringExtra(BusResultsActivity.ORIGIN_ADDRESS_EXTRA));
-        mSearchDestinationTextView.setText(getIntent().getStringExtra(BusResultsActivity.DESTINATION_ADDRESS_EXTRA));
-        mResults = getIntent().getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
+        mSearchOriginTextView.setText(getIntent().getStringExtra(ORIGIN_ADDRESS_EXTRA));
+        mSearchDestinationTextView.setText(getIntent().getStringExtra(DESTINATION_ADDRESS_EXTRA));
+        mResults = getIntent().getParcelableArrayListExtra(RESULTS_EXTRA);
         //initialize the RecyclerView
         mBusResultsRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -77,6 +78,7 @@ public class BusResultsActivity extends AppCompatActivity implements BusLineList
     public void onItemClicked(int position) {
         Intent intent = new Intent();
         intent.putExtra(SELECTED_BUS_LINE_EXTRA, position);
+        intent.putExtra(RESULTS_EXTRA, (ArrayList<BusRouteResult>) mResults);
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();
