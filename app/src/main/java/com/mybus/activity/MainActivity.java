@@ -1,7 +1,6 @@
 package com.mybus.activity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -106,7 +105,6 @@ public class MainActivity extends ProgressDialogActivity implements OnMapReadyCa
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     //HashMap used as cache for complete bus routes
     private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
-    private ProgressDialog mDialog;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -734,20 +732,7 @@ public class MainActivity extends ProgressDialogActivity implements OnMapReadyCa
                         showCompleteBusRoute(busLineId, busLineName);
                         break;
                     case DISPLAY_BUS_LINES_RESULT:
-                        int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
-                        GeoLocation startGeoLocation = data.getParcelableExtra(BusResultsActivity.START_GEOLOCATION_EXTRA);
-                        GeoLocation endGeoLocation = data.getParcelableExtra(BusResultsActivity.END_GEOLOCATION_EXTRA);
-                        List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
-                        //update the varialbes with the new addresses
-                        mCompoundSearchBox.setFromAddress(startGeoLocation.getAddress());
-                        mCompoundSearchBox.setToAddress(endGeoLocation.getAddress());
-                        mStartLocationMarker.getMapMarker().setPosition(startGeoLocation.getLatLng());
-                        mEndLocationMarker.getMapMarker().setPosition(endGeoLocation.getLatLng());
-                        mStartLocationMarker.getMapMarker().setSnippet(startGeoLocation.getAddress());
-                        mEndLocationMarker.getMapMarker().setSnippet(endGeoLocation.getAddress());
-                        if (busResultId != -1 && results != null) {
-                            populateBottomSheet(results, busResultId);
-                        }
+                        updateAfterBusLineReult(data);
                         break;
                     default:
                         break;
@@ -756,6 +741,23 @@ public class MainActivity extends ProgressDialogActivity implements OnMapReadyCa
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateAfterBusLineReult(Intent data){
+        int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
+        GeoLocation startGeoLocation = data.getParcelableExtra(BusResultsActivity.START_GEOLOCATION_EXTRA);
+        GeoLocation endGeoLocation = data.getParcelableExtra(BusResultsActivity.END_GEOLOCATION_EXTRA);
+        List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
+        //update the varialbes with the new addresses
+        mCompoundSearchBox.setFromAddress(startGeoLocation.getAddress());
+        mCompoundSearchBox.setToAddress(endGeoLocation.getAddress());
+        mStartLocationMarker.getMapMarker().setPosition(startGeoLocation.getLatLng());
+        mEndLocationMarker.getMapMarker().setPosition(endGeoLocation.getLatLng());
+        mStartLocationMarker.getMapMarker().setSnippet(startGeoLocation.getAddress());
+        mEndLocationMarker.getMapMarker().setSnippet(endGeoLocation.getAddress());
+        if (busResultId != -1 && results != null) {
+            populateBottomSheet(results, busResultId);
+        }
     }
 
     private void showCompleteBusRoute(int busLineId, String busLineName) {
