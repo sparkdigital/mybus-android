@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#0574A5</color>
+    <color name="colorPrimaryDark">#0574A5</color>
     <color name="colorAccent">#FF4081</color>
     <color name="splashText">#454545</color>
     <color name="walkingLine">#bbbbbb</color>
-    <color name="mainSearchBoxColor">#006ad1</color>
+    <color name="mainSearchBoxColor">#0288D1</color>
     <color name="actionButtonBgColor">#FFFFFF</color>
     <color name="actionButtonPressedColor">#bbbbbb</color>
-    <color name="showAllFavoritesBackground">#0089D1</color>
+    <color name="showAllFavoritesBackground">#006ad1</color>
     <color name="showAllFavoritesTextColor">#FFFFFFFF</color>
-    <color name="searchLayoutBackground">#0288D1</color>
+    <color name="searchLayoutBackground">#006ad1</color>
     <color name="searchLayoutText">#000000</color>
     <color name="searchLayoutTextBackground">#FFFFFF</color>
-    <color name="returnRouteColor">#FF4081</color>
+    <color name="returnRouteColor">#EE236F</color>
     <color name="goingRouteColor">#77006ad1</color>
+    <color name="white">#FFFFFF</color>
 </resources>

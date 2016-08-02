@@ -24,7 +24,6 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/mainActivityBar"
         android:layout_width="match_parent"

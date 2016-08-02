@@ -445,11 +445,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mChargingPoints = new HashMap<>();
         mStartLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_origen))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_mappin))
                 .title(getString(R.string.start_location_title)), false, null, MyBusMarker.ORIGIN);
         mEndLocationMarker = new MyBusMarker(new MarkerOptions()
                 .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destino))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_mappin))
                 .title(getString(R.string.end_location_title)), false, null, MyBusMarker.DESTINATION);
     }
 
@@ -1025,7 +1025,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (chargePoints != null && !chargePoints.isEmpty()) {
             List<Marker> markerList = new ArrayList<>();
             MarkerOptions options = new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.punto_de_carga));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.charge));
             for (ChargePoint chargePoint : chargePoints) {
                 options.title(chargePoint.getName());
                 options.snippet(chargePoint.getAddress());

@@ -61,7 +61,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         if (busRouteResult.getType() == 0) {
             mBusLineTitle.setText(busRouteResult.getBusRoutes().get(0).getBusLineName());
-            mBusLineImage.setImageResource(R.drawable.mini_bondi);
+            mBusLineImage.setImageResource(R.drawable.bus);
         } else {
             String text = busRouteResult.getBusRoutes().get(0).getBusLineName() + " / " + busRouteResult.getBusRoutes().get(1).getBusLineName();
             mBusLineTitle.setText(text);
