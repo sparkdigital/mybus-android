@@ -31,7 +31,7 @@ import butterknife.OnClick;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFavoritesActivity extends BaseDisplayActivity implements FavoriteListItemListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener {
+public class DisplayFavoritesActivity extends BaseMyBusActivity implements FavoriteListItemListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener {
 
     public static final String RESULT_MYBUSMARKER = "FAVORITE_MARKER";
     @Bind(R.id.favorites_recycler_view)
