@@ -66,7 +66,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends ProgressDialogActivity implements OnMapReadyCallback, OnLocationChangedCallback,
+public class MainActivity extends BaseDisplayActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
         CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener,
         FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
@@ -342,9 +342,7 @@ public class MainActivity extends ProgressDialogActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         //check if play services are intalled and updated
         if (!PlayServicesChecker.checkPlayServices(mContext)) {
             //if not, request to open the play store
@@ -1134,6 +1132,21 @@ public class MainActivity extends ProgressDialogActivity implements OnMapReadyCa
         List<Marker> markerList = new ArrayList<>();
         markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
         zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
+    }
+
+    @Override
+    public int getLayoutToInflate() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public int getToolbarId() {
+        return 0;
+    }
+
+    @Override
+    protected int getToolbarTittle() {
+        return 0;
     }
 
 }

@@ -29,7 +29,7 @@ import butterknife.OnClick;
 /**
  * Created by Lucas De Lio on 7/19/2016.
  */
-public class BusResultsActivity extends ProgressDialogActivity implements BusLineListItemListener, RouteSearchCallback {
+public class BusResultsActivity extends BaseDisplayActivity implements BusLineListItemListener, RouteSearchCallback {
 
     public static final String RESULTS_EXTRA = "RESULTS_EXTRA";
     public static final String SELECTED_BUS_LINE_EXTRA = "SELECTED_BUS_LINE_EXTRA";
@@ -92,7 +92,6 @@ public class BusResultsActivity extends ProgressDialogActivity implements BusLin
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bus_results);
         ButterKnife.bind(this);
         mBusResultsRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -107,6 +106,21 @@ public class BusResultsActivity extends ProgressDialogActivity implements BusLin
         //initialize the RecyclerView
         mBusResultViewAdapter = new BusResultViewAdapter(mResults, this, this);
         mBusResultsRecyclerView.setAdapter(mBusResultViewAdapter);
+    }
+
+    @Override
+    public int getLayoutToInflate() {
+        return R.layout.activity_bus_results;
+    }
+
+    @Override
+    public int getToolbarId() {
+        return 0;
+    }
+
+    @Override
+    protected int getToolbarTittle() {
+        return 0;
     }
 
     @Override
