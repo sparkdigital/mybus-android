@@ -160,7 +160,7 @@ public class BusResultsActivity extends BaseDisplayActivity implements BusLineLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_CANCELED:
-                //the user canceled
+                //TODO: The user canceled
                 break;
             case RESULT_OK:
                 GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
@@ -179,6 +179,7 @@ public class BusResultsActivity extends BaseDisplayActivity implements BusLineLi
                 //perform a new search
                 showProgressDialog(getString(R.string.toast_searching));
                 ServiceFacade.getInstance().searchRoutes(mStartGeoLocation.getLatLng(), mEndGeoLocation.getLatLng(), this);
+                break;
             default:
                 break;
         }
