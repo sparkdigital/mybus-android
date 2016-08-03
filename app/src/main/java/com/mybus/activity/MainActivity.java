@@ -66,7 +66,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseDisplayActivity implements OnMapReadyCallback, OnLocationChangedCallback,
+public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
         CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener,
         FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
@@ -730,7 +730,7 @@ public class MainActivity extends BaseDisplayActivity implements OnMapReadyCallb
                         showCompleteBusRoute(busLineId, busLineName);
                         break;
                     case DISPLAY_BUS_LINES_RESULT:
-                        updateAfterBusLineReult(data);
+                        updateAfterBusLineResult(data);
                         break;
                     default:
                         break;
@@ -741,7 +741,7 @@ public class MainActivity extends BaseDisplayActivity implements OnMapReadyCallb
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void updateAfterBusLineReult(Intent data){
+    private void updateAfterBusLineResult(Intent data){
         int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
         GeoLocation startGeoLocation = data.getParcelableExtra(BusResultsActivity.START_GEOLOCATION_EXTRA);
         GeoLocation endGeoLocation = data.getParcelableExtra(BusResultsActivity.END_GEOLOCATION_EXTRA);

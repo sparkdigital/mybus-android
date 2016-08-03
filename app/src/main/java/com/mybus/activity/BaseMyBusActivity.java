@@ -11,9 +11,9 @@ import com.mybus.R;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public abstract class BaseDisplayActivity extends AppCompatActivity {
+public abstract class BaseMyBusActivity extends AppCompatActivity {
 
-    protected ProgressDialog mDialog;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

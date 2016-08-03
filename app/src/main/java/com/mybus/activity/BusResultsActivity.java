@@ -29,7 +29,7 @@ import butterknife.OnClick;
 /**
  * Created by Lucas De Lio on 7/19/2016.
  */
-public class BusResultsActivity extends BaseDisplayActivity implements BusLineListItemListener, RouteSearchCallback {
+public class BusResultsActivity extends BaseMyBusActivity implements BusLineListItemListener, RouteSearchCallback {
 
     public static final String RESULTS_EXTRA = "RESULTS_EXTRA";
     public static final String SELECTED_BUS_LINE_EXTRA = "SELECTED_BUS_LINE_EXTRA";
@@ -115,11 +115,13 @@ public class BusResultsActivity extends BaseDisplayActivity implements BusLineLi
 
     @Override
     public int getToolbarId() {
+        // This Activity has no toolbar
         return 0;
     }
 
     @Override
     protected int getToolbarTittle() {
+        // This Activity has no title
         return 0;
     }
 
@@ -158,32 +160,29 @@ public class BusResultsActivity extends BaseDisplayActivity implements BusLineLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode) {
-            case RESULT_CANCELED:
-                //TODO: The user canceled
+        if (resultCode == RESULT_OK) {
+            GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
+            updateOriginAndDestination(requestCode, geoLocation);
+            //perform a new search
+            showProgressDialog(getString(R.string.toast_searching));
+            ServiceFacade.getInstance().searchRoutes(mStartGeoLocation.getLatLng(), mEndGeoLocation.getLatLng(), this);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateOriginAndDestination(int requestCode, GeoLocation geoLocation) {
+        switch (requestCode) {
+            case FROM_SEARCH_ORIGIN_RESULT_ID:
+                mStartGeoLocation = geoLocation;
+                mSearchOriginTextView.setText(mStartGeoLocation.getAddress());
                 break;
-            case RESULT_OK:
-                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
-                switch (requestCode) {
-                    case FROM_SEARCH_ORIGIN_RESULT_ID:
-                        mStartGeoLocation = geoLocation;
-                        mSearchOriginTextView.setText(mStartGeoLocation.getAddress());
-                        break;
-                    case FROM_SEARCH_DESTINATION_RESULT_ID:
-                        mEndGeoLocation = geoLocation;
-                        mSearchDestinationTextView.setText(mEndGeoLocation.getAddress());
-                        break;
-                    default:
-                        break;
-                }
-                //perform a new search
-                showProgressDialog(getString(R.string.toast_searching));
-                ServiceFacade.getInstance().searchRoutes(mStartGeoLocation.getLatLng(), mEndGeoLocation.getLatLng(), this);
+            case FROM_SEARCH_DESTINATION_RESULT_ID:
+                mEndGeoLocation = geoLocation;
+                mSearchDestinationTextView.setText(mEndGeoLocation.getAddress());
                 break;
             default:
                 break;
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
