@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:background="@color/searchLayoutBackground"
+        android:background="@color/colorPrimary"
         android:baselineAligned="true"
         android:orientation="horizontal">
 
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="6dp"
-                    android:textColor="@color/searchLayoutText"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/auto_fit_tv_text_size"
                     autofit:minTextSize="@dimen/auto_fit_tv_min_text_size" />
             </LinearLayout>
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="6dp"
-                    android:textColor="@color/searchLayoutText"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/auto_fit_tv_text_size"
                     autofit:minTextSize="@dimen/auto_fit_tv_min_text_size" />
 

@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.arlib.floatingsearchview.FloatingSearchView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -86,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     DrawerLayout mDrawerLayout;
     @Bind(R.id.nav_view)
     NavigationView navigationView;
-    @Bind(R.id.mainActivityBar)
-    FloatingSearchView mToolbar;
+    @Bind(R.id.main_toolbar)
+    View mToolbar;
 
     /*-- Local Variables --*/
     private GoogleMap mMap;
@@ -120,8 +119,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ViewPager mViewPager;
     private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     private Context mContext;
-
     /*---Bottom Sheet------*/
+
+    /*---Main bar---*/
+    @OnClick(R.id.hamburger_icon)
+    public void onHamgurgerIconClick(View view) {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @OnClick(R.id.search_box)
+    public void onSearchBoxClick(View view) {
+        startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
+    }
+    /*---Main bar---*/
+
     /**
      * Listener for Map Long Click Listener for setting start or end locations.
      */
@@ -355,7 +366,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        initToolbar();
         initDrawer();
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -384,37 +394,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                mToolbar.closeMenu(false);
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
-            }
-        });
-    }
-
-    private void initToolbar() {
-        mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
-            @Override
-            public void onFocus() {
-                startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
-            }
-
-            @Override
-            public void onFocusCleared() {
-            }
-        });
-
-        //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
-        mToolbar.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
-            @Override
-            public void onMenuOpened() {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-
-            @Override
-            public void onMenuClosed() {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
             }
         });
     }
@@ -557,8 +540,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mViewPagerAdapter = null;
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
-        }
-        else{
+        } else {
             startResultsActivity(results);
         }
     }
@@ -698,13 +680,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mToolbar.clearSearchFocus();
-        mToolbar.closeMenu(false);
-    }
-
     /**
      * @param requestCode
      */
@@ -756,7 +731,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
                         List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
                         if (busResultId != -1 && results != null) {
-                                populateBottomSheet(results, busResultId);
+                            populateBottomSheet(results, busResultId);
                         }
                         break;
                     default:
@@ -1110,7 +1085,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     *
      * @param results
      */
     private void startResultsActivity(List<BusRouteResult> results) {

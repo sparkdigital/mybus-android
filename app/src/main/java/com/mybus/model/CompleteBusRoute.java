@@ -113,7 +113,7 @@ public class CompleteBusRoute {
 
         //Return route:
         PolylineOptions rectOptions = new PolylineOptions();
-        rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.returnRouteColor));
+        rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.colorSecondary));
         rectOptions.width(POLYLINE_WIDTH);
         rectOptions.geodesic(true);
         for (RoutePoint point : mReturnPointList) {

@@ -4,7 +4,7 @@
     xmlns:autofit="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:background="@color/mainSearchBoxColor"
+    android:background="@color/colorPrimary"
     android:baselineAligned="true"
     android:orientation="horizontal">
 
@@ -55,7 +55,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="6dp"
                 android:hint="@string/from_hint"
-                android:textColor="@color/searchLayoutText"
+                android:textColor="@color/black"
                 android:textSize="@dimen/auto_fit_tv_text_size"
                 autofit:minTextSize="@dimen/auto_fit_tv_min_text_size" />
         </LinearLayout>
@@ -82,7 +82,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="6dp"
                 android:hint="@string/to_hint"
-                android:textColor="@color/searchLayoutText"
+                android:textColor="@color/black"
                 android:textSize="@dimen/auto_fit_tv_text_size"
                 autofit:minTextSize="@dimen/auto_fit_tv_min_text_size" />
         </LinearLayout>
