@@ -719,8 +719,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_CANCELED:
-                //TODO: The user canceled
+                switch (requestCode) {
+                    case DISPLAY_BUS_LINES_RESULT:
+                        //clear the map
+                        onDrawerToggleClick();
                 break;
+                default:
+                    break;
+                }
             case RESULT_OK:
                 removeChargingPointMarkers();
 

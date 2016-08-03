@@ -53,7 +53,14 @@ public class BusResultsActivity extends AppCompatActivity implements BusLineList
     }
 
     @OnClick(R.id.backArrowImageView)
-    public void onBackPressed(View view) {
+    public void onBackArrowPressed(View view) {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
         overridePendingTransition(0, 0);
         finish();
     }
