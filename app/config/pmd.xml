@@ -73,6 +73,7 @@ Severity: EASY
         <exclude name="SingularField" />
         <exclude name="UncommentedEmptyMethodBody" />
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
+        <exclude name="SwitchDensity" />
     </rule>
 
     <rule ref="rulesets/java/empty.xml" />
