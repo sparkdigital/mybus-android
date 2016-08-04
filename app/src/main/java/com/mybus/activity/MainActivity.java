@@ -719,17 +719,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_CANCELED:
-                switch (requestCode) {
-                    case DISPLAY_BUS_LINES_RESULT:
-                        //clear the map
-                        onDrawerToggleClick();
-                break;
-                default:
-                    break;
+                if (requestCode == DISPLAY_BUS_LINES_RESULT) {
+                    //clear the map
+                    onDrawerToggleClick();
                 }
             case RESULT_OK:
                 removeChargingPointMarkers();
-
                 GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
                 boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
                 String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
