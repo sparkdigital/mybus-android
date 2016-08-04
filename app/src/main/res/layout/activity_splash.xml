@@ -7,9 +7,10 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/splash_logo_layout_height"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:src="@drawable/mybus_logo" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/splash" />
 
     <TextView
         android:layout_below="@id/imgLogo"
