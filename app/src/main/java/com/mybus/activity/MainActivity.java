@@ -1,7 +1,6 @@
 package com.mybus.activity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,7 +65,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationChangedCallback,
+public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
         CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener,
         FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
@@ -106,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     //HashMap used as cache for complete bus routes
     private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
-    private ProgressDialog mDialog;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -305,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p/>
+     * <p>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -356,9 +353,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         //check if play services are intalled and updated
         if (!PlayServicesChecker.checkPlayServices(mContext)) {
             //if not, request to open the play store
@@ -580,25 +575,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         performRoadSearch(busRouteResult);
     }
 
-    /**
-     * Shows a progress dialog with specified text
-     *
-     * @param text
-     */
-    private void showProgressDialog(String text) {
-        cancelProgressDialog();
-        mDialog = ProgressDialog.show(MainActivity.this, "", text, true, false);
-    }
-
-    /**
-     * Cancels the current progress dialog if any
-     */
-    private void cancelProgressDialog() {
-        if (mDialog != null) {
-            mDialog.cancel();
-            mDialog = null;
-        }
-    }
 
     /**
      * Hide all markers and polyline for a previous route
@@ -692,55 +668,61 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode) {
-            case RESULT_CANCELED:
-                //TODO: The user canceled
-                break;
-            case RESULT_OK:
-                removeChargingPointMarkers();
-
-                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
-                boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
-                String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
-                switch (requestCode) {
-                    case FROM_SEARCH_RESULT_ID:
-                        addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
-                        updateMyBusMarkerInfo(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
-                        mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
-                        zoomTo(mStartLocationMarker.getMapMarker().getPosition());
-                        mToolbar.setVisibility(View.GONE);
-                        mCompoundSearchBox.setVisible(true, true);
-                        break;
-                    case TO_SEARCH_RESULT_ID:
-                        addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
-                        updateMyBusMarkerInfo(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
-                        mCompoundSearchBox.setToAddress(geoLocation.getAddress());
-                        zoomOutStartEndMarkers();
-                        mToolbar.setVisibility(View.GONE);
-                        mCompoundSearchBox.setVisible(true, true);
-                        break;
-                    case DISPLAY_FAVORITES_RESULT:
-                        disPlayFavoritesResults(data);
-                        break;
-                    case DISPLAY_ROADS_RESULT:
-                        int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
-                        String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
-                        showCompleteBusRoute(busLineId, busLineName);
-                        break;
-                    case DISPLAY_BUS_LINES_RESULT:
-                        int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
-                        List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
-                        if (busResultId != -1 && results != null) {
-                            populateBottomSheet(results, busResultId);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            default:
-                break;
+        if (resultCode == RESULT_OK) {
+            removeChargingPointMarkers();
+            GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
+            boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
+            String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
+            switch (requestCode) {
+                case FROM_SEARCH_RESULT_ID:
+                    addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
+                    updateMyBusMarkerInfo(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
+                    mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
+                    zoomTo(mStartLocationMarker.getMapMarker().getPosition());
+                    mToolbar.setVisibility(View.GONE);
+                    mCompoundSearchBox.setVisible(true, true);
+                    break;
+                case TO_SEARCH_RESULT_ID:
+                    addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
+                    updateMyBusMarkerInfo(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
+                    mCompoundSearchBox.setToAddress(geoLocation.getAddress());
+                    zoomOutStartEndMarkers();
+                    mToolbar.setVisibility(View.GONE);
+                    mCompoundSearchBox.setVisible(true, true);
+                    break;
+                case DISPLAY_FAVORITES_RESULT:
+                    disPlayFavoritesResults(data);
+                    break;
+                case DISPLAY_ROADS_RESULT:
+                    int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
+                    String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
+                    showCompleteBusRoute(busLineId, busLineName);
+                    break;
+                case DISPLAY_BUS_LINES_RESULT:
+                    updateAfterBusLineResult(data);
+                    break;
+                default:
+                    break;
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateAfterBusLineResult(Intent data) {
+        int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
+        GeoLocation startGeoLocation = data.getParcelableExtra(BusResultsActivity.START_GEOLOCATION_EXTRA);
+        GeoLocation endGeoLocation = data.getParcelableExtra(BusResultsActivity.END_GEOLOCATION_EXTRA);
+        List<BusRouteResult> results = data.getParcelableArrayListExtra(BusResultsActivity.RESULTS_EXTRA);
+        //update the varialbes with the new addresses
+        mCompoundSearchBox.setFromAddress(startGeoLocation.getAddress());
+        mCompoundSearchBox.setToAddress(endGeoLocation.getAddress());
+        mStartLocationMarker.getMapMarker().setPosition(startGeoLocation.getLatLng());
+        mEndLocationMarker.getMapMarker().setPosition(endGeoLocation.getLatLng());
+        mStartLocationMarker.getMapMarker().setSnippet(startGeoLocation.getAddress());
+        mEndLocationMarker.getMapMarker().setSnippet(endGeoLocation.getAddress());
+        if (busResultId != -1 && results != null) {
+            populateBottomSheet(results, busResultId);
+        }
     }
 
     private void showCompleteBusRoute(int busLineId, String busLineName) {
@@ -1090,8 +1072,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void startResultsActivity(List<BusRouteResult> results) {
         Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
         busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
-        busResultsIntent.putExtra(BusResultsActivity.ORIGIN_ADDRESS_EXTRA, mCompoundSearchBox.getFromAddress());
-        busResultsIntent.putExtra(BusResultsActivity.DESTINATION_ADDRESS_EXTRA, mCompoundSearchBox.getToAddress());
+        GeoLocation startGeoLocation = new GeoLocation(mCompoundSearchBox.getFromAddress(), mStartLocationMarker.getMapMarker().getPosition());
+        busResultsIntent.putExtra(BusResultsActivity.START_GEOLOCATION_EXTRA, startGeoLocation);
+        GeoLocation endGeoLocation = new GeoLocation(mCompoundSearchBox.getToAddress(), mEndLocationMarker.getMapMarker().getPosition());
+        busResultsIntent.putExtra(BusResultsActivity.END_GEOLOCATION_EXTRA, endGeoLocation);
         startActivityForResult(busResultsIntent, DISPLAY_BUS_LINES_RESULT);
         overridePendingTransition(0, 0);
     }
@@ -1114,6 +1098,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         List<Marker> markerList = new ArrayList<>();
         markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
         zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
+    }
+
+    @Override
+    public int getLayoutToInflate() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public int getToolbarId() {
+        return 0;
+    }
+
+    @Override
+    protected int getToolbarTittle() {
+        return 0;
     }
 
 }
