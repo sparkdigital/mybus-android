@@ -694,50 +694,47 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode) {
-            case RESULT_CANCELED:
-                if (requestCode == DISPLAY_BUS_LINES_RESULT) {
-                    //clear the map
-                    onDrawerToggleClick();
-                }
-            case RESULT_OK:
-                removeChargingPointMarkers();
-                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
-                boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
-                String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
-                switch (requestCode) {
-                    case FROM_SEARCH_RESULT_ID:
-                        addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
-                        updateMyBusMarkerInfo(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
-                        mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
-                        zoomTo(mStartLocationMarker.getMapMarker().getPosition());
-                        mToolbar.setVisibility(View.GONE);
-                        mCompoundSearchBox.setVisible(true, true);
-                        break;
-                    case TO_SEARCH_RESULT_ID:
-                        addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
-                        updateMyBusMarkerInfo(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
-                        mCompoundSearchBox.setToAddress(geoLocation.getAddress());
-                        zoomOutStartEndMarkers();
-                        mToolbar.setVisibility(View.GONE);
-                        mCompoundSearchBox.setVisible(true, true);
-                        break;
-                    case DISPLAY_FAVORITES_RESULT:
-                        disPlayFavoritesResults(data);
-                        break;
-                    case DISPLAY_ROADS_RESULT:
-                        int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
-                        String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
-                        showCompleteBusRoute(busLineId, busLineName);
-                        break;
-                    case DISPLAY_BUS_LINES_RESULT:
-                        updateAfterBusLineResult(data);
-                        break;
-                    default:
-                        break;
-                }
-            default:
-                break;
+        if (resultCode == RESULT_CANCELED) {
+            if (requestCode == DISPLAY_BUS_LINES_RESULT) {
+                //clear the map
+                onDrawerToggleClick();
+            }
+        } else if (resultCode == RESULT_OK) {
+            removeChargingPointMarkers();
+            GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
+            boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
+            String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
+            switch (requestCode) {
+                case FROM_SEARCH_RESULT_ID:
+                    addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
+                    updateMyBusMarkerInfo(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
+                    mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
+                    zoomTo(mStartLocationMarker.getMapMarker().getPosition());
+                    mToolbar.setVisibility(View.GONE);
+                    mCompoundSearchBox.setVisible(true, true);
+                    break;
+                case TO_SEARCH_RESULT_ID:
+                    addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
+                    updateMyBusMarkerInfo(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
+                    mCompoundSearchBox.setToAddress(geoLocation.getAddress());
+                    zoomOutStartEndMarkers();
+                    mToolbar.setVisibility(View.GONE);
+                    mCompoundSearchBox.setVisible(true, true);
+                    break;
+                case DISPLAY_FAVORITES_RESULT:
+                    disPlayFavoritesResults(data);
+                    break;
+                case DISPLAY_ROADS_RESULT:
+                    int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
+                    String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
+                    showCompleteBusRoute(busLineId, busLineName);
+                    break;
+                case DISPLAY_BUS_LINES_RESULT:
+                    updateAfterBusLineResult(data);
+                    break;
+                default:
+                    break;
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
