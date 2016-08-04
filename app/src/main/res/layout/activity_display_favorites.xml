@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textSize="20sp"
-                    android:textColor="@color/showAllFavoritesTextColor"
+                    android:textColor="@color/white"
                     android:layout_margin="10dp"
                     android:text="@string/show_all_favorites_on_map"/>
             </LinearLayout>
