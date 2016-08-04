@@ -552,8 +552,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             mViewPagerAdapter = null;
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
-        }
-        else{
+        } else {
             startResultsActivity(results);
         }
     }
@@ -592,7 +591,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
         performRoadSearch(busRouteResult);
     }
-
 
 
     /**
@@ -699,7 +697,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 //clear the map
                 onDrawerToggleClick();
             }
-        } else if (resultCode == RESULT_OK) {
+        }
+        if (resultCode == RESULT_OK) {
             removeChargingPointMarkers();
             GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
             boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
@@ -739,7 +738,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void updateAfterBusLineResult(Intent data){
+    private void updateAfterBusLineResult(Intent data) {
         int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
         GeoLocation startGeoLocation = data.getParcelableExtra(BusResultsActivity.START_GEOLOCATION_EXTRA);
         GeoLocation endGeoLocation = data.getParcelableExtra(BusResultsActivity.END_GEOLOCATION_EXTRA);
@@ -1098,7 +1097,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     /**
-     *
      * @param results
      */
     private void startResultsActivity(List<BusRouteResult> results) {
