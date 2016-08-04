@@ -668,6 +668,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_CANCELED) {
+            if (requestCode == DISPLAY_BUS_LINES_RESULT) {
+                //clear the map
+                onDrawerToggleClick();
+            }
+        }
         if (resultCode == RESULT_OK) {
             removeChargingPointMarkers();
             GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
