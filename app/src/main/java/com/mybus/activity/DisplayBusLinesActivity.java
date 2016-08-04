@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusLinesRequestCallback, BusLineListItemListener{
+public class DisplayBusLinesActivity extends BaseMyBusActivity implements BusLinesRequestCallback, BusLineListItemListener{
 
     @Bind(R.id.bus_lines_recycler_view)
     RecyclerView mBusLinesRecyclerView;
