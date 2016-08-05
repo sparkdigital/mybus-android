@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.GeoLocation;
+import com.mybus.requirements.AddressValidator;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,7 +55,10 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocat
             Log.i(TAG, "address_found");
             String addressThoroughfare = address.getThoroughfare() != null ? address.getThoroughfare() : "";
             String addressFeatureName = address.getFeatureName() != null ? address.getFeatureName() : "";
-            String fullAddress = addressThoroughfare + " " + addressFeatureName;
+
+            String streetName = AddressValidator.removeAccents(addressThoroughfare);
+            String streetNumber = AddressValidator.removeDash(addressFeatureName);
+            String fullAddress = streetName + " " + streetNumber;
             return new GeoLocation(fullAddress, latLng);
         }
         return null;
