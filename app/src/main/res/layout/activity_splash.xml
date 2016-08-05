@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/splash" />
+        android:src="@drawable/splash_mybus" />
 
     <TextView
         android:layout_below="@id/imgLogo"
