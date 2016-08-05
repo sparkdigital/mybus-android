@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -91,9 +89,6 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         ButterKnife.bind(this);
 
         initSearchView();
-        Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
-        mSearchContent.startAnimation(bottomUp);
-
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
         switch (mSearchType) {
             case SearchType.ORIGIN:

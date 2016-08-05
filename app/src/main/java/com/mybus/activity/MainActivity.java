@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.arlib.floatingsearchview.FloatingSearchView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -84,8 +83,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     DrawerLayout mDrawerLayout;
     @Bind(R.id.nav_view)
     NavigationView navigationView;
-    @Bind(R.id.mainActivityBar)
-    FloatingSearchView mToolbar;
+    @Bind(R.id.main_toolbar)
+    View mToolbar;
 
     /*-- Local Variables --*/
     private GoogleMap mMap;
@@ -117,8 +116,20 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     ViewPager mViewPager;
     private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     private Context mContext;
-
     /*---Bottom Sheet------*/
+
+    /*---Main bar---*/
+    @OnClick(R.id.hamburger_icon)
+    public void onHamgurgerIconClick(View view) {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @OnClick(R.id.search_box)
+    public void onSearchBoxClick(View view) {
+        startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
+    }
+    /*---Main bar---*/
+
     /**
      * Listener for Map Long Click Listener for setting start or end locations.
      */
@@ -291,7 +302,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p/>
+     * <p>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -350,7 +361,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             return;
         }
 
-        initToolbar();
         initDrawer();
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -379,37 +389,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                mToolbar.closeMenu(false);
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
-            }
-        });
-    }
-
-    private void initToolbar() {
-        mToolbar.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
-            @Override
-            public void onFocus() {
-                startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
-            }
-
-            @Override
-            public void onFocusCleared() {
-            }
-        });
-
-        //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
-        mToolbar.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
-            @Override
-            public void onMenuOpened() {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-
-            @Override
-            public void onMenuClosed() {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
             }
         });
     }
@@ -552,8 +535,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             mViewPagerAdapter = null;
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
-        }
-        else{
+        } else {
             startResultsActivity(results);
         }
     }
@@ -592,7 +574,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
         performRoadSearch(busRouteResult);
     }
-
 
 
     /**
@@ -675,13 +656,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mToolbar.clearSearchFocus();
-        mToolbar.closeMenu(false);
-    }
-
     /**
      * @param requestCode
      */
@@ -694,54 +668,53 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode) {
-            case RESULT_CANCELED:
-                //TODO: The user canceled
-                break;
-            case RESULT_OK:
-                removeChargingPointMarkers();
-
-                GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
-                boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
-                String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
-                switch (requestCode) {
-                    case FROM_SEARCH_RESULT_ID:
-                        addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
-                        updateMyBusMarkerInfo(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
-                        mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
-                        zoomTo(mStartLocationMarker.getMapMarker().getPosition());
-                        mToolbar.setVisibility(View.GONE);
-                        mCompoundSearchBox.setVisible(true, true);
-                        break;
-                    case TO_SEARCH_RESULT_ID:
-                        addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
-                        updateMyBusMarkerInfo(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
-                        mCompoundSearchBox.setToAddress(geoLocation.getAddress());
-                        zoomOutStartEndMarkers();
-                        mToolbar.setVisibility(View.GONE);
-                        mCompoundSearchBox.setVisible(true, true);
-                        break;
-                    case DISPLAY_FAVORITES_RESULT:
-                        disPlayFavoritesResults(data);
-                        break;
-                    case DISPLAY_ROADS_RESULT:
-                        int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
-                        String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
-                        showCompleteBusRoute(busLineId, busLineName);
-                        break;
-                    case DISPLAY_BUS_LINES_RESULT:
-                        updateAfterBusLineResult(data);
-                        break;
-                    default:
-                        break;
-                }
-            default:
-                break;
+        if (resultCode == RESULT_CANCELED) {
+            if (requestCode == DISPLAY_BUS_LINES_RESULT) {
+                //clear the map
+                onDrawerToggleClick();
+            }
+        }
+        if (resultCode == RESULT_OK) {
+            removeChargingPointMarkers();
+            GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
+            boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
+            String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
+            switch (requestCode) {
+                case FROM_SEARCH_RESULT_ID:
+                    addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
+                    updateMyBusMarkerInfo(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
+                    mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
+                    zoomTo(mStartLocationMarker.getMapMarker().getPosition());
+                    mToolbar.setVisibility(View.GONE);
+                    mCompoundSearchBox.setVisible(true, true);
+                    break;
+                case TO_SEARCH_RESULT_ID:
+                    addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
+                    updateMyBusMarkerInfo(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
+                    mCompoundSearchBox.setToAddress(geoLocation.getAddress());
+                    zoomOutStartEndMarkers();
+                    mToolbar.setVisibility(View.GONE);
+                    mCompoundSearchBox.setVisible(true, true);
+                    break;
+                case DISPLAY_FAVORITES_RESULT:
+                    disPlayFavoritesResults(data);
+                    break;
+                case DISPLAY_ROADS_RESULT:
+                    int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
+                    String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
+                    showCompleteBusRoute(busLineId, busLineName);
+                    break;
+                case DISPLAY_BUS_LINES_RESULT:
+                    updateAfterBusLineResult(data);
+                    break;
+                default:
+                    break;
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void updateAfterBusLineResult(Intent data){
+    private void updateAfterBusLineResult(Intent data) {
         int busResultId = data.getIntExtra(BusResultsActivity.SELECTED_BUS_LINE_EXTRA, -1);
         GeoLocation startGeoLocation = data.getParcelableExtra(BusResultsActivity.START_GEOLOCATION_EXTRA);
         GeoLocation endGeoLocation = data.getParcelableExtra(BusResultsActivity.END_GEOLOCATION_EXTRA);
@@ -1100,7 +1073,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     /**
-     *
      * @param results
      */
     private void startResultsActivity(List<BusRouteResult> results) {

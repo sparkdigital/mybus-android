@@ -29,7 +29,7 @@
     <string name="displayFavoritesToolbarTittle">Favoritos</string>
     <string name="floating_search_origin">Origen de tu viaje…</string>
     <string name="floating_search_destination">Destino de tu viaje…</string>
-    <string name="main_activity_search_hint">Buscar…</string>
+    <string name="main_activity_search_hint">Buscar dirección de origen…</string>
     <string name="history_card_view_title">Recientes</string>
     <string name="favorite_card_view_title">Favoritos</string>
     <string name="invalidAddress">Direccion invalida</string>
