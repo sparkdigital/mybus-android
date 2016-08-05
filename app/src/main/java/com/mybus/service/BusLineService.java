@@ -1,5 +1,7 @@
 package com.mybus.service;
 
+import android.content.Context;
+
 import com.mybus.model.BusLine;
 
 import java.util.List;
@@ -9,5 +11,5 @@ import java.util.List;
  */
 public interface BusLineService {
 
-    List<BusLine> getBusLines();
+    List<BusLine> getBusLines(Context context);
 }

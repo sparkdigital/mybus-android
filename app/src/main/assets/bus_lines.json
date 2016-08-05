@@ -1,0 +1,215 @@
+{
+  "Results": [
+    {
+      "BusLineName": "720",
+      "Color": "01755e",
+      "IdBusLine": "3"
+    },
+    {
+      "BusLineName": "717sp",
+      "Color": "4d0302",
+      "IdBusLine": "42"
+    },
+    {
+      "BusLineName": "717lp",
+      "Color": "4d0302",
+      "IdBusLine": "43"
+    },
+    {
+      "BusLineName": "717cv",
+      "Color": "4d0302",
+      "IdBusLine": "41"
+    },
+    {
+      "BusLineName": "593b",
+      "Color": "2e88d6",
+      "IdBusLine": "36"
+    },
+    {
+      "BusLineName": "593a",
+      "Color": "2e88d6",
+      "IdBusLine": "35"
+    },
+    {
+      "BusLineName": "591b",
+      "Color": "2e88d6",
+      "IdBusLine": "38"
+    },
+    {
+      "BusLineName": "591a",
+      "Color": "2e88d6",
+      "IdBusLine": "37"
+    },
+    {
+      "BusLineName": "581",
+      "Color": "e50000",
+      "IdBusLine": "18"
+    },
+    {
+      "BusLineName": "573b",
+      "Color": "f77306",
+      "IdBusLine": "21"
+    },
+    {
+      "BusLineName": "573",
+      "Color": "f77306",
+      "IdBusLine": "22"
+    },
+    {
+      "BusLineName": "571b",
+      "Color": "f77306",
+      "IdBusLine": "20"
+    },
+    {
+      "BusLineName": "571a",
+      "Color": "f77306",
+      "IdBusLine": "19"
+    },
+    {
+      "BusLineName": "563b",
+      "Color": "00338e",
+      "IdBusLine": "17"
+    },
+    {
+      "BusLineName": "563a",
+      "Color": "00338e",
+      "IdBusLine": "2"
+    },
+    {
+      "BusLineName": "562",
+      "Color": "00338e",
+      "IdBusLine": "16"
+    },
+    {
+      "BusLineName": "555",
+      "Color": "d60405",
+      "IdBusLine": "34"
+    },
+    {
+      "BusLineName": "554",
+      "Color": "d60405",
+      "IdBusLine": "4"
+    },
+    {
+      "BusLineName": "553",
+      "Color": "d60405",
+      "IdBusLine": "32"
+    },
+    {
+      "BusLineName": "552a",
+      "Color": "d60405",
+      "IdBusLine": "25"
+    },
+    {
+      "BusLineName": "552",
+      "Color": "d60405",
+      "IdBusLine": "24"
+    },
+    {
+      "BusLineName": "551",
+      "Color": "d60405",
+      "IdBusLine": "23"
+    },
+    {
+      "BusLineName": "543",
+      "Color": "d60405",
+      "IdBusLine": "14"
+    },
+    {
+      "BusLineName": "542",
+      "Color": "d60405",
+      "IdBusLine": "1"
+    },
+    {
+      "BusLineName": "541",
+      "Color": "d60405",
+      "IdBusLine": "13"
+    },
+    {
+      "BusLineName": "533",
+      "Color": "2c800e",
+      "IdBusLine": "12"
+    },
+    {
+      "BusLineName": "532",
+      "Color": "2c800e",
+      "IdBusLine": "10"
+    },
+    {
+      "BusLineName": "531",
+      "Color": "2c800e",
+      "IdBusLine": "11"
+    },
+    {
+      "BusLineName": "525",
+      "Color": "d60405",
+      "IdBusLine": "39"
+    },
+    {
+      "BusLineName": "523",
+      "Color": "d60405",
+      "IdBusLine": "5"
+    },
+    {
+      "BusLineName": "522",
+      "Color": "d60405",
+      "IdBusLine": "9"
+    },
+    {
+      "BusLineName": "521",
+      "Color": "d60405",
+      "IdBusLine": "15"
+    },
+    {
+      "BusLineName": "512b",
+      "Color": "4d0302",
+      "IdBusLine": "7"
+    },
+    {
+      "BusLineName": "512a",
+      "Color": "4d0302",
+      "IdBusLine": "6"
+    },
+    {
+      "BusLineName": "511Ron",
+      "Color": "4d0302",
+      "IdBusLine": "33"
+    },
+    {
+      "BusLineName": "511p",
+      "Color": "4d0302",
+      "IdBusLine": "26"
+    },
+    {
+      "BusLineName": "511f",
+      "Color": "4d0302",
+      "IdBusLine": "27"
+    },
+    {
+      "BusLineName": "511e",
+      "Color": "4d0302",
+      "IdBusLine": "30"
+    },
+    {
+      "BusLineName": "511ch",
+      "Color": "4d0302",
+      "IdBusLine": "31"
+    },
+    {
+      "BusLineName": "511b",
+      "Color": "4d0302",
+      "IdBusLine": "28"
+    },
+    {
+      "BusLineName": "511a",
+      "Color": "4d0302",
+      "IdBusLine": "29"
+    },
+    {
+      "BusLineName": "221",
+      "Color": "38E028",
+      "IdBusLine": "44"
+    }
+  ],
+  "Type": -1
+}

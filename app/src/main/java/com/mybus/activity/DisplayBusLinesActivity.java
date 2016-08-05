@@ -39,7 +39,7 @@ public class DisplayBusLinesActivity extends BaseMyBusActivity implements BusLin
         mBusLinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //Show a progress dialog while bus lines are loading
         showProgressDialog(getString(R.string.toast_bus_lines_searching));
-        ServiceFacade.getInstance().getBusLines(this);
+        ServiceFacade.getInstance().getBusLines(this, this);
     }
 
     @Override
