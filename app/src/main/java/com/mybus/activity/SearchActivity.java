@@ -261,7 +261,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
             }
             setActivityResult(geoLocation, false, null);
         } else {
-            Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.address_not_exists, Toast.LENGTH_SHORT).show();
         }
     }
 
