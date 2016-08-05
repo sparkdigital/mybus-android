@@ -62,10 +62,7 @@ public final class AddressValidator {
         address = Normalizer.normalize(address, Normalizer.Form.NFD);
         address = address.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         //Avenue string abbreviation:
-        if (address.contains(AVENUE_STR)){
-            return address.replaceAll(AVENUE_STR, SHORT_AVENUE_STR);
-        }
-        return address;
+        return address.replaceAll(AVENUE_STR, SHORT_AVENUE_STR);
     }
 
     /**
