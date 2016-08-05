@@ -13,7 +13,7 @@
     <dimen name="search_view_inset">5dp</dimen>
     <dimen name="item_divider_margin">10dp</dimen>
     <dimen name="card_view_margin">2dp</dimen>
-    <dimen name="search_bar_height">70dp</dimen>
+    <dimen name="search_bar_height">58dp</dimen>
     <dimen name="card_view_title_padding">8dp</dimen>
     <dimen name="auto_fit_tv_min_text_size">8sp</dimen>
     <dimen name="auto_fit_tv_text_size">15sp</dimen>

@@ -26,7 +26,6 @@
                 android:layout_width="@dimen/square_button_size"
                 android:layout_height="@dimen/square_button_size"
                 android:alpha="1"
-                android:background="@drawable/oval_btn_selector"
                 android:clickable="true"
                 android:padding="@dimen/square_button_padding"
                 android:src="@drawable/ic_arrow_back_black_24dp" />
@@ -62,6 +61,7 @@
                 android:imeOptions="actionSearch"
                 android:inputType="textNoSuggestions"
                 android:maxLines="1"
+                android:textSize="16sp"
                 android:minHeight="@dimen/square_button_size"
                 android:singleLine="true" />
         </FrameLayout>

@@ -16,6 +16,7 @@
 
         <View
             android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
             android:layout_height="@dimen/search_bar_height" />
 
         <android.support.v7.widget.CardView
