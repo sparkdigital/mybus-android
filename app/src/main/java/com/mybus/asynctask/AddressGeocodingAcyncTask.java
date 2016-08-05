@@ -75,7 +75,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         for (Address address : addresses) {
             if ((address.getPostalCode() != null) && (MDQ_POSTAL_CODES.contains(address.getPostalCode()))) {
                 Log.i(TAG, "address_found");
-                String addressString = AddressValidator.removeAccents(address.getAddressLine(0));
+                String addressString = AddressValidator.normalizeAddress(address.getAddressLine(0));
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 return new GeoLocation(addressString, latLng);
             }

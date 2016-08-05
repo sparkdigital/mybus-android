@@ -56,7 +56,7 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocat
             String addressThoroughfare = address.getThoroughfare() != null ? address.getThoroughfare() : "";
             String addressFeatureName = address.getFeatureName() != null ? address.getFeatureName() : "";
 
-            String streetName = AddressValidator.removeAccents(addressThoroughfare);
+            String streetName = AddressValidator.normalizeAddress(addressThoroughfare);
             String streetNumber = AddressValidator.removeDash(addressFeatureName);
             String fullAddress = streetName + " " + streetNumber;
             return new GeoLocation(fullAddress, latLng);

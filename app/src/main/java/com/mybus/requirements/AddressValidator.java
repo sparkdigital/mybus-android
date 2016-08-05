@@ -5,6 +5,8 @@ import java.text.Normalizer;
 public final class AddressValidator {
 
     private static final int MAX_NUMBER = 20000;
+    private static final String AVENUE_STR = "Avenida";
+    private static final String SHORT_AVENUE_STR = "Av";
 
     private AddressValidator() {
     }
@@ -55,9 +57,15 @@ public final class AddressValidator {
      * @param address
      * @return
      */
-    public static String removeAccents(String address) {
+    public static String normalizeAddress(String address) {
+        //Remove accents:
         address = Normalizer.normalize(address, Normalizer.Form.NFD);
-        return address.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        address = address.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        //Avenue string abbreviation:
+        if (address.contains(AVENUE_STR)){
+            return address.replaceAll(AVENUE_STR, SHORT_AVENUE_STR);
+        }
+        return address;
     }
 
     /**
