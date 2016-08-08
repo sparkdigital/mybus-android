@@ -6,6 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="9dp"
+        android:paddingTop="9dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -14,19 +16,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_recent_history" />
+            android:src="@drawable/recent" />
 
         <TextView
             android:id="@+id/history_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="5"
+            android:layout_weight="6"
+            android:textSize="@dimen/mybus_text_size"
             android:text="Avenida Pedro Luro 2228" />
     </LinearLayout>
 
-    <View
-        style="@style/Divider"
-        android:layout_marginLeft="@dimen/item_divider_margin"
-        android:layout_marginRight="@dimen/item_divider_margin" />
+    <View style="@style/Divider" />
 </LinearLayout>

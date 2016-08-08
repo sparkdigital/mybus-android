@@ -16,6 +16,7 @@
 
         <View
             android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
             android:layout_height="@dimen/search_bar_height" />
 
         <android.support.v7.widget.CardView
@@ -40,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:src="@android:drawable/ic_menu_mylocation" />
+                    android:src="@drawable/location" />
 
                 <TextView
                     android:id="@+id/history_address"
