@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawerFavorites"
+            android:checkable="false"
+            android:icon="@drawable/favorite_white"
+            android:title="@string/main_drawer_favorites" />
+        <item
+            android:id="@+id/drawerCharge"
+            android:checkable="false"
+            android:icon="@drawable/charge_white"
+            android:title="@string/main_drawer_load_points" />
+        <item
+            android:id="@+id/drawerRoads"
+            android:checkable="false"
+            android:icon="@drawable/bus_white"
+            android:title="@string/main_drawer_tours" />
+
+        <item
+            android:id="@+id/drawerCosts"
+            android:checkable="false"
+            android:icon="@drawable/price_white"
+            android:title="@string/main_drawer_fares" />
+
+        <item
+            android:id="@+id/about"
+            android:checkable="false"
+            android:icon="@android:drawable/ic_menu_help"
+            android:title="@string/about" />
+    </group>
+</menu>
