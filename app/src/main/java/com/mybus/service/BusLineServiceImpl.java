@@ -14,6 +14,8 @@ import java.util.List;
 
 public class BusLineServiceImpl extends GenericService implements BusLineService {
 
+    private static final String TAG = "BusLineServiceImpl";
+
     @Override
     public List<BusLine> getBusLines(Context context) {
         JSONArray results = null;
@@ -22,7 +24,7 @@ public class BusLineServiceImpl extends GenericService implements BusLineService
             try {
                 results = linesJSONObject.getJSONArray("Results");
             } catch (JSONException e) {
-                Log.e("BusLineServiceImpl", e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
         }
         return BusLine.parseResults(results);
