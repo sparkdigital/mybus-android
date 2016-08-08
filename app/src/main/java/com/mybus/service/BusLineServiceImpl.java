@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BusLineServiceImpl extends GenericService implements BusLineService {
 
-    private static final String TAG = "BusLineServiceImpl";
+    private static final String TAG = BusLineService.class.getSimpleName();
 
     @Override
     public List<BusLine> getBusLines(Context context) {
