@@ -26,23 +26,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/show_all_favorites_layout"
-                android:background="@color/showAllFavoritesBackground"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:textColor="@color/white"
-                    android:layout_margin="10dp"
-                    android:text="@string/show_all_favorites_on_map"/>
-            </LinearLayout>
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/favorites_recycler_view"
                 android:layout_width="match_parent"
@@ -62,10 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginRight="20dp"
             android:src="@drawable/ic_input_add"
-            app:backgroundTint="@color/colorPrimary"
+            app:backgroundTint="@color/colorSecondaryDark"
             app:rippleColor="@color/colorPrimaryDark" />
     </android.support.design.widget.CoordinatorLayout>
 

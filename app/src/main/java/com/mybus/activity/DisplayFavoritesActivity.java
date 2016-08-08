@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -50,12 +52,6 @@ public class DisplayFavoritesActivity extends BaseMyBusActivity implements Favor
     void onAddFavoriteButtonClicked(View view) {
         DisplayFavoritesActivity.this.startSearchActivityForFavorite(ADD_SEARCH_RESULT_ID, null);
     }
-
-    @OnClick(R.id.show_all_favorites_layout)
-    void onShowAllFavoritesLayout(View view) {
-        returnFavoriteMarker(mFavorites);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,5 +227,21 @@ public class DisplayFavoritesActivity extends BaseMyBusActivity implements Favor
         setResult(RESULT_OK, intent);
         overridePendingTransition(0, 0);
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.favorites_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.show_all_favorites_on_map) {
+            returnFavoriteMarker(mFavorites);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
