@@ -49,7 +49,7 @@ public class CompoundSearchBox extends FrameLayout {
             setToAddress(null);
             setSearchEnabled(false);
             if (mListener != null) {
-                mListener.onDrawerToggleClick();
+                mListener.onBackArrowClick();
             }
         }
     };
