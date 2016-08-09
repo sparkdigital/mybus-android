@@ -42,12 +42,12 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_favorite_action_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="40dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/ic_input_add"
+            android:src="@drawable/plus"
             app:backgroundTint="@color/colorSecondaryDark"
             app:rippleColor="@color/colorPrimaryDark" />
     </android.support.design.widget.CoordinatorLayout>
