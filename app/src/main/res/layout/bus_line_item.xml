@@ -5,12 +5,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/bus_line_color_rectangle"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/bus_line_icon"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -19,7 +30,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="10"
             android:layout_margin="2dp"
             android:orientation="vertical">
 
@@ -27,8 +38,8 @@
                 android:id="@+id/bus_line_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:textSize="20sp"
+                android:layout_marginLeft="10dp"
                 android:textColor="@color/abc_search_url_text_selected"
                 android:textStyle="bold" />
         </LinearLayout>
