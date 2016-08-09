@@ -625,7 +625,12 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     @Override
     public void onLocationChanged(LatLng latLng) {
         if (mUserLocationMarker != null) {
-            mUserLocationMarker.getMapMarker().setPosition(latLng);
+            mUserLocationMarker.getMarkerOptions().position(latLng);
+            if (mUserLocationMarker.getMapMarker() == null) {
+                mUserLocationMarker.setMapMarker(mMap.addMarker(mUserLocationMarker.getMarkerOptions()));
+            } else {
+                mUserLocationMarker.getMapMarker().setPosition(latLng);
+            }
         }
     }
 
