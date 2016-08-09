@@ -443,7 +443,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void showCompleteBusRoute(int busLineId, String busLineName) {
         clearBusRouteOnMap();
         //Check if the complete route is present in cache.
-        if (mMyBusMap.CompleteRouteExists(busLineId)) {
+        if (mMyBusMap.completeRouteExists(busLineId)) {
             mMyBusMap.showCompleteBusRoute(busLineId);
         } else {
             showProgressDialog(getString(R.string.searching_complete_route));
