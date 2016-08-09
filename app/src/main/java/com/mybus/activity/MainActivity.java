@@ -1,8 +1,6 @@
 package com.mybus.activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -11,20 +9,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mybus.R;
@@ -38,14 +32,13 @@ import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
 import com.mybus.location.OnLocationChangedCallback;
-import com.mybus.location.OnLocationGeocodingCompleteCallback;
-import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.ChargePoint;
 import com.mybus.model.CompleteBusRoute;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
+import com.mybus.model.MyBusMap;
 import com.mybus.model.SearchType;
 import com.mybus.model.road.MapBusRoad;
 import com.mybus.model.road.RoadResult;
@@ -58,7 +51,6 @@ import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -67,8 +59,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
-        CompoundSearchBoxListener, GoogleMap.OnInfoWindowClickListener,
-        FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
+        CompoundSearchBoxListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
         ChargePointSearchCallback, CompleteBusRouteCallback {
 
     public static final int FROM_SEARCH_RESULT_ID = 1;
@@ -86,24 +77,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Bind(R.id.main_toolbar)
     View mToolbar;
 
-    /*-- Local Variables --*/
-    private GoogleMap mMap;
-    private LocationUpdater mLocationUpdater;
-    //Marker used to update the location on the map
-    private MyBusMarker mUserLocationMarker;
-    //Marker used to show the Start Location
-    private MyBusMarker mStartLocationMarker;
-    //Marker used to show the End Location
-    private MyBusMarker mEndLocationMarker;
-    //MyBusMarker reference used to update when a favorite is created
+    private Context mContext;
+    private MyBusMap mMyBusMap;
     private MyBusMarker mMarkerFavoriteToUpdate;
-    //List of chargingPoint markers
-    private HashMap<LatLng, MyBusMarker> mChargingPointMarkers;
-    private HashMap<MyBusMarker, ChargePoint> mChargingPoints;
-    //Favorite MyBusMarker List
-    private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
-    //HashMap used as cache for complete bus routes
-    private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -115,7 +91,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
     private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
-    private Context mContext;
     /*---Bottom Sheet------*/
 
     /*---Main bar---*/
@@ -130,179 +105,39 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
     /*---Main bar---*/
 
-    /**
-     * Listener for Map Long Click Listener for setting start or end locations.
-     */
-    private final GoogleMap.OnMapLongClickListener mMapOnLongClickListener = new GoogleMap.OnMapLongClickListener() {
-        @Override
-        public void onMapLongClick(LatLng latLng) {
-            removeChargingPointMarkers();
-            if (mStartLocationMarker.getMapMarker() == null) {
-                addOrUpdateMarker(mStartLocationMarker, latLng, mStartLocationGeocodingCompleted);
-                zoomTo(mStartLocationMarker.getMapMarker().getPosition());
-            } else {
-                addOrUpdateMarker(mEndLocationMarker, latLng, mEndLocationGeocodingCompleted);
-                zoomOutStartEndMarkers(); // Makes a zoom out in the map to see both markers at the same time.
-            }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = this;
+        ButterKnife.bind(this);
+        //check if play services are intalled and updated
+        if (!PlayServicesChecker.checkPlayServices(mContext)) {
+            //if not, request to open the play store
+            PlayServicesChecker.buildAlertMessageUpdatePlayServices(mContext);
+            return;
         }
-    };
 
-    /**
-     * Listener for start marker geocoding process
-     */
-    private final OnLocationGeocodingCompleteCallback mStartLocationGeocodingCompleted =
-            new OnLocationGeocodingCompleteCallback() {
-                @Override
-                public void onLocationGeocodingComplete(GeoLocation geoLocation) {
-                    if (geoLocation != null) {
-                        mStartLocationMarker.setAsFavorite(false);
-                        setAddressFromGeoCoding(geoLocation.getAddress(), mStartLocationMarker, getString(R.string.start_location_title));
-                        mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
-                    }
-                }
-            };
+        mMyBusMap = new MyBusMap(this);
+        mMyBusMap.resetLocalVariables();
 
-    /**
-     * Listener for end marker geocoding process
-     */
-    private final OnLocationGeocodingCompleteCallback mEndLocationGeocodingCompleted =
-            new OnLocationGeocodingCompleteCallback() {
-                @Override
-                public void onLocationGeocodingComplete(GeoLocation geoLocation) {
-                    if (geoLocation != null) {
-                        mEndLocationMarker.setAsFavorite(false);
-                        setAddressFromGeoCoding(geoLocation.getAddress(), mEndLocationMarker, getString(R.string.end_location_title));
-                        mCompoundSearchBox.setToAddress(geoLocation.getAddress());
-                    }
-                }
-            };
+        initDrawer();
+        navigationView.setNavigationItemSelectedListener(this);
 
-    /**
-     * Sets the marker title with the specified address
-     * Hides the toolbar and shows the compound search box
-     *
-     * @param address
-     * @param marker
-     * @param title
-     */
-    private void setAddressFromGeoCoding(String address, MyBusMarker marker, String title) {
-        setMarkerTitle(marker, title, address);
-        mToolbar.setVisibility(View.GONE);
-        mCompoundSearchBox.setVisible(true);
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        mMyBusMap.setLocationUpdater(new LocationUpdater(this, this));
+        //Disable the mPerformSearchButton action
+        mCompoundSearchBox.setSearchEnabled(false);
+        setupBottomSheet();
+        DeviceRequirementsChecker.checkGpsEnabled(this);
+        mCompoundSearchBox.setListener(this);
     }
-
-    /**
-     * Makes a zoom in the map using a LatLng
-     *
-     * @param latLng
-     */
-    private void zoomTo(LatLng latLng) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, getResources().getInteger(R.integer.default_map_zoom)));
-    }
-
-    /**
-     * Makes a zoom out in the map to keep all the markers received in view.
-     */
-    private void zoomOut(List<Marker> markerList) {
-        zoomOut(markerList, getResources().getInteger(R.integer.map_padding));
-    }
-
-    /**
-     * @param markerList
-     */
-    private void zoomOutFavorites(List<MyBusMarker> markerList) {
-        List<Marker> markers = new ArrayList<Marker>();
-        for (MyBusMarker myBusMarker : markerList) {
-            markers.add(myBusMarker.getMapMarker());
-        }
-        zoomOut(markers, getResources().getInteger(R.integer.map_padding_favorites));
-    }
-
-    /**
-     * Makes a zoom out in the map to keep all the markers received in view.
-     */
-    private void zoomOut(List<Marker> markerList, int padding) {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Marker marker : markerList) {
-            builder.include(marker.getPosition());
-        }
-        LatLngBounds bounds = builder.build();
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(padding));
-        mMap.animateCamera(cu);
-    }
-
-    /**
-     * Makes a zoom out in the map to keep mStartLocationMarker and mEndLocationMarker visible.
-     */
-    private void zoomOutStartEndMarkers() {
-        if (mStartLocationMarker.getMapMarker() != null && mStartLocationMarker.getMapMarker().isVisible() && mEndLocationMarker.getMapMarker() != null && mEndLocationMarker.getMapMarker().isVisible()) {
-            List<Marker> markerList = new ArrayList<>();
-            markerList.add(mStartLocationMarker.getMapMarker());
-            markerList.add(mEndLocationMarker.getMapMarker());
-            zoomOut(markerList);
-        }
-    }
-
-    /**
-     * Add or update a specified marker on the map
-     *
-     * @param marker   the marker to be updated.
-     * @param latLng   the LatLng where the marker is going to be
-     * @param listener null if no Geocoding By Location needed.
-     * @return the marker from the map
-     */
-    private void addOrUpdateMarker(MyBusMarker marker, LatLng latLng, OnLocationGeocodingCompleteCallback listener) {
-        clearBusRouteOnMap();
-        showBottomSheetResults(false);
-        if (marker.getMapMarker() == null) {
-            marker.getMarkerOptions().position(latLng);
-            marker.setMapMarker(mMap.addMarker(marker.getMarkerOptions()));
-        } else {
-            marker.getMapMarker().setPosition(latLng);
-        }
-        if (listener != null) {
-            ServiceFacade.getInstance().performGeocodeByLocation(latLng, listener, mContext);
-        }
-        //Update searchButton status
-        boolean enableSearch = mStartLocationMarker.getMapMarker() != null && mEndLocationMarker.getMapMarker() != null;
-        mCompoundSearchBox.setSearchEnabled(enableSearch);
-    }
-
-    /**
-     * Listener for the marker drag
-     */
-    private final GoogleMap.OnMarkerDragListener mOnMarkerDragListener = new GoogleMap.OnMarkerDragListener() {
-
-        @Override
-        public void onMarkerDragStart(Marker marker) {
-            marker.hideInfoWindow();
-            removeChargingPointMarkers();
-            clearBusRouteOnMap();
-            showBottomSheetResults(false);
-        }
-
-        @Override
-        public void onMarkerDrag(Marker marker) {
-            marker.hideInfoWindow();
-        }
-
-        @Override
-        public void onMarkerDragEnd(Marker marker) {
-            marker.hideInfoWindow();
-            OnLocationGeocodingCompleteCallback listener = null;
-            if (marker.getId().equals(mStartLocationMarker.getMapMarker().getId())) {
-                listener = mStartLocationGeocodingCompleted;
-            } else if (marker.getId().equals(mEndLocationMarker.getMapMarker().getId())) {
-                listener = mEndLocationGeocodingCompleted;
-            }
-            ServiceFacade.getInstance().performGeocodeByLocation(marker.getPosition(), listener, mContext);
-            zoomOutStartEndMarkers();
-        }
-    };
 
     /**
      * Bottom Sheet Tab selected listener
-     * <p>
+     * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
     private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -321,9 +156,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                     MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
                     List<Marker> markerList = new ArrayList<>();
                     markerList.addAll(mapBusRoad.getMarkerList());
-                    markerList.add(mStartLocationMarker.getMapMarker());
-                    markerList.add(mEndLocationMarker.getMapMarker());
-                    zoomOut(markerList);
+                    markerList.add(mMyBusMap.getStartLocationMarker().getMapMarker());
+                    markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
+                    mMyBusMap.zoomOut(markerList);
                 } else {
                     BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
                     performRoadSearch(busRouteResult);
@@ -345,36 +180,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @OnClick(R.id.center_location_action_button)
     public void onCenterLocationButtonClick(View view) {
         if (DeviceRequirementsChecker.checkGpsEnabled(this)) {
-            centerToLastKnownLocation();
+            mMyBusMap.centerToLastKnownLocation();
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mContext = this;
-        ButterKnife.bind(this);
-        //check if play services are intalled and updated
-        if (!PlayServicesChecker.checkPlayServices(mContext)) {
-            //if not, request to open the play store
-            PlayServicesChecker.buildAlertMessageUpdatePlayServices(mContext);
-            return;
-        }
-
-        initDrawer();
-        navigationView.setNavigationItemSelectedListener(this);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        mLocationUpdater = new LocationUpdater(this, this);
-        //Disable the mPerformSearchButton action
-        mCompoundSearchBox.setSearchEnabled(false);
-        resetLocalVariables();
-        setupBottomSheet();
-        DeviceRequirementsChecker.checkGpsEnabled(this);
-        mCompoundSearchBox.setListener(this);
     }
 
     private void initDrawer() {
@@ -400,35 +207,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void setupBottomSheet() {
         mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(dpToPx(BOTTOM_SHEET_PEEK_HEIGHT_DP));
-    }
-
-    /**
-     * Returns pixels dimension from DensityPoints given the display metrics from the device
-     *
-     * @param dp
-     * @return
-     */
-    private int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-    }
-
-    /**
-     * This method restart the local variables to avoid old apps's states
-     */
-    private void resetLocalVariables() {
-        mFavoritesMarkers = new HashMap<>();
-        mChargingPointMarkers = new HashMap<>();
-        mChargingPoints = new HashMap<>();
-        mStartLocationMarker = new MyBusMarker(new MarkerOptions()
-                .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_mappin))
-                .title(getString(R.string.start_location_title)), false, null, MyBusMarker.ORIGIN);
-        mEndLocationMarker = new MyBusMarker(new MarkerOptions()
-                .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_mappin))
-                .title(getString(R.string.end_location_title)), false, null, MyBusMarker.DESTINATION);
+        mBottomSheetBehavior.setPeekHeight(mMyBusMap.dpToPx(BOTTOM_SHEET_PEEK_HEIGHT_DP));
     }
 
     /**
@@ -437,40 +216,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mLocationUpdater.startListening();
-        mUserLocationMarker = new MyBusMarker(new MarkerOptions()
-                .title(getString(R.string.current_location_marker))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot)), false, null, MyBusMarker.USER_LOCATION);
-        centerToLastKnownLocation();
-
-        mMap.setInfoWindowAdapter(new MyBusInfoWindowsAdapter(this));
-        mMap.setOnMapLongClickListener(mMapOnLongClickListener);
-        mMap.setOnMarkerDragListener(mOnMarkerDragListener);
-        mMap.setOnInfoWindowClickListener(this);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-    }
-
-    public void centerToLastKnownLocation() {
-        //get the last gps location
-        LatLng lastLocation = mLocationUpdater.getLastKnownLocation();
-        if (lastLocation != null) {
-            mUserLocationMarker.getMarkerOptions().position(lastLocation);
-            //if the marker is not on the map, add it
-            if (mUserLocationMarker.getMapMarker() == null) {
-                mUserLocationMarker.setMapMarker(mMap.addMarker(mUserLocationMarker.getMarkerOptions()));
-            } else {
-                mUserLocationMarker.getMapMarker().setPosition(lastLocation);
-            }
-            zoomTo(mLocationUpdater.getLastKnownLocation());
-        }
+        mMyBusMap.setMap(googleMap);
     }
 
     @Override
     public void onLocationChanged(LatLng latLng) {
-        if (mUserLocationMarker != null) {
-            mUserLocationMarker.getMapMarker().setPosition(latLng);
-        }
+        mMyBusMap.onLocationChanged(latLng);
     }
 
     @Override
@@ -482,33 +233,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         super.onBackPressed();
     }
 
-    private void setMarkerTitle(MyBusMarker marker, String title, String address) {
-        if (marker.getMapMarker() != null) {
-            marker.getMapMarker().setTitle(title);
-            marker.getMapMarker().setSnippet(address);
-            marker.getMapMarker().showInfoWindow();
-        }
-        marker.getMarkerOptions().title(title);
-        marker.getMarkerOptions().snippet(address);
-    }
-
     /**
      * Searches between two points in the map
      */
     private void performRoutesSearch() {
-        if (mStartLocationMarker.getMapMarker() == null || mEndLocationMarker.getMapMarker() == null) {
-            return;
-        }
-        if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
-            clearBusRouteOnMap();
-            showBottomSheetResults(false);
-            showProgressDialog(getString(R.string.toast_searching));
-            ServiceFacade.getInstance().searchRoutes(mStartLocationMarker.getMapMarker().getPosition(), mEndLocationMarker.getMapMarker().getPosition(), this);
-        } else {
-            Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
-        }
-        //when performing a search remove all the favorites in the map
-        removeAllFavoritesMarkers();
+
     }
 
     /**
@@ -522,14 +251,14 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
         showProgressDialog(getString(R.string.dialog_searching_specific_route));
         ServiceFacade.getInstance().searchRoads(busRouteResult.getType(), busRouteResult,
-                mStartLocationMarker.getMapMarker().getPosition(), mEndLocationMarker.getMapMarker().getPosition(), MainActivity.this);
+                mMyBusMap.getStartLocationMarker().getMapMarker().getPosition(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition(), MainActivity.this);
     }
 
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
         //onDrawerToggleClick();
-        removeChargingPointMarkers();
+        mMyBusMap.removeChargingPointMarkers();
         if (results == null || results.isEmpty()) {
             showBottomSheetResults(false);
             mViewPagerAdapter = null;
@@ -543,14 +272,14 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onRoadFound(RoadResult roadResult) {
         cancelProgressDialog();
-        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMap, roadResult.getMarkerOptions(), roadResult.getPolylineOptions());
+        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMyBusMap.getMap(), roadResult.getMarkerOptions(), roadResult.getPolylineOptions());
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
             List<Marker> markerList = new ArrayList<>();
             markerList.addAll(mapBusRoad.getMarkerList());
-            markerList.add(mStartLocationMarker.getMapMarker());
-            markerList.add(mEndLocationMarker.getMapMarker());
-            zoomOut(markerList);
+            markerList.add(mMyBusMap.getStartLocationMarker().getMapMarker());
+            markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
+            mMyBusMap.zoomOut(markerList);
         }
     }
 
@@ -588,14 +317,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     /**
      * Clears all markers and polyline
      */
-    private void clearBusRouteOnMap() {
+    public void clearBusRouteOnMap() {
         if (mViewPagerAdapter != null) {
             mViewPagerAdapter.clearBusRoutes();
         }
-        //Hide complete bus routes
-        for (MapBusRoad route : mCompleteRoutes.values()) {
-            route.showBusRoadFromMap(false);
-        }
+        mMyBusMap.hideBusRoutes();
     }
 
     /**
@@ -613,7 +339,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
      *
      * @param show
      */
-    private void showBottomSheetResults(boolean show) {
+    public void showBottomSheetResults(boolean show) {
         if (mBottomSheet != null) {
             if (show) {
                 mBottomSheet.setVisibility(View.VISIBLE);
@@ -648,7 +374,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 break;
             case R.id.drawerCharge:
                 showProgressDialog(getString(R.string.dialog_searching_loading_points));
-                ServiceFacade.getInstance().getNearChargingPoints(mLocationUpdater.getLastKnownLocation(), MainActivity.this);
+                ServiceFacade.getInstance().getNearChargingPoints(mMyBusMap.getLocationUpdater().getLastKnownLocation(), MainActivity.this);
                 break;
             default:
                 break;
@@ -675,24 +401,24 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             }
         }
         if (resultCode == RESULT_OK) {
-            removeChargingPointMarkers();
+            mMyBusMap.removeChargingPointMarkers();
             GeoLocation geoLocation = data.getParcelableExtra(SearchActivity.RESULT_GEOLOCATION_EXTRA);
             boolean isFavorite = data.getBooleanExtra(SearchActivity.RESULT_ISFAVORITE_EXTRA, false);
             String favName = data.getStringExtra(SearchActivity.RESULT_FAVORITE_NAME_EXTRA);
             switch (requestCode) {
                 case FROM_SEARCH_RESULT_ID:
-                    addOrUpdateMarker(mStartLocationMarker, geoLocation.getLatLng(), null);
-                    updateMyBusMarkerInfo(mStartLocationMarker, favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
+                    mMyBusMap.addOrUpdateMarker(mMyBusMap.getStartLocationMarker(), geoLocation.getLatLng(), null);
+                    mMyBusMap.updateMyBusMarkerInfo(mMyBusMap.getStartLocationMarker(), favName, getString(R.string.start_location_title), geoLocation.getAddress(), isFavorite);
                     mCompoundSearchBox.setFromAddress(geoLocation.getAddress());
-                    zoomTo(mStartLocationMarker.getMapMarker().getPosition());
+                    mMyBusMap.zoomTo(mMyBusMap.getStartLocationMarker().getMapMarker().getPosition());
                     mToolbar.setVisibility(View.GONE);
                     mCompoundSearchBox.setVisible(true, true);
                     break;
                 case TO_SEARCH_RESULT_ID:
-                    addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
-                    updateMyBusMarkerInfo(mEndLocationMarker, favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
+                    mMyBusMap.addOrUpdateMarker(mMyBusMap.getEndLocationMarker(), geoLocation.getLatLng(), null);
+                    mMyBusMap.updateMyBusMarkerInfo(mMyBusMap.getEndLocationMarker(), favName, getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
                     mCompoundSearchBox.setToAddress(geoLocation.getAddress());
-                    zoomOutStartEndMarkers();
+                    mMyBusMap.zoomOutStartEndMarkers();
                     mToolbar.setVisibility(View.GONE);
                     mCompoundSearchBox.setVisible(true, true);
                     break;
@@ -722,10 +448,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         //update the varialbes with the new addresses
         mCompoundSearchBox.setFromAddress(startGeoLocation.getAddress());
         mCompoundSearchBox.setToAddress(endGeoLocation.getAddress());
-        mStartLocationMarker.getMapMarker().setPosition(startGeoLocation.getLatLng());
-        mEndLocationMarker.getMapMarker().setPosition(endGeoLocation.getLatLng());
-        mStartLocationMarker.getMapMarker().setSnippet(startGeoLocation.getAddress());
-        mEndLocationMarker.getMapMarker().setSnippet(endGeoLocation.getAddress());
+        mMyBusMap.getStartLocationMarker().getMapMarker().setPosition(startGeoLocation.getLatLng());
+        mMyBusMap.getEndLocationMarker().getMapMarker().setPosition(endGeoLocation.getLatLng());
+        mMyBusMap.getStartLocationMarker().getMapMarker().setSnippet(startGeoLocation.getAddress());
+        mMyBusMap.getEndLocationMarker().getMapMarker().setSnippet(endGeoLocation.getAddress());
         if (busResultId != -1 && results != null) {
             populateBottomSheet(results, busResultId);
         }
@@ -734,8 +460,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void showCompleteBusRoute(int busLineId, String busLineName) {
         clearBusRouteOnMap();
         //Check if the complete route is present in cache.
-        if (mCompleteRoutes.containsKey(busLineId)) {
-            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+        if (mMyBusMap.getCompleteRoutes().containsKey(busLineId)) {
+            mMyBusMap.getCompleteRoutes().get(busLineId).showBusRoadFromMap(true);
             zoomOutCompleteBusRoute(busLineId);
         } else {
             showProgressDialog(getString(R.string.searching_complete_route));
@@ -748,54 +474,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         if (favoriteMarkers != null && !favoriteMarkers.isEmpty()) {
             onDrawerToggleClick();
             for (MyBusMarker favMarker : favoriteMarkers) {
-                favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
+                favMarker.setMapMarker(mMyBusMap.getMap().addMarker(favMarker.getMarkerOptions()));
                 //favMarker.getMapMarker().showInfoWindow();
-                mFavoritesMarkers.put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
+                mMyBusMap.getFavoritesMarkers().put(favMarker.getMapMarker().getPosition(), favMarker); //TODO: Check if exists
             }
-            zoomOutFavorites(favoriteMarkers);
-        }
-    }
-
-    /**
-     * Remove the given favorite marker from he HashMap and Map
-     */
-    private void removeFavoriteMarker(MyBusMarker favoriteMarker) {
-        Marker marker = favoriteMarker.getMapMarker();
-        if (marker != null) {
-            mFavoritesMarkers.remove(marker.getPosition());
-            marker.remove();
-        }
-    }
-
-    /**
-     * Remove all favorite markers present on the map and reset the HashMap
-     */
-    private void removeAllFavoritesMarkers() {
-        for (MyBusMarker myBusMarker : mFavoritesMarkers.values()) {
-            Marker marker = myBusMarker.getMapMarker();
-            if (marker != null) {
-                marker.remove();
-            }
-        }
-        mFavoritesMarkers = new HashMap<>();
-    }
-
-    /**
-     * Update myBusMarker's information with favorite name or default title.
-     *
-     * @param myBusMarker
-     * @param title
-     * @param defaultTitle
-     * @param address
-     * @param isFavorite
-     */
-    private void updateMyBusMarkerInfo(MyBusMarker myBusMarker, String title, String defaultTitle, String address, boolean isFavorite) {
-        if (isFavorite) {
-            myBusMarker.setAsFavorite(true);
-            myBusMarker.setFavoriteName(title);
-            setMarkerTitle(myBusMarker, title, address);
-        } else {
-            setMarkerTitle(myBusMarker, defaultTitle, address);
+            mMyBusMap.zoomOutFavorites(favoriteMarkers);
         }
     }
 
@@ -811,84 +494,56 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @Override
     public void onDrawerToggleClick() {
-        if (mStartLocationMarker.getMapMarker() != null) {
-            mStartLocationMarker.getMapMarker().remove();
-            mStartLocationMarker.setMapMarker(null);
-            mStartLocationMarker.setAsFavorite(false);
+        if (mMyBusMap.getStartLocationMarker().getMapMarker() != null) {
+            mMyBusMap.getStartLocationMarker().getMapMarker().remove();
+            mMyBusMap.getStartLocationMarker().setMapMarker(null);
+            mMyBusMap.getStartLocationMarker().setAsFavorite(false);
         }
-        if (mEndLocationMarker.getMapMarker() != null) {
-            mEndLocationMarker.getMapMarker().remove();
-            mEndLocationMarker.setMapMarker(null);
-            mEndLocationMarker.setAsFavorite(false);
+        if (mMyBusMap.getEndLocationMarker().getMapMarker() != null) {
+            mMyBusMap.getEndLocationMarker().getMapMarker().remove();
+            mMyBusMap.getEndLocationMarker().setMapMarker(null);
+            mMyBusMap.getEndLocationMarker().setAsFavorite(false);
         }
-        removeChargingPointMarkers();
+        mMyBusMap.removeChargingPointMarkers();
         showBottomSheetResults(false);
         clearBusRouteOnMap();
         mCompoundSearchBox.setVisible(false);
         mToolbar.setVisibility(View.VISIBLE);
-        removeAllFavoritesMarkers();
+        mMyBusMap.removeAllFavoritesMarkers();
     }
 
     @Override
     public void onFlipSearchClick() {
-        if (mStartLocationMarker.getMapMarker() == null || mEndLocationMarker.getMapMarker() == null) {
+        if (mMyBusMap.getStartLocationMarker().getMapMarker() == null || mMyBusMap.getEndLocationMarker().getMapMarker() == null) {
             return;
         }
-        LatLng latLngAux = mStartLocationMarker.getMapMarker().getPosition();
-        String addressAux = mStartLocationMarker.getMapMarker().getTitle();
-        addOrUpdateMarker(mStartLocationMarker, mEndLocationMarker.getMapMarker().getPosition(), null);
-        mStartLocationMarker.getMapMarker().setTitle(mEndLocationMarker.getMapMarker().getTitle());
-        mStartLocationMarker.getMapMarker().hideInfoWindow();
-        addOrUpdateMarker(mEndLocationMarker, latLngAux, null);
-        mEndLocationMarker.getMapMarker().setTitle(addressAux);
-        mEndLocationMarker.getMapMarker().hideInfoWindow();
+        LatLng latLngAux = mMyBusMap.getStartLocationMarker().getMapMarker().getPosition();
+        String addressAux = mMyBusMap.getStartLocationMarker().getMapMarker().getTitle();
+        mMyBusMap.addOrUpdateMarker(mMyBusMap.getStartLocationMarker(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition(), null);
+        mMyBusMap.getStartLocationMarker().getMapMarker().setTitle(mMyBusMap.getEndLocationMarker().getMapMarker().getTitle());
+        mMyBusMap.getStartLocationMarker().getMapMarker().hideInfoWindow();
+        mMyBusMap.addOrUpdateMarker(mMyBusMap.getEndLocationMarker(), latLngAux, null);
+        mMyBusMap.getEndLocationMarker().getMapMarker().setTitle(addressAux);
+        mMyBusMap.getEndLocationMarker().getMapMarker().hideInfoWindow();
 
-        zoomOutStartEndMarkers();
+        mMyBusMap.zoomOutStartEndMarkers();
     }
 
     @Override
     public void onSearchButtonClick() {
-        performRoutesSearch();
-    }
-
-    @Override
-    public void onInfoWindowClick(final Marker marker) {
-        //Some infoWindow was clicked
-        //Detect which type of marker is:
-        MyBusMarker myBusMarker = isMyBusMarker(marker);
-
-        if (myBusMarker != null) {
-            myBusMarker.getMapMarker().hideInfoWindow();
-            switch (myBusMarker.getType()) {
-                case MyBusMarker.ORIGIN: //Is a favorite creation or remove
-                case MyBusMarker.DESTINATION: //Is a favorite creation or remove
-                    if (myBusMarker.isFavorite()) { //Remove
-                        FavoriteAlertDialogConfirm favAlert = FavoriteAlertDialogConfirm.newInstance(FavoriteAlertDialogConfirm.REMOVE,
-                                getString(R.string.favorite_confirm_delete_title), getString(R.string.favorite_confirm_delete_message), null, myBusMarker);
-                        favAlert.show(getFragmentManager(), "Confirm Remove Dialog");
-                    } else { //Add
-                        FavoriteLocation newFavorite = new FavoriteLocation();
-                        newFavorite.setAddress(myBusMarker.getMapMarker().getSnippet());
-                        newFavorite.setLatitude(myBusMarker.getMapMarker().getPosition().latitude);
-                        newFavorite.setLongitude(myBusMarker.getMapMarker().getPosition().longitude);
-                        FavoriteAlertDialogConfirm favAlert = FavoriteAlertDialogConfirm.newInstance(FavoriteAlertDialogConfirm.ADD,
-                                getString(R.string.favorite_confirm_add_title), getString(R.string.favorite_confirm_add_message), newFavorite, myBusMarker);
-                        favAlert.show(getFragmentManager(), "Confirm Add Dialog");
-                    }
-                    break;
-                case MyBusMarker.USER_LOCATION:
-                    useKnownLocationForRoute(mUserLocationMarker, getString(R.string.user_location_dialog_title), getString(R.string.user_location_dialog_message));
-                    break;
-                case MyBusMarker.FAVORITE:
-                    useKnownLocationForRoute(myBusMarker, getString(R.string.use_favorite_dialog_title), getString(R.string.use_favorite_dialog_message));
-                    break;
-                case MyBusMarker.CHARGING_POINT:
-                    marker.showInfoWindow();
-                    break;
-                default:
-                    break;
-            }
+        if (mMyBusMap.getStartLocationMarker().getMapMarker() == null || mMyBusMap.getEndLocationMarker().getMapMarker() == null) {
+            return;
         }
+        if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
+            clearBusRouteOnMap();
+            showBottomSheetResults(false);
+            showProgressDialog(getString(R.string.toast_searching));
+            ServiceFacade.getInstance().searchRoutes(mMyBusMap.getStartLocationMarker().getMapMarker().getPosition(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition(), this);
+        } else {
+            Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+        }
+        //when performing a search remove all the favorites in the map
+        mMyBusMap.removeAllFavoritesMarkers();
     }
 
     @Override
@@ -931,52 +586,14 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             if (FavoriteLocationDao.getInstance(mContext).remove(favoriteLocation.getId())) {
                 //Update marker if favorite was successfully removed
                 if (marker.getType().equals(MyBusMarker.ORIGIN)) {
-                    setMarkerTitle(marker, getString(R.string.start_location_title), marker.getMapMarker().getSnippet());
+                    mMyBusMap.setMarkerTitle(marker, getString(R.string.start_location_title), marker.getMapMarker().getSnippet());
                 } else if (marker.getType().equals(MyBusMarker.DESTINATION)) {
-                    setMarkerTitle(marker, getString(R.string.end_location_title), marker.getMapMarker().getSnippet());
+                    mMyBusMap.setMarkerTitle(marker, getString(R.string.end_location_title), marker.getMapMarker().getSnippet());
                 }
                 marker.setAsFavorite(false);
                 marker.getMapMarker().showInfoWindow();
             }
         }
-    }
-
-    /**
-     * Checks if the given marker is MyBusMarker (StartLocation, EndLocation, UserLocation or FavoriteMarker).
-     *
-     * @param marker
-     * @return a MyBusMarker (StartLocation/EndLocation) or null
-     */
-    public MyBusMarker isMyBusMarker(Marker marker) {
-        if (mStartLocationMarker != null && mStartLocationMarker.getMapMarker() != null && mStartLocationMarker.getMapMarker().getId().equals(marker.getId())) {
-            return mStartLocationMarker;
-        }
-        if (mEndLocationMarker != null && mEndLocationMarker.getMapMarker() != null && mEndLocationMarker.getMapMarker().getId().equals(marker.getId())) {
-            return mEndLocationMarker;
-        }
-        if (mUserLocationMarker != null && mUserLocationMarker.getMapMarker() != null && mUserLocationMarker.getMapMarker().getId().equals(marker.getId())) {
-            return mUserLocationMarker;
-        }
-        if (!mFavoritesMarkers.isEmpty() && mFavoritesMarkers.containsKey(marker.getPosition())) {
-            return mFavoritesMarkers.get(marker.getPosition());
-        }
-        if (!mChargingPointMarkers.isEmpty() && mChargingPointMarkers.containsKey(marker.getPosition())) {
-            return mChargingPointMarkers.get(marker.getPosition());
-        }
-        return null;
-    }
-
-    /**
-     * Checks if given a MyBusMarker corresponds into a ChargePoint displayed in the Map
-     *
-     * @param myBusMarker
-     * @return corresponding ChargePoint or null
-     */
-    public ChargePoint getChargePointPresent(MyBusMarker myBusMarker) {
-        if (!mChargingPoints.isEmpty() && mChargingPoints.containsKey(myBusMarker)) {
-            return mChargingPoints.get(myBusMarker);
-        }
-        return null;
     }
 
     @Override
@@ -994,82 +611,17 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 options.snippet(chargePoint.getAddress());
 
                 MyBusMarker chargingPointMarker = new MyBusMarker(options, false, null, MyBusMarker.CHARGING_POINT);
-                addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
-                mChargingPointMarkers.put(chargePoint.getLatLng(), chargingPointMarker);
-                mChargingPoints.put(chargingPointMarker, chargePoint);
+                mMyBusMap.addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
+                mMyBusMap.getChargingPointMarkers().put(chargePoint.getLatLng(), chargingPointMarker);
+                mMyBusMap.getChargingPoints().put(chargingPointMarker, chargePoint);
 
                 markerList.add(chargingPointMarker.getMapMarker());
             }
-            markerList.add(mUserLocationMarker.getMapMarker());
-            zoomOut(markerList, getResources().getInteger(R.integer.charging_point_padding));
+            markerList.add(mMyBusMap.getUserLocationMarker().getMapMarker());
+            mMyBusMap.zoomOut(markerList, getResources().getInteger(R.integer.charging_point_padding));
         } else {
             Toast.makeText(this, R.string.toast_no_loading_point_found, Toast.LENGTH_LONG).show();
         }
-    }
-
-    /**
-     * Removes all charging point markers and clears the list
-     */
-    private void removeChargingPointMarkers() {
-        for (MyBusMarker marker : mChargingPointMarkers.values()) {
-            marker.getMapMarker().remove();
-        }
-        mChargingPointMarkers.clear();
-        mChargingPoints.clear();
-    }
-
-    /**
-     * Asks to user how want to use the marker selected (Origin or Destination)
-     *
-     * @param myBusMarker
-     * @param title
-     * @param message
-     */
-    private void useKnownLocationForRoute(final MyBusMarker myBusMarker, final String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setNeutralButton(getString(R.string.start_location_title),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        LatLng newLatLng = myBusMarker.getMapMarker().getPosition();
-                        if (myBusMarker.isFavorite()) {
-                            addOrUpdateMarker(mStartLocationMarker, newLatLng, null);
-                            updateMyBusMarkerInfo(mStartLocationMarker, myBusMarker.getFavoriteName(), null, myBusMarker.getMapMarker().getSnippet(), true);
-                            mCompoundSearchBox.setFromAddress(myBusMarker.getMapMarker().getSnippet());
-                            mToolbar.setVisibility(View.GONE);
-                            mCompoundSearchBox.setVisible(true);
-                            removeFavoriteMarker(myBusMarker);
-                        } else {
-                            addOrUpdateMarker(mStartLocationMarker, newLatLng, mStartLocationGeocodingCompleted);
-                        }
-                        zoomTo(mStartLocationMarker.getMapMarker().getPosition()); // Makes a zoom out in the map to see both markers at the same time.
-                    }
-                });
-        builder.setPositiveButton(getString(R.string.end_location_title),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        LatLng newLatLng = myBusMarker.getMapMarker().getPosition();
-                        if (myBusMarker.isFavorite()) {
-                            addOrUpdateMarker(mEndLocationMarker, newLatLng, null);
-                            updateMyBusMarkerInfo(mEndLocationMarker, myBusMarker.getFavoriteName(), null, myBusMarker.getMapMarker().getSnippet(), true);
-                            mCompoundSearchBox.setToAddress(myBusMarker.getMapMarker().getSnippet());
-                            mToolbar.setVisibility(View.GONE);
-                            mCompoundSearchBox.setVisible(true);
-                            removeFavoriteMarker(myBusMarker);
-                        } else {
-                            addOrUpdateMarker(mEndLocationMarker, newLatLng, mEndLocationGeocodingCompleted);
-                        }
-                        zoomOutStartEndMarkers(); // Makes a zoom out in the map to see both markers at the same time.
-                    }
-                });
-        builder.setNegativeButton(getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
     }
 
     /**
@@ -1078,9 +630,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void startResultsActivity(List<BusRouteResult> results) {
         Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
         busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
-        GeoLocation startGeoLocation = new GeoLocation(mCompoundSearchBox.getFromAddress(), mStartLocationMarker.getMapMarker().getPosition());
+        GeoLocation startGeoLocation = new GeoLocation(mCompoundSearchBox.getFromAddress(), mMyBusMap.getStartLocationMarker().getMapMarker().getPosition());
         busResultsIntent.putExtra(BusResultsActivity.START_GEOLOCATION_EXTRA, startGeoLocation);
-        GeoLocation endGeoLocation = new GeoLocation(mCompoundSearchBox.getToAddress(), mEndLocationMarker.getMapMarker().getPosition());
+        GeoLocation endGeoLocation = new GeoLocation(mCompoundSearchBox.getToAddress(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition());
         busResultsIntent.putExtra(BusResultsActivity.END_GEOLOCATION_EXTRA, endGeoLocation);
         startActivityForResult(busResultsIntent, DISPLAY_BUS_LINES_RESULT);
         overridePendingTransition(0, 0);
@@ -1093,17 +645,17 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             Toast.makeText(this, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
         } else {
             //Save in the local HashMap
-            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
+            mMyBusMap.getCompleteRoutes().put(busLineId, new MapBusRoad().addBusRoadOnMap(mMyBusMap.getMap(), completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
             //Draw complete route:
-            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+            mMyBusMap.getCompleteRoutes().get(busLineId).showBusRoadFromMap(true);
             zoomOutCompleteBusRoute(busLineId);
         }
     }
 
     private void zoomOutCompleteBusRoute(int busLineId) {
         List<Marker> markerList = new ArrayList<>();
-        markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
-        zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
+        markerList.addAll(mMyBusMap.getCompleteRoutes().get(busLineId).getMarkerList());
+        mMyBusMap.zoomOut(markerList, getResources().getInteger(R.integer.complete_route_padding));
     }
 
     @Override
@@ -1121,4 +673,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         return 0;
     }
 
+    public View getToolbar() {
+        return mToolbar;
+    }
+
+    public CompoundSearchBox getCompoundSearchBox() {
+        return mCompoundSearchBox;
+    }
 }
