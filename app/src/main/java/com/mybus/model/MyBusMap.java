@@ -213,22 +213,22 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     }
 
     public void cleanMap() {
-        if (mStartLocationMarker.getMapMarker() != null) {
-            mStartLocationMarker.getMapMarker().remove();
-            mStartLocationMarker.setMapMarker(null);
-            mStartLocationMarker.setAsFavorite(false);
-        }
-        if (mEndLocationMarker.getMapMarker() != null) {
-            mEndLocationMarker.getMapMarker().remove();
-            mEndLocationMarker.setMapMarker(null);
-            mEndLocationMarker.setAsFavorite(false);
-        }
+        cleanMarker(mStartLocationMarker);
+        cleanMarker(mEndLocationMarker);
         removeChargingPointMarkers();
         mMainActivity.showBottomSheetResults(false);
         mMainActivity.clearBusRouteOnMap();
         mMainActivity.getCompoundSearchBox().setVisible(false);
         mMainActivity.getToolbar().setVisibility(View.VISIBLE);
         removeAllFavoritesMarkers();
+    }
+
+    private void cleanMarker(MyBusMarker myBusMarker) {
+        if (myBusMarker != null) {
+            myBusMarker.getMapMarker().remove();
+            myBusMarker.setMapMarker(null);
+            myBusMarker.setAsFavorite(false);
+        }
     }
 
     public void flipMarkers() {
