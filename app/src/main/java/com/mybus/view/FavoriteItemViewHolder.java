@@ -8,42 +8,40 @@ import android.widget.TextView;
 import com.mybus.R;
 import com.mybus.listener.FavoriteListItemListener;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class FavoriteItemViewHolder extends RecyclerView.ViewHolder {
 
+    @Bind(R.id.favorite_name)
     public TextView favName;
+    @Bind(R.id.favorite_address)
     public TextView favAddress;
+    @Bind(R.id.favorite_edit)
     public ImageView favoriteEditIcon;
+    @Bind(R.id.favorite_delete)
     public ImageView favoriteDeleteIcon;
     private FavoriteListItemListener mFavoriteListener;
 
+    @OnClick({R.id.favorite_star_icon, R.id.favorite_name, R.id.favorite_address})
+    public void showFavoriteOnMap() {
+        mFavoriteListener.onFavoriteClicked(getAdapterPosition());
+    }
+
+    @OnClick(R.id.favorite_delete)
+    public void deleteFavorite() {
+        mFavoriteListener.onFavoriteItemDelete(getAdapterPosition());
+    }
+
+    @OnClick(R.id.favorite_edit)
+    public void editFavorite() {
+        mFavoriteListener.onFavoriteItemEdit(getAdapterPosition());
+    }
+
     public FavoriteItemViewHolder(View itemView, FavoriteListItemListener favoriteEditListener) {
         super(itemView);
+        ButterKnife.bind(this, itemView);
         this.mFavoriteListener = favoriteEditListener;
-        favName = (TextView) itemView.findViewById(R.id.favorite_name);
-        favAddress = (TextView) itemView.findViewById(R.id.favorite_address);
-        favoriteEditIcon = (ImageView) itemView.findViewById(R.id.favorite_edit);
-        favoriteDeleteIcon = (ImageView) itemView.findViewById(R.id.favorite_delete);
-
-        //Set listeners
-        View.OnClickListener favClickedListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFavoriteListener.onFavoriteClicked(getAdapterPosition());
-            }
-        };
-        favName.setOnClickListener(favClickedListener);
-        favAddress.setOnClickListener(favClickedListener);
-        favoriteDeleteIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFavoriteListener.onFavoriteItemDelete(getAdapterPosition());
-            }
-        });
-        favoriteEditIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFavoriteListener.onFavoriteItemEdit(getAdapterPosition());
-            }
-        });
     }
 }
