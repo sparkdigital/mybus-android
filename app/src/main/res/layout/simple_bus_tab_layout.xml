@@ -6,15 +6,10 @@
     android:orientation="vertical"
     android:padding="5dp">
 
-    <ImageView
-        android:id="@+id/bus_line_image"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:src="@drawable/bus" />
-
     <TextView
         android:id="@+id/bus_line_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="19sp"
         android:text="541" />
 </LinearLayout>
