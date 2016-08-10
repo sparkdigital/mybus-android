@@ -253,7 +253,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
-        onBackArrowClick();
         mMyBusMap.removeChargingPointMarkers();
         if (results == null || results.isEmpty()) {
             showBottomSheetResults(false);
