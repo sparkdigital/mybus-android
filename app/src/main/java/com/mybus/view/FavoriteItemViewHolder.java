@@ -2,7 +2,6 @@ package com.mybus.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mybus.R;
@@ -18,10 +17,6 @@ public class FavoriteItemViewHolder extends RecyclerView.ViewHolder {
     public TextView favName;
     @Bind(R.id.favorite_address)
     public TextView favAddress;
-    @Bind(R.id.favorite_edit)
-    public ImageView favoriteEditIcon;
-    @Bind(R.id.favorite_delete)
-    public ImageView favoriteDeleteIcon;
     private FavoriteListItemListener mFavoriteListener;
 
     @OnClick({R.id.favorite_star_icon, R.id.favorite_name, R.id.favorite_address})
