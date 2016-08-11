@@ -224,7 +224,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     }
 
     private void cleanMarker(MyBusMarker myBusMarker) {
-        if (myBusMarker != null) {
+        if (myBusMarker.getMapMarker() != null) {
             myBusMarker.getMapMarker().remove();
             myBusMarker.setMapMarker(null);
             myBusMarker.setAsFavorite(false);
@@ -423,7 +423,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     public void updateToInfo(GeoLocation geoLocation, String favName, boolean isFavorite) {
         addOrUpdateMarker(mEndLocationMarker, geoLocation.getLatLng(), null);
         updateMyBusMarkerInfo(mEndLocationMarker, favName, mMainActivity.getString(R.string.end_location_title), geoLocation.getAddress(), isFavorite);
-        mMainActivity.getCompoundSearchBox().setFromAddress(geoLocation.getAddress());
+        mMainActivity.getCompoundSearchBox().setToAddress(geoLocation.getAddress());
         zoomTo(mEndLocationMarker.getMapMarker().getPosition());
         mMainActivity.getToolbar().setVisibility(View.GONE);
         mMainActivity.getCompoundSearchBox().setVisible(true, true);
