@@ -20,5 +20,6 @@
     <dimen name="mybus_text_size">15sp</dimen>
     <dimen name="favorite_item_text_size">16sp</dimen>
     <dimen name="bus_route_text_size">15sp</dimen>
+    <dimen name="fares_text_size">16sp</dimen>
     <dimen name="bus_line_name_size">25sp</dimen>
 </resources>

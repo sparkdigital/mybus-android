@@ -18,7 +18,7 @@ public interface CompoundSearchBoxListener {
     /**
      * Click on the Drawer Toggle
      */
-    void onDrawerToggleClick();
+    void onBackArrowClick();
 
     /**
      * Click on the Flip Search
