@@ -182,7 +182,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void setupBottomSheet() {
         mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(mMyBusMap.dpToPx(BOTTOM_SHEET_PEEK_HEIGHT_DP));
+        mBottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_tab_height));
     }
 
     /**
