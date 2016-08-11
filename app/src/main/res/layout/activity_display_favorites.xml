@@ -41,7 +41,7 @@
             android:layout_marginBottom="@dimen/fab_margin_bottom"
             android:layout_marginRight="@dimen/fab_margin_right"
             android:src="@drawable/plus"
-            app:backgroundTint="@color/colorSecondaryDark"
+            app:backgroundTint="@color/colorSecondary"
             app:rippleColor="@color/colorPrimaryDark" />
 
     </android.support.design.widget.CoordinatorLayout>
