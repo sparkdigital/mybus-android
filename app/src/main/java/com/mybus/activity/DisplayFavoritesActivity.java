@@ -237,8 +237,7 @@ public class DisplayFavoritesActivity extends BaseMyBusActivity implements Favor
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.show_all_favorites_on_map) {
+        if (item.getItemId() == R.id.show_all_favorites_on_map) {
             returnFavoriteMarker(mFavorites);
             return true;
         }
