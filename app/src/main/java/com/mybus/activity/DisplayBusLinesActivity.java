@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusLinesRequestCallback, BusLineListItemListener{
+public class DisplayBusLinesActivity extends BaseMyBusActivity implements BusLinesRequestCallback, BusLineListItemListener{
 
     @Bind(R.id.bus_lines_recycler_view)
     RecyclerView mBusLinesRecyclerView;
@@ -39,7 +39,7 @@ public class DisplayBusLinesActivity extends BaseDisplayActivity implements BusL
         mBusLinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //Show a progress dialog while bus lines are loading
         showProgressDialog(getString(R.string.toast_bus_lines_searching));
-        ServiceFacade.getInstance().getBusLines(this);
+        ServiceFacade.getInstance().getBusLines(this, this);
     }
 
     @Override

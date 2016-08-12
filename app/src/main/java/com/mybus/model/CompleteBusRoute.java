@@ -80,32 +80,28 @@ public class CompleteBusRoute {
     public List<MarkerOptions> getMarkerOptions() {
         List<MarkerOptions> list = new ArrayList<>();
         if (mGoingPointList.get(0).getLatLng().equals(mReturnPointList.get(mReturnPointList.size() - 1).getLatLng())) {
-            //TODO: Icono inicio/fin:
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.start_end_complete_route, mBusLineName))
                     .snippet(mGoingPointList.get(0).getAddress())
                     .position(mGoingPointList.get(0).getLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_to_route)));
         } else {
-            //TODO: Icono ida:
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.start_complete_route, mBusLineName))
                     .snippet(mGoingPointList.get(0).getAddress())
                     .position(mGoingPointList.get(0).getLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
-            //TODO: Icono Fin de recorrido:
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_route)));
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.end_complete_route, mBusLineName))
                     .snippet(mReturnPointList.get(mReturnPointList.size() - 1).getAddress())
                     .position(mReturnPointList.get(mReturnPointList.size() - 1).getLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
         }
-        //TODO: Icono intermedio:
         list.add(new MarkerOptions()
                 .title(MyBus.getContext().getString(R.string.mid_complete_route, mBusLineName))
                 .snippet(mGoingPointList.get(mGoingPointList.size() - 1).getAddress())
                 .position(mGoingPointList.get(mGoingPointList.size() - 1).getLatLng())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.invert_route)));
         return list;
     }
 
@@ -117,7 +113,7 @@ public class CompleteBusRoute {
 
         //Return route:
         PolylineOptions rectOptions = new PolylineOptions();
-        rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.returnRouteColor));
+        rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.colorSecondary));
         rectOptions.width(POLYLINE_WIDTH);
         rectOptions.geodesic(true);
         for (RoutePoint point : mReturnPointList) {

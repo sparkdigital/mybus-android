@@ -3,103 +3,112 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:autofit="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/mainSearchBoxColor"
+    android:layout_height="90dp"
+    android:background="@color/colorPrimary"
     android:baselineAligned="true"
     android:orientation="horizontal">
-
-    <ImageView
-        android:id="@+id/drawerToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:cropToPadding="false"
-        android:focusable="false"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:src="@drawable/ic_arrow_back_black_24dp" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/drawerToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="top"
+            android:focusable="false"
+            android:padding="10dp"
+            android:src="@drawable/arrow_back_white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
         android:orientation="vertical"
         android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/marker_origen" />
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/from_arrow" />
 
             <me.grantland.widget.AutofitTextView
                 android:id="@+id/fromTextView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:background="#6bb6ff"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:singleLine="true"
-                android:text="@string/from_hint"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="6dp"
+                android:hint="@string/from_hint"
+                android:textColor="@color/black"
                 android:textSize="@dimen/auto_fit_tv_text_size"
                 autofit:minTextSize="@dimen/auto_fit_tv_min_text_size" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/marker_destino" />
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/to_arrow" />
 
             <me.grantland.widget.AutofitTextView
                 android:id="@+id/toTextView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:background="#6bb6ff"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:singleLine="true"
-                android:text="@string/to_hint"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="6dp"
+                android:hint="@string/to_hint"
+                android:textColor="@color/black"
                 android:textSize="@dimen/auto_fit_tv_text_size"
                 autofit:minTextSize="@dimen/auto_fit_tv_min_text_size" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/flipSearch"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:scaleType="center"
-            android:src="@drawable/ic_swap_vert_black_24dp" />
+            android:padding="10dp"
+            android:src="@drawable/invert" />
 
         <ImageView
             android:id="@+id/searchBtn"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:scaleType="center"
-            android:src="@drawable/search_icon_selector" />
+            android:padding="10dp"
+            android:src="@drawable/search" />
 
     </LinearLayout>
 

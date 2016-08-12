@@ -6,6 +6,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="4dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -14,36 +17,27 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/mini_bondi" />
+            android:src="@drawable/pricetag" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/fare_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:layout_margin="2dp"
-            android:orientation="vertical">
+            android:text="Title"
+            android:layout_marginBottom="2dp"
+            android:textSize="@dimen/fares_text_size"
+            android:textColor="@color/abc_search_url_text_selected" />
 
-            <TextView
-                android:id="@+id/fare_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Title"
-                android:layout_marginBottom="2dp"
-                android:textSize="16sp"
-                android:textColor="@color/abc_search_url_text_selected"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/fare_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="$6.50" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/fare_cost"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/fares_text_size"
+            android:text="$6.50"
+            android:textStyle="bold"/>
     </LinearLayout>
 
-    <View
-        style="@style/Divider"
-        android:layout_marginLeft="@dimen/item_divider_margin"
-        android:layout_marginRight="@dimen/item_divider_margin" />
+    <View style="@style/Divider" />
 </LinearLayout>

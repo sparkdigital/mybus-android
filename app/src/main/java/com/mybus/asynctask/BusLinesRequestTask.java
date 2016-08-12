@@ -1,5 +1,6 @@
 package com.mybus.asynctask;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.mybus.model.BusLine;
@@ -13,14 +14,16 @@ import java.util.List;
 public class BusLinesRequestTask extends AsyncTask<Void, Void, List<BusLine>> {
 
     private BusLinesRequestCallback mBusLinesRequestCallback;
+    private Context mContext;
 
-    public BusLinesRequestTask(BusLinesRequestCallback callback) {
+    public BusLinesRequestTask(BusLinesRequestCallback callback, Context context) {
         this.mBusLinesRequestCallback = callback;
+        mContext = context;
     }
 
     @Override
     protected List<BusLine> doInBackground(Void... voids) {
-        return new BusLineServiceImpl().getBusLines();
+        return new BusLineServiceImpl().getBusLines(mContext);
     }
 
     @Override

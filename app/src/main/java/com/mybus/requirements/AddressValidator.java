@@ -1,8 +1,12 @@
 package com.mybus.requirements;
 
+import java.text.Normalizer;
+
 public final class AddressValidator {
 
     private static final int MAX_NUMBER = 20000;
+    private static final String AVENUE_STR = "Avenida";
+    private static final String SHORT_AVENUE_STR = "Av";
 
     private AddressValidator() {
     }
@@ -33,7 +37,7 @@ public final class AddressValidator {
             return false;
         }
         //regular expresion
-        String pattern = "[a-zA-Z0-9 ,-]+";
+        String pattern = "[a-zA-Z0-9 ]+";
         return text.matches(pattern);
     }
 
@@ -47,5 +51,29 @@ public final class AddressValidator {
         }
         Long number = getStreetNumber(address);
         return number != null && number < MAX_NUMBER;
+    }
+
+    /**
+     * @param address
+     * @return
+     */
+    public static String normalizeAddress(String address) {
+        //Remove accents:
+        address = Normalizer.normalize(address, Normalizer.Form.NFD);
+        address = address.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        //Avenue string abbreviation:
+        return address.replaceAll(AVENUE_STR, SHORT_AVENUE_STR);
+    }
+
+    /**
+     * @param addressNumber
+     * @return
+     */
+    public static String removeDash(String addressNumber) {
+        if (addressNumber.contains("-")) {
+            return addressNumber.split("-")[0];
+        } else {
+            return addressNumber;
+        }
     }
 }

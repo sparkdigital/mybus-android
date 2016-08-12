@@ -107,8 +107,8 @@ public final class ServiceFacade {
     /**
      * @param callback
      */
-    public void getBusLines(BusLinesRequestCallback callback) {
-        BusLinesRequestTask busLinesRequestTask = new BusLinesRequestTask(callback);
+    public void getBusLines(BusLinesRequestCallback callback, Context context) {
+        BusLinesRequestTask busLinesRequestTask = new BusLinesRequestTask(callback, context);
         busLinesRequestTask.execute();
     }
 

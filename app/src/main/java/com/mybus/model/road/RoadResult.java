@@ -138,34 +138,34 @@ public class RoadResult {
                     .title(MyBus.getContext().getString(R.string.bus_stop_origin, ""))
                     .snippet(mRouteList.get(0).getFirstAddress())
                     .position(mRouteList.get(0).getFirstLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_route)));
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_destination, ""))
                     .snippet(mRouteList.get(0).getLastAddress())
                     .position(mRouteList.get(0).getLastLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
         } else {
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_origin, "1"))
                     .snippet(mRouteList.get(0).getFirstAddress())
                     .position(mRouteList.get(0).getFirstLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_route)));
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_destination, "1"))
                     .snippet(mRouteList.get(0).getLastAddress())
                     .position(mRouteList.get(0).getLastLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_origen)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
 
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_origin, "2"))
                     .snippet(mRouteList.get(1).getFirstAddress())
                     .position(mRouteList.get(1).getFirstLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_route)));
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_destination, "2"))
                     .snippet(mRouteList.get(1).getLastAddress())
                     .position(mRouteList.get(1).getLastLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parada_destino)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
         }
         return list;
     }

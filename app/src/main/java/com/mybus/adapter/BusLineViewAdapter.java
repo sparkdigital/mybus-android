@@ -40,7 +40,7 @@ public class BusLineViewAdapter extends RecyclerView.Adapter<BusLineItemViewHold
     public void onBindViewHolder(BusLineItemViewHolder holder, int position) {
         if (mDataset != null && !mDataset.isEmpty()) {
             holder.mBusLineName.setText(mDataset.get(position).getName());
-            holder.mBusLineIcon.setBackgroundColor(Color.parseColor(mDataset.get(position).getColor()));
+            holder.mBusLineColorRectangle.setBackgroundColor(Color.parseColor(mDataset.get(position).getColor()));
         }
     }
 

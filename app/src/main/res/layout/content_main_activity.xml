@@ -24,18 +24,8 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-
-    <com.arlib.floatingsearchview.FloatingSearchView
-        android:id="@+id/mainActivityBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:floatingSearch_dismissOnOutsideTouch="true"
-        app:floatingSearch_leftActionMode="showHamburger"
-        app:floatingSearch_searchBarMarginLeft="@dimen/search_view_inset"
-        app:floatingSearch_searchBarMarginRight="@dimen/search_view_inset"
-        app:floatingSearch_searchBarMarginTop="@dimen/search_view_inset"
-        app:floatingSearch_searchHint="@string/main_activity_search_hint"
-        app:floatingSearch_showSearchKey="false" />
+    <include android:id="@+id/main_toolbar"
+        layout="@layout/main_bar"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/center_location_action_button"
@@ -44,9 +34,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
         android:layout_marginRight="@dimen/fab_margin_right"
-        android:src="@android:drawable/ic_menu_mylocation"
-        app:backgroundTint="@color/actionButtonBgColor"
-        app:rippleColor="@color/actionButtonPressedColor" />
+        android:src="@drawable/location"
+        app:backgroundTint="@color/white"
+        app:rippleColor="@color/colorPrimary" />
 
     <include layout="@layout/bottom_sheet_layout" />
 </android.support.design.widget.CoordinatorLayout>

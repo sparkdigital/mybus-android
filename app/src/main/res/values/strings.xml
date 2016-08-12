@@ -29,10 +29,10 @@
     <string name="displayFavoritesToolbarTittle">Favoritos</string>
     <string name="floating_search_origin">Origen de tu viaje…</string>
     <string name="floating_search_destination">Destino de tu viaje…</string>
-    <string name="main_activity_search_hint">Buscar…</string>
+    <string name="main_activity_search_hint">Buscar dirección de origen…</string>
     <string name="history_card_view_title">Recientes</string>
     <string name="favorite_card_view_title">Favoritos</string>
-    <string name="invalidAddress">Direccion invalida</string>
+    <string name="invalidAddress">Formato de dirección inválido</string>
     <string name="use_current_location">Usar ubicacion actual</string>
     <string name="cant_find_current_location">No es posible saber su ubicacion actual</string>
     <string name="history_no_recent">No hay recientes…</string>
@@ -75,4 +75,5 @@
     <string name="searching_complete_route">Cargando recorrido...</string>
     <string name="start_end_complete_route">Inicio/Fin del recorrido - Linea: %1$s</string>
     <string name="toast_no_complete_route">Recorrido no disponible</string>
+    <string name="address_not_exists">La direccion buscada no existe</string>
 </resources>

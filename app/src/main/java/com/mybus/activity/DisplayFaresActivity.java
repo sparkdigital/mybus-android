@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayFaresActivity extends BaseDisplayActivity implements FaresRequestCallback {
+public class DisplayFaresActivity extends BaseMyBusActivity implements FaresRequestCallback {
 
     @Bind(R.id.fares_recycler_view)
     RecyclerView mFaresRecyclerView;
