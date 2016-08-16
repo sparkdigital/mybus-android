@@ -13,7 +13,11 @@
         android:layout_width="match_parent"
         android:background="@drawable/tab_background"
         android:layout_height="@dimen/bottom_tab_height"
-        app:tabGravity="fill"
+        app:tabMaxWidth="@dimen/tab_width"
+        app:tabMinWidth="@dimen/tab_width"
+        app:tabIndicatorHeight="5dp"
+        app:tabPadding="0dp"
+        app:tabPaddingStart="0dp"
         app:tabMode="scrollable" />
 
     <android.support.v4.view.ViewPager
