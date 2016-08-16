@@ -90,7 +90,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     /*---Bottom Sheet------*/
 
     /**
