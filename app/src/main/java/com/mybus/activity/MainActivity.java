@@ -217,7 +217,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            hideCurrentBusRouteOnMap();
+            hideCurrentBusRouteOnMap(tab.getPosition());
         }
 
         @Override
@@ -259,7 +259,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
         } else {
-            startResultsActivity(results);
+            startResultsActivity((ArrayList<BusRouteResult>) results);
         }
     }
 
@@ -315,9 +315,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     /**
      * Hide all markers and polyline for a previous route
      */
-    private void hideCurrentBusRouteOnMap() {
-        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
-            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
+    private void hideCurrentBusRouteOnMap(int position) {
+        if (isBusRouteFragmentPresent(position)) {
+            mViewPagerAdapter.getItem(position).showMapBusRoad(false);
         }
     }
 
@@ -583,9 +583,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     /**
      * @param results
      */
-    private void startResultsActivity(List<BusRouteResult> results) {
+    private void startResultsActivity(ArrayList<BusRouteResult> results) {
         Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
-        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
+        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, results);
         GeoLocation startGeoLocation = new GeoLocation(mCompoundSearchBox.getFromAddress(), mMyBusMap.getStartLocationMarker().getMapMarker().getPosition());
         busResultsIntent.putExtra(BusResultsActivity.START_GEOLOCATION_EXTRA, startGeoLocation);
         GeoLocation endGeoLocation = new GeoLocation(mCompoundSearchBox.getToAddress(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition());
