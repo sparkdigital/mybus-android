@@ -159,7 +159,7 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                         leftIcon.setImageResource(R.drawable.favorite_blue);
                         break;
                     case StreetSuggestion.TYPE_TOURISTIC_PLACE:
-                        leftIcon.setImageResource(R.drawable.touristic_place);
+                        leftIcon.setImageResource(R.drawable.tourist_spot);
                         break;
                     default:
                         leftIcon.setImageDrawable(null);
