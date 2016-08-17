@@ -280,8 +280,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
         }
         showBottomSheetResults(true);
-        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
-        performRoadSearch(busRouteResult);
+        mOnTabSelectedListener.onTabSelected(mTabLayout.getTabAt(busResultId));
     }
 
     /**
