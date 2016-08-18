@@ -65,7 +65,7 @@ public class BusRouteFragment extends Fragment {
         if (mBusRouteResult.getType() == 0) {
             mStopDestination.setText(getContext().getString(R.string.bus_route_frag_concat_space,
                     mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopStreetName(),
-                    mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopNumber()));
+                    mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopStreetNumber()));
 
             mWalkDestination.setText(getContext().getString(R.string.bus_route_distance_to_destination,
                     WalkDistanceHelper.getDistanceInBlocks(
@@ -73,8 +73,8 @@ public class BusRouteFragment extends Fragment {
         } else {
 
             mStopDestination.setText(getContext().getString(R.string.bus_route_frag_concat_space,
-                    mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopStreetName(),
-                    mBusRouteResult.getBusRoutes().get(0).getDestinationBusStopNumber()));
+                    mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopStreetName(),
+                    mBusRouteResult.getBusRoutes().get(1).getDestinationBusStopStreetNumber()));
 
             mWalkDestination.setText(getContext().getString(R.string.bus_route_distance_to_destination,
                     WalkDistanceHelper.getDistanceInBlocks(

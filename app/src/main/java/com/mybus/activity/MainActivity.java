@@ -186,48 +186,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Bottom Sheet Tab selected listener
-     * <p/>
-     * Expands the bottom sheet when the user re-selects any tab
-     */
-    private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
-        @Override
-        public void onTabSelected(TabLayout.Tab tab) {
-            mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
-            mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
-            mViewPager.setCurrentItem(tab.getPosition(), true);
-            mViewPager.requestLayout();
-            mBottomSheet.requestLayout();
-
-            if (isBusRouteFragmentPresent(tab.getPosition())) {
-                boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
-                if (isMapBusRoadPresent) {
-                    mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
-                    MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
-                    List<Marker> markerList = new ArrayList<>();
-                    markerList.addAll(mapBusRoad.getMarkerList());
-                    markerList.add(mMyBusMap.getStartLocationMarker().getMapMarker());
-                    markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
-                    mMyBusMap.zoomOut(markerList);
-                } else {
-                    BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
-                    performRoadSearch(busRouteResult);
-                }
-            }
-        }
-
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab) {
-            hideCurrentBusRouteOnMap();
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab) {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-    };
-
-    /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      */
@@ -260,7 +218,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
         } else {
-            startResultsActivity(results);
+            startResultsActivity((ArrayList<BusRouteResult>) results);
         }
     }
 
@@ -276,13 +234,63 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        mTabLayout.setOnTabSelectedListener(getCustomOnTabSelectedListener());
+        //Set custom view for each tab:
+        TabLayout.Tab tab;
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-            mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
+            tab = mTabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
+            }
         }
         showBottomSheetResults(true);
-        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
-        performRoadSearch(busRouteResult);
+        // Select custom Tab:
+        tab = mTabLayout.getTabAt(busResultId);
+        if (tab != null) {
+            tab.select();
+        }
+    }
+
+    /**
+     * Bottom Sheet Tab selected listener
+     * <p/>
+     * Expands the bottom sheet when the user re-selects any tab
+     */
+    private TabLayout.OnTabSelectedListener getCustomOnTabSelectedListener() {
+        return new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition(), true);
+                mViewPager.requestLayout();
+                mBottomSheet.requestLayout();
+
+                if (isBusRouteFragmentPresent(tab.getPosition())) {
+                    boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
+                    if (isMapBusRoadPresent) {
+                        mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                        MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
+                        List<Marker> markerList = new ArrayList<>();
+                        markerList.addAll(mapBusRoad.getMarkerList());
+                        markerList.add(mMyBusMap.getStartLocationMarker().getMapMarker());
+                        markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
+                        mMyBusMap.zoomOut(markerList);
+                    } else {
+                        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
+                        performRoadSearch(busRouteResult);
+                    }
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                hideCurrentBusRouteOnMap(tab.getPosition());
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        };
     }
 
     /**
@@ -316,10 +324,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     /**
      * Hide all markers and polyline for a previous route
+     * @param position
      */
-    private void hideCurrentBusRouteOnMap() {
-        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
-            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
+    private void hideCurrentBusRouteOnMap(int position) {
+        if (isBusRouteFragmentPresent(position)) {
+            mViewPagerAdapter.getItem(position).showMapBusRoad(false);
         }
     }
 
@@ -585,9 +594,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     /**
      * @param results
      */
-    private void startResultsActivity(List<BusRouteResult> results) {
+    private void startResultsActivity(ArrayList<BusRouteResult> results) {
         Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
-        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
+        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, results);
         GeoLocation startGeoLocation = new GeoLocation(mCompoundSearchBox.getFromAddress(), mMyBusMap.getStartLocationMarker().getMapMarker().getPosition());
         busResultsIntent.putExtra(BusResultsActivity.START_GEOLOCATION_EXTRA, startGeoLocation);
         GeoLocation endGeoLocation = new GeoLocation(mCompoundSearchBox.getToAddress(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition());
