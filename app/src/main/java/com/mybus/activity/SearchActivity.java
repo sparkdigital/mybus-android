@@ -156,10 +156,10 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                 StreetSuggestion suggestion = (StreetSuggestion) item;
                 switch (suggestion.getType()) {
                     case StreetSuggestion.TYPE_FAVORITE:
-                        leftIcon.setImageResource(android.R.drawable.ic_menu_myplaces);
+                        leftIcon.setImageResource(R.drawable.favorite_blue);
                         break;
                     case StreetSuggestion.TYPE_TOURISTIC_PLACE:
-                        leftIcon.setImageResource(android.R.drawable.ic_dialog_map);
+                        leftIcon.setImageResource(R.drawable.tourist_spot);
                         break;
                     default:
                         leftIcon.setImageDrawable(null);

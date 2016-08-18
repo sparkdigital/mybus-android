@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize"/>
 
         <activity android:name=".activity.DisplayFaresActivity" />
 
