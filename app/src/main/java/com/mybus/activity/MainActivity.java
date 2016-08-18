@@ -190,11 +190,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
      * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
-    private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+    private final TabLayout.ViewPagerOnTabSelectedListener mOnTabSelectedListener = new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
-            mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
             mViewPager.setCurrentItem(tab.getPosition(), true);
             mViewPager.requestLayout();
             mBottomSheet.requestLayout();
@@ -281,7 +279,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
         }
         showBottomSheetResults(true);
-        mOnTabSelectedListener.onTabSelected(mTabLayout.getTabAt(busResultId));
+        mTabLayout.getTabAt(busResultId).select();
     }
 
     /**
