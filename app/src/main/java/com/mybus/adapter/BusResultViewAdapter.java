@@ -79,7 +79,7 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
         mBusLineListItemListener.onItemClicked(position);
     }
 
-    public void setDataset(List<BusRouteResult> dataset){
+    public void setDataset(List<BusRouteResult> dataset) {
         mDataset = dataset;
     }
 }
