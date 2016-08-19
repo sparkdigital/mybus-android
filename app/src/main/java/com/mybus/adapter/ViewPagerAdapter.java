@@ -20,6 +20,7 @@ import java.util.List;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private final List<BusRouteFragment> mFragmentList = new ArrayList<>();
     private final LayoutInflater mInflater;
+    private final FragmentManager mFragmentManager;
 
     private TextView mBusLineTitle;
     private TextView mBusLineDestination;
@@ -28,6 +29,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public ViewPagerAdapter(FragmentManager manager, LayoutInflater layoutInflater) {
         super(manager);
         this.mInflater = layoutInflater;
+        this.mFragmentManager = manager;
     }
 
     @Override
@@ -77,4 +79,16 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
+    public void cleanAll() {
+        for (BusRouteFragment busRoute : mFragmentList) {
+            mFragmentManager.beginTransaction().remove(busRoute).commit();
+        }
+        mFragmentList.clear();
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(Object object){
+        return POSITION_NONE;
+    }
 }

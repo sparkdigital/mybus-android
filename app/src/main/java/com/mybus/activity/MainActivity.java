@@ -97,6 +97,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     /**
      * Getter for Toolbar in order to interact with it from MyBusMap.
+     *
      * @return
      */
     public View getToolbar() {
@@ -105,6 +106,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     /**
      * Getter for CompoundSearchBox in order to interact with it from MyBusMap.
+     *
      * @return
      */
     public CompoundSearchBox getCompoundSearchBox() {
@@ -245,12 +247,17 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 tab.setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
             }
         }
-        showBottomSheetResults(true);
         // Select custom Tab:
-        tab = mTabLayout.getTabAt(busResultId);
-        if (tab != null) {
-            tab.select();
+        if (busResultId == 0) { // The tab is already selected:
+            BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
+            performRoadSearch(busRouteResult);
+        } else { // Select a different tab:
+            tab = mTabLayout.getTabAt(busResultId);
+            if (tab != null) {
+                tab.select();
+            }
         }
+        showBottomSheetResults(true);
     }
 
     /**
@@ -258,7 +265,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
      * <p/>
      * Expands the bottom sheet when the user re-selects any tab
      */
-    private TabLayout.OnTabSelectedListener getCustomOnTabSelectedListener() {
+    private TabLayout.ViewPagerOnTabSelectedListener getCustomOnTabSelectedListener() {
         return new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -326,6 +333,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     /**
      * Hide all markers and polyline for a previous route
+     *
      * @param position
      */
     private void hideCurrentBusRouteOnMap(int position) {
@@ -340,6 +348,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     public void clearBusRouteOnMap() {
         if (mViewPagerAdapter != null) {
             mViewPagerAdapter.clearBusRoutes();
+            mViewPagerAdapter.cleanAll();
         }
         mMyBusMap.hideBusRoutes();
     }
