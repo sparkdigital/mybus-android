@@ -22,10 +22,10 @@ import butterknife.ButterKnife;
  */
 public class BusRouteFragment extends Fragment {
 
-    @Bind(R.id.start_address)
-    public TextView mStartAddress;
-    @Bind(R.id.stop_address)
-    public TextView mStopAddress;
+    @Bind(R.id.origin_bus_stop_address)
+    public TextView mOriginBusStopAddress;
+    @Bind(R.id.destination_bus_stop_address)
+    public TextView mDestinationBusStopAddress;
     @Bind(R.id.start_distance)
     public TextView mStartDistance;
     @Bind(R.id.stop_distance)
@@ -57,16 +57,16 @@ public class BusRouteFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         BusRoute firstBus = mBusRouteResult.getBusRoutes().get(0);
-        mStartAddress.setText(firstBus.getStartBusStopStreetName() + " " + firstBus.getStartBusStopStreetNumber());
+        mOriginBusStopAddress.setText(String.format("%s %s", firstBus.getStartBusStopStreetName(), firstBus.getStartBusStopStreetNumber()));
         mStartDistance.setText(getContext().getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(firstBus.getStartBusStopDistanceToOrigin())));
         if (!mBusRouteResult.isCombined()) {
             //if single route
-            mStopAddress.setText(firstBus.getDestinationBusStopStreetName() + " " + firstBus.getDestinationBusStopStreetNumber());
+            mDestinationBusStopAddress.setText(String.format("%s %s", firstBus.getDestinationBusStopStreetName(), firstBus.getDestinationBusStopStreetNumber()));
             mStopDistance.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(firstBus.getDestinationBusStopDistanceToDestination())));
         } else {
             //if combined
             BusRoute lastBus = mBusRouteResult.getBusRoutes().get(1);
-            mStopAddress.setText(lastBus.getDestinationBusStopStreetName() + " " + lastBus.getDestinationBusStopStreetNumber());
+            mDestinationBusStopAddress.setText(String.format("%s %s", lastBus.getDestinationBusStopStreetName(), lastBus.getDestinationBusStopStreetNumber()));
             mStopDistance.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(lastBus.getDestinationBusStopDistanceToDestination())));
         }
     }
