@@ -57,16 +57,16 @@ public class BusRouteFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         BusRoute firstBus = mBusRouteResult.getBusRoutes().get(0);
-        mStartAddress.setText(firstBus.getStartBusStopStreetName() + " " + firstBus.getStartBusStopStreetNumber());
+        mStartAddress.setText(String.format("%s %s", firstBus.getStartBusStopStreetName(), firstBus.getStartBusStopStreetNumber()));
         mStartDistance.setText(getContext().getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(firstBus.getStartBusStopDistanceToOrigin())));
         if (!mBusRouteResult.isCombined()) {
             //if single route
-            mStopAddress.setText(firstBus.getDestinationBusStopStreetName() + " " + firstBus.getDestinationBusStopStreetNumber());
+            mStopAddress.setText(String.format("%s %s", firstBus.getDestinationBusStopStreetName(), firstBus.getDestinationBusStopStreetNumber()));
             mStopDistance.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(firstBus.getDestinationBusStopDistanceToDestination())));
         } else {
             //if combined
             BusRoute lastBus = mBusRouteResult.getBusRoutes().get(1);
-            mStopAddress.setText(lastBus.getDestinationBusStopStreetName() + " " + lastBus.getDestinationBusStopStreetNumber());
+            mStopAddress.setText(String.format("%s %s", lastBus.getDestinationBusStopStreetName(), lastBus.getDestinationBusStopStreetNumber()));
             mStopDistance.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(lastBus.getDestinationBusStopDistanceToDestination())));
         }
     }
