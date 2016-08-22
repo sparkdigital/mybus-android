@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="260dp"
+    android:layout_height="@dimen/bottom_sheet_height"
     android:background="@android:color/white"
     android:orientation="vertical"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
@@ -13,7 +13,11 @@
         android:layout_width="match_parent"
         android:background="@drawable/tab_background"
         android:layout_height="@dimen/bottom_tab_height"
-        app:tabGravity="fill"
+        app:tabMaxWidth="@dimen/tab_width"
+        app:tabMinWidth="@dimen/tab_width"
+        app:tabIndicatorHeight="5dp"
+        app:tabIndicatorColor="@color/colorSecondary"
+        app:tabPaddingStart="0dp"
         app:tabMode="scrollable" />
 
     <android.support.v4.view.ViewPager

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -68,6 +69,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private static final int DISPLAY_ROADS_RESULT = 4;
     public static final int DISPLAY_BUS_LINES_RESULT = 5;
 
+    @Bind(R.id.center_location_action_button)
+    FloatingActionButton mCenterLocationActionButton;
     @Bind(R.id.compoundSearchBox)
     CompoundSearchBox mCompoundSearchBox;
     @Bind(R.id.drawer_layout)
@@ -90,7 +93,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     /*---Bottom Sheet------*/
 
     /**
@@ -184,7 +186,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void setupBottomSheet() {
         mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(mMyBusMap.dpToPx(BOTTOM_SHEET_PEEK_HEIGHT_DP));
+        mBottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_tab_height));
     }
 
     /**
@@ -370,8 +372,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         if (mBottomSheet != null) {
             if (show) {
                 mBottomSheet.setVisibility(View.VISIBLE);
+                mCenterLocationActionButton.hide();
             } else {
                 mBottomSheet.setVisibility(View.INVISIBLE);
+                mCenterLocationActionButton.show();
             }
         }
     }

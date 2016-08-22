@@ -47,23 +47,20 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
         BusRouteResult routeResult = mDataset.get(pos);
         List<BusRoute> routes = routeResult.getBusRoutes();
         if (routes != null && !routes.isEmpty()) {
+            BusRoute firstBusRoute = routes.get(0);
+            holder.mStartAddress.setText(String.format("%s %s", firstBusRoute.getStartBusStopStreetName(), firstBusRoute.getStartBusStopStreetNumber()));
+            holder.mStartDistance.setText(mContext.getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(firstBusRoute.getStartBusStopDistanceToOrigin())));
             if (!routeResult.isCombined()) {
                 //if single route
-                BusRoute busRoute = routes.get(0);
-                holder.mLineNumber.setText(busRoute.getBusLineName());
-                holder.mStartAddress.setText(busRoute.getStartBusStopStreetName() + " " + busRoute.getStartBusStopStreetNumber());
-                holder.mStopAddress.setText(busRoute.getDestinationBusStopStreetName() + " " + busRoute.getDestinationBusStopStreetNumber());
-                holder.mStartDistance.setText(mContext.getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(busRoute.getStartBusStopDistanceToOrigin())));
-                holder.mStopDistance.setText(mContext.getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(busRoute.getDestinationBusStopDistanceToDestination())));
+                holder.mLineNumber.setText(firstBusRoute.getBusLineName());
+                holder.mStopAddress.setText(String.format("%s %s", firstBusRoute.getDestinationBusStopStreetName(), firstBusRoute.getDestinationBusStopStreetNumber()));
+                holder.mStopDistance.setText(mContext.getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(firstBusRoute.getDestinationBusStopDistanceToDestination())));
             } else {
                 //if combined
-                BusRoute firstBus = routes.get(0);
-                BusRoute lastBus = routes.get(1);
-                holder.mLineNumber.setText(firstBus.getBusLineName() + " -> " + lastBus.getBusLineName());
-                holder.mStartAddress.setText(firstBus.getStartBusStopStreetName() + " " + firstBus.getStartBusStopStreetNumber());
-                holder.mStopAddress.setText(lastBus.getDestinationBusStopStreetName() + " " + lastBus.getDestinationBusStopStreetNumber());
-                holder.mStartDistance.setText(mContext.getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(firstBus.getStartBusStopDistanceToOrigin())));
-                holder.mStopDistance.setText(mContext.getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(lastBus.getDestinationBusStopDistanceToDestination())));
+                BusRoute secondBusRoute = routes.get(1);
+                holder.mLineNumber.setText(String.format("%s -> %s", firstBusRoute.getBusLineName(), secondBusRoute.getBusLineName()));
+                holder.mStopAddress.setText(String.format("%s %s", secondBusRoute.getDestinationBusStopStreetName(), secondBusRoute.getDestinationBusStopStreetNumber()));
+                holder.mStopDistance.setText(mContext.getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(secondBusRoute.getDestinationBusStopDistanceToDestination())));
             }
         }
     }
@@ -82,7 +79,7 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
         mBusLineListItemListener.onItemClicked(position);
     }
 
-    public void setDataset(List<BusRouteResult> dataset){
+    public void setDataset(List<BusRouteResult> dataset) {
         mDataset = dataset;
     }
 }
