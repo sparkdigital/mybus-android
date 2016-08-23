@@ -404,8 +404,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 aboutAlertDialog.show(getFragmentManager(), "");
                 break;
             case R.id.drawerCharge:
-                showProgressDialog(getString(R.string.dialog_searching_loading_points));
-                ServiceFacade.getInstance().getNearChargingPoints(mMyBusMap.getLocationUpdater().getLastKnownLocation(), MainActivity.this);
+                if (mMyBusMap.getLocationUpdater().getLastKnownLocation() != null) {
+                    showProgressDialog(getString(R.string.dialog_searching_loading_points));
+                    ServiceFacade.getInstance().getNearChargingPoints(mMyBusMap.getLocationUpdater().getLastKnownLocation(), MainActivity.this);
+                } else {
+                    DeviceRequirementsChecker.checkGpsEnabled(this);
+                }
                 break;
             default:
                 break;
