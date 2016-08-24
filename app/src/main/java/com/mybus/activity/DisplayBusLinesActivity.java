@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.mybus.R;
 import com.mybus.adapter.BusLineViewAdapter;
 import com.mybus.asynctask.BusLinesRequestCallback;
 import com.mybus.listener.BusLineListItemListener;
 import com.mybus.model.BusLine;
+import com.mybus.requirements.DeviceRequirementsChecker;
 import com.mybus.service.ServiceFacade;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class DisplayBusLinesActivity extends BaseMyBusActivity implements BusLinesRequestCallback, BusLineListItemListener{
+public class DisplayBusLinesActivity extends BaseMyBusActivity implements BusLinesRequestCallback, BusLineListItemListener {
 
     @Bind(R.id.bus_lines_recycler_view)
     RecyclerView mBusLinesRecyclerView;
@@ -68,11 +70,15 @@ public class DisplayBusLinesActivity extends BaseMyBusActivity implements BusLin
     @Override
     public void onItemClicked(int position) {
         //Return the bus line id to the MainActivity
-        Intent intent = new Intent();
-        intent.putExtra(RESULT_BUS_LINE_ID, mBusLines.get(position).getId());
-        intent.putExtra(RESULT_BUS_LINE_NAME, mBusLines.get(position).getName());
-        setResult(RESULT_OK, intent);
-        overridePendingTransition(0, 0);
-        finish();
+        if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
+            Intent intent = new Intent();
+            intent.putExtra(RESULT_BUS_LINE_ID, mBusLines.get(position).getId());
+            intent.putExtra(RESULT_BUS_LINE_NAME, mBusLines.get(position).getName());
+            setResult(RESULT_OK, intent);
+            overridePendingTransition(0, 0);
+            finish();
+        } else {
+            Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+        }
     }
 }
