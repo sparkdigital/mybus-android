@@ -404,9 +404,15 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 aboutAlertDialog.show(getFragmentManager(), "");
                 break;
             case R.id.drawerCharge:
+                //CHECK INTERNET CONNECTION ENABLED
                 if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
-                    showProgressDialog(getString(R.string.dialog_searching_loading_points));
-                    ServiceFacade.getInstance().getNearChargingPoints(mMyBusMap.getLocationUpdater().getLastKnownLocation(), MainActivity.this);
+                    //CHECK GPS ENABLED
+                    if (mMyBusMap.getLocationUpdater().getLastKnownLocation() != null) {
+                        showProgressDialog(getString(R.string.dialog_searching_loading_points));
+                        ServiceFacade.getInstance().getNearChargingPoints(mMyBusMap.getLocationUpdater().getLastKnownLocation(), MainActivity.this);
+                    } else {
+                        DeviceRequirementsChecker.checkGpsEnabled(this);
+                    }
                 } else {
                     Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
                 }
