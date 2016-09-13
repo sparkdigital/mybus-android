@@ -5,8 +5,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.mybus.R;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.model.GeoLocation;
 import com.mybus.requirements.AddressValidator;
@@ -23,6 +25,7 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocat
     private static final String TAG = "LocationGeocoding";
     private OnLocationGeocodingCompleteCallback callback;
     private Context mContext;
+    private IOException mException;
 
     public LocationGeocodingAcyncTask(Context c, OnLocationGeocodingCompleteCallback callback) {
         this.mContext = c;
@@ -39,6 +42,7 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocat
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             Log.e(TAG, "service_not_available", ioException);
+            mException = ioException;
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
             Log.e(TAG, "invalid_lat_long_used" + ". "
@@ -66,7 +70,11 @@ public class LocationGeocodingAcyncTask extends AsyncTask<LatLng, Void, GeoLocat
 
     @Override
     protected void onPostExecute(GeoLocation geoLocation) {
-        super.onPostExecute(geoLocation);
-        callback.onLocationGeocodingComplete(geoLocation);
+        if (mException != null) {
+            Toast.makeText(mContext, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+        } else {
+            super.onPostExecute(geoLocation);
+            callback.onLocationGeocodingComplete(geoLocation);
+        }
     }
 }
