@@ -284,8 +284,13 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                         markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
                         mMyBusMap.zoomOut(markerList);
                     } else {
-                        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
-                        performRoadSearch(busRouteResult);
+                        //CHECK INTERNET CONNECTION
+                        if (DeviceRequirementsChecker.isNetworkAvailable(MainActivity.this)) {
+                            BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
+                            performRoadSearch(busRouteResult);
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
