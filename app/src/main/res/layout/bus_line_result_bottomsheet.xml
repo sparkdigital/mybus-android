@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:src="@drawable/bus" />
+        android:src="@drawable/bus_small" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +43,16 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="40dp"
+                android:layout_width="19dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+            <LinearLayout
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:orientation="horizontal" />
+            <LinearLayout
+                android:layout_width="19dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
             <TextView
@@ -56,10 +65,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:orientation="horizontal">
             <LinearLayout
-                android:layout_width="40dp"
+                android:layout_width="19dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+            <LinearLayout
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:orientation="horizontal" />
+            <LinearLayout
+                android:layout_width="19dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
             <TextView
@@ -67,6 +84,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/auto_fit_tv_text_size"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="19dp"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="2dp"
+                android:layout_height="10dp"
+                android:background="@color/black"/>
         </LinearLayout>
 
         <LinearLayout
