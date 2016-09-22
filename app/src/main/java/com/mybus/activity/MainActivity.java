@@ -222,7 +222,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
         } else {
-            startResultsActivity((ArrayList<BusRouteResult>) results);
+            startResultsActivity(results);
         }
     }
 
@@ -622,9 +622,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     /**
      * @param results
      */
-    private void startResultsActivity(ArrayList<BusRouteResult> results) {
+    private void startResultsActivity(List<BusRouteResult> results) {
         Intent busResultsIntent = new Intent(MainActivity.this, BusResultsActivity.class);
-        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, results);
+        busResultsIntent.putExtra(BusResultsActivity.RESULTS_EXTRA, (ArrayList<BusRouteResult>) results);
         GeoLocation startGeoLocation = new GeoLocation(mCompoundSearchBox.getFromAddress(), mMyBusMap.getStartLocationMarker().getMapMarker().getPosition());
         busResultsIntent.putExtra(BusResultsActivity.START_GEOLOCATION_EXTRA, startGeoLocation);
         GeoLocation endGeoLocation = new GeoLocation(mCompoundSearchBox.getToAddress(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition());

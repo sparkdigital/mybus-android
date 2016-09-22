@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1087521531819",
+    "firebase_url": "https://mybus-3c031.firebaseio.com",
+    "project_id": "mybus-3c031",
+    "storage_bucket": "mybus-3c031.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087521531819:android:65a6df6cf2d76cde",
+        "android_client_info": {
+          "package_name": "com.mybus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087521531819-op0v0sr63hr96auhvguf766bn3193d1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqD3a4aDOFmI_GwVxbr83HvXvfK7pQbtM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
