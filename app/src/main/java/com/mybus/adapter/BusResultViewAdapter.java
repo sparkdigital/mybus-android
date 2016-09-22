@@ -48,8 +48,8 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
         List<BusRoute> routes = routeResult.getBusRoutes();
         if (routes != null && !routes.isEmpty()) {
             BusRoute firstBusRoute = routes.get(0);
-            holder.mStartAddress.setText(String.format("%s %s", firstBusRoute.getStartBusStopStreetName(), firstBusRoute.getStartBusStopStreetNumber()));
-            holder.mStopAddress.setText(String.format("%s %s", firstBusRoute.getDestinationBusStopStreetName(), firstBusRoute.getDestinationBusStopStreetNumber()));
+            holder.mStartAddress.setText(firstBusRoute.getFullStartStopBusAddress());
+            holder.mStopAddress.setText(firstBusRoute.getFullDestinationStopBusAddress());
             if (!routeResult.isCombined()) { //Single route
                 // Single Bus Line Name title:
                 holder.mLineNumber.setText(firstBusRoute.getBusLineName());
@@ -62,8 +62,8 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
                 holder.mLineNumber.setText(String.format("%s -> %s", firstBusRoute.getBusLineName(), secondBusRoute.getBusLineName()));
                 // Populate second line information:
                 holder.mFirstDestinationTitle.setText(mContext.getString(R.string.down_on));
-                holder.mSecondStartAddress.setText(String.format("%s %s", secondBusRoute.getStartBusStopStreetName(), secondBusRoute.getStartBusStopStreetNumber()));
-                holder.mSecondStopAddress.setText(String.format("%s %s", secondBusRoute.getDestinationBusStopStreetName(), secondBusRoute.getDestinationBusStopStreetNumber()));
+                holder.mSecondStartAddress.setText(secondBusRoute.getFullStartStopBusAddress());
+                holder.mSecondStopAddress.setText(secondBusRoute.getFullDestinationStopBusAddress());
                 // Show second line information
                 holder.mSecondLineView.setVisibility(View.VISIBLE);
             }
