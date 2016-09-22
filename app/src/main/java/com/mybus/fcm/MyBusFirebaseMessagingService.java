@@ -32,7 +32,7 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
         int id = 0;
         Object obj = message.getData().get("id");
         if (obj != null) {
-            id = Integer.valueOf(obj.toString());
+            id = Integer.parseInt(obj.toString());
         }
 
         this.sendNotification(new NotificationData(image, id, title, text, sound));
@@ -64,7 +64,7 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent);
 
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.e(TAG, "NotificationBuilder creation failed.", e);
         }
 
         if (notificationBuilder != null) {
