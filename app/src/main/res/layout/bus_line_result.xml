@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,7 +19,6 @@
             android:id="@+id/bus_line_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
             android:textColor="@color/abc_search_url_text_selected"
             android:textSize="@dimen/bus_line_name_size" />
     </LinearLayout>
@@ -134,7 +132,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
