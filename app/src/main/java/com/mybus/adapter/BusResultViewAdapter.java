@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mybus.R;
-import com.mybus.helper.WalkDistanceHelper;
 import com.mybus.listener.BusLineListItemListener;
 import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
@@ -27,7 +26,8 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
     @Override
     public BusResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext())
+        View v;
+        v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.bus_line_result, parent, false);
         return new BusResultViewHolder(v, this);
     }
@@ -37,8 +37,8 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
      * @param busLineListItemListener
      */
     public BusResultViewAdapter(List<BusRouteResult> dataSet, BusLineListItemListener busLineListItemListener, Context context) {
-        mDataset = dataSet;
-        mBusLineListItemListener = busLineListItemListener;
+        this.mDataset = dataSet;
+        this.mBusLineListItemListener = busLineListItemListener;
         this.mContext = context;
     }
 
@@ -48,19 +48,24 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
         List<BusRoute> routes = routeResult.getBusRoutes();
         if (routes != null && !routes.isEmpty()) {
             BusRoute firstBusRoute = routes.get(0);
-            holder.mStartAddress.setText(String.format("%s %s", firstBusRoute.getStartBusStopStreetName(), firstBusRoute.getStartBusStopStreetNumber()));
-            holder.mStartDistance.setText(mContext.getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(firstBusRoute.getStartBusStopDistanceToOrigin())));
-            if (!routeResult.isCombined()) {
-                //if single route
+            holder.mStartAddress.setText(firstBusRoute.getFullStartStopBusAddress());
+            holder.mStopAddress.setText(firstBusRoute.getFullDestinationStopBusAddress());
+            if (!routeResult.isCombined()) { //Single route
+                // Single Bus Line Name title:
                 holder.mLineNumber.setText(firstBusRoute.getBusLineName());
-                holder.mStopAddress.setText(String.format("%s %s", firstBusRoute.getDestinationBusStopStreetName(), firstBusRoute.getDestinationBusStopStreetNumber()));
-                holder.mStopDistance.setText(mContext.getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(firstBusRoute.getDestinationBusStopDistanceToDestination())));
-            } else {
-                //if combined
+                // Make sure that the second line is hidden
+                holder.mSecondLineView.setVisibility(View.GONE);
+            } else { // Combined Route
+                // Get the second route
                 BusRoute secondBusRoute = routes.get(1);
+                //Combined bus line name title:
                 holder.mLineNumber.setText(String.format("%s -> %s", firstBusRoute.getBusLineName(), secondBusRoute.getBusLineName()));
-                holder.mStopAddress.setText(String.format("%s %s", secondBusRoute.getDestinationBusStopStreetName(), secondBusRoute.getDestinationBusStopStreetNumber()));
-                holder.mStopDistance.setText(mContext.getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(secondBusRoute.getDestinationBusStopDistanceToDestination())));
+                // Populate second line information:
+                holder.mFirstDestinationTitle.setText(mContext.getString(R.string.down_on));
+                holder.mSecondStartAddress.setText(secondBusRoute.getFullStartStopBusAddress());
+                holder.mSecondStopAddress.setText(secondBusRoute.getFullDestinationStopBusAddress());
+                // Show second line information
+                holder.mSecondLineView.setVisibility(View.VISIBLE);
             }
         }
     }

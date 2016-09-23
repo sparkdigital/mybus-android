@@ -76,4 +76,6 @@
     <string name="start_end_complete_route">Inicio/Fin del recorrido - Linea: %1$s</string>
     <string name="toast_no_complete_route">Recorrido no disponible</string>
     <string name="address_not_exists">La direccion buscada no existe</string>
+    <string name="down_on">Bajar en:</string>
+    <string name="take_second_bus_line">Tomar el segundo colectivo en:</string>
 </resources>
