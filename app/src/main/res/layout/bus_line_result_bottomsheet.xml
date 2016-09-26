@@ -126,6 +126,7 @@
                     android:src="@drawable/from_circle" />
 
                 <TextView
+                    android:id="@+id/first_destination_bus_stop_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/stop_destination_title"
@@ -170,7 +171,7 @@
 
             <!-- Second Line Information -->
             <LinearLayout
-                android:id="@+id/secondLineView"
+                android:id="@+id/secondLineInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -219,7 +220,7 @@
                         android:orientation="horizontal" />
 
                     <TextView
-                        android:id="@+id/second_line_start_address"
+                        android:id="@+id/secondLineStartAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/auto_fit_tv_text_size" />
@@ -262,7 +263,7 @@
                         android:orientation="horizontal" />
 
                     <TextView
-                        android:id="@+id/second_line_start_distance"
+                        android:id="@+id/secondLineStartDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/auto_fit_tv_text_size" />
@@ -300,7 +301,7 @@
                         android:orientation="horizontal" />
 
                     <TextView
-                        android:id="@+id/second_line_stop_address"
+                        android:id="@+id/secondLineStopAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/auto_fit_tv_text_size" />
@@ -317,7 +318,7 @@
                         android:orientation="horizontal" />
 
                     <TextView
-                        android:id="@+id/second_line_stop_distance"
+                        android:id="@+id/secondLineStopDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/auto_fit_tv_text_size" />

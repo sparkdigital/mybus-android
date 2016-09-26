@@ -23,7 +23,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
 
     private static final String TAG = AddressGeocodingAcyncTask.class.getSimpleName();
     //TODO remove this hardcoded city & CP codes, using a preferences to detect city
-    private static final List<String> MDQ_POSTAL_CODES = Arrays.asList("08183", "B7600", "B7602", "B7603", "B7605", "B7606", "B7608", "B7611");
+    private static final List<String> MDQ_POSTAL_CODES = Arrays.asList("08183", "B7600", "B7601", "B7602", "B7603", "B7604", "B7605", "B7606", "B7608", "B7609", "B7611", "B7612");
     private static final String MDQ_CITY_NAME = ", Mar del Plata, Buenos Aires, Argentina";
 
     private final Context mContext;

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mybus.R;
@@ -23,13 +24,25 @@ import butterknife.ButterKnife;
 public class BusRouteFragment extends Fragment {
 
     @Bind(R.id.origin_bus_stop_address)
-    public TextView mOriginBusStopAddress;
-    @Bind(R.id.destination_bus_stop_address)
-    public TextView mDestinationBusStopAddress;
+    public TextView mFirstLineOriginBusStopAddress;
     @Bind(R.id.start_distance)
-    public TextView mStartDistance;
+    public TextView mFirstLineDistanceFromOrigin;
+    @Bind(R.id.first_destination_bus_stop_title)
+    public TextView mFirstDestinationTitle;
+    @Bind(R.id.destination_bus_stop_address)
+    public TextView mFirstLineDestinationBusStopAddress;
     @Bind(R.id.stop_distance)
-    public TextView mStopDistance;
+    public TextView mFirstLineDistanceToDestination;
+    @Bind(R.id.secondLineInfo)
+    public LinearLayout mSecondLineInfo;
+    @Bind(R.id.secondLineStartAddress)
+    public TextView mSecondLineOriginBusStopAddress;
+    @Bind(R.id.secondLineStartDistance)
+    public TextView mCombinationDistance;
+    @Bind(R.id.secondLineStopAddress)
+    public TextView mSecondLineDestinationBusStopAddress;
+    @Bind(R.id.secondLineStopDistance)
+    public TextView mSecondLineDistanceToDestination;
 
     private BusRouteResult mBusRouteResult;
     private MapBusRoad mMapBusRoad;
@@ -57,17 +70,27 @@ public class BusRouteFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         BusRoute firstBus = mBusRouteResult.getBusRoutes().get(0);
-        mOriginBusStopAddress.setText(String.format("%s %s", firstBus.getStartBusStopStreetName(), firstBus.getStartBusStopStreetNumber()));
-        mStartDistance.setText(getContext().getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(firstBus.getStartBusStopDistanceToOrigin())));
-        if (!mBusRouteResult.isCombined()) {
-            //if single route
-            mDestinationBusStopAddress.setText(String.format("%s %s", firstBus.getDestinationBusStopStreetName(), firstBus.getDestinationBusStopStreetNumber()));
-            mStopDistance.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(firstBus.getDestinationBusStopDistanceToDestination())));
-        } else {
-            //if combined
-            BusRoute lastBus = mBusRouteResult.getBusRoutes().get(1);
-            mDestinationBusStopAddress.setText(String.format("%s %s", lastBus.getDestinationBusStopStreetName(), lastBus.getDestinationBusStopStreetNumber()));
-            mStopDistance.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(lastBus.getDestinationBusStopDistanceToDestination())));
+        //1° Stop Bus:
+        mFirstLineOriginBusStopAddress.setText(firstBus.getFullOriginStopBusAddress());
+        mFirstLineDistanceFromOrigin.setText(getContext().getString(R.string.bus_route_distance_to_origin, WalkDistanceHelper.getDistanceInBlocks(firstBus.getStartBusStopDistanceToOrigin())));
+
+        //2° Stop Bus:
+        mFirstLineDestinationBusStopAddress.setText(firstBus.getFullDestinationStopBusAddress());
+
+        if (!mBusRouteResult.isCombined()) { //if single route
+            mSecondLineInfo.setVisibility(View.GONE); // Hide second line info
+            mFirstLineDistanceToDestination.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(firstBus.getDestinationBusStopDistanceToDestination())));
+        } else { //if combined
+            mFirstDestinationTitle.setText(getContext().getString(R.string.down_on)); // Change title for first destination stop bus
+
+            BusRoute secondBus = mBusRouteResult.getBusRoutes().get(1);
+            mSecondLineOriginBusStopAddress.setText(secondBus.getFullOriginStopBusAddress());
+            mCombinationDistance.setText(getContext().getString(R.string.bus_route_distance_from_combination, WalkDistanceHelper.getDistanceInBlocks(mBusRouteResult.getCombinationDistance())));
+
+            mSecondLineDestinationBusStopAddress.setText(secondBus.getFullDestinationStopBusAddress());
+            mSecondLineDistanceToDestination.setText(getContext().getString(R.string.bus_route_distance_to_destination, WalkDistanceHelper.getDistanceInBlocks(secondBus.getDestinationBusStopDistanceToDestination())));
+
+            mSecondLineInfo.setVisibility(View.VISIBLE); // Show second line info.
         }
     }
 

@@ -347,7 +347,7 @@ public class BusRoute implements Parcelable {
         return new LatLng(Double.valueOf(mDestinationBusStopLat), Double.valueOf(mDestinationBusStopLng));
     }
 
-    public String getFullStartStopBusAddress() {
+    public String getFullOriginStopBusAddress() {
         return mStartBusStopStreetName + " " + mStartBusStopStreetNumber;
     }
 
