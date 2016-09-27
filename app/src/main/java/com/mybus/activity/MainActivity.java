@@ -222,7 +222,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return;
         }
-        super.onBackPressed();
+        finish();
     }
 
     @Override
