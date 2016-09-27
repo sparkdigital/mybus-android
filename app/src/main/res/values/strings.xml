@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">MyBus</string>
     <string name="app_url">www.mybus.com.ar</string>
-    <string name="app_store_url">https://play.google.com/store/apps/details?id=org.globant.mybus</string>
+    <string name="app_store_url">https://play.google.com/store/apps/details?id=com.mybus</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
     <string name="save_favorite_as">Guardar favorito como</string>
-    <string name="powered_by">Powered by Devspark</string>
+    <string name="spark_digital_title">Spark Digital</string>
     <string name="from_hint">Ingresa tu Origen</string>
     <string name="to_hint">Ingresa tu Destino</string>
     <string name="current_location_marker">Tu Ubicación</string>
@@ -79,4 +79,7 @@
     <string name="down_on">Bajar en:</string>
     <string name="take_second_bus_line">Tomar el segundo colectivo en:</string>
     <string name="bus_route_distance_from_combination">"Distancia desde el trasbordo: %1$s"</string>
+    <string name="android_authors">Android: Julián Gonzalez, Lucas Dimitroff, Lucas De Lio</string>
+    <string name="powered_by_url">http://www.sparkdigital.com/</string>
+    <string name="powered_by">Powered by</string>
 </resources>
