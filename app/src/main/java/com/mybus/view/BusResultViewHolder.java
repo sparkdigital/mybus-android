@@ -2,6 +2,7 @@ package com.mybus.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mybus.R;
@@ -21,10 +22,17 @@ public class BusResultViewHolder extends RecyclerView.ViewHolder {
     public TextView mStartAddress;
     @Bind(R.id.stop_address)
     public TextView mStopAddress;
-    @Bind(R.id.start_distance)
-    public TextView mStartDistance;
-    @Bind(R.id.stop_distance)
-    public TextView mStopDistance;
+
+    // Second line information:
+    @Bind(R.id.secondLineView)
+    public LinearLayout mSecondLineView;
+    @Bind(R.id.first_line_destination_title)
+    public TextView mFirstDestinationTitle;
+    @Bind(R.id.second_line_start_address)
+    public TextView mSecondStartAddress;
+    @Bind(R.id.second_line_stop_address)
+    public TextView mSecondStopAddress;
+
 
     private BusLineListItemListener mItemClickListener;
 

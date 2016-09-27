@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -68,6 +69,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private static final int DISPLAY_ROADS_RESULT = 4;
     public static final int DISPLAY_BUS_LINES_RESULT = 5;
 
+    @Bind(R.id.center_location_action_button)
+    FloatingActionButton mCenterLocationActionButton;
     @Bind(R.id.compoundSearchBox)
     CompoundSearchBox mCompoundSearchBox;
     @Bind(R.id.drawer_layout)
@@ -90,11 +93,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    private static final int BOTTOM_SHEET_PEEK_HEIGHT_DP = 60;
     /*---Bottom Sheet------*/
 
     /**
      * Getter for Toolbar in order to interact with it from MyBusMap.
+     *
      * @return
      */
     public View getToolbar() {
@@ -103,6 +106,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     /**
      * Getter for CompoundSearchBox in order to interact with it from MyBusMap.
+     *
      * @return
      */
     public CompoundSearchBox getCompoundSearchBox() {
@@ -182,50 +186,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void setupBottomSheet() {
         mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(mMyBusMap.dpToPx(BOTTOM_SHEET_PEEK_HEIGHT_DP));
+        mBottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_tab_height));
     }
-
-    /**
-     * Bottom Sheet Tab selected listener
-     * <p/>
-     * Expands the bottom sheet when the user re-selects any tab
-     */
-    private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
-        @Override
-        public void onTabSelected(TabLayout.Tab tab) {
-            mTabLayout.getTabAt(tab.getPosition()).getCustomView().setSelected(true);
-            mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
-            mViewPager.setCurrentItem(tab.getPosition(), true);
-            mViewPager.requestLayout();
-            mBottomSheet.requestLayout();
-
-            if (isBusRouteFragmentPresent(tab.getPosition())) {
-                boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
-                if (isMapBusRoadPresent) {
-                    mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
-                    MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
-                    List<Marker> markerList = new ArrayList<>();
-                    markerList.addAll(mapBusRoad.getMarkerList());
-                    markerList.add(mMyBusMap.getStartLocationMarker().getMapMarker());
-                    markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
-                    mMyBusMap.zoomOut(markerList);
-                } else {
-                    BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
-                    performRoadSearch(busRouteResult);
-                }
-            }
-        }
-
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab) {
-            hideCurrentBusRouteOnMap();
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab) {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-    };
 
     /**
      * Manipulates the map once available.
@@ -276,13 +238,73 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        mTabLayout.setOnTabSelectedListener(getCustomOnTabSelectedListener());
+        //Set custom view for each tab:
+        TabLayout.Tab tab;
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-            mTabLayout.getTabAt(i).setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
+            tab = mTabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(mViewPagerAdapter.getTabView(mTabLayout, results.get(i)));
+            }
+        }
+        // Select custom Tab:
+        if (busResultId == 0) { // The tab is already selected:
+            BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
+            performRoadSearch(busRouteResult);
+        } else { // Select a different tab:
+            tab = mTabLayout.getTabAt(busResultId);
+            if (tab != null) {
+                tab.select();
+            }
         }
         showBottomSheetResults(true);
-        BusRouteResult busRouteResult = mViewPagerAdapter.getItem(busResultId).getBusRouteResult();
-        performRoadSearch(busRouteResult);
+    }
+
+    /**
+     * Bottom Sheet Tab selected listener
+     * <p/>
+     * Expands the bottom sheet when the user re-selects any tab
+     */
+    private TabLayout.ViewPagerOnTabSelectedListener getCustomOnTabSelectedListener() {
+        return new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition(), true);
+                mViewPager.requestLayout();
+                mBottomSheet.requestLayout();
+
+                if (isBusRouteFragmentPresent(tab.getPosition())) {
+                    boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
+                    if (isMapBusRoadPresent) {
+                        mViewPagerAdapter.getItem(tab.getPosition()).showMapBusRoad(true);
+                        MapBusRoad mapBusRoad = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad();
+                        List<Marker> markerList = new ArrayList<>();
+                        markerList.addAll(mapBusRoad.getMarkerList());
+                        markerList.add(mMyBusMap.getStartLocationMarker().getMapMarker());
+                        markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
+                        mMyBusMap.zoomOut(markerList);
+                    } else {
+                        //CHECK INTERNET CONNECTION
+                        if (DeviceRequirementsChecker.isNetworkAvailable(MainActivity.this)) {
+                            BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
+                            performRoadSearch(busRouteResult);
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                hideCurrentBusRouteOnMap(tab.getPosition());
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        };
     }
 
     /**
@@ -316,10 +338,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     /**
      * Hide all markers and polyline for a previous route
+     *
+     * @param position
      */
-    private void hideCurrentBusRouteOnMap() {
-        if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
-            mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).showMapBusRoad(false);
+    private void hideCurrentBusRouteOnMap(int position) {
+        if (isBusRouteFragmentPresent(position)) {
+            mViewPagerAdapter.getItem(position).showMapBusRoad(false);
         }
     }
 
@@ -329,6 +353,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     public void clearBusRouteOnMap() {
         if (mViewPagerAdapter != null) {
             mViewPagerAdapter.clearBusRoutes();
+            mViewPagerAdapter.cleanAll();
         }
         mMyBusMap.hideBusRoutes();
     }
@@ -352,8 +377,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         if (mBottomSheet != null) {
             if (show) {
                 mBottomSheet.setVisibility(View.VISIBLE);
+                mCenterLocationActionButton.hide();
             } else {
                 mBottomSheet.setVisibility(View.INVISIBLE);
+                mCenterLocationActionButton.show();
             }
         }
     }
@@ -382,8 +409,18 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 aboutAlertDialog.show(getFragmentManager(), "");
                 break;
             case R.id.drawerCharge:
-                showProgressDialog(getString(R.string.dialog_searching_loading_points));
-                ServiceFacade.getInstance().getNearChargingPoints(mMyBusMap.getLocationUpdater().getLastKnownLocation(), MainActivity.this);
+                //CHECK INTERNET CONNECTION ENABLED
+                if (DeviceRequirementsChecker.isNetworkAvailable(this)) {
+                    //CHECK GPS ENABLED
+                    if (mMyBusMap.getLocationUpdater().getLastKnownLocation() != null) {
+                        showProgressDialog(getString(R.string.dialog_searching_loading_points));
+                        ServiceFacade.getInstance().getNearChargingPoints(mMyBusMap.getLocationUpdater().getLastKnownLocation(), MainActivity.this);
+                    } else {
+                        DeviceRequirementsChecker.checkGpsEnabled(this);
+                    }
+                } else {
+                    Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 break;

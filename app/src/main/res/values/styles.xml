@@ -30,6 +30,16 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginLeft">@dimen/item_divider_margin</item>
         <item name="android:layout_marginRight">@dimen/item_divider_margin</item>
+        <item name="android:layout_marginTop">@dimen/item_divider_margin</item>
+        <item name="android:layout_marginBottom">@dimen/item_divider_margin</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="DividerVertical">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/item_divider_margin</item>
+        <item name="android:layout_marginBottom">@dimen/item_divider_margin</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 </resources>
