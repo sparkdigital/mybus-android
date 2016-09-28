@@ -84,6 +84,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private Context mContext;
     private MyBusMap mMyBusMap;
     private MyBusMarker mMarkerFavoriteToUpdate;
+    private boolean mFromActivityResults;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -228,9 +229,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
+        showBottomSheetResults(false);
         mMyBusMap.removeChargingPointMarkers();
         if (results == null || results.isEmpty()) {
-            showBottomSheetResults(false);
             mViewPagerAdapter = null;
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
@@ -349,8 +350,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
             mMyBusMap.zoomOut(markerList);
             //Exand bottom sheet if it is collapsed
-            if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            if ((mFromActivityResults) && (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED)) {
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                mFromActivityResults = false;
             }
         }
     }
@@ -487,6 +489,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                     showCompleteBusRoute(busLineId, busLineName);
                     break;
                 case DISPLAY_BUS_LINES_RESULT:
+                    mFromActivityResults = true;
+                    //Collapse bottom sheet if it is expanded
+                    if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
                     updateAfterBusLineResult(data);
                     break;
                 default:
