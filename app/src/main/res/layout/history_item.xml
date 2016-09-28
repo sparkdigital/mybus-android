@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/recent" />
+            android:src="@drawable/recent_small" />
 
         <TextView
             android:id="@+id/history_address"
