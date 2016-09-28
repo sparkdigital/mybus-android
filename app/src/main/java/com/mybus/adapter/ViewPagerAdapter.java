@@ -81,14 +81,15 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public void cleanAll() {
         for (BusRouteFragment busRoute : mFragmentList) {
-            mFragmentManager.beginTransaction().remove(busRoute).commit();
+            mFragmentManager.beginTransaction().remove(busRoute).commitAllowingStateLoss();
+
         }
         mFragmentList.clear();
         notifyDataSetChanged();
     }
 
     @Override
-    public int getItemPosition(Object object){
+    public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
 }
