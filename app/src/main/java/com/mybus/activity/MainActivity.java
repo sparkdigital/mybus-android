@@ -194,6 +194,14 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) { // Disable dragging by user
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheet.requestLayout();
+                    bottomSheet.invalidate();
+                }
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    bottomSheet.requestLayout();
+                    bottomSheet.invalidate();
+                }
             }
 
             @Override
@@ -271,7 +279,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 tab.select();
             }
         }
-        showBottomSheetResults(true);
     }
 
     /**
@@ -354,6 +361,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 mFromActivityResults = false;
             }
+            showBottomSheetResults(true);
         }
     }
 
@@ -490,10 +498,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                     break;
                 case DISPLAY_BUS_LINES_RESULT:
                     mFromActivityResults = true;
-                    //Collapse bottom sheet if it is expanded
-                    if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
                     updateAfterBusLineResult(data);
                     break;
                 default:
