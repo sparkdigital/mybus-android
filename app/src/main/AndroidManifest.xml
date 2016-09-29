@@ -6,7 +6,7 @@
     <application
         android:name=".MyBus"
         android:allowBackup="true"
-        android:icon="@drawable/mybus_icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
