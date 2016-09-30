@@ -1,20 +1,875 @@
 {
   "Places": [
-    {
-      "name": "Casino",
-      "description": "Casino",
-      "address": "Av Patricio Peralta Ramos 2656",
-      "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Casino_Central_de_Mar_del_Plata.jpg/250px-Casino_Central_de_Mar_del_Plata.jpg",
-      "lat": -38.0041782,
-      "lng": -57.5420009
+{
+      "name": "UTN Mar del Plata",
+      "description": "UTN Mar del Plata",
+      "address": "Buque pesquero Dorrego 281",
+      "photoUrl": "",
+      "lat": -38.049191,
+      "lng": -57.542320
     },
     {
-      "name": "Rotonda Del Golf",
-      "description": "Rotonda Del Golf",
-      "address": "Av Patricio Peralta Ramos 5921",
-      "photoUrl": "http://www.radiobrisas.com/wp-content/uploads/2014/03/rotonda-del-golf.jpg",
-      "lat": -38.0308249,
-      "lng": -57.5349531
+      "name": "Casino Central",
+      "description": "Casino Central",
+      "address": "Av Patricio Peralta Ramos 2100",
+      "photoUrl": "",
+      "lat": -38.004330,
+      "lng": -57.542431
+    },
+    {
+      "name": "La fuente",
+      "description": "La fuente",
+      "address": "San Martin 2700",
+      "photoUrl": "",
+      "lat": -37.998764,
+      "lng": -57.548084
+    },
+    {
+      "name": "Plaza Mitre",
+      "description": "Plaza Mitre",
+      "address": "Av Colon 2800",
+      "photoUrl": "",
+      "lat": -38.003265,
+      "lng": -57.552891
+    },
+     {
+      "name": "Plaza San Martin",
+      "description": "Plaza San Martin",
+      "address": "Bartolome Mitre 1599",
+      "photoUrl": "",
+      "lat": -37.997478,
+      "lng": -57.548035
+    },
+    {
+      "name": "Plaza Colon",
+      "description": "Plaza Colon",
+      "address": "Buenos Aires 2100",
+      "photoUrl": "",
+      "lat": -38.005184,
+      "lng": -57.544319
+    },
+    {
+      "name": "Aguas Dansantes",
+      "description": "Aguas Dansantes",
+      "address": "Buenos Aires 1950",
+      "photoUrl": "",
+      "lat": -38.004013,
+      "lng": -57.543392
+    },
+    {
+      "name": "Plaza de Las Provincias",
+      "description": "Plaza de Las Provincias",
+      "address": "Buenos Aires 1850",
+      "photoUrl": "",
+      "lat": -38.003162,
+      "lng": -57.542706
+    },
+    {
+      "name": "Parque Primavesi",
+      "description": "Parque Primavesi",
+      "address": "Urquiza 4000",
+      "photoUrl": "",
+      "lat": -38.028355,
+      "lng": -57.540581
+    },
+    {
+      "name": "Plaza Peralta Ramos",
+      "description": "Plaza Peralta Ramos",
+      "address": "20 de Septiembre 2200",
+      "photoUrl": "",
+      "lat": -37.999104,
+      "lng": -57.560890
+    },
+    {
+      "name": "Plaza Rocha",
+      "description": "Plaza Rocha",
+      "address": "14 de Julio 1500",
+      "photoUrl": "",
+      "lat": -37.992958,
+      "lng": -57.557266
+    },
+    {
+      "name": "Plaza Pueyrredon",
+      "description": "Plaza Pueyrredon",
+      "address": "14 de Julio 850",
+      "photoUrl": "",
+      "lat": -37.987183,
+      "lng": -57.552631
+    },
+    {
+      "name": "Plaza EspaÃ±a",
+      "description": "Plaza EspaÃ±a",
+      "address": "Av Patricio Peralta Ramos 900",
+      "photoUrl": "",
+      "lat": -37.990849,
+      "lng": -57.545158
+    },
+    {
+      "name": "Parque Camet",
+      "description": "Parque Camet",
+      "address": "Av Fray Luis Beltran 5150",
+      "photoUrl": "",
+      "lat": -37.943241,
+      "lng": -57.538265
+    },
+    {
+      "name": "Plaza del Agua",
+      "description": "Plaza del Agua",
+      "address": "Martin Miguel de Guemes 3250",
+      "photoUrl": "",
+      "lat": -38.018661,
+      "lng": -57.543659
+    },
+    {
+      "name": "Bosque Peralta Ramos 1",
+      "description": "Bosque Peralta Ramos 1",
+      "address": "Av de Circunvalacion Mario Bravo 2150",
+      "photoUrl": "",
+      "lat": -38.069836,
+      "lng": -57.559017
+    },
+    {
+      "name": "Bosque Peralta Ramos 2",
+      "description": "Bosque Peralta Ramos 2",
+      "address": "Vergara 3200",
+      "photoUrl": "",
+      "lat": -38.090519,
+      "lng": -57.564892
+    },
+    {
+      "name": "Playa grande",
+      "description": "Playa grande",
+      "address": "Av Patricio Peralta Ramos 5250",
+      "photoUrl": "",
+      "lat": -38.025833,
+      "lng": -57.530979
+    },
+    {
+      "name": "Punta Mogotes",
+      "description": "Punta Mogotes",
+      "address": "Av Martinez de Hoz 1850",
+      "photoUrl": "",
+      "lat": -38.063553,
+      "lng": -57.546688
+    },
+    {
+      "name": "Cabo Corrientes",
+      "description": "Cabo Corrientes",
+      "address": "Av Patricio Peralta Ramos 4330",
+      "photoUrl": "",
+      "lat": -38.017036,
+      "lng": -57.525421
+    },
+    {
+      "name": "Playa Varese",
+      "description": "Playa Varese",
+      "address": "Av Patricio Peralta Ramos 650",
+      "photoUrl": "",
+      "lat": -38.015041,
+      "lng": -57.531818
+    },
+    {
+      "name": "ExpoIndustria",
+      "description": "ExpoIndustria",
+      "address": "Av Patricio Peralta Ramos 6500",
+      "photoUrl": "",
+      "lat": -38.036388,
+      "lng": -57.538589
+    },
+    {
+      "name": "Rambla",
+      "description": "Rambla",
+      "address": "Av Patricio Peralta Ramos 2350",
+      "photoUrl": "",
+      "lat": -38.005428,
+      "lng": -57.542439
+    },
+    {
+      "name": "Peatonal",
+      "description": "Peatonal",
+      "address": "San Martin 1700",
+      "photoUrl": "",
+      "lat": -37.999443,
+      "lng": -57.546860
+    },
+    {
+      "name": "Escollera Norte",
+      "description": "Escollera Norte",
+      "address": "Av Patricio Peralta Ramos 5650",
+      "photoUrl": "",
+      "lat": -38.029247,
+      "lng": -57.534359
+    },
+    {
+      "name": "Chapadmalal",
+      "description": "Chapadmalal",
+      "address": "Ruta Nacional 11 1",
+      "photoUrl": "",
+      "lat": -38.206318,
+      "lng": -57.695740
+    },
+    {
+      "name": "Cementerio de la Loma",
+      "description": "Cementerio de la Loma",
+      "address": "Almafuerte 300",
+      "photoUrl": "",
+      "lat": -38.029461,
+      "lng": -57.538639
+    },
+    {
+      "name": "Cementerio Parque",
+      "description": "Cementerio Parque",
+      "address": "10 de Febrero 1",
+      "photoUrl": "",
+      "lat": -38.058254,
+      "lng": -57.608658
+    },
+    {
+      "name": "Hospital Privado de Comunidad",
+      "description": "Hospital Privado de Comunidad",
+      "address": "Cordoba 4550",
+      "photoUrl": "",
+      "lat": -38.022057,
+      "lng": -57.565022
+    },
+    {
+      "name": "Hospital Materno Infantil",
+      "description": "Hospital Materno Infantil",
+      "address": "Alvarado 2550",
+      "photoUrl": "",
+      "lat": -38.010036,
+      "lng": -57.554810
+    },
+    {
+      "name": "Puerto",
+      "description": "Puerto",
+      "address": "12 de Octubre 3000",
+      "photoUrl": "",
+      "lat": -38.045452,
+      "lng": -57.543034
+    },
+    {
+      "name": "Municipalidad de Gral. Pueyrredon",
+      "description": "Municipalidad de Gral. Pueyrredon",
+      "address": "Hipolito Yrigoyen 1600",
+      "photoUrl": "",
+      "lat": -37.997227,
+      "lng": -57.549286
+    },
+    {
+      "name": "Barrio 2 de Abril",
+      "description": "Barrio 2 de Abril",
+      "address": "Au Ruta Provincial 2 1",
+      "photoUrl": "",
+      "lat": -37.914089,
+      "lng": -57.592934
+    },
+    {
+      "name": "Universidad Nacional",
+      "description": "Universidad Nacional",
+      "address": "Dean Funes 3250",
+      "photoUrl": "",
+      "lat": -38.004616,
+      "lng": -57.571152
+    },
+    {
+      "name": "Escuela de Artes Visuales Malharro",
+      "description": "Escuela de Artes Visuales Malharro",
+      "address": "Pampa 1600",
+      "photoUrl": "",
+      "lat": -37.989925,
+      "lng": -57.563339
+    },
+    {
+      "name": "Capilla Santa Cecilia",
+      "description": "Capilla Santa Cecilia",
+      "address": "Cordoba 1338",
+      "photoUrl": "",
+      "lat": -37.996475,
+      "lng": -57.544498
+    },
+    {
+      "name": "La catedral",
+      "description": "La catedral",
+      "address": "San Martin 2700",
+      "photoUrl": "",
+      "lat": -37.998596,
+      "lng": -57.548744
+    },
+    {
+      "name": "El Faro",
+      "description": "El Faro",
+      "address": "Av Martinez de Hoz 3600",
+      "photoUrl": "",
+      "lat": -38.091354,
+      "lng": -57.545982
+    },
+    {
+      "name": "Torre Tanque",
+      "description": "Torre Tanque",
+      "address": "Falucho 993",
+      "photoUrl": "",
+      "lat": -38.013283,
+      "lng": -57.535286
+    },
+    {
+      "name": "Hospital Regional",
+      "description": "Hospital Regional",
+      "address": "Av Juan B Justo 6800",
+      "photoUrl": "",
+      "lat": -37.994709,
+      "lng": -57.602528
+    },
+    {
+      "name": "Batan",
+      "description": "Batan",
+      "address": "Au Ruta Provincial 2 1",
+      "photoUrl": "",
+      "lat": -38.007423,
+      "lng": -57.710674
+    },
+    {
+      "name": "Sierra de los Padres",
+      "description": "Sierra de los Padres",
+      "address": "Au Ruta Nacional 226 1",
+      "photoUrl": "",
+      "lat": -37.939968,
+      "lng": -57.773888
+    },
+    {
+      "name": "Laguna de los Padres",
+      "description": "Laguna de los Padres",
+      "address": "Au Ruta Nacional 226 1",
+      "photoUrl": "",
+      "lat": -37.926125,
+      "lng": -57.733334
+    },
+    {
+      "name": "Colinas Verdes",
+      "description": "Colinas Verdes",
+      "address": "Au Ruta Nacional 226 1",
+      "photoUrl": "",
+      "lat": -37.900764,
+      "lng": -57.812298
+    },
+    {
+      "name": "Vieja Terminal",
+      "description": "Vieja Terminal",
+      "address": "Julian Aguirre 1650",
+      "photoUrl": "",
+      "lat": -38.011490,
+      "lng": -57.543587
+    },
+    {
+      "name": "Autodromo",
+      "description": "Autodromo",
+      "address": "Tripulantes del Fournier 1210",
+      "photoUrl": "",
+      "lat": -37.994995,
+      "lng": -57.630783
+    },
+    {
+      "name": "Nueva Terminal",
+      "description": "Nueva Terminal",
+      "address": "San Juan 1450",
+      "photoUrl": "",
+      "lat": -37.989025,
+      "lng": -57.561367
+    },
+    {
+      "name": "Oratorio de la Inmaculada Concepcion",
+      "description": "Oratorio de la Inmaculada Concepcion",
+      "address": "Jujuy 77",
+      "photoUrl": "",
+      "lat": -37.982082,
+      "lng": -57.544357
+    },
+    {
+      "name": "Capilla Stella Maris",
+      "description": "Capilla Stella Maris",
+      "address": "Almirante Brown 110",
+      "photoUrl": "",
+      "lat": -38.011898,
+      "lng": -57.535812
+    },
+    {
+      "name": "Gruta de Lourdes",
+      "description": "Gruta de Lourdes",
+      "address": "Magallanes 4000",
+      "photoUrl": "",
+      "lat": -38.038692,
+      "lng": -57.553631
+    },
+    {
+      "name": "Museo Juan Carlos Castagnino",
+      "description": "Museo Juan Carlos Castagnino",
+      "address": "Av Colon 1189",
+      "photoUrl": "",
+      "lat": -38.010689,
+      "lng": -57.535992
+    },
+    {
+      "name": "Museo de Ciencas Naturales Lorenzo Scaglia",
+      "description": "Museo de Ciencas Naturales Lorenzo Scaglia",
+      "address": "Av Libertad 3099",
+      "photoUrl": "",
+      "lat": -37.990929,
+      "lng": -57.546623
+    },
+    {
+      "name": "Colinas de Peralta Ramos",
+      "description": "Colinas de Peralta Ramos",
+      "address": "Ruta Nacional 11 4",
+      "photoUrl": "",
+      "lat": -38.095490,
+      "lng": -57.551243
+    },
+    {
+      "name": "Escuela Secundaria 201 (EX 107)",
+      "description": "Escuela Secundaria 201 (EX 107)",
+      "address": "Calabria 2078",
+      "photoUrl": "",
+      "lat": -38.065895,
+      "lng": -57.553856
+    },
+    {
+      "name": "Escuela Secundaria 202 (EX 109)",
+      "description": "Escuela Secundaria 202 (EX 109)",
+      "address": "Pigue 626",
+      "photoUrl": "",
+      "lat": -37.960712,
+      "lng": -57.599113
+    },
+    {
+      "name": "Escuela Secundaria 203 (EX 103)",
+      "description": "Escuela Secundaria 203 (EX 103)",
+      "address": "Sanchez de Bustamante 3485",
+      "photoUrl": "",
+      "lat": -38.083183,
+      "lng": -57.546955
+    },
+    {
+      "name": "Escuela Secundaria 204 (EX 104)",
+      "description": "Escuela Secundaria 204 (EX 104)",
+      "address": "Alejandro Korn 2279",
+      "photoUrl": "",
+      "lat": -38.048584,
+      "lng": -57.571590
+    },
+    {
+      "name": "Escuela Secundaria 205 (EX 106)",
+      "description": "Escuela Secundaria 205 (EX 106)",
+      "address": "12 de Octubre 10045",
+      "photoUrl": "",
+      "lat": -37.998024,
+      "lng": -57.605747
+    },
+    {
+      "name": "Escuela Secundaria 206 Victoria Ocampo ",
+      "description": "Escuela Secundaria 206 Victoria Ocampo ",
+      "address": "Bernardo de Irigoyen 4951",
+      "photoUrl": "",
+      "lat": -38.036995,
+      "lng": -57.544876
+    },
+    {
+      "name": "Escuela Secundaria 207 (Ex 111)",
+      "description": "Escuela Secundaria 207 (Ex 111)",
+      "address": "Los Granados 4550",
+      "photoUrl": "",
+      "lat": -37.925743,
+      "lng": -57.545006
+    },
+    {
+      "name": "Escuela Secundaria 208 (Ex 113)",
+      "description": "Escuela Secundaria 208 (Ex 113)",
+      "address": "Rawson 6390",
+      "photoUrl": "",
+      "lat": -37.988235,
+      "lng": -57.591591
+    },
+    {
+      "name": "EMDER",
+      "description": "EMDER",
+      "address": "Av Juan B Justo 3680",
+      "photoUrl": "",
+      "lat": -38.016010,
+      "lng": -57.575336
+    },
+    {
+      "name": "Escuela Secundaria 209 (Ex 115)",
+      "description": "Escuela Secundaria 209 (Ex 115)",
+      "address": "Mexico 3950",
+      "photoUrl": "",
+      "lat": -38.002762,
+      "lng": -57.591572
+    },
+    {
+      "name": "Escuela Secundaria 210 (Ex 116)",
+      "description": "Escuela Secundaria 210 (Ex 116)",
+      "address": "Padre Cardiel 6062",
+      "photoUrl": "",
+      "lat": -37.964993,
+      "lng": -57.568134
+    },
+    {
+      "name": "Escuela Primaria 2 ",
+      "description": "Escuela Primaria 2 ",
+      "address": "3 de Febrero 9511",
+      "photoUrl": "",
+      "lat": -37.961117,
+      "lng": -57.613621
+    },
+    {
+      "name": "Escuela Primaria 1 ",
+      "description": "Escuela Primaria 1 ",
+      "address": "Magnasco 2179",
+      "photoUrl": "",
+      "lat": -38.024143,
+      "lng": -57.602242
+    },
+    {
+      "name": "Escuela Primaria 10",
+      "description": "Escuela Primaria 10",
+      "address": "Padre Dutto 2530",
+      "photoUrl": "",
+      "lat": -38.054092,
+      "lng": -57.568424
+    },
+    {
+      "name": "Escuela Primaria 12",
+      "description": "Escuela Primaria 12",
+      "address": "Bernardo de Irigoyen 4951",
+      "photoUrl": "",
+      "lat": -38.036995,
+      "lng": -57.544876
+    },
+    {
+      "name": "Escuela Primaria 14",
+      "description": "Escuela Primaria 14",
+      "address": "Castelli 8050",
+      "photoUrl": "",
+      "lat": -37.981354,
+      "lng": -57.609501
+    },
+    {
+      "name": "Escuela Primaria 3",
+      "description": "Escuela Primaria 3",
+      "address": "Sanchez de Bustamante 3485",
+      "photoUrl": "",
+      "lat": -38.083183,
+      "lng": -57.546955
+    },
+    {
+      "name": "Escuela Primaria 7",
+      "description": "Escuela Primaria 7",
+      "address": "Calabria 8786",
+      "photoUrl": "",
+      "lat": -38.021496,
+      "lng": -57.612972
+    },
+    {
+      "name": "Escuela Primaria 8",
+      "description": "Escuela Primaria 8",
+      "address": "Juramento 953",
+      "photoUrl": "",
+      "lat": -38.040112,
+      "lng": -57.559589
+    },
+    {
+      "name": "Escuela Primaria 9",
+      "description": "Escuela Primaria 9",
+      "address": "Pigue 626",
+      "photoUrl": "",
+      "lat": -37.960724,
+      "lng": -57.599243
+    },
+    {
+      "name": "Escuela Primaria 11",
+      "description": "Escuela Primaria 11",
+      "address": "Los Granados 4550",
+      "photoUrl": "",
+      "lat": -37.925743,
+      "lng": -57.545006
+    },
+    {
+      "name": "Escuela Primaria 13",
+      "description": "Escuela Primaria 13",
+      "address": "Rawson 6390",
+      "photoUrl": "",
+      "lat": -37.988235,
+      "lng": -57.591591
+    },
+    {
+      "name": "Escuela Primaria 15",
+      "description": "Escuela Primaria 15",
+      "address": "Mexico 3950",
+      "photoUrl": "",
+      "lat": -38.002762,
+      "lng": -57.591572
+    },
+    {
+      "name": "Escuela Primaria 16",
+      "description": "Escuela Primaria 16",
+      "address": "Padre Cardiel 6062",
+      "photoUrl": "",
+      "lat": -37.964993,
+      "lng": -57.568134
+    },
+    {
+      "name": "Escuela Primaria 4 ",
+      "description": "Escuela Primaria 4 ",
+      "address": "Alejandro Korn 2279",
+      "photoUrl": "",
+      "lat": -38.048584,
+      "lng": -57.571590
+    },
+    {
+      "name": "Escuela Primaria 6",
+      "description": "Escuela Primaria 6",
+      "address": "12 de Octubre 10045",
+      "photoUrl": "",
+      "lat": -37.998192,
+      "lng": -57.605701
+    },
+    {
+      "name": "ESMET 1",
+      "description": "ESMET 1",
+      "address": "Av Juan B Justo 2901",
+      "photoUrl": "",
+      "lat": -38.020912,
+      "lng": -57.568710
+    },
+    {
+      "name": "Estacion de Tren",
+      "description": "Estacion de Tren",
+      "address": "Av Pedro Luro 4550",
+      "photoUrl": "",
+      "lat": -37.988644,
+      "lng": -57.565712
+    },
+    {
+      "name": "Estadio Jose Maria Minella",
+      "description": "Estadio Jose Maria Minella",
+      "address": "Av Juan B Justo 3740",
+      "photoUrl": "",
+      "lat": -38.018089,
+      "lng": -57.582306
+    },
+    {
+      "name": "Estadio Polideportivo Islas Malvinas",
+      "description": "Estadio Polideportivo Islas Malvinas",
+      "address": "Av Juan B Justo 3420",
+      "photoUrl": "",
+      "lat": -38.017887,
+      "lng": -57.574451
+    },
+    {
+      "name": "Natatorio Municipal",
+      "description": "Natatorio Municipal",
+      "address": "Av Juan B Justo 3710",
+      "photoUrl": "",
+      "lat": -38.017548,
+      "lng": -57.577499
+    },
+    {
+      "name": "Gran Hotel Provincial",
+      "description": "Gran Hotel Provincial",
+      "address": "Av Patricio Peralta Ramos 2502",
+      "photoUrl": "",
+      "lat": -38.006012,
+      "lng": -57.542133
+    },
+    {
+      "name": "Torres de Manantiales",
+      "description": "Torres de Manantiales",
+      "address": "Alberti 453",
+      "photoUrl": "",
+      "lat": -38.017544,
+      "lng": -57.531300
+    },
+    {
+      "name": "Facultad de ingenieria",
+      "description": "Facultad de ingenieria",
+      "address": "Av Juan B Justo 4302",
+      "photoUrl": "",
+      "lat": -38.012035,
+      "lng": -57.581112
+    },
+    {
+      "name": "Distrito Descentralizado El Gaucho",
+      "description": "Distrito Descentralizado El Gaucho",
+      "address": "Av Juan B Justo 5630",
+      "photoUrl": "",
+      "lat": -38.002789,
+      "lng": -57.592205
+    },
+    {
+      "name": "Colegio Nacional Dr Arturo Illia",
+      "description": "Colegio Nacional Dr Arturo Illia",
+      "address": "Matheu 4051",
+      "photoUrl": "",
+      "lat": -38.008842,
+      "lng": -57.575169
+    },
+    {
+      "name": "Instituto Peralta Ramos",
+      "description": "Instituto Peralta Ramos",
+      "address": "Maipu 3351",
+      "photoUrl": "",
+      "lat": -37.988968,
+      "lng": -57.549198
+    },
+    {
+      "name": "Ente municipal de turismo",
+      "description": "Ente municipal de turismo",
+      "address": "Belgrano 2740",
+      "photoUrl": "",
+      "lat": -38.000523,
+      "lng": -57.549709
+    },
+    {
+      "name": "Barrio Felix U Camet",
+      "description": "Barrio Felix U Camet",
+      "address": "Ruta Nacional 11 218",
+      "photoUrl": "",
+      "lat": -37.899849,
+      "lng": -57.528633
+    },
+    {
+      "name": "Ruta 2: Inicio",
+      "description": "Ruta 2: Inicio",
+      "address": "Av Constitucion 7700",
+      "photoUrl": "",
+      "lat": -37.951885,
+      "lng": -57.580761
+    }, {
+      "name": "Centro de Especialidades MÃ©dicas Ambulatorias (CEMA)",
+      "description": "Centro de Especialidades MÃ©dicas Ambulatorias (CEMA)",
+      "address": "Av Juan B Justo 4150",
+      "photoUrl": "",
+      "lat": -38.013729,
+      "lng": -57.580700
+    },
+    {
+      "name": "Sanatorio Central Emhsa",
+      "description": "Sanatorio Central Emhsa",
+      "address": "Av Juan B Justo 1774",
+      "photoUrl": "",
+      "lat": -38.028431,
+      "lng": -57.558678
+    },
+    {
+      "name": "Aeropuerto Mar del Plata",
+      "description": "Aeropuerto Mar del Plata",
+      "address": "Au Ruta Provincial 2 9",
+      "photoUrl": "",
+      "lat": -37.933876,
+      "lng": -57.585224
+    },
+    {
+      "name": "Casa del Puente",
+      "description": "Casa del Puente",
+      "address": "Matheu 3950",
+      "photoUrl": "",
+      "lat": -38.008831,
+      "lng": -57.573605
+    },
+    {
+      "name": "Base Naval",
+      "description": "Base Naval",
+      "address": "Av Patricio Peralta Ramos 6500",
+      "photoUrl": "",
+      "lat": -38.036388,
+      "lng": -57.538589
+    },
+     {
+      "name": "Fragata Libertad",
+      "description": "Fragata Libertad",
+      "address": "Av Patricio Peralta Ramos 6500",
+      "photoUrl": "",
+      "lat": -38.036388,
+      "lng": -57.538589
+    },
+    {
+      "name": "Asilo Unzue",
+      "description": "Asilo Unzue",
+      "address": "Av Patricio Peralta Ramos 50",
+      "photoUrl": "",
+      "lat": -37.982014,
+      "lng": -57.544357
+    },
+    {
+      "name": "Villa Victoria",
+      "description": "Villa Victoria",
+      "address": "Matheu 1851",
+      "photoUrl": "",
+      "lat": -38.019920,
+      "lng": -57.552814
+    },
+     {
+      "name": "AquaSol",
+      "description": "AquaSol",
+      "address": "Au Ruta Provincial 2 1",
+      "photoUrl": "",
+      "lat": -37.841141,
+      "lng": -57.617649
+    },
+     {
+      "name": "Monumeto El Gaucho",
+      "description": "Monumeto El Gaucho",
+      "address": "Av Juan B Justo 6200",
+      "photoUrl": "",
+      "lat": -37.999500,
+      "lng": -57.597530
+    },
+     {
+      "name": "Universidad Fasta",
+      "description": "Universidad Fasta",
+      "address": "Gascon 3145",
+      "photoUrl": "",
+      "lat": -38.003124,
+      "lng": -57.557545
+    },
+    {
+      "name": "Barrio La Herradura",
+      "description": "Barrio La Herradura",
+      "address": "Av Colon 11000",
+      "photoUrl": "",
+      "lat": -37.953808,
+      "lng": -57.641186
+    },
+   {
+      "name": "Camping el Griego",
+      "description": "Camping el Griego",
+      "address": "Av Jorge Newbery 8000",
+      "photoUrl": "",
+      "lat": -38.095158,
+      "lng": -57.602856
+    },
+     {
+      "name": "Torreon del Monje",
+      "description": "Torreon del Monje",
+      "address": "Paseo Jesus de Galindez 1",
+      "photoUrl": "",
+      "lat": -38.008018,
+      "lng": -57.533455
+    },
+    {
+      "name": "Inareps",
+      "description": "Inareps",
+      "address": "Av Centenario 1350",
+      "photoUrl": "",
+      "lat": -38.007729,
+      "lng": -57.609905
+    },
+    {
+      "name": "Centro de Salud Numero 1 Dr. Arturo Illia",
+      "description": "Centro de Salud Numero 1 Dr. Arturo Illia",
+      "address": "Av Colon 3286",
+      "photoUrl": "",
+      "lat": -37.999943,
+      "lng": -57.557171
     }
-  ]
+      ]
 }

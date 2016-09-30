@@ -3,6 +3,7 @@ package com.mybus.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -83,6 +84,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private Context mContext;
     private MyBusMap mMyBusMap;
     private MyBusMarker mMarkerFavoriteToUpdate;
+    private boolean mFromActivityResults;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -186,6 +188,26 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void setupBottomSheet() {
         mBottomSheet.setVisibility(View.INVISIBLE);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) { // Disable dragging by user
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheet.requestLayout();
+                    bottomSheet.invalidate();
+                }
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    bottomSheet.requestLayout();
+                    bottomSheet.invalidate();
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
         mBottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_tab_height));
     }
 
@@ -209,15 +231,15 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return;
         }
-        super.onBackPressed();
+        finish();
     }
 
     @Override
     public void onRouteFound(List<BusRouteResult> results) {
         cancelProgressDialog();
+        showBottomSheetResults(false);
         mMyBusMap.removeChargingPointMarkers();
         if (results == null || results.isEmpty()) {
-            showBottomSheetResults(false);
             mViewPagerAdapter = null;
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
@@ -257,7 +279,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 tab.select();
             }
         }
-        showBottomSheetResults(true);
     }
 
     /**
@@ -272,7 +293,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 mViewPager.setCurrentItem(tab.getPosition(), true);
                 mViewPager.requestLayout();
                 mBottomSheet.requestLayout();
-
                 if (isBusRouteFragmentPresent(tab.getPosition())) {
                     boolean isMapBusRoadPresent = mViewPagerAdapter.getItem(tab.getPosition()).getMapBusRoad() != null;
                     if (isMapBusRoadPresent) {
@@ -302,7 +322,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
             }
         };
     }
@@ -332,6 +356,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             markerList.add(mMyBusMap.getStartLocationMarker().getMapMarker());
             markerList.add(mMyBusMap.getEndLocationMarker().getMapMarker());
             mMyBusMap.zoomOut(markerList);
+            //Exand bottom sheet if it is collapsed
+            if ((mFromActivityResults) && (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED)) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                mFromActivityResults = false;
+            }
+            showBottomSheetResults(true);
         }
     }
 
@@ -467,6 +497,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                     showCompleteBusRoute(busLineId, busLineName);
                     break;
                 case DISPLAY_BUS_LINES_RESULT:
+                    mFromActivityResults = true;
                     updateAfterBusLineResult(data);
                     break;
                 default:

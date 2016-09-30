@@ -31,6 +31,11 @@ public class AboutAlertDialog extends DialogFragment {
         TextView linkTextView = ButterKnife.findById(view, R.id.link_to_store);
         linkTextView.setText(Html.fromHtml(String.format(getString(R.string.html_link), getString(R.string.app_store_url), getString(R.string.rate_this_app))));
         linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextView sparkDigitalText = ButterKnife.findById(view, R.id.sparkDigitalLink);
+        sparkDigitalText.setText(Html.fromHtml(String.format(getString(R.string.html_link), getString(R.string.powered_by_url), getString(R.string.spark_digital_title))));
+        sparkDigitalText.setMovementMethod(LinkMovementMethod.getInstance());
+
         builder.setView(view)
                 .setPositiveButton(getString(R.string.ok),
                         new DialogInterface.OnClickListener() {

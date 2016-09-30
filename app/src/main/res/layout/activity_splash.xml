@@ -13,15 +13,6 @@
         android:src="@drawable/splash_mybus" />
 
     <TextView
-        android:layout_below="@id/imgLogo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="@dimen/splash_powered_by_textSize"
-        android:textColor="@color/splashText"
-        android:text="@string/powered_by" />
-
-    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"

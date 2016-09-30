@@ -56,8 +56,8 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
         try {
 
             notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.mybus_icon)
-                    .setContentTitle(URLDecoder.decode(notificationData.getTitle(), "UTF-8"))
+                    .setSmallIcon(R.drawable.ic_notification_icon)
+                    .setContentTitle(URLDecoder.decode(notificationData.getTitle() != null ? notificationData.getTitle() : "MyBus", "UTF-8"))
                     .setContentText(URLDecoder.decode(notificationData.getTextMessage(), "UTF-8"))
                     .setAutoCancel(true)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))

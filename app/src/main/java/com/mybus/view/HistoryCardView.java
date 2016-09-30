@@ -17,8 +17,7 @@ import java.util.List;
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
-public class
-HistoryCardView extends CardView implements HistoryItemSelectedListener {
+public class HistoryCardView extends CardView implements HistoryItemSelectedListener {
 
     private HistoryItemSelectedListener mHistoryItemSelectedListener;
     private RecyclerView mRecyclerView;

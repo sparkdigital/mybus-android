@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/favorite_blue" />
+            android:src="@drawable/favorite_blue_small" />
 
         <LinearLayout
             android:layout_width="0dp"
