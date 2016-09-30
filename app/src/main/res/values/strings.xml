@@ -82,4 +82,6 @@
     <string name="android_authors">Android: Julián Gonzalez, Lucas Dimitroff, Lucas De Lio</string>
     <string name="powered_by_url">http://www.sparkdigital.com/</string>
     <string name="powered_by">Powered by</string>
+    <string name="ux_design_author">UX &amp; Design: Geraldine Gamondes</string>
+    <string name="nexus_core_author">Nexus Core: Mario Lucchelli</string>
 </resources>

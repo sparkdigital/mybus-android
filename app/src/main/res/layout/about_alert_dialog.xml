@@ -62,10 +62,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nexus Core: Mario Lucchelli" />
+        android:text="@string/nexus_core_author" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ux_design_author" />
+
+    <TextView
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:lines="2"
