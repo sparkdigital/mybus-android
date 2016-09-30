@@ -1,0 +1,22 @@
+{
+  "Type": 0,
+  "TotalDistance": 8.47,
+  "TravelTime": 33,
+  "ArrivalTime": null,
+  "Route1": [
+    {
+      "StopId": "3710",
+      "Lat": "-38.017799",
+      "Lng": "-57.572887",
+      "Address": "Av Juan B Justo 3385",
+      "isWaypoint": false
+    },
+    {
+      "StopId": "3711",
+      "Lat": "-38.019493",
+      "Lng": "-57.570572",
+      "Address": "Av Juan B Justo 3125",
+      "isWaypoint": false
+    }
+  ]
+}
