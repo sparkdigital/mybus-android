@@ -526,10 +526,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         //update the varialbes with the new addresses
         mCompoundSearchBox.setFromAddress(startGeoLocation.getAddress());
         mCompoundSearchBox.setToAddress(endGeoLocation.getAddress());
-        mMyBusMap.getStartLocationMarker().getMapMarker().setPosition(startGeoLocation.getLatLng());
-        mMyBusMap.getEndLocationMarker().getMapMarker().setPosition(endGeoLocation.getLatLng());
-        mMyBusMap.getStartLocationMarker().getMapMarker().setSnippet(startGeoLocation.getAddress());
-        mMyBusMap.getEndLocationMarker().getMapMarker().setSnippet(endGeoLocation.getAddress());
+        if (mMyBusMap.getStartLocationMarker().getMapMarker() != null) {
+            mMyBusMap.getStartLocationMarker().getMapMarker().setPosition(startGeoLocation.getLatLng());
+            mMyBusMap.getEndLocationMarker().getMapMarker().setPosition(endGeoLocation.getLatLng());
+            mMyBusMap.getStartLocationMarker().getMapMarker().setSnippet(startGeoLocation.getAddress());
+            mMyBusMap.getEndLocationMarker().getMapMarker().setSnippet(endGeoLocation.getAddress());
+        }
         if (busResultId != -1 && results != null) {
             populateBottomSheet(results, busResultId);
         }
