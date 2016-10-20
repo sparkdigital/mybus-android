@@ -45,27 +45,29 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
     @Override
     public void onBindViewHolder(BusResultViewHolder holder, int pos) {
         BusRouteResult routeResult = mDataset.get(pos);
-        List<BusRoute> routes = routeResult.getBusRoutes();
-        if (routes != null && !routes.isEmpty()) {
-            BusRoute firstBusRoute = routes.get(0);
-            holder.mStartAddress.setText(firstBusRoute.getFullOriginStopBusAddress());
-            holder.mStopAddress.setText(firstBusRoute.getFullDestinationStopBusAddress());
-            if (!routeResult.isCombined()) { //Single route
-                // Single Bus Line Name title:
-                holder.mLineNumber.setText(firstBusRoute.getBusLineName());
-                // Make sure that the second line is hidden
-                holder.mSecondLineView.setVisibility(View.GONE);
-            } else { // Combined Route
-                // Get the second route
-                BusRoute secondBusRoute = routes.get(1);
-                //Combined bus line name title:
-                holder.mLineNumber.setText(String.format("%s -> %s", firstBusRoute.getBusLineName(), secondBusRoute.getBusLineName()));
-                // Populate second line information:
-                holder.mFirstDestinationTitle.setText(mContext.getString(R.string.down_on));
-                holder.mSecondStartAddress.setText(secondBusRoute.getFullOriginStopBusAddress());
-                holder.mSecondStopAddress.setText(secondBusRoute.getFullDestinationStopBusAddress());
-                // Show second line information
-                holder.mSecondLineView.setVisibility(View.VISIBLE);
+        if (routeResult != null) {
+            List<BusRoute> routes = routeResult.getBusRoutes();
+            if (routes != null && !routes.isEmpty()) {
+                BusRoute firstBusRoute = routes.get(0);
+                holder.mStartAddress.setText(firstBusRoute.getFullOriginStopBusAddress());
+                holder.mStopAddress.setText(firstBusRoute.getFullDestinationStopBusAddress());
+                if (!routeResult.isCombined()) { //Single route
+                    // Single Bus Line Name title:
+                    holder.mLineNumber.setText(firstBusRoute.getBusLineName());
+                    // Make sure that the second line is hidden
+                    holder.mSecondLineView.setVisibility(View.GONE);
+                } else { // Combined Route
+                    // Get the second route
+                    BusRoute secondBusRoute = routes.get(1);
+                    //Combined bus line name title:
+                    holder.mLineNumber.setText(String.format("%s -> %s", firstBusRoute.getBusLineName(), secondBusRoute.getBusLineName()));
+                    // Populate second line information:
+                    holder.mFirstDestinationTitle.setText(mContext.getString(R.string.down_on));
+                    holder.mSecondStartAddress.setText(secondBusRoute.getFullOriginStopBusAddress());
+                    holder.mSecondStopAddress.setText(secondBusRoute.getFullDestinationStopBusAddress());
+                    // Show second line information
+                    holder.mSecondLineView.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
