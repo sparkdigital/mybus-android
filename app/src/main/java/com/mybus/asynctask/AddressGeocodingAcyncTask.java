@@ -25,12 +25,13 @@ import java.net.URL;
 /**
  * Address Geocoding Class
  */
-public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocation> {
+public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
 
     private static final String TAG = AddressGeocodingAcyncTask.class.getSimpleName();
     //TODO remove this hardcoded city & CP codes, using a preferences to detect city
     //private static final List<String> MDQ_POSTAL_CODES = Arrays.asList("08183", "B7600", "B7601", "B7602", "B7603", "B7604", "B7605", "B7606", "B7608", "B7609", "B7611", "B7612");
     private static final String MDQ_CITY_NAME = ", Mar del Plata, Buenos Aires, Argentina";
+    private static final String CITY_FILTER = "Gral Pueyrredón";
 
     private final Context mContext;
     private OnAddressGeocodingCompleteCallback callback;
@@ -40,7 +41,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
         this.callback = callback;
     }
 
-    protected GeoLocation getLocationFromHttp(String address) {
+    protected String getLocationFromHttp(String address) {
         address = address.replaceAll(" ", "%20");
         try {
             URL url = new URL(mContext.getString(R.string.geocoding_url, address));
@@ -54,26 +55,10 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
                 sb.append(line + "\n");
             }
             br.close();
-            JSONObject jsonObject = new JSONObject(sb.toString());
-            JSONObject jsonObjectLocation = ((JSONArray) jsonObject.get("results"))
-                    .getJSONObject(0).getJSONObject("geometry")
-                    .getJSONObject("location");
-            double longitude = jsonObjectLocation.getDouble("lng");
-            double latitude = jsonObjectLocation.getDouble("lat");
-            //get the clean address from json
-            String formatted_address = ((JSONArray) jsonObject.get("results"))
-                    .getJSONObject(0).getString("formatted_address");
-            //if the address fround is not from Mar del plata
-            if (formatted_address == null || !formatted_address.contains("Mar del Plata")) {
-                return null;
-            }
-            formatted_address = formatted_address.split(",")[0];
-            return getGeoLocationFromAddresses(new LatLng(latitude, longitude), formatted_address);
+            return sb.toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
@@ -81,7 +66,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
 
 
     @Override
-    protected GeoLocation doInBackground(String... strings) {
+    protected String doInBackground(String... strings) {
         String locationName = strings[0];
         if (!AddressValidator.isValidAddress(locationName)) {
             return null;
@@ -90,8 +75,37 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, GeoLocati
     }
 
     @Override
-    protected void onPostExecute(GeoLocation geoLocation) {
-        callback.onAddressGeocodingComplete(geoLocation);
+    protected void onPostExecute(String result) {
+        GeoLocation geoLocation = null;
+        if (result != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                JSONObject jsonObjectLocation = ((JSONArray) jsonObject.get("results"))
+                        .getJSONObject(0).getJSONObject("geometry")
+                        .getJSONObject("location");
+                double longitude = jsonObjectLocation.getDouble("lng");
+                double latitude = jsonObjectLocation.getDouble("lat");
+                //get the clean address from json
+                String formatted_address = ((JSONArray) jsonObject.get("results"))
+                        .getJSONObject(0).getString("formatted_address");
+                String bigLocation = ((JSONArray) jsonObject.get("results"))
+                        .getJSONObject(0).getJSONArray("address_components")
+                        .getJSONObject(2)
+                        .getString("short_name");
+                String bigLocation2 = ((JSONArray) jsonObject.get("results"))
+                        .getJSONObject(0).getJSONArray("address_components")
+                        .getJSONObject(3)
+                        .getString("short_name");
+                //if the address fround is not from Mar del plata
+                if (bigLocation.equals(CITY_FILTER) || bigLocation2.equals(CITY_FILTER)) {
+                    formatted_address = formatted_address.split(",")[0];
+                    geoLocation = getGeoLocationFromAddresses(new LatLng(latitude, longitude), formatted_address);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            callback.onAddressGeocodingComplete(geoLocation);
+        }
     }
 
     /**
