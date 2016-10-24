@@ -30,6 +30,7 @@ import com.mybus.asynctask.CompleteBusRouteCallback;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
+import com.mybus.dao.RecentLocationDao;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
@@ -244,6 +245,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
         } else {
+            Marker startMarker = mMyBusMap.getStartLocationMarker().getMapMarker();
+            Marker endMarker = mMyBusMap.getEndLocationMarker().getMapMarker();
+            RecentLocationDao.findOrCreateNewRecent(startMarker.getSnippet(), startMarker.getPosition(), 0, MainActivity.this);
+            RecentLocationDao.findOrCreateNewRecent(endMarker.getSnippet(), endMarker.getPosition(), 1, MainActivity.this);
             startResultsActivity(results);
         }
     }
