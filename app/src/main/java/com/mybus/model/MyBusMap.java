@@ -637,7 +637,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     public void centerToLastKnownLocation() {
         //get the last gps location
         LatLng lastLocation = mLocationUpdater.getLastKnownLocation();
-        if (lastLocation != null) {
+        if (lastLocation != null && mUserLocationMarker != null) {
             mUserLocationMarker.getMarkerOptions().position(lastLocation);
             //if the marker is not on the map, add it
             if (mUserLocationMarker.getMapMarker() == null) {

@@ -33,7 +33,7 @@ public class LocationUpdater implements LocationListener {
 
     public void startListening() {
         // Register the listener with the Location Manager to receive location updates
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
 
     @Override
