@@ -57,9 +57,9 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
             br.close();
             return sb.toString();
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return null;
     }
@@ -102,7 +102,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
                     geoLocation = getGeoLocationFromAddresses(new LatLng(latitude, longitude), formatted_address);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
             callback.onAddressGeocodingComplete(geoLocation);
         }
