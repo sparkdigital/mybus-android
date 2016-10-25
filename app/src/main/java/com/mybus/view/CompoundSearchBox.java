@@ -62,6 +62,7 @@ public class CompoundSearchBox extends FrameLayout {
                 mToTextView.setText(aux);
                 if (mListener != null) {
                     mListener.onFlipSearchClick();
+                    mListener.onSearchButtonClick();
                 }
             }
         }
