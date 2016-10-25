@@ -8,12 +8,12 @@ public interface CompoundSearchBoxListener {
     /**
      * Click on the From TextView
      */
-    void onFromClick();
+    void onFromClick(String address);
 
     /**
      * Click on the To TextView
      */
-    void onToClick();
+    void onToClick(String address);
 
     /**
      * Click on the Drawer Toggle
