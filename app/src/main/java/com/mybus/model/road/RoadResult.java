@@ -144,6 +144,8 @@ public class RoadResult {
                     .snippet(mRouteList.get(0).getLastAddress())
                     .position(mRouteList.get(0).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
+            List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
+            putMidMarkers(list, midPointsList);
         } else {
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_origin, "1"))
@@ -155,7 +157,8 @@ public class RoadResult {
                     .snippet(mRouteList.get(0).getLastAddress())
                     .position(mRouteList.get(0).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
-
+            List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
+            putMidMarkers(list, midPointsList);
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_origin, "2"))
                     .snippet(mRouteList.get(1).getFirstAddress())
@@ -166,8 +169,20 @@ public class RoadResult {
                     .snippet(mRouteList.get(1).getLastAddress())
                     .position(mRouteList.get(1).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
+            midPointsList = mRouteList.get(1).getPointList();
+            putMidMarkers(list, midPointsList);
         }
         return list;
+    }
+
+    private void putMidMarkers(List<MarkerOptions> markerOptionsList, List<RoutePoint> midPointsList) {
+        for (int i=1; (i < midPointsList.size() - 1) ; i++) {
+            markerOptionsList.add(new MarkerOptions()
+                    .title(MyBus.getContext().getString(R.string.bus_stop_mid, String.valueOf(i+1)))
+                    .snippet(midPointsList.get(i).getAddress())
+                    .position(midPointsList.get(i).getLatLng())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+        }
     }
 
     /**
