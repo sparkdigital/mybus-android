@@ -32,6 +32,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
     //private static final List<String> MDQ_POSTAL_CODES = Arrays.asList("08183", "B7600", "B7601", "B7602", "B7603", "B7604", "B7605", "B7606", "B7608", "B7609", "B7611", "B7612");
     private static final String MDQ_CITY_NAME = ", Mar del Plata, Buenos Aires, Argentina";
     private static final String CITY_FILTER = "Gral Pueyrredón";
+    private static final String ADMINISTRATIVE_AREA_LEVEL = "[\"administrative_area_level_2\",\"political\"]";
 
     private final Context mContext;
     private OnAddressGeocodingCompleteCallback callback;
@@ -74,6 +75,25 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
         return getLocationFromHttp(locationName + MDQ_CITY_NAME);
     }
 
+    /**
+     * get the short_name from the administrative_area_level_2 section in the json
+     * @param jsonObject
+     * @return
+     * @throws JSONException
+     */
+    private String getBigLocation(JSONObject jsonObject) throws JSONException {
+        JSONArray jsonArray = ((JSONArray) jsonObject.get("results"))
+                .getJSONObject(0).getJSONArray("address_components");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject obj = jsonArray.getJSONObject(i);
+            String types = obj.getString("types");
+            if (ADMINISTRATIVE_AREA_LEVEL.equals(types)) {
+                return obj.getString("short_name");
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void onPostExecute(String result) {
         GeoLocation geoLocation = null;
@@ -88,16 +108,9 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
                 //get the clean address from json
                 String formatted_address = ((JSONArray) jsonObject.get("results"))
                         .getJSONObject(0).getString("formatted_address");
-                String bigLocation = ((JSONArray) jsonObject.get("results"))
-                        .getJSONObject(0).getJSONArray("address_components")
-                        .getJSONObject(2)
-                        .getString("short_name");
-                String bigLocation2 = ((JSONArray) jsonObject.get("results"))
-                        .getJSONObject(0).getJSONArray("address_components")
-                        .getJSONObject(3)
-                        .getString("short_name");
+                String bigLocation = getBigLocation(jsonObject);
                 //if the address fround is not from Mar del plata
-                if (bigLocation.equals(CITY_FILTER) || bigLocation2.equals(CITY_FILTER)) {
+                if (bigLocation.equals(CITY_FILTER)) {
                     formatted_address = formatted_address.split(",")[0];
                     geoLocation = getGeoLocationFromAddresses(new LatLng(latitude, longitude), formatted_address);
                 }
