@@ -37,7 +37,8 @@ public final class AddressValidator {
             return false;
         }
         //regular expresion
-        String pattern = "[a-zA-Z0-9 ]+";
+        text = normalizeAddress(text);
+        String pattern = "[a-zA-Z0-9 .]+";
         return text.matches(pattern);
     }
 
