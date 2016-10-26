@@ -395,7 +395,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
             Toast.makeText(mMainActivity, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
         } else {
             //Save in the local HashMap
-            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
+            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), null, completeBusRoute.getPolylineOptions()));
             //Draw complete route:
             mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
             zoomOutCompleteBusRoute(busLineId);

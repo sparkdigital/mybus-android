@@ -144,8 +144,6 @@ public class RoadResult {
                     .snippet(mRouteList.get(0).getLastAddress())
                     .position(mRouteList.get(0).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
-            List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
-            putMidMarkers(list, midPointsList);
         } else {
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_origin, "1"))
@@ -157,8 +155,6 @@ public class RoadResult {
                     .snippet(mRouteList.get(0).getLastAddress())
                     .position(mRouteList.get(0).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
-            List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
-            putMidMarkers(list, midPointsList);
             list.add(new MarkerOptions()
                     .title(MyBus.getContext().getString(R.string.bus_stop_origin, "2"))
                     .snippet(mRouteList.get(1).getFirstAddress())
@@ -169,6 +165,18 @@ public class RoadResult {
                     .snippet(mRouteList.get(1).getLastAddress())
                     .position(mRouteList.get(1).getLastLatLng())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
+        }
+        return list;
+    }
+
+    /**
+     * @return a list of Bus Stop markers to be drawed on the map
+     */
+    public List<MarkerOptions> getStopMarkers() {
+        List<MarkerOptions> list = new ArrayList<>();
+        List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
+        putMidMarkers(list, midPointsList);
+        if (mType != 0) {
             midPointsList = mRouteList.get(1).getPointList();
             putMidMarkers(list, midPointsList);
         }

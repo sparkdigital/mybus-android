@@ -348,7 +348,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onRoadFound(RoadResult roadResult) {
         cancelProgressDialog();
-        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMyBusMap.getMap(), roadResult.getMarkerOptions(), roadResult.getPolylineOptions());
+        MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMyBusMap.getMap(), roadResult.getMarkerOptions(), roadResult.getStopMarkers(), roadResult.getPolylineOptions());
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
             List<Marker> markerList = new ArrayList<>();
