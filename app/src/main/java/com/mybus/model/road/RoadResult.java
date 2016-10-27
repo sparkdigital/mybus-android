@@ -185,11 +185,14 @@ public class RoadResult {
 
     private void putMidMarkers(List<MarkerOptions> markerOptionsList, List<RoutePoint> midPointsList) {
         for (int i=1; (i < midPointsList.size() - 1) ; i++) {
-            markerOptionsList.add(new MarkerOptions()
-                    .title(MyBus.getContext().getString(R.string.bus_stop_mid, String.valueOf(i+1)))
-                    .snippet(midPointsList.get(i).getAddress())
-                    .position(midPointsList.get(i).getLatLng())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+            RoutePoint midStopBus = midPointsList.get(i);
+            if (!midStopBus.isWaypoint()) {
+                markerOptionsList.add(new MarkerOptions()
+                        .title(MyBus.getContext().getString(R.string.bus_stop_mid, String.valueOf(i + 1)))
+                        .snippet(midStopBus.getAddress())
+                        .position(midStopBus.getLatLng())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+            }
         }
     }
 
