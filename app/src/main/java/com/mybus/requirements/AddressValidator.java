@@ -37,7 +37,8 @@ public final class AddressValidator {
             return false;
         }
         //regular expresion
-        String pattern = "[a-zA-Z0-9 ]+";
+        text = normalizeAddress(text);
+        String pattern = "[a-zA-Z0-9 .]+";
         return text.matches(pattern);
     }
 
@@ -49,8 +50,12 @@ public final class AddressValidator {
         if (!isValidCharacters(address)) {
             return false;
         }
+        /*
         Long number = getStreetNumber(address);
         return number != null && number < MAX_NUMBER;
+        */
+        //disable number valitarion for now to enable street intersections
+        return true;
     }
 
     /**
