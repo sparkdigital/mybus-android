@@ -472,7 +472,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void startSearchActivity(int requestCode, int type, String address) {
         Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, type);
-        searchIntent.putExtra(SearchActivity.SEARCH_ADDRESS_EXTRA, address);
+        if (address != null) {
+            searchIntent.putExtra(SearchActivity.SEARCH_ADDRESS_EXTRA, address);
+        }
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
     }
