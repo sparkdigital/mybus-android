@@ -90,6 +90,10 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
         initSearchView();
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
+        String searchAddress = getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA);
+        if (searchAddress != null) {
+            mSearchView.setSearchText(searchAddress);
+        }
         switch (mSearchType) {
             case SearchType.ORIGIN:
                 mSearchView.setSearchHint(getString(R.string.floating_search_origin));
@@ -100,29 +104,22 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                 initFavoriteCardView();
                 break;
             case SearchType.FAVORITE:
-                if (getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA) != null) {
-                    mSearchView.setSearchText(getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA));
-                }
                 mSearchView.setSearchHint(getString(R.string.floating_search_favorite));
                 mFavoriteCardView.setVisibility(View.GONE);
                 break;
             default:
                 break;
         }
-
         initHistoryCardView();
-
         mStreetSuggestionFilter = new StreetSuggestionFilter(SearchActivity.this, new OnFindResultsListener() {
 
             @Override
             public void onResults(List<StreetSuggestion> results) {
-
                 //this will swap the data and
                 //render the collapse/expand animations as necessary
                 if (results != null) {
                     mSearchView.swapSuggestions(results);
                 }
-
                 //let the users know that the background
                 //process has completed
                 mSearchView.hideProgress();
