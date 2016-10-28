@@ -44,6 +44,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
 
     protected String getLocationFromHttp(String address) {
         address = address.replaceAll(" ", "%20");
+        address = AddressValidator.normalizeAddress(address);
         try {
             URL url = new URL(mContext.getString(R.string.geocoding_url, address));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
