@@ -23,6 +23,7 @@
     <string name="toast_searching">Buscando rutas…</string>
     <string name="toast_searching_address">Buscando la direccion especificada…</string>
     <string name="bus_stop_origin"> Parada Origen %1$s</string>
+    <string name="bus_stop_mid"> Parada N°: %1$s</string>
     <string name="bus_stop_destination"> Parada Destino %1$s</string>
     <string name="dialog_searching_specific_route">Obteniendo ruta de colectivo</string>
     <string name="displayFaresToolbarTittle">Tarifas</string>
