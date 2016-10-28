@@ -90,8 +90,9 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
         initSearchView();
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
-        if (getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA) != null) {
-            mSearchView.setSearchText(getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA));
+        String searchAddress = getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA);
+        if (searchAddress != null) {
+            mSearchView.setSearchText(searchAddress);
         }
         switch (mSearchType) {
             case SearchType.ORIGIN:
