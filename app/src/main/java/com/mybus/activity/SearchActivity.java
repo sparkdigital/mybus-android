@@ -90,6 +90,10 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
 
         initSearchView();
         mSearchType = getIntent().getIntExtra(SEARCH_TYPE_EXTRA, -1);
+        String searchAddress = getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA);
+        if (searchAddress != null) {
+            mSearchView.setSearchText(searchAddress);
+        }
         switch (mSearchType) {
             case SearchType.ORIGIN:
                 mSearchView.setSearchHint(getString(R.string.floating_search_origin));
@@ -100,29 +104,22 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
                 initFavoriteCardView();
                 break;
             case SearchType.FAVORITE:
-                if (getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA) != null) {
-                    mSearchView.setSearchText(getIntent().getStringExtra(SEARCH_ADDRESS_EXTRA));
-                }
                 mSearchView.setSearchHint(getString(R.string.floating_search_favorite));
                 mFavoriteCardView.setVisibility(View.GONE);
                 break;
             default:
                 break;
         }
-
         initHistoryCardView();
-
         mStreetSuggestionFilter = new StreetSuggestionFilter(SearchActivity.this, new OnFindResultsListener() {
 
             @Override
             public void onResults(List<StreetSuggestion> results) {
-
                 //this will swap the data and
                 //render the collapse/expand animations as necessary
                 if (results != null) {
                     mSearchView.swapSuggestions(results);
                 }
-
                 //let the users know that the background
                 //process has completed
                 mSearchView.hideProgress();
@@ -257,27 +254,11 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
         cancelProgressDialog();
         if (geoLocation != null) {
             if (mSearchType >= 0) {
-                findOrCreateNewRecent(geoLocation.getAddress(), geoLocation.getLatLng());
+                RecentLocationDao.findOrCreateNewRecent(geoLocation.getAddress(), geoLocation.getLatLng(), mSearchType, SearchActivity.this);
             }
             setActivityResult(geoLocation, false, null);
         } else {
             Toast.makeText(this, R.string.address_not_exists, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Finds a recent for History Searches and increases it's usage, or creates a new one if no one found
-     *
-     * @param query
-     * @param latLng
-     */
-    private void findOrCreateNewRecent(String query, LatLng latLng) {
-        RecentLocation location = RecentLocationDao.getInstance(SearchActivity.this).getItemByLatLng(latLng);
-        if (location != null) {
-            RecentLocationDao.getInstance(SearchActivity.this).updateUsage(location.getId());
-        } else {
-            RecentLocation recentLocation = new RecentLocation(mSearchType, query, latLng.latitude, latLng.longitude);
-            RecentLocationDao.getInstance(SearchActivity.this).saveOrUpdate(recentLocation);
         }
     }
 

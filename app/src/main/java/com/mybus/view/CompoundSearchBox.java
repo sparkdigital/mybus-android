@@ -30,7 +30,12 @@ public class CompoundSearchBox extends FrameLayout {
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                mListener.onFromClick();
+                String fromText = mFromTextView.getText().toString();
+                if (!getResString(R.string.from_hint).equals(fromText)) {
+                    mListener.onFromClick(fromText);
+                } else {
+                    mListener.onFromClick(null);
+                }
             }
         }
     };
@@ -38,7 +43,12 @@ public class CompoundSearchBox extends FrameLayout {
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                mListener.onToClick();
+                String toText = mToTextView.getText().toString();
+                if (!getResString(R.string.to_hint).equals(toText)) {
+                    mListener.onToClick(toText);
+                } else {
+                    mListener.onToClick(null);
+                }
             }
         }
     };
@@ -62,6 +72,7 @@ public class CompoundSearchBox extends FrameLayout {
                 mToTextView.setText(aux);
                 if (mListener != null) {
                     mListener.onFlipSearchClick();
+                    mListener.onSearchButtonClick();
                 }
             }
         }

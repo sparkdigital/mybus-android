@@ -30,6 +30,7 @@ import com.mybus.asynctask.CompleteBusRouteCallback;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
+import com.mybus.dao.RecentLocationDao;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
@@ -123,7 +124,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @OnClick(R.id.search_box)
     public void onSearchBoxClick(View view) {
-        startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
+        startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN, "");
     }
     /*---Main bar---*/
 
@@ -244,6 +245,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             Toast.makeText(this, R.string.toast_no_result_found, Toast.LENGTH_LONG).show();
             return;
         } else {
+            Marker startMarker = mMyBusMap.getStartLocationMarker().getMapMarker();
+            Marker endMarker = mMyBusMap.getEndLocationMarker().getMapMarker();
+            RecentLocationDao.findOrCreateNewRecent(startMarker.getSnippet(), startMarker.getPosition(), 0, MainActivity.this);
+            RecentLocationDao.findOrCreateNewRecent(endMarker.getSnippet(), endMarker.getPosition(), 1, MainActivity.this);
             startResultsActivity(results);
         }
     }
@@ -459,11 +464,17 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     /**
+     *
      * @param requestCode
+     * @param type
+     * @param address
      */
-    private void startSearchActivity(int requestCode, int type) {
+    private void startSearchActivity(int requestCode, int type, String address) {
         Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, type);
+        if (address != null) {
+            searchIntent.putExtra(SearchActivity.SEARCH_ADDRESS_EXTRA, address);
+        }
         startActivityForResult(searchIntent, requestCode);
         overridePendingTransition(0, 0);
     }
@@ -538,13 +549,13 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onFromClick() {
-        startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN);
+    public void onFromClick(String address) {
+        startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN, address);
     }
 
     @Override
-    public void onToClick() {
-        startSearchActivity(TO_SEARCH_RESULT_ID, SearchType.DESTINATION);
+    public void onToClick(String address) {
+        startSearchActivity(TO_SEARCH_RESULT_ID, SearchType.DESTINATION, address);
     }
 
     @Override
