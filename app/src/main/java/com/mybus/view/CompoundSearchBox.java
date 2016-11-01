@@ -30,12 +30,7 @@ public class CompoundSearchBox extends FrameLayout {
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                String fromText = mFromTextView.getText().toString();
-                if (!getResString(R.string.from_hint).equals(fromText)) {
-                    mListener.onFromClick(fromText);
-                } else {
-                    mListener.onFromClick(null);
-                }
+                mListener.onFromClick(mFromTextView.getText().toString());
             }
         }
     };
@@ -43,12 +38,7 @@ public class CompoundSearchBox extends FrameLayout {
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                String toText = mToTextView.getText().toString();
-                if (!getResString(R.string.to_hint).equals(toText)) {
-                    mListener.onToClick(toText);
-                } else {
-                    mListener.onToClick(null);
-                }
+                mListener.onToClick(mToTextView.getText().toString());
             }
         }
     };
@@ -163,9 +153,11 @@ public class CompoundSearchBox extends FrameLayout {
     public void setFromAddress(String text) {
         mFromAddress = text;
         if (text == null) {
-            text = getResString(R.string.from_hint);
+            mFromTextView.setText("");
+            mFromTextView.setHint(getResString(R.string.from_hint));
+        } else {
+            mFromTextView.setText(text);
         }
-        mFromTextView.setText(text);
     }
 
     /**
@@ -174,9 +166,11 @@ public class CompoundSearchBox extends FrameLayout {
     public void setToAddress(String text) {
         mToAddress = text;
         if (text == null) {
-            text = getResString(R.string.to_hint);
+            mToTextView.setText("");
+            mToTextView.setHint(getResString(R.string.to_hint));
+        } else {
+            mToTextView.setText(text);
         }
-        mToTextView.setText(text);
     }
 
     /**
