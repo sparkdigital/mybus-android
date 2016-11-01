@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 /**
  * Address Geocoding Class
@@ -50,11 +51,12 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             InputStream is = connection.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line);
+                sb.append(System.getProperty("line.separator"));
             }
             br.close();
             return sb.toString();
@@ -107,13 +109,13 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
                 double longitude = jsonObjectLocation.getDouble("lng");
                 double latitude = jsonObjectLocation.getDouble("lat");
                 //get the clean address from json
-                String formatted_address = ((JSONArray) jsonObject.get("results"))
+                String formattedAddress = ((JSONArray) jsonObject.get("results"))
                         .getJSONObject(0).getString("formatted_address");
                 String bigLocation = getBigLocation(jsonObject);
                 //if the address fround is not from Mar del plata
                 if (bigLocation.equals(CITY_FILTER)) {
-                    formatted_address = formatted_address.split(",")[0];
-                    geoLocation = getGeoLocationFromAddresses(new LatLng(latitude, longitude), formatted_address);
+                    formattedAddress = formattedAddress.split(",")[0];
+                    geoLocation = getGeoLocationFromAddresses(new LatLng(latitude, longitude), formattedAddress);
                 }
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());

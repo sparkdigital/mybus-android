@@ -4,28 +4,10 @@ import java.text.Normalizer;
 
 public final class AddressValidator {
 
-    private static final int MAX_NUMBER = 20000;
     private static final String AVENUE_STR = "Avenida";
     private static final String SHORT_AVENUE_STR = "Av";
 
     private AddressValidator() {
-    }
-
-    /**
-     * @param address
-     * @return
-     */
-    private static Long getStreetNumber(String address) {
-        String[] texts = address.split(" ");
-        if (texts.length < 2) {
-            return null;
-        }
-        String possibleNumber = texts[texts.length - 1];
-        try {
-            return Long.parseLong(possibleNumber);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 
     /**
@@ -47,15 +29,8 @@ public final class AddressValidator {
      * @return
      */
     public static boolean isValidAddress(String address) {
-        if (!isValidCharacters(address)) {
-            return false;
-        }
-        /*
-        Long number = getStreetNumber(address);
-        return number != null && number < MAX_NUMBER;
-        */
         //disable number valitarion for now to enable street intersections
-        return true;
+        return isValidCharacters(address);
     }
 
     /**
