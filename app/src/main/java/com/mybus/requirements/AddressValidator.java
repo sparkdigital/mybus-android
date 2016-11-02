@@ -41,7 +41,6 @@ public final class AddressValidator {
         //Remove accents:
         address = Normalizer.normalize(address, Normalizer.Form.NFD);
         address = address.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-        address = address.replaceAll("&", "y");
         //Avenue string abbreviation:
         return address.replaceAll(AVENUE_STR, SHORT_AVENUE_STR);
     }
