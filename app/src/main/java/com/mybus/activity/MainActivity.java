@@ -566,6 +566,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onFlipSearchClick() {
         mMyBusMap.flipMarkers();
+        onSearchButtonClick();
     }
 
     @Override

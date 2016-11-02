@@ -235,14 +235,21 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         if (mStartLocationMarker.getMapMarker() == null || mEndLocationMarker.getMapMarker() == null) {
             return;
         }
+        // Temporal vars
         LatLng latLngAux = mStartLocationMarker.getMapMarker().getPosition();
-        String addressAux = mStartLocationMarker.getMapMarker().getTitle();
+        String addressAux = mStartLocationMarker.getMapMarker().getSnippet();
+
+        //Update StartLocationMarker:
         addOrUpdateMarker(mStartLocationMarker, mEndLocationMarker.getMapMarker().getPosition(), null);
-        mStartLocationMarker.getMapMarker().setTitle(mEndLocationMarker.getMapMarker().getTitle());
+        mStartLocationMarker.getMapMarker().setSnippet(mEndLocationMarker.getMapMarker().getSnippet());
         mStartLocationMarker.getMapMarker().hideInfoWindow();
+        mStartLocationMarker.getMapMarker().showInfoWindow();
+
+        //Update EndLocationMarker:
         addOrUpdateMarker(mEndLocationMarker, latLngAux, null);
-        mEndLocationMarker.getMapMarker().setTitle(addressAux);
+        mEndLocationMarker.getMapMarker().setSnippet(addressAux);
         mEndLocationMarker.getMapMarker().hideInfoWindow();
+        mEndLocationMarker.getMapMarker().showInfoWindow();
 
         zoomOutStartEndMarkers();
     }
