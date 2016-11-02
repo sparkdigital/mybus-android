@@ -232,6 +232,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return;
         }
+        if (mCompoundSearchBox.isVisible()) {
+            onBackArrowClick();
+            return;
+        }
         finish();
     }
 
