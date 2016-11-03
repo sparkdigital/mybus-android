@@ -115,6 +115,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
                 //if the address fround is not from Mar del plata
                 if (bigLocation.equals(CITY_FILTER)) {
                     formattedAddress = formattedAddress.split(",")[0];
+                    formattedAddress = formattedAddress.replaceAll("&", "y");
                     geoLocation = getGeoLocationFromAddresses(new LatLng(latitude, longitude), formattedAddress);
                 }
             } catch (JSONException e) {
