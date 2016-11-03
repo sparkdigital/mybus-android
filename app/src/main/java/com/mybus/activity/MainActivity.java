@@ -689,6 +689,13 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onPause() {
+        mCompoundSearchBox.setToAddress("");
+        mCompoundSearchBox.setFromAddress("");
+        super.onPause();
+    }
+
+    @Override
     public int getLayoutToInflate() {
         return R.layout.activity_main;
     }
