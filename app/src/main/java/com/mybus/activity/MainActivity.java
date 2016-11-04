@@ -565,6 +565,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onBackArrowClick() {
         mMyBusMap.cleanMap();
+        // Reset from and to text views:
+        mCompoundSearchBox.setToAddress(null);
+        mCompoundSearchBox.setFromAddress(null);
     }
 
     @Override
