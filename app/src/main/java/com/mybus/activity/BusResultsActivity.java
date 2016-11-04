@@ -116,6 +116,13 @@ public class BusResultsActivity extends BaseMyBusActivity implements BusLineList
     }
 
     @Override
+    protected void onPause() {
+        mSearchDestinationTextView.setText("");
+        mSearchOriginTextView.setText("");
+        super.onPause();
+    }
+
+    @Override
     public int getLayoutToInflate() {
         return R.layout.activity_bus_results;
     }
