@@ -22,15 +22,13 @@ public class CompoundSearchBox extends FrameLayout {
     private ImageView mDrawerToggle;
     private ImageView mFlipSearchBtn;
     private ImageView mSearchBtn;
-    private String mFromAddress = null;
-    private String mToAddress = null;
     private CompoundSearchBoxListener mListener;
 
     private OnClickListener mFromClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                mListener.onFromClick();
+                mListener.onFromClick(mFromTextView.getText().toString());
             }
         }
     };
@@ -38,7 +36,7 @@ public class CompoundSearchBox extends FrameLayout {
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                mListener.onToClick();
+                mListener.onToClick(mToTextView.getText().toString());
             }
         }
     };
@@ -56,13 +54,11 @@ public class CompoundSearchBox extends FrameLayout {
     private OnClickListener mFlipSearchClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (mFromAddress != null && mToAddress != null) {
+            if (mFromTextView.getText().length() > 0 && mToTextView.getText().length() > 0 && mListener != null) {
                 String aux = mFromTextView.getText().toString();
-                mFromTextView.setText(mToTextView.getText());
-                mToTextView.setText(aux);
-                if (mListener != null) {
-                    mListener.onFlipSearchClick();
-                }
+                setFromAddress(mToTextView.getText().toString());
+                setToAddress(aux);
+                mListener.onFlipSearchClick();
             }
         }
     };
@@ -150,22 +146,24 @@ public class CompoundSearchBox extends FrameLayout {
      * @param text
      */
     public void setFromAddress(String text) {
-        mFromAddress = text;
         if (text == null) {
-            text = getResString(R.string.from_hint);
+            mFromTextView.setText("");
+            mFromTextView.setHint(getResString(R.string.from_hint));
+        } else {
+            mFromTextView.setText(text);
         }
-        mFromTextView.setText(text);
     }
 
     /**
      * @param text
      */
     public void setToAddress(String text) {
-        mToAddress = text;
         if (text == null) {
-            text = getResString(R.string.to_hint);
+            mToTextView.setText("");
+            mToTextView.setHint(getResString(R.string.to_hint));
+        } else {
+            mToTextView.setText(text);
         }
-        mToTextView.setText(text);
     }
 
     /**
@@ -185,10 +183,10 @@ public class CompoundSearchBox extends FrameLayout {
     }
 
     public String getToAddress() {
-        return mToAddress;
+        return mToTextView.getText().toString();
     }
 
     public String getFromAddress() {
-        return mFromAddress;
+        return mFromTextView.getText().toString();
     }
 }

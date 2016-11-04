@@ -42,4 +42,20 @@ public final class RecentLocationDao extends RealmDao<RecentLocation> {
                         .findFirst()
         );
     }
+
+    /**
+     * Finds a recent for History Searches and increases it's usage, or creates a new one if no one found
+     *
+     * @param query
+     * @param latLng
+     */
+    public static void findOrCreateNewRecent(String query, LatLng latLng, int type, Context context) {
+        RecentLocation location = RecentLocationDao.getInstance(context).getItemByLatLng(latLng);
+        if (location != null) {
+            RecentLocationDao.getInstance(context).updateUsage(location.getId());
+        } else {
+            RecentLocation recentLocation = new RecentLocation(type, query, latLng.latitude, latLng.longitude);
+            RecentLocationDao.getInstance(context).saveOrUpdate(recentLocation);
+        }
+    }
 }
