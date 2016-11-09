@@ -235,23 +235,39 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         if (mStartLocationMarker.getMapMarker() == null || mEndLocationMarker.getMapMarker() == null) {
             return;
         }
-        // Temporal vars
-        LatLng latLngAux = mStartLocationMarker.getMapMarker().getPosition();
-        String addressAux = mStartLocationMarker.getMapMarker().getSnippet();
+        // Temporal vars for keep startLocation state:
+        LatLng startLocationlatLng = mStartLocationMarker.getMapMarker().getPosition();
+        String startLocationAddress = mStartLocationMarker.getMapMarker().getSnippet();
+        String startLocationTitle = mStartLocationMarker.getMapMarker().getTitle();
+        boolean startLocationWasFavorite = mStartLocationMarker.isFavorite();
 
-        //Update StartLocationMarker:
+        // Update Locations:
         addOrUpdateMarker(mStartLocationMarker, mEndLocationMarker.getMapMarker().getPosition(), null);
+        addOrUpdateMarker(mEndLocationMarker, startLocationlatLng, null);
+        // Update addresses:
         mStartLocationMarker.getMapMarker().setSnippet(mEndLocationMarker.getMapMarker().getSnippet());
-        mStartLocationMarker.getMapMarker().hideInfoWindow();
-        mStartLocationMarker.getMapMarker().showInfoWindow();
-
-        //Update EndLocationMarker:
-        addOrUpdateMarker(mEndLocationMarker, latLngAux, null);
-        mEndLocationMarker.getMapMarker().setSnippet(addressAux);
-        mEndLocationMarker.getMapMarker().hideInfoWindow();
-        mEndLocationMarker.getMapMarker().showInfoWindow();
+        mEndLocationMarker.getMapMarker().setSnippet(startLocationAddress);
+        // Update titles:
+        updateMarkerTitle(mStartLocationMarker, mEndLocationMarker.isFavorite(), mEndLocationMarker.getMapMarker().getTitle(), getContext().getString(R.string.start_location_title));
+        updateMarkerTitle(mEndLocationMarker, startLocationWasFavorite, startLocationTitle, getContext().getString(R.string.end_location_title));
 
         zoomOutStartEndMarkers();
+    }
+
+    private void updateMarkerTitle(MyBusMarker myBusMarker, boolean isFavoriteNow, String newTitle, String resetTitle) {
+        if (isFavoriteNow) {
+            myBusMarker.setAsFavorite(true);
+            myBusMarker.setFavoriteName(newTitle);
+            myBusMarker.getMapMarker().setTitle(newTitle);
+        } else {
+            // Restart Start Location title and favorite fields:
+            myBusMarker.getMapMarker().setTitle(resetTitle);
+            myBusMarker.setAsFavorite(false);
+            myBusMarker.setFavoriteName(null);
+        }
+        // Update info-windows (hot fix for a known issue of google maps):
+        myBusMarker.getMapMarker().hideInfoWindow();
+        myBusMarker.getMapMarker().showInfoWindow();
     }
 
     /**
