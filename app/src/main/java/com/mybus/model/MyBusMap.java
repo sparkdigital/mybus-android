@@ -209,6 +209,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     private void setAddressFromGeoCoding(String address, MyBusMarker marker, String title) {
         setMarkerTitle(marker, title, address);
         mMainActivity.getToolbar().setVisibility(View.GONE);
+        mMainActivity.getGoingAndReturnLayout().setVisibility(View.GONE);
         mMainActivity.getCompoundSearchBox().setVisible(true);
     }
 
@@ -220,6 +221,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         mMainActivity.clearBusRouteOnMap();
         mMainActivity.getCompoundSearchBox().setVisible(false);
         mMainActivity.getToolbar().setVisibility(View.VISIBLE);
+        mMainActivity.getGoingAndReturnLayout().setVisibility(View.GONE);
         removeAllFavoritesMarkers();
     }
 
@@ -418,11 +420,26 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
             Toast.makeText(mMainActivity, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
         } else {
             //Save in the local HashMap
-            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptions(), completeBusRoute.getPolylineOptions()));
+            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsBoth(), completeBusRoute.getPolylineOptionsBoth()));
             //Draw complete route:
             mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
             zoomOutCompleteBusRoute(busLineId);
         }
+    }
+
+    public void showCompleteRouteGoing(int busLineId, CompleteBusRoute completeBusRoute) {
+        mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsGoing(), completeBusRoute.getPolylineOptionsGoing()));
+        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+    }
+
+    public void showCompleteRouteReturn(int busLineId, CompleteBusRoute completeBusRoute) {
+        mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsReturn(), completeBusRoute.getPolylineOptionsReturn()));
+        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+    }
+
+    public void showCompleteRouteBoth(int busLineId, CompleteBusRoute completeBusRoute) {
+        mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsBoth(), completeBusRoute.getPolylineOptionsBoth()));
+        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
     }
 
     public boolean completeRouteExists(int busLineId) {
@@ -440,6 +457,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         mMainActivity.getCompoundSearchBox().setFromAddress(geoLocation.getAddress());
         zoomTo(mStartLocationMarker.getMapMarker().getPosition());
         mMainActivity.getToolbar().setVisibility(View.GONE);
+        mMainActivity.getGoingAndReturnLayout().setVisibility(View.GONE);
         mMainActivity.getCompoundSearchBox().setVisible(true, true);
     }
 
@@ -449,6 +467,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         mMainActivity.getCompoundSearchBox().setToAddress(geoLocation.getAddress());
         zoomTo(mEndLocationMarker.getMapMarker().getPosition());
         mMainActivity.getToolbar().setVisibility(View.GONE);
+        mMainActivity.getGoingAndReturnLayout().setVisibility(View.GONE);
         mMainActivity.getCompoundSearchBox().setVisible(true, true);
     }
 
@@ -547,6 +566,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
                             updateMyBusMarkerInfo(mStartLocationMarker, myBusMarker.getFavoriteName(), null, myBusMarker.getMapMarker().getSnippet(), true);
                             mMainActivity.getCompoundSearchBox().setFromAddress(myBusMarker.getMapMarker().getSnippet());
                             mMainActivity.getToolbar().setVisibility(View.GONE);
+                            mMainActivity.getGoingAndReturnLayout().setVisibility(View.GONE);
                             mMainActivity.getCompoundSearchBox().setVisible(true);
                             removeFavoriteMarker(myBusMarker);
                         } else {
@@ -564,6 +584,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
                             updateMyBusMarkerInfo(mEndLocationMarker, myBusMarker.getFavoriteName(), null, myBusMarker.getMapMarker().getSnippet(), true);
                             mMainActivity.getCompoundSearchBox().setToAddress(myBusMarker.getMapMarker().getSnippet());
                             mMainActivity.getToolbar().setVisibility(View.GONE);
+                            mMainActivity.getGoingAndReturnLayout().setVisibility(View.GONE);
                             mMainActivity.getCompoundSearchBox().setVisible(true);
                             removeFavoriteMarker(myBusMarker);
                         } else {

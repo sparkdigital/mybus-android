@@ -77,7 +77,7 @@ public class CompleteBusRoute {
     /**
      * @return a list of Marker options to be drawed on the map
      */
-    public List<MarkerOptions> getMarkerOptions() {
+    public List<MarkerOptions> getMarkerOptionsBoth() {
         List<MarkerOptions> list = new ArrayList<>();
         if (mGoingPointList.get(0).getLatLng().equals(mReturnPointList.get(mReturnPointList.size() - 1).getLatLng())) {
             list.add(new MarkerOptions()
@@ -105,12 +105,52 @@ public class CompleteBusRoute {
         return list;
     }
 
+    public List<MarkerOptions> getMarkerOptionsGoing() {
+        List<MarkerOptions> list = new ArrayList<>();
+        list.add(new MarkerOptions()
+                .title(MyBus.getContext().getString(R.string.start_complete_route, mBusLineName))
+                .snippet(mGoingPointList.get(0).getAddress())
+                .position(mGoingPointList.get(0).getLatLng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_route)));
+        list.add(new MarkerOptions()
+                .title(MyBus.getContext().getString(R.string.mid_complete_route, mBusLineName))
+                .snippet(mGoingPointList.get(mGoingPointList.size() - 1).getAddress())
+                .position(mGoingPointList.get(mGoingPointList.size() - 1).getLatLng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.invert_route)));
+        return list;
+    }
+
+    /**
+     * @return a list of Marker options to be drawed on the map
+     */
+    public List<MarkerOptions> getMarkerOptionsReturn() {
+        List<MarkerOptions> list = new ArrayList<>();
+        list.add(new MarkerOptions()
+                .title(MyBus.getContext().getString(R.string.end_complete_route, mBusLineName))
+                .snippet(mReturnPointList.get(mReturnPointList.size() - 1).getAddress())
+                .position(mReturnPointList.get(mReturnPointList.size() - 1).getLatLng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
+        list.add(new MarkerOptions()
+                .title(MyBus.getContext().getString(R.string.mid_complete_route, mBusLineName))
+                .snippet(mGoingPointList.get(mGoingPointList.size() - 1).getAddress())
+                .position(mGoingPointList.get(mGoingPointList.size() - 1).getLatLng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.invert_route)));
+        return list;
+    }
+
+
     /**
      * @return a list of polyline options to be drawed on the map
      */
-    public List<PolylineOptions> getPolylineOptions() {
+    public List<PolylineOptions> getPolylineOptionsBoth() {
         List<PolylineOptions> list = new ArrayList<>();
+        list.addAll(getPolylineOptionsGoing());
+        list.addAll(getPolylineOptionsReturn());
+        return list;
+    }
 
+    public List<PolylineOptions> getPolylineOptionsReturn() {
+        List<PolylineOptions> list = new ArrayList<>();
         //Return route:
         PolylineOptions rectOptions = new PolylineOptions();
         rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.colorSecondary));
@@ -120,9 +160,13 @@ public class CompleteBusRoute {
             rectOptions.add(point.getLatLng());
         }
         list.add(rectOptions);
+        return list;
+    }
 
+    public List<PolylineOptions> getPolylineOptionsGoing() {
+        List<PolylineOptions> list = new ArrayList<>();
+        PolylineOptions rectOptions = new PolylineOptions();
         //Going route:
-        rectOptions = new PolylineOptions();
         rectOptions.color(ContextCompat.getColor(MyBus.getContext(), R.color.goingRouteColor));
         rectOptions.width(POLYLINE_WIDTH);
         rectOptions.geodesic(true);
@@ -130,7 +174,6 @@ public class CompleteBusRoute {
             rectOptions.add(point.getLatLng());
         }
         list.add(rectOptions);
-
         return list;
     }
 }
