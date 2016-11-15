@@ -31,6 +31,7 @@ import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.dao.RecentLocationDao;
+import com.mybus.fcm.NotificationData;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
@@ -164,6 +165,18 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
         mCompoundSearchBox.setListener(this);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String notificationText = extras.getString(NotificationData.TEXT);
+            if (notificationText != null) {
+                Toast.makeText(this, notificationText, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void initDrawer() {

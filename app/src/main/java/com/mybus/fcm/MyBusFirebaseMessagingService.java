@@ -1,5 +1,6 @@
 package com.mybus.fcm;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,10 +25,10 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
-        String image = message.getNotification().getIcon();
-        String title = message.getNotification().getTitle();
-        String text = message.getNotification().getBody();
-        String sound = message.getNotification().getSound();
+        String image = message.getData().get("icon");
+        String title = message.getData().get("title");
+        String text = message.getData().get("text");
+        String sound = message.getData().get("sound");
 
         int id = 0;
         Object obj = message.getData().get("id");
@@ -61,7 +62,9 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentText(URLDecoder.decode(notificationData.getTextMessage(), "UTF-8"))
                     .setAutoCancel(true)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setContentIntent(pendingIntent);
+                    .setContentIntent(pendingIntent)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationData.getTextMessage()));
 
         } catch (UnsupportedEncodingException e) {
             Log.e(TAG, "NotificationBuilder creation failed.", e);
