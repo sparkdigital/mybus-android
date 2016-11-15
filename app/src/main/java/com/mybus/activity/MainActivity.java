@@ -165,11 +165,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
         mCompoundSearchBox.setListener(this);
-    }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String notificationText = extras.getString(NotificationData.TEXT);
@@ -717,5 +713,17 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     protected int getToolbarTittle() {
         return 0;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            String notificationText = extras.getString(NotificationData.TEXT);
+            if (notificationText != null) {
+                Toast.makeText(this, notificationText, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
