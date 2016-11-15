@@ -116,7 +116,7 @@ public class CompleteBusRoute {
                 .title(MyBus.getContext().getString(R.string.mid_complete_route, mBusLineName))
                 .snippet(mGoingPointList.get(mGoingPointList.size() - 1).getAddress())
                 .position(mGoingPointList.get(mGoingPointList.size() - 1).getLatLng())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.invert_route)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.to_route)));
         return list;
     }
 
@@ -134,7 +134,7 @@ public class CompleteBusRoute {
                 .title(MyBus.getContext().getString(R.string.mid_complete_route, mBusLineName))
                 .snippet(mGoingPointList.get(mGoingPointList.size() - 1).getAddress())
                 .position(mGoingPointList.get(mGoingPointList.size() - 1).getLatLng())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.invert_route)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.from_route)));
         return list;
     }
 
