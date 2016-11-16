@@ -53,6 +53,7 @@ import com.mybus.view.AboutAlertDialog;
 import com.mybus.view.CompoundSearchBox;
 import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
+import com.mybus.view.NotificationDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -721,7 +722,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         if (extras != null) {
             String notificationText = extras.getString(NotificationData.TEXT);
             if (notificationText != null) {
-                Toast.makeText(this, notificationText, Toast.LENGTH_LONG).show();
+                NotificationDialog notificationDialog = new NotificationDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString(NotificationDialog.NOTIFICATION_MSG, notificationText);
+                notificationDialog.setArguments(bundle);
+                notificationDialog.show(getFragmentManager(), "");
             }
         }
     }
