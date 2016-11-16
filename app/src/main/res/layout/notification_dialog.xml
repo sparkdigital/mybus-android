@@ -17,6 +17,6 @@
         android:id="@+id/notificationMsg"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal" />
+        android:gravity="start"/>
 
 </LinearLayout>
