@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.ChargePointSearchCallback;
@@ -166,6 +167,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
         mCompoundSearchBox.setListener(this);
+
+        // Subscribe to news (notifications):
+        FirebaseMessaging.getInstance().subscribeToTopic("news"); //TODO: let the user un-subscribe the app.
 
         Bundle extras = getIntent().getExtras();
         showNotificationDialog(extras);

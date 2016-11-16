@@ -25,7 +25,7 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
-        if (message.getData() == null || message.getData().get("title") == null || message.getData().get("text") == null) {
+        if (message.getNotification() != null || message.getData() == null || message.getData().get("title") == null || message.getData().get("text") == null) {
             return;
         }
         String title = message.getData().get("title");
