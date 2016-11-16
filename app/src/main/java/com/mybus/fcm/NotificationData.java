@@ -7,37 +7,25 @@ public class NotificationData {
 
     public static final String TEXT = "TEXT";
 
-    private String imageName;
-    private int id;
+    private Long id;
     private String title;
     private String textMessage;
-    private String sound;
 
     public NotificationData() {
         // This constructor is intentionally empty. Nothing special is needed here.
     }
 
-    public NotificationData(String imageName, int id, String title, String textMessage, String sound) {
-        this.imageName = imageName;
+    public NotificationData(long id, String title, String textMessage) {
         this.id = id;
         this.title = title;
         this.textMessage = textMessage;
-        this.sound = sound;
     }
 
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -55,13 +43,5 @@ public class NotificationData {
 
     public void setTextMessage(String textMessage) {
         this.textMessage = textMessage;
-    }
-
-    public String getSound() {
-        return sound;
-    }
-
-    public void setSound(String sound) {
-        this.sound = sound;
     }
 }

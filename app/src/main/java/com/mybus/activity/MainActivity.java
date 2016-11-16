@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.ChargePointSearchCallback;
@@ -31,6 +32,7 @@ import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.dao.RecentLocationDao;
+import com.mybus.fcm.NotificationData;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
@@ -52,6 +54,7 @@ import com.mybus.view.AboutAlertDialog;
 import com.mybus.view.CompoundSearchBox;
 import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
+import com.mybus.view.NotificationDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,6 +167,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
         mCompoundSearchBox.setListener(this);
+
+        // Subscribe to news (notifications):
+        FirebaseMessaging.getInstance().subscribeToTopic("news"); //TODO: let the user un-subscribe the app.
+
+        Bundle extras = getIntent().getExtras();
+        showNotificationDialog(extras);
     }
 
     private void initDrawer() {
@@ -704,5 +713,25 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     protected int getToolbarTittle() {
         return 0;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        showNotificationDialog(extras);
+    }
+
+    private void showNotificationDialog(Bundle extras) {
+        if (extras != null) {
+            String notificationText = extras.getString(NotificationData.TEXT);
+            if (notificationText != null) {
+                NotificationDialog notificationDialog = new NotificationDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString(NotificationDialog.NOTIFICATION_MSG, notificationText);
+                notificationDialog.setArguments(bundle);
+                notificationDialog.show(getFragmentManager(), "");
+            }
+        }
     }
 }
