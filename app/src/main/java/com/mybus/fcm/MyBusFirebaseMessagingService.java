@@ -25,18 +25,15 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
-        String image = message.getData().get("icon");
+        if (message.getData() == null || message.getData().get("title") == null || message.getData().get("text") == null) {
+            return;
+        }
         String title = message.getData().get("title");
         String text = message.getData().get("text");
-        String sound = message.getData().get("sound");
 
-        int id = 0;
-        Object obj = message.getData().get("id");
-        if (obj != null) {
-            id = Integer.parseInt(obj.toString());
-        }
+        long id = System.currentTimeMillis();
 
-        this.sendNotification(new NotificationData(image, id, title, text, sound));
+        this.sendNotification(new NotificationData(id, title, text));
     }
 
     /**
@@ -73,7 +70,7 @@ public class MyBusFirebaseMessagingService extends FirebaseMessagingService {
         if (notificationBuilder != null) {
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationData.getId(), notificationBuilder.build());
+            notificationManager.notify(notificationData.getId().intValue(), notificationBuilder.build());
         } else {
             Log.d(TAG, "NotificationBuilder creation failed.");
         }

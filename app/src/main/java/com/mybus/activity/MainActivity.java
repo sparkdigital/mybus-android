@@ -167,12 +167,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         mCompoundSearchBox.setListener(this);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String notificationText = extras.getString(NotificationData.TEXT);
-            if (notificationText != null) {
-                Toast.makeText(this, notificationText, Toast.LENGTH_LONG).show();
-            }
-        }
+        showNotificationDialog(extras);
     }
 
     private void initDrawer() {
@@ -719,6 +714,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Bundle extras = intent.getExtras();
+        showNotificationDialog(extras);
+    }
+
+    private void showNotificationDialog(Bundle extras) {
         if (extras != null) {
             String notificationText = extras.getString(NotificationData.TEXT);
             if (notificationText != null) {
