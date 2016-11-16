@@ -40,7 +40,6 @@
     <string name="search_activity_error_toast">Hubo un error inesperado</string>
     <string name="floating_search_favorite">Ingrese dirección</string>
     <string name="no_favorites_present">No hay favoritos…</string>
-    <string name="bus_route_frag_concat_space">%1$s %2$s</string>
     <string name="main_drawer_favorites">Lugares favoritos</string>
     <string name="main_drawer_load_points">Puntos de carga</string>
     <string name="main_drawer_tours">Recorridos</string>
@@ -60,7 +59,6 @@
     <string name="displayBusLinesToolbarTittle">Recorridos</string>
     <string name="toast_bus_lines_searching">Obteniendo las lineas de colectivo...</string>
     <string name="about">Acerca de</string>
-    <string name="about_text">MyBus</string>
     <string name="rights">Rights text</string>
     <string name="rate_this_app">Calificar la aplicación</string>
     <string name="html_link">&lt;a href=%1$s&gt;%2$s</string>
@@ -72,7 +70,6 @@
     <string name="mid_complete_route">Retorno - Linea: %1$s</string>
     <string name="end_complete_route">Fin del recorrido - Linea: %1$s</string>
     <string name="searching_complete_route">Cargando recorrido...</string>
-    <string name="start_end_complete_route">Inicio/Fin del recorrido - Linea: %1$s</string>
     <string name="toast_no_complete_route">Recorrido no disponible</string>
     <string name="address_not_exists">La direccion buscada no existe</string>
     <string name="down_on">Bajar en:</string>

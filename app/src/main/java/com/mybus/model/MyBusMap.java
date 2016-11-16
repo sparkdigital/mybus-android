@@ -419,10 +419,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         if (completeBusRoute.getGoingPointList().size() == 0 || completeBusRoute.getReturnPointList().size() == 0) {
             Toast.makeText(mMainActivity, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
         } else {
-            //Save in the local HashMap
-            mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsBoth(), completeBusRoute.getPolylineOptionsBoth()));
-            //Draw complete route:
-            mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+            showCompleteRouteReturn(busLineId, completeBusRoute);
             zoomOutCompleteBusRoute(busLineId);
         }
     }
@@ -434,11 +431,6 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
 
     public void showCompleteRouteReturn(int busLineId, CompleteBusRoute completeBusRoute) {
         mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsReturn(), completeBusRoute.getPolylineOptionsReturn()));
-        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
-    }
-
-    public void showCompleteRouteBoth(int busLineId, CompleteBusRoute completeBusRoute) {
-        mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsBoth(), completeBusRoute.getPolylineOptionsBoth()));
         mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
     }
 

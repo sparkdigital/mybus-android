@@ -3,28 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:layout_marginTop="5dp"
+    android:layout_marginTop="4dp"
     android:visibility="gone"
     android:orientation="horizontal">
     <LinearLayout
+        android:id="@+id/SwitchLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/switch_layout_background"
-        android:padding="10dp"
+        android:padding="12dp"
         android:orientation="horizontal">
         <Switch
             android:id="@+id/SwitchGoing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:checked="true"
             android:textColor="@color/white"
             android:text="Ida" />
-        <Switch
+        <TextView
             android:id="@+id/SwitchReturn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:textColor="@color/white"
             android:text="Vuelta" />
     </LinearLayout>

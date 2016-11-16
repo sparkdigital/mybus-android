@@ -85,10 +85,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     View mToolbar;
     @Bind(R.id.GoingAndReturnLayout)
     LinearLayout mGoingAndReturnLayout;
+    @Bind(R.id.SwitchLayout)
+    LinearLayout mSwitchLayout;
     @Bind(R.id.SwitchGoing)
     Switch mGoingSwitch;
-    @Bind(R.id.SwitchReturn)
-    Switch mReturnSwitch;
 
     private Context mContext;
     private MyBusMap mMyBusMap;
@@ -155,23 +155,18 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
     }
 
-    @OnCheckedChanged(R.id.SwitchReturn)
-    public void onSwitchReturnChecked(boolean checked){
-        onSwitchStatusChanged();
+    @OnClick(R.id.SwitchLayout)
+    public void onSwitchLayoutClick(View view) {
+        onSwitchGoingChecked(!mGoingSwitch.isChecked());
     }
 
     @OnCheckedChanged(R.id.SwitchGoing)
-    public void onSwitchGoingChecked(boolean checked){
-        onSwitchStatusChanged();
-    }
-
-    private void onSwitchStatusChanged() {
+    public void onSwitchGoingChecked(boolean checked) {
+        mGoingSwitch.setChecked(checked);
         clearBusRouteOnMap();
-        if (mGoingSwitch.isChecked() && mReturnSwitch.isChecked()) {
-            mMyBusMap.showCompleteRouteBoth(mBusLineId, mCompleteBusRoute);
-        } else if (mReturnSwitch.isChecked()) {
+        if (checked) {
             mMyBusMap.showCompleteRouteReturn(mBusLineId, mCompleteBusRoute);
-        } else if (mGoingSwitch.isChecked()) {
+        } else {
             mMyBusMap.showCompleteRouteGoing(mBusLineId, mCompleteBusRoute);
         }
     }
@@ -565,7 +560,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void showCompleteBusRoute(int busLineId, String busLineName) {
         clearBusRouteOnMap();
         mGoingSwitch.setChecked(true);
-        mReturnSwitch.setChecked(true);
         mGoingAndReturnLayout.setVisibility(View.VISIBLE);
         //Check if the complete route is present in cache.
         if (mMyBusMap.completeRouteExists(busLineId)) {
@@ -733,6 +727,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         cancelProgressDialog();
         mCompleteBusRoute = completeBusRoute;
         mBusLineId = busLineId;
+        clearBusRouteOnMap();
         mMyBusMap.showCompleteRoute(busLineId, completeBusRoute);
     }
 
