@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:visibility="gone"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,9 +17,9 @@
     <LinearLayout
         android:id="@+id/SwitchLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:layout_height="@dimen/abc_action_bar_default_height_material"
         android:background="@color/white"
+        android:padding="10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -35,16 +34,17 @@
             android:id="@+id/lineNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:textStyle="bold"
             android:text="Linea 581"
             android:textColor="@color/black"
-            android:layout_marginTop="2dp"
-            android:layout_weight="5"
+            android:layout_weight="6"
             android:textSize="18sp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <Switch
