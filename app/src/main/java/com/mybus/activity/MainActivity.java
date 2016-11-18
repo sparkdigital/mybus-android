@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -89,6 +90,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     LinearLayout mSwitchLayout;
     @Bind(R.id.SwitchGoing)
     Switch mGoingSwitch;
+    @Bind(R.id.lineNumber)
+    TextView mLineNumber;
 
     private Context mContext;
     private MyBusMap mMyBusMap;
@@ -269,6 +272,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
         if (mCompoundSearchBox.isVisible()) {
             onBackArrowClick();
+            return;
+        }
+        if (mSwitchLayout.getVisibility() == View.VISIBLE) {
+            mGoingAndReturnLayout.setVisibility(View.GONE);
+            mToolbar.setVisibility(View.VISIBLE);
+            clearBusRouteOnMap();
             return;
         }
         finish();
@@ -544,6 +553,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 case DISPLAY_ROADS_RESULT:
                     int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                     String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
+                    mLineNumber.setText(busLineName);
                     showCompleteBusRoute(busLineId, busLineName);
                     break;
                 case DISPLAY_BUS_LINES_RESULT:
@@ -560,6 +570,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void showCompleteBusRoute(int busLineId, String busLineName) {
         clearBusRouteOnMap();
         mGoingSwitch.setChecked(true);
+        mToolbar.setVisibility(View.GONE);
         mGoingAndReturnLayout.setVisibility(View.VISIBLE);
         //Check if the complete route is present in cache.
         if (mMyBusMap.completeRouteExists(busLineId)) {
@@ -738,11 +749,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @Override
     public int getToolbarId() {
-        return 0;
+        return R.id.displayBusLineToolbar;
     }
 
     @Override
     protected int getToolbarTittle() {
-        return 0;
+        return R.string.main_activity_toolbar_title;
     }
 }

@@ -43,6 +43,7 @@
     <string name="main_drawer_favorites">Lugares favoritos</string>
     <string name="main_drawer_load_points">Puntos de carga</string>
     <string name="main_drawer_tours">Recorridos</string>
+    <string name="main_activity_toolbar_title">Recorrido</string>
     <string name="main_drawer_fares">Tarifas</string>
     <string name="start_location_title">Origen</string>
     <string name="end_location_title">Destino</string>
