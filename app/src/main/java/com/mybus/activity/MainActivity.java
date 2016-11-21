@@ -483,6 +483,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.drawerRoads:
+                clearBusRouteOnMap();
+                showBottomSheetResults(false);
                 Intent roadsIntent = new Intent(MainActivity.this, DisplayBusLinesActivity.class);
                 startActivityForResult(roadsIntent, DISPLAY_ROADS_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
