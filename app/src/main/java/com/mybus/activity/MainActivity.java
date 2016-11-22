@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -89,7 +90,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Bind(R.id.SwitchLayout)
     LinearLayout mSwitchLayout;
     @Bind(R.id.SwitchGoing)
-    Switch mGoingSwitch;
+    SwitchCompat mGoingSwitch;
     @Bind(R.id.lineNumber)
     TextView mLineNumber;
 
