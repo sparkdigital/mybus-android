@@ -8,7 +8,6 @@
     <dimen name="bottom_sheet_height">250dp</dimen>
     <dimen name="splash_powered_by_textSize">17sp</dimen>
     <dimen name="splash_app_url_textSize">14sp</dimen>
-    <dimen name="splash_logo_layout_height">100dp</dimen>
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">120dp</dimen>
     <dimen name="search_view_inset">5dp</dimen>
@@ -19,7 +18,6 @@
     <dimen name="auto_fit_tv_min_text_size">8sp</dimen>
     <dimen name="auto_fit_tv_text_size">15sp</dimen>
     <dimen name="mybus_text_size">15sp</dimen>
-    <dimen name="bus_route_text_size">15sp</dimen>
     <dimen name="fares_text_size">16sp</dimen>
     <dimen name="bus_line_name_size">25sp</dimen>
     <dimen name="tab_width">102dp</dimen>

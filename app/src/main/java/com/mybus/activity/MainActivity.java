@@ -11,9 +11,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -61,6 +64,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallback, OnLocationChangedCallback,
@@ -84,11 +88,21 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     NavigationView navigationView;
     @Bind(R.id.main_toolbar)
     View mToolbar;
+    @Bind(R.id.GoingAndReturnLayout)
+    LinearLayout mGoingAndReturnLayout;
+    @Bind(R.id.SwitchLayout)
+    LinearLayout mSwitchLayout;
+    @Bind(R.id.SwitchGoing)
+    SwitchCompat mGoingSwitch;
+    @Bind(R.id.lineNumber)
+    TextView mLineNumber;
 
     private Context mContext;
     private MyBusMap mMyBusMap;
     private MyBusMarker mMarkerFavoriteToUpdate;
     private boolean mFromActivityResults;
+    private CompleteBusRoute mCompleteBusRoute;
+    int mBusLineId;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -108,6 +122,15 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
      */
     public View getToolbar() {
         return mToolbar;
+    }
+
+    /**
+     * Getter for GoingAndReturnLayout in order to interact with it from MyBusMap.
+     *
+     * @return
+     */
+    public View getGoingAndReturnLayout() {
+        return mGoingAndReturnLayout;
     }
 
     /**
@@ -136,6 +159,22 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     public void onCenterLocationButtonClick(View view) {
         if (DeviceRequirementsChecker.checkGpsEnabled(this)) {
             mMyBusMap.centerToLastKnownLocation();
+        }
+    }
+
+    @OnClick(R.id.SwitchLayout)
+    public void onSwitchLayoutClick(View view) {
+        onSwitchGoingChecked(!mGoingSwitch.isChecked());
+    }
+
+    @OnCheckedChanged(R.id.SwitchGoing)
+    public void onSwitchGoingChecked(boolean checked) {
+        mGoingSwitch.setChecked(checked);
+        clearBusRouteOnMap();
+        if (checked) {
+            mMyBusMap.showCompleteRouteReturn(mBusLineId, mCompleteBusRoute);
+        } else {
+            mMyBusMap.showCompleteRouteGoing(mBusLineId, mCompleteBusRoute);
         }
     }
 
@@ -243,6 +282,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
         if (mCompoundSearchBox.isVisible()) {
             onBackArrowClick();
+            return;
+        }
+        if (mSwitchLayout.getVisibility() == View.VISIBLE) {
+            mGoingAndReturnLayout.setVisibility(View.GONE);
+            mToolbar.setVisibility(View.VISIBLE);
+            clearBusRouteOnMap();
             return;
         }
         finish();
@@ -448,6 +493,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.drawerRoads:
+                clearBusRouteOnMap();
+                showBottomSheetResults(false);
                 Intent roadsIntent = new Intent(MainActivity.this, DisplayBusLinesActivity.class);
                 startActivityForResult(roadsIntent, DISPLAY_ROADS_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -518,6 +565,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 case DISPLAY_ROADS_RESULT:
                     int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                     String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
+                    mLineNumber.setText(busLineName);
                     showCompleteBusRoute(busLineId, busLineName);
                     break;
                 case DISPLAY_BUS_LINES_RESULT:
@@ -533,6 +581,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     private void showCompleteBusRoute(int busLineId, String busLineName) {
         clearBusRouteOnMap();
+        mGoingSwitch.setChecked(true);
+        mToolbar.setVisibility(View.GONE);
+        mGoingAndReturnLayout.setVisibility(View.VISIBLE);
         //Check if the complete route is present in cache.
         if (mMyBusMap.completeRouteExists(busLineId)) {
             mMyBusMap.showCompleteBusRoute(busLineId);
@@ -697,6 +748,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onCompleteRouteFound(int busLineId, CompleteBusRoute completeBusRoute) {
         cancelProgressDialog();
+        mCompleteBusRoute = completeBusRoute;
+        mBusLineId = busLineId;
+        clearBusRouteOnMap();
         mMyBusMap.showCompleteRoute(busLineId, completeBusRoute);
     }
 
@@ -707,12 +761,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @Override
     public int getToolbarId() {
-        return 0;
+        return R.id.displayBusLineToolbar;
     }
 
     @Override
     protected int getToolbarTittle() {
-        return 0;
+        return R.string.main_activity_toolbar_title;
     }
 
     @Override
