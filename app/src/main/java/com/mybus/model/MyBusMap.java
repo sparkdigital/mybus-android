@@ -425,13 +425,22 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     }
 
     public void showCompleteRouteGoing(int busLineId, CompleteBusRoute completeBusRoute) {
+        if (completeBusRoute == null) {
+            return;
+        }
         mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsGoing(), completeBusRoute.getPolylineOptionsGoing()));
         mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+        zoomOutCompleteBusRoute(busLineId);
     }
 
     public void showCompleteRouteReturn(int busLineId, CompleteBusRoute completeBusRoute) {
+        if (completeBusRoute == null) {
+            return;
+        }
         mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsReturn(), completeBusRoute.getPolylineOptionsReturn()));
         mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
+        zoomOutCompleteBusRoute(busLineId);
+
     }
 
     public boolean completeRouteExists(int busLineId) {

@@ -15,7 +15,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -161,12 +160,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @OnClick(R.id.SwitchLayout)
     public void onSwitchLayoutClick(View view) {
-        onSwitchGoingChecked(!mGoingSwitch.isChecked());
+        mGoingSwitch.setChecked(!mGoingSwitch.isChecked());
     }
 
     @OnCheckedChanged(R.id.SwitchGoing)
     public void onSwitchGoingChecked(boolean checked) {
-        mGoingSwitch.setChecked(checked);
         clearBusRouteOnMap();
         if (checked) {
             mMyBusMap.showCompleteRouteReturn(mBusLineId, mCompleteBusRoute);
@@ -515,7 +513,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     /**
-     *
      * @param requestCode
      * @param type
      * @param address
@@ -572,12 +569,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     private void showCompleteBusRoute(int busLineId, String busLineName) {
         clearBusRouteOnMap();
-        mGoingSwitch.setChecked(true);
         mToolbar.setVisibility(View.GONE);
         mGoingAndReturnLayout.setVisibility(View.VISIBLE);
         //Check if the complete route is present in cache.
         if (mMyBusMap.completeRouteExists(busLineId)) {
-            mMyBusMap.showCompleteBusRoute(busLineId);
+//            mMyBusMap.showCompleteBusRoute(busLineId);
+            mGoingSwitch.setChecked(false);
         } else {
             showProgressDialog(getString(R.string.searching_complete_route));
             ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
@@ -742,7 +739,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         mCompleteBusRoute = completeBusRoute;
         mBusLineId = busLineId;
         clearBusRouteOnMap();
-        mMyBusMap.showCompleteRoute(busLineId, completeBusRoute);
+//        mMyBusMap.showCompleteRoute(busLineId, completeBusRoute);
+        onSwitchGoingChecked(false);
     }
 
     @Override
