@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
@@ -7,7 +8,6 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/displayBusLineToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"
@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:text="Linea 581"
             android:textColor="@color/black"
             android:layout_weight="6"
             android:textSize="18sp"/>
@@ -52,17 +51,18 @@
                 android:id="@+id/SwitchGoing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
+                android:checked="false"
                 android:textOn=""
                 android:textOff=""
-                android:text="Ida" />
+                android:text="@string/going"
+                app:theme="@style/SwitchStyle"/>
 
             <TextView
                 android:id="@+id/SwitchReturn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="Vuelta" />
+                android:text="@string/returning" />
         </LinearLayout>
 
 

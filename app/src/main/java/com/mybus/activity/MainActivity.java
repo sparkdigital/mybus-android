@@ -15,7 +15,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,7 +97,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private MyBusMap mMyBusMap;
     private MyBusMarker mMarkerFavoriteToUpdate;
     private boolean mFromActivityResults;
-    private CompleteBusRoute mCompleteBusRoute;
     int mBusLineId;
 
     /*---Bottom Sheet------*/
@@ -167,11 +165,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @OnCheckedChanged(R.id.SwitchGoing)
     public void onSwitchGoingChecked(boolean checked) {
         mGoingSwitch.setChecked(checked);
-        clearBusRouteOnMap();
         if (checked) {
-            mMyBusMap.showCompleteRouteReturn(mBusLineId, mCompleteBusRoute);
+            mMyBusMap.showCompleteRouteReturn(mBusLineId);
         } else {
-            mMyBusMap.showCompleteRouteGoing(mBusLineId, mCompleteBusRoute);
+            mMyBusMap.showCompleteRouteGoing(mBusLineId);
         }
     }
 
@@ -557,7 +554,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                     int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                     String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
                     mLineNumber.setText(busLineName);
-                    showCompleteBusRoute(busLineId, busLineName);
+                    showCompleteBusRouteGoing(busLineId, busLineName);
                     break;
                 case DISPLAY_BUS_LINES_RESULT:
                     mFromActivityResults = true;
@@ -570,14 +567,16 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showCompleteBusRoute(int busLineId, String busLineName) {
+    private void showCompleteBusRouteGoing(int busLineId, String busLineName) {
         clearBusRouteOnMap();
-        mGoingSwitch.setChecked(true);
+        mBusLineId = busLineId;
+        mGoingSwitch.setChecked(false);
         mToolbar.setVisibility(View.GONE);
         mGoingAndReturnLayout.setVisibility(View.VISIBLE);
         //Check if the complete route is present in cache.
         if (mMyBusMap.completeRouteExists(busLineId)) {
-            mMyBusMap.showCompleteBusRoute(busLineId);
+            mMyBusMap.showCompleteRouteGoing(busLineId);
+            mMyBusMap.zoomOutCompleteBusRouteGoing(busLineId);
         } else {
             showProgressDialog(getString(R.string.searching_complete_route));
             ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
@@ -739,10 +738,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onCompleteRouteFound(int busLineId, CompleteBusRoute completeBusRoute) {
         cancelProgressDialog();
-        mCompleteBusRoute = completeBusRoute;
-        mBusLineId = busLineId;
-        clearBusRouteOnMap();
-        mMyBusMap.showCompleteRoute(busLineId, completeBusRoute);
+        mMyBusMap.showCompleteRouteGoing(busLineId, completeBusRoute);
     }
 
     @Override

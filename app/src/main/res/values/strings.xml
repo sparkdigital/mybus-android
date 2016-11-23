@@ -82,4 +82,6 @@
     <string name="ux_design_author">UX &amp; Design: Geraldine Gamondes</string>
     <string name="nexus_core_author">Nexus Core: Mario Lucchelli</string>
     <string name="geocoding_url">http://maps.googleapis.com/maps/api/geocode/json?address=%1$s</string>
+    <string name="going">ida</string>
+    <string name="returning">vuelta</string>
 </resources>

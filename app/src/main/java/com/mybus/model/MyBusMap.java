@@ -24,7 +24,7 @@ import com.mybus.location.OnLocationChangedCallback;
 import com.mybus.location.OnLocationGeocodingCompleteCallback;
 import com.mybus.marker.MyBusInfoWindowsAdapter;
 import com.mybus.marker.MyBusMarker;
-import com.mybus.model.road.MapBusRoad;
+import com.mybus.model.road.MapCompleteBusRoute;
 import com.mybus.service.ServiceFacade;
 import com.mybus.view.FavoriteAlertDialogConfirm;
 
@@ -52,7 +52,7 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     //Favorite MyBusMarker List
     private HashMap<LatLng, MyBusMarker> mFavoritesMarkers;
     //HashMap used as cache for complete bus routes
-    private HashMap<Integer, MapBusRoad> mCompleteRoutes = new HashMap<>();
+    private HashMap<Integer, MapCompleteBusRoute> mCompleteRoutes = new HashMap<>();
     private MainActivity mMainActivity;
 
     /**
@@ -345,8 +345,8 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
 
     public void hideBusRoutes() {
         //Hide complete bus routes
-        for (MapBusRoad route : mCompleteRoutes.values()) {
-            route.showBusRoadFromMap(false);
+        for (MapCompleteBusRoute route : mCompleteRoutes.values()) {
+            route.hideBusRoutes();
         }
     }
 
@@ -415,32 +415,32 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         return null;
     }
 
-    public void showCompleteRoute(int busLineId, CompleteBusRoute completeBusRoute) {
-        if (completeBusRoute.getGoingPointList().size() == 0 || completeBusRoute.getReturnPointList().size() == 0) {
-            Toast.makeText(mMainActivity, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
-        } else {
-            showCompleteRouteReturn(busLineId, completeBusRoute);
-            zoomOutCompleteBusRoute(busLineId);
-        }
-    }
-
-    public void showCompleteRouteGoing(int busLineId, CompleteBusRoute completeBusRoute) {
-        mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsGoing(), completeBusRoute.getPolylineOptionsGoing()));
-        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
-    }
-
-    public void showCompleteRouteReturn(int busLineId, CompleteBusRoute completeBusRoute) {
-        mCompleteRoutes.put(busLineId, new MapBusRoad().addBusRoadOnMap(mMap, completeBusRoute.getMarkerOptionsReturn(), completeBusRoute.getPolylineOptionsReturn()));
-        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
-    }
-
     public boolean completeRouteExists(int busLineId) {
         return mCompleteRoutes.containsKey(busLineId);
     }
 
-    public void showCompleteBusRoute(int busLineId) {
-        mCompleteRoutes.get(busLineId).showBusRoadFromMap(true);
-        zoomOutCompleteBusRoute(busLineId);
+    public void showCompleteRouteGoing(int busLineId, CompleteBusRoute completeBusRoute) {
+        if (completeBusRoute.getGoingPointList().size() == 0 || completeBusRoute.getReturnPointList().size() == 0) {
+            Toast.makeText(mMainActivity, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
+        }
+        else{
+            MapCompleteBusRoute route = new MapCompleteBusRoute(mMap, completeBusRoute);
+            mCompleteRoutes.put(busLineId, route);
+            route.showBusRouteGoing();
+            zoomOutCompleteBusRouteGoing(busLineId);
+        }
+    }
+
+    public void showCompleteRouteGoing(int busLineId) {
+        if (completeRouteExists(busLineId)) {
+            mCompleteRoutes.get(busLineId).showBusRouteGoing();
+        }
+    }
+
+    public void showCompleteRouteReturn(int busLineId) {
+        if (completeRouteExists(busLineId)) {
+            mCompleteRoutes.get(busLineId).showBusRouteReturn();
+        }
     }
 
     public void updateFromInfo(GeoLocation geoLocation, String favName, boolean isFavorite) {
@@ -521,9 +521,9 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         }
     }
 
-    private void zoomOutCompleteBusRoute(int busLineId) {
+    public void zoomOutCompleteBusRouteGoing(int busLineId) {
         List<Marker> markerList = new ArrayList<>();
-        markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerList());
+        markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerListGoing());
         zoomOut(markerList, mMainActivity.getResources().getInteger(R.integer.complete_route_padding));
     }
 
