@@ -427,19 +427,21 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
             MapCompleteBusRoute route = new MapCompleteBusRoute(mMap, completeBusRoute);
             mCompleteRoutes.put(busLineId, route);
             route.showBusRouteGoing();
-            zoomOutCompleteBusRouteGoing(busLineId);
+            zoomOut(mCompleteRoutes.get(busLineId).getMarkerListGoing(), mMainActivity.getResources().getInteger(R.integer.complete_route_padding));
         }
     }
 
     public void showCompleteRouteGoing(int busLineId) {
         if (completeRouteExists(busLineId)) {
             mCompleteRoutes.get(busLineId).showBusRouteGoing();
+            zoomOut(mCompleteRoutes.get(busLineId).getMarkerListGoing(), mMainActivity.getResources().getInteger(R.integer.complete_route_padding));
         }
     }
 
     public void showCompleteRouteReturn(int busLineId) {
         if (completeRouteExists(busLineId)) {
             mCompleteRoutes.get(busLineId).showBusRouteReturn();
+            zoomOut(mCompleteRoutes.get(busLineId).getMarkerListReturn(), mMainActivity.getResources().getInteger(R.integer.complete_route_padding));
         }
     }
 

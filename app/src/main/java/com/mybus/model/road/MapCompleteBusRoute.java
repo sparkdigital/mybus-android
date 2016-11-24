@@ -40,6 +40,10 @@ public class MapCompleteBusRoute {
         return mMarkerListGoing;
     }
 
+    public List<Marker> getMarkerListReturn() {
+        return mMarkerListReturn;
+    }
+
     public void showBusRouteGoing() {
         for (Marker marker : mMarkerListGoing) {
             marker.setVisible(true);

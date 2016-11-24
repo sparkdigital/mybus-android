@@ -159,12 +159,11 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @OnClick(R.id.SwitchLayout)
     public void onSwitchLayoutClick(View view) {
-        onSwitchGoingChecked(!mGoingSwitch.isChecked());
+        mGoingSwitch.setChecked(!mGoingSwitch.isChecked());
     }
 
     @OnCheckedChanged(R.id.SwitchGoing)
     public void onSwitchGoingChecked(boolean checked) {
-        mGoingSwitch.setChecked(checked);
         if (checked) {
             mMyBusMap.showCompleteRouteReturn(mBusLineId);
         } else {
@@ -575,7 +574,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         //Check if the complete route is present in cache.
         if (mMyBusMap.completeRouteExists(busLineId)) {
             mMyBusMap.showCompleteRouteGoing(busLineId);
-            mMyBusMap.zoomOutCompleteBusRouteGoing(busLineId);
         } else {
             showProgressDialog(getString(R.string.searching_complete_route));
             ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
