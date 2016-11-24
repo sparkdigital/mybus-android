@@ -275,7 +275,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         if (mSwitchLayout.getVisibility() == View.VISIBLE) {
             mGoingAndReturnLayout.setVisibility(View.GONE);
             mToolbar.setVisibility(View.VISIBLE);
-            clearBusRouteOnMap();
+            mMyBusMap.cleanMap();
             return;
         }
         finish();
@@ -481,7 +481,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.drawerRoads:
-                clearBusRouteOnMap();
+                mMyBusMap.cleanMap();
                 showBottomSheetResults(false);
                 Intent roadsIntent = new Intent(MainActivity.this, DisplayBusLinesActivity.class);
                 startActivityForResult(roadsIntent, DISPLAY_ROADS_RESULT);
@@ -568,7 +568,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     private void showCompleteBusRouteGoing(int busLineId, String busLineName) {
-        clearBusRouteOnMap();
         mBusLineId = busLineId;
         mGoingSwitch.setChecked(false);
         mToolbar.setVisibility(View.GONE);
