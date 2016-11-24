@@ -600,7 +600,6 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
     public void disPlayFavoritesResults(Intent data) {
         ArrayList<MyBusMarker> favoriteMarkers = data.getExtras().getParcelableArrayList(DisplayFavoritesActivity.RESULT_MYBUSMARKER);
         if (favoriteMarkers != null && !favoriteMarkers.isEmpty()) {
-            mMainActivity.onBackArrowClick();
             for (MyBusMarker favMarker : favoriteMarkers) {
                 favMarker.setMapMarker(mMap.addMarker(favMarker.getMarkerOptions()));
                 //favMarker.getMapMarker().showInfoWindow();

@@ -480,8 +480,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.drawerRoads:
-                mMyBusMap.cleanMap();
-                showBottomSheetResults(false);
                 Intent roadsIntent = new Intent(MainActivity.this, DisplayBusLinesActivity.class);
                 startActivityForResult(roadsIntent, DISPLAY_ROADS_RESULT);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -547,9 +545,13 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                     mMyBusMap.updateToInfo(geoLocation, favName, isFavorite);
                     break;
                 case DISPLAY_FAVORITES_RESULT:
+                    //clear the map
+                    onBackArrowClick();
                     mMyBusMap.disPlayFavoritesResults(data);
                     break;
                 case DISPLAY_ROADS_RESULT:
+                    //clear the map
+                    onBackArrowClick();
                     int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                     String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
                     mLineNumber.setText(busLineName);
