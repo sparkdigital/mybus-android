@@ -705,13 +705,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             for (ChargePoint chargePoint : chargePoints) {
                 options.title(chargePoint.getName());
                 options.snippet(chargePoint.getAddress());
-
                 MyBusMarker chargingPointMarker = new MyBusMarker(options, false, null, MyBusMarker.CHARGING_POINT);
-                mMyBusMap.addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
-                mMyBusMap.getChargingPointMarkers().put(chargePoint.getLatLng(), chargingPointMarker);
-                mMyBusMap.getChargingPoints().put(chargingPointMarker, chargePoint);
-
-                markerList.add(chargingPointMarker.getMapMarker());
+                if (!mMyBusMap.containsChargingPointAt(chargePoint.getLatLng())) {
+                    mMyBusMap.addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
+                    mMyBusMap.addChargePoint(chargePoint, chargingPointMarker);
+                    markerList.add(chargingPointMarker.getMapMarker());
+                }
             }
             markerList.add(mMyBusMap.getUserLocationMarker().getMapMarker());
             mMyBusMap.zoomOut(markerList, getResources().getInteger(R.integer.charging_point_padding));

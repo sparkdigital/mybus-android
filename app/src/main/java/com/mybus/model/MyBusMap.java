@@ -90,10 +90,6 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         this.mLocationUpdater = mLocationUpdater;
     }
 
-    public HashMap<LatLng, MyBusMarker> getChargingPointMarkers() {
-        return mChargingPointMarkers;
-    }
-
     public HashMap<MyBusMarker, ChargePoint> getChargingPoints() {
         return mChargingPoints;
     }
@@ -684,5 +680,14 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
             }
             zoomTo(mUserLocationMarker.getMapMarker().getPosition());
         }
+    }
+
+    public boolean containsChargingPointAt(LatLng latLng) {
+        return mChargingPointMarkers.containsKey(latLng);
+    }
+
+    public void addChargePoint(ChargePoint chargePoint, MyBusMarker chargingPointMarker) {
+        mChargingPointMarkers.put(chargePoint.getLatLng(), chargingPointMarker);
+        mChargingPoints.put(chargingPointMarker, chargePoint);
     }
 }
