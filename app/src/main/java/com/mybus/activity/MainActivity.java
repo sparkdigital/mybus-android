@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.ChargePointSearchCallback;
@@ -32,6 +34,7 @@ import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
 import com.mybus.dao.RecentLocationDao;
+import com.mybus.fcm.NotificationData;
 import com.mybus.fragment.BusRouteFragment;
 import com.mybus.listener.CompoundSearchBoxListener;
 import com.mybus.location.LocationUpdater;
@@ -53,12 +56,14 @@ import com.mybus.view.AboutAlertDialog;
 import com.mybus.view.CompoundSearchBox;
 import com.mybus.view.FavoriteAlertDialogConfirm;
 import com.mybus.view.FavoriteNameAlertDialog;
+import com.mybus.view.NotificationDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallback, OnLocationChangedCallback,
@@ -82,11 +87,20 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     NavigationView navigationView;
     @Bind(R.id.main_toolbar)
     View mToolbar;
+    @Bind(R.id.GoingAndReturnLayout)
+    LinearLayout mGoingAndReturnLayout;
+    @Bind(R.id.SwitchLayout)
+    LinearLayout mSwitchLayout;
+    @Bind(R.id.SwitchGoing)
+    SwitchCompat mGoingSwitch;
+    @Bind(R.id.lineNumber)
+    TextView mLineNumber;
 
     private Context mContext;
     private MyBusMap mMyBusMap;
     private MyBusMarker mMarkerFavoriteToUpdate;
     private boolean mFromActivityResults;
+    int mBusLineId;
 
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
@@ -106,6 +120,15 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
      */
     public View getToolbar() {
         return mToolbar;
+    }
+
+    /**
+     * Getter for GoingAndReturnLayout in order to interact with it from MyBusMap.
+     *
+     * @return
+     */
+    public View getGoingAndReturnLayout() {
+        return mGoingAndReturnLayout;
     }
 
     /**
@@ -137,6 +160,20 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
     }
 
+    @OnClick(R.id.SwitchLayout)
+    public void onSwitchLayoutClick(View view) {
+        mGoingSwitch.setChecked(!mGoingSwitch.isChecked());
+    }
+
+    @OnCheckedChanged(R.id.SwitchGoing)
+    public void onSwitchGoingChecked(boolean checked) {
+        if (checked) {
+            mMyBusMap.showCompleteRouteReturn(mBusLineId);
+        } else {
+            mMyBusMap.showCompleteRouteGoing(mBusLineId);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +202,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         setupBottomSheet();
         DeviceRequirementsChecker.checkGpsEnabled(this);
         mCompoundSearchBox.setListener(this);
+
+        // Subscribe to news (notifications):
+        FirebaseMessaging.getInstance().subscribeToTopic("news"); //TODO: let the user un-subscribe the app.
+
+        Bundle extras = getIntent().getExtras();
+        showNotificationDialog(extras);
     }
 
     private void initDrawer() {
@@ -235,6 +278,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
         if (mCompoundSearchBox.isVisible()) {
             onBackArrowClick();
+            return;
+        }
+        if (mSwitchLayout.getVisibility() == View.VISIBLE) {
+            mGoingAndReturnLayout.setVisibility(View.GONE);
+            mToolbar.setVisibility(View.VISIBLE);
+            mMyBusMap.cleanMap();
             return;
         }
         finish();
@@ -521,12 +570,17 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                     mMyBusMap.updateToInfo(geoLocation, favName, isFavorite);
                     break;
                 case DISPLAY_FAVORITES_RESULT:
+                    //clear the map
+                    onBackArrowClick();
                     mMyBusMap.disPlayFavoritesResults(data);
                     break;
                 case DISPLAY_ROADS_RESULT:
+                    //clear the map
+                    onBackArrowClick();
                     int busLineId = data.getIntExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_ID, -1);
                     String busLineName = data.getStringExtra(DisplayBusLinesActivity.RESULT_BUS_LINE_NAME);
-                    showCompleteBusRoute(busLineId, busLineName);
+                    mLineNumber.setText(busLineName);
+                    showCompleteBusRouteGoing(busLineId, busLineName);
                     break;
                 case DISPLAY_BUS_LINES_RESULT:
                     mFromActivityResults = true;
@@ -539,11 +593,14 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showCompleteBusRoute(int busLineId, String busLineName) {
-        clearBusRouteOnMap();
+    private void showCompleteBusRouteGoing(int busLineId, String busLineName) {
+        mBusLineId = busLineId;
+        mGoingSwitch.setChecked(false);
+        mToolbar.setVisibility(View.GONE);
+        mGoingAndReturnLayout.setVisibility(View.VISIBLE);
         //Check if the complete route is present in cache.
         if (mMyBusMap.completeRouteExists(busLineId)) {
-            mMyBusMap.showCompleteBusRoute(busLineId);
+            mMyBusMap.showCompleteRouteGoing(busLineId);
         } else {
             showProgressDialog(getString(R.string.searching_complete_route));
             ServiceFacade.getInstance().getCompleteBusRoute(busLineId, busLineName, this);
@@ -673,13 +730,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             for (ChargePoint chargePoint : chargePoints) {
                 options.title(chargePoint.getName());
                 options.snippet(chargePoint.getAddress());
-
                 MyBusMarker chargingPointMarker = new MyBusMarker(options, false, null, MyBusMarker.CHARGING_POINT);
-                mMyBusMap.addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
-                mMyBusMap.getChargingPointMarkers().put(chargePoint.getLatLng(), chargingPointMarker);
-                mMyBusMap.getChargingPoints().put(chargingPointMarker, chargePoint);
-
-                markerList.add(chargingPointMarker.getMapMarker());
+                if (!mMyBusMap.containsChargingPointAt(chargePoint.getLatLng())) {
+                    mMyBusMap.addOrUpdateMarker(chargingPointMarker, chargePoint.getLatLng(), null);
+                    mMyBusMap.addChargePoint(chargePoint, chargingPointMarker);
+                    markerList.add(chargingPointMarker.getMapMarker());
+                }
             }
             markerList.add(mMyBusMap.getUserLocationMarker().getMapMarker());
             mMyBusMap.zoomOut(markerList, getResources().getInteger(R.integer.charging_point_padding));
@@ -705,7 +761,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onCompleteRouteFound(int busLineId, CompleteBusRoute completeBusRoute) {
         cancelProgressDialog();
-        mMyBusMap.showCompleteRoute(busLineId, completeBusRoute);
+        mMyBusMap.showCompleteRouteGoing(busLineId, completeBusRoute);
     }
 
     @Override
@@ -715,11 +771,31 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
 
     @Override
     public int getToolbarId() {
-        return 0;
+        return R.id.displayBusLineToolbar;
     }
 
     @Override
     protected int getToolbarTittle() {
-        return 0;
+        return R.string.main_activity_toolbar_title;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        showNotificationDialog(extras);
+    }
+
+    private void showNotificationDialog(Bundle extras) {
+        if (extras != null) {
+            String notificationText = extras.getString(NotificationData.TEXT);
+            if (notificationText != null) {
+                NotificationDialog notificationDialog = new NotificationDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString(NotificationDialog.NOTIFICATION_MSG, notificationText);
+                notificationDialog.setArguments(bundle);
+                notificationDialog.show(getFragmentManager(), "");
+            }
+        }
     }
 }
