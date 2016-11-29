@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_tab_height"
         android:gravity="center"
+        android:paddingLeft="10dp"
         android:orientation="vertical">
 
         <LinearLayout

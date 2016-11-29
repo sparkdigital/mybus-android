@@ -20,7 +20,8 @@
     <dimen name="mybus_text_size">15sp</dimen>
     <dimen name="fares_text_size">16sp</dimen>
     <dimen name="bus_line_name_size">25sp</dimen>
-    <dimen name="tab_width">102dp</dimen>
+    <dimen name="tab_min_width">102dp</dimen>
+    <dimen name="tab_max_width">204dp</dimen>
     <dimen name="simple_bus_tab_text_size">19sp</dimen>
     <dimen name="combined_bus_tab_text_size">16sp</dimen>
 </resources>

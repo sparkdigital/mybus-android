@@ -28,7 +28,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     private TextView mBusLineTitle;
     private TextView mBusLineDestination;
     private TextView mBusLineOrigin;
-    private LinearLayout mBusLineLayout;
+    private LinearLayout mBusLineLayoutOrigin;
+    private LinearLayout mBusLineLayoutDestination;
 
     public ViewPagerAdapter(FragmentManager manager, LayoutInflater layoutInflater) {
         super(manager);
@@ -61,12 +62,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             view = mInflater.inflate(R.layout.simple_bus_tab_layout, tabLayout, false);
             mBusLineTitle = (TextView) view.findViewById(R.id.bus_line_text);
             mBusLineTitle.setText(busRouteResult.getBusRoutes().get(0).getBusLineName());
-            mBusLineLayout = (LinearLayout) view.findViewById(R.id.bus_tab_layout);
+            mBusLineLayoutOrigin = (LinearLayout) view.findViewById(R.id.bus_tab_layout);
             int busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(0).getBusLineColor() );
-            busColor = Color.argb(255, Color.red(busColor), Color.green(busColor), Color.blue(busColor));
-            GradientDrawable drawable = (GradientDrawable)mBusLineLayout.getBackground();
-            drawable.setStroke(3, busColor); // set stroke width and stroke color
-            drawable.setColor(busColor); // set solid color
+            setColorLine(busColor, mBusLineLayoutOrigin);
         } else {
             view = mInflater.inflate(R.layout.combined_bus_tab_layout, tabLayout, false);
             String firstBus = busRouteResult.getBusRoutes().get(0).getBusLineName();
@@ -75,10 +73,23 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             mBusLineDestination = (TextView) view.findViewById(R.id.bus_line_destination);
             mBusLineOrigin.setText(firstBus);
             mBusLineDestination.setText(secondBus);
+            mBusLineLayoutOrigin = (LinearLayout) view.findViewById(R.id.bus_tab_layout_origin);
+            mBusLineLayoutDestination = (LinearLayout) view.findViewById(R.id.bus_tab_layout_destination);
+            int busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(0).getBusLineColor() );
+            setColorLine(busColor, mBusLineLayoutOrigin);
+            busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(1).getBusLineColor() );
+            setColorLine(busColor, mBusLineLayoutDestination);
         }
 
 
         return view;
+    }
+
+    private void setColorLine(int busColor, LinearLayout linearLayout) {
+        busColor = Color.argb(255, Color.red(busColor), Color.green(busColor), Color.blue(busColor));
+        GradientDrawable drawable = (GradientDrawable) linearLayout.getBackground();
+        drawable.setStroke(3, busColor); // set stroke width and stroke color
+        drawable.setColor(busColor); // set solid color
     }
 
     public void clearBusRoutes() {

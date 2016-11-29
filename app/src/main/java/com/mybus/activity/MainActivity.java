@@ -428,16 +428,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void updateDistanceAndTime(RoadResult roadResult) {
         TabLayout.Tab tab = mTabLayout.getTabAt(mViewPager.getCurrentItem());
         View tabView = tab.getCustomView();
-        if (roadResult.getIdBusLine2() == null) { // is single route:
-            TextView distance = (TextView) tabView.findViewById(R.id.bus_line_distance);
-            TextView time = (TextView) tabView.findViewById(R.id.bus_line_time);
-            distance.setText(String.valueOf(roadResult.getTotalDistance()) + " Km.");
-            distance.setVisibility(View.VISIBLE);
-            time.setText(String.valueOf(roadResult.getTravelTime()) + " Min.");
-            time.setVisibility(View.VISIBLE);
-        } else {
-            //TODO: When combined tab layout is ready.
-        }
+        TextView distance = (TextView) tabView.findViewById(R.id.bus_line_distance);
+        TextView time = (TextView) tabView.findViewById(R.id.bus_line_time);
+        distance.setText(String.valueOf(roadResult.getTotalDistance()) + " Km.");
+        distance.setVisibility(View.VISIBLE);
+        time.setText(String.valueOf(roadResult.getTravelTime()) + " Min.");
+        time.setVisibility(View.VISIBLE);
     }
 
 
@@ -534,7 +530,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     /**
-     *
      * @param requestCode
      * @param type
      * @param address
