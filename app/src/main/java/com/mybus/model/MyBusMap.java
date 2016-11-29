@@ -519,12 +519,6 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
         }
     }
 
-    public void zoomOutCompleteBusRouteGoing(int busLineId) {
-        List<Marker> markerList = new ArrayList<>();
-        markerList.addAll(mCompleteRoutes.get(busLineId).getMarkerListGoing());
-        zoomOut(markerList, mMainActivity.getResources().getInteger(R.integer.complete_route_padding));
-    }
-
     /**
      * Returns pixels dimension from DensityPoints given the display metrics from the device
      *
