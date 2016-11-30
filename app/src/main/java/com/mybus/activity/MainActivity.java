@@ -368,7 +368,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                             BusRouteResult busRouteResult = mViewPagerAdapter.getItem(tab.getPosition()).getBusRouteResult();
                             performRoadSearch(busRouteResult);
                         } else {
-                            Toast.makeText(MainActivity.this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+                            noInternetConnectionMsg();
                         }
                     }
                 }
@@ -407,6 +407,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onRoadFound(RoadResult roadResult) {
         cancelProgressDialog();
+        if (roadResult == null) {
+            noInternetConnectionMsg();
+        }
         MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMyBusMap.getMap(), roadResult.getMarkerOptions(), roadResult.getPolylineOptions());
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
@@ -422,6 +425,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             }
             showBottomSheetResults(true);
         }
+    }
+
+    private void noInternetConnectionMsg() {
+        Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
     }
 
 
@@ -508,7 +515,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                         DeviceRequirementsChecker.checkGpsEnabled(this);
                     }
                 } else {
-                    Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+                    noInternetConnectionMsg();
                 }
                 break;
             default:
@@ -645,7 +652,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             showProgressDialog(getString(R.string.toast_searching));
             ServiceFacade.getInstance().searchRoutes(mMyBusMap.getStartLocationMarker().getMapMarker().getPosition(), mMyBusMap.getEndLocationMarker().getMapMarker().getPosition(), this);
         } else {
-            Toast.makeText(this, R.string.toast_no_internet, Toast.LENGTH_LONG).show();
+            noInternetConnectionMsg();
         }
         //when performing a search remove all the favorites in the map
         mMyBusMap.removeAllFavoritesMarkers();
@@ -745,6 +752,10 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     @Override
     public void onCompleteRouteFound(int busLineId, CompleteBusRoute completeBusRoute) {
         cancelProgressDialog();
+        if (completeBusRoute == null || completeBusRoute.getGoingPointList() == null || completeBusRoute.getReturnPointList() == null) {
+            Toast.makeText(this, R.string.toast_no_complete_route, Toast.LENGTH_LONG).show();
+            return;
+        }
         mMyBusMap.showCompleteRouteGoing(busLineId, completeBusRoute);
     }
 

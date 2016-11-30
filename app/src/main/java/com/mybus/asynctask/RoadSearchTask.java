@@ -85,6 +85,9 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     @Override
     protected RoadResult doInBackground(Void... params) {
         RoadResult result = new MyBusServiceImpl().searchRoads(mType, roadSearch);
+        if (result == null) {
+            return null;
+        }
         result.setBusLine1Color(mBusLine1Color);
         if (startLocation != null && firstBusStop != null) {
             result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
