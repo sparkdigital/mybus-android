@@ -420,8 +420,20 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 mFromActivityResults = false;
             }
+            updateDistanceAndTime(roadResult);
             showBottomSheetResults(true);
         }
+    }
+
+    private void updateDistanceAndTime(RoadResult roadResult) {
+        TabLayout.Tab tab = mTabLayout.getTabAt(mViewPager.getCurrentItem());
+        View tabView = tab.getCustomView();
+        TextView distance = (TextView) tabView.findViewById(R.id.bus_line_distance);
+        TextView time = (TextView) tabView.findViewById(R.id.bus_line_time);
+        distance.setText(String.valueOf(roadResult.getTotalDistance()) + " Km.");
+        distance.setVisibility(View.VISIBLE);
+        time.setText(String.valueOf(roadResult.getTravelTime()) + " Min.");
+        time.setVisibility(View.VISIBLE);
     }
 
 
@@ -518,7 +530,6 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     }
 
     /**
-     *
      * @param requestCode
      * @param type
      * @param address
