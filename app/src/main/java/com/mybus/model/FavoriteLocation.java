@@ -135,9 +135,9 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = HASH_MULTIPLIER * result + name.hashCode();
-        result = HASH_MULTIPLIER * result + address.hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = HASH_MULTIPLIER * result + (name != null ? name.hashCode() : 0);
+        result = HASH_MULTIPLIER * result + (address != null ? address.hashCode() : 0);
         result = HASH_MULTIPLIER * result + latitude.hashCode();
         result = HASH_MULTIPLIER * result + longitude.hashCode();
         result = HASH_MULTIPLIER * result + usageCount.hashCode();
