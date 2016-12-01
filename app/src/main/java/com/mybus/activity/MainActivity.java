@@ -280,7 +280,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             onBackArrowClick();
             return;
         }
-        if (mSwitchLayout.getVisibility() == View.VISIBLE) {
+        if (mGoingAndReturnLayout.getVisibility() == View.VISIBLE) {
             mGoingAndReturnLayout.setVisibility(View.GONE);
             mToolbar.setVisibility(View.VISIBLE);
             mMyBusMap.cleanMap();
