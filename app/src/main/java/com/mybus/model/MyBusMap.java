@@ -37,6 +37,7 @@ import java.util.List;
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLongClickListener {
+    private static final LatLng CITY_LAT_LNG = new LatLng(-38, -57.55);
     /*-- Local Variables --*/
     private GoogleMap mMap;
     private LocationUpdater mLocationUpdater;
@@ -673,6 +674,8 @@ public class MyBusMap implements OnLocationChangedCallback, GoogleMap.OnInfoWind
                 mUserLocationMarker.getMapMarker().setPosition(lastLocation);
             }
             zoomTo(mUserLocationMarker.getMapMarker().getPosition());
+        } else {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(CITY_LAT_LNG, mMainActivity.getResources().getInteger(R.integer.default_map_zoom)));
         }
     }
 
