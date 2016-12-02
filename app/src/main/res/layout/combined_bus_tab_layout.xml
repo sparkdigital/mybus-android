@@ -5,34 +5,86 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <View style="@style/DividerVertical"/>
+    <View style="@style/DividerVertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_tab_height"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
+        android:paddingLeft="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/bus_tab_layout_origin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/switch_layout_background"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/bus_line_origin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="555"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/combined_bus_tab_text_size" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:textSize="@dimen/simple_bus_tab_text_size"
+                android:text="->" />
+
+            <LinearLayout
+                android:id="@+id/bus_tab_layout_destination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/switch_layout_background"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/bus_line_destination"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="555"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/combined_bus_tab_text_size" />
+            </LinearLayout>
+        </LinearLayout>
+
 
         <TextView
-            android:id="@+id/bus_line_origin"
-            android:layout_width="wrap_content"
+            android:id="@+id/bus_line_time"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/combined_bus_tab_text_size"
-            android:text="541" />
-
-        <ImageView
-            android:id="@+id/fare_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/connection_small" />
+            android:layout_marginBottom="-3dp"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:visibility="invisible" />
 
         <TextView
-            android:id="@+id/bus_line_destination"
-            android:layout_width="wrap_content"
+            android:id="@+id/bus_line_distance"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/combined_bus_tab_text_size"
-            android:text="541" />
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:visibility="invisible" />
     </LinearLayout>
 </LinearLayout>
