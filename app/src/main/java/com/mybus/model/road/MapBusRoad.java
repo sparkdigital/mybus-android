@@ -13,12 +13,13 @@ import java.util.List;
 /**
  * @author Lucas Dimitroff <ldimitroff@devspark.com>
  */
-public class MapBusRoad {
+public class MapBusRoad implements GoogleMap.OnCameraChangeListener{
 
     private List<Marker> mMarkerList = new ArrayList<>();
     private List<Marker> mStopsMarkers = new ArrayList<>();
     private List<Polyline> mPolylineList = new ArrayList<>();
     public static final float MIN_MAP_STOPS_DISTANCE = 13.5f;
+    private GoogleMap mMap;
 
     public List<Marker> getMarkerList() {
         return mMarkerList;
@@ -32,6 +33,7 @@ public class MapBusRoad {
      * @param polylineOptionsList
      */
     public MapBusRoad addBusRoadOnMap(GoogleMap map, List<MarkerOptions> markerOptionsList, List<MarkerOptions> stopsMarkers, List<PolylineOptions> polylineOptionsList) {
+        mMap = map;
         for (MarkerOptions markerOptions : markerOptionsList) {
             mMarkerList.add(map.addMarker(markerOptions));
         }
@@ -43,17 +45,9 @@ public class MapBusRoad {
         for (PolylineOptions polylineOptions : polylineOptionsList) {
             mPolylineList.add(map.addPolyline(polylineOptions));
         }
-        map.setOnCameraChangeListener(mOnCameraChangeListener);
+        map.setOnCameraChangeListener(this);
         return this;
     }
-
-    private final GoogleMap.OnCameraChangeListener mOnCameraChangeListener =
-            new GoogleMap.OnCameraChangeListener() {
-                @Override
-                public void onCameraChange(CameraPosition cameraPosition) {
-                    showStopMarkers(cameraPosition.zoom > MIN_MAP_STOPS_DISTANCE);
-                }
-            };
 
     private void showStopMarkers(boolean show) {
         for (Marker marker : mStopsMarkers) {
@@ -93,6 +87,15 @@ public class MapBusRoad {
         for (Polyline polyline : mPolylineList) {
             polyline.setVisible(show);
         }
+        if (show) {
+            mMap.setOnCameraChangeListener(this);
+        } else {
+            mMap.setOnCameraChangeListener(null);
+        }
     }
 
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        showStopMarkers(cameraPosition.zoom > MIN_MAP_STOPS_DISTANCE);
+    }
 }
