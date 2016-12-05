@@ -39,7 +39,9 @@ public class MapBusRoad implements GoogleMap.OnCameraChangeListener{
         }
         if (stopsMarkers != null) {
             for (MarkerOptions markerOptions : stopsMarkers) {
-                mStopsMarkers.add(map.addMarker(markerOptions));
+                Marker stopMarker = map.addMarker(markerOptions);
+                stopMarker.setVisible(false);
+                mStopsMarkers.add(stopMarker);
             }
         }
         for (PolylineOptions polylineOptions : polylineOptionsList) {
