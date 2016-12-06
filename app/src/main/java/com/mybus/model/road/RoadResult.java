@@ -170,28 +170,32 @@ public class RoadResult {
     }
 
     /**
-     * @return a list of Bus Stop markers to be drawed on the map
+     * @return a list of Bus Stop markers to be drawn on the map
      */
     public List<MarkerOptions> getStopMarkers() {
         List<MarkerOptions> list = new ArrayList<>();
         List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
         putMidMarkers(list, midPointsList);
-        if (mType != 0) {
-            midPointsList = mRouteList.get(1).getPointList();
-            putMidMarkers(list, midPointsList);
+        if (mType == 1) {
+            if (mRouteList.get(1) != null) {
+                midPointsList = mRouteList.get(1).getPointList();
+                putMidMarkers(list, midPointsList);
+            }
         }
         return list;
     }
 
     private void putMidMarkers(List<MarkerOptions> markerOptionsList, List<RoutePoint> midPointsList) {
-        for (int i=1; (i < midPointsList.size() - 1) ; i++) {
-            RoutePoint midStopBus = midPointsList.get(i);
-            if (!midStopBus.isWaypoint()) {
-                markerOptionsList.add(new MarkerOptions()
-                        .title(MyBus.getContext().getString(R.string.bus_stop_mid, String.valueOf(i + 1)))
-                        .snippet(midStopBus.getAddress())
-                        .position(midStopBus.getLatLng())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+        if (markerOptionsList != null && midPointsList != null) {
+            for (int i = 1; (i < midPointsList.size() - 1); i++) {
+                RoutePoint midStopBus = midPointsList.get(i);
+                if (!midStopBus.isWaypoint()) {
+                    markerOptionsList.add(new MarkerOptions()
+                            .title(MyBus.getContext().getString(R.string.bus_stop_mid, String.valueOf(i + 1)))
+                            .snippet(midStopBus.getAddress())
+                            .position(midStopBus.getLatLng())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+                }
             }
         }
     }
