@@ -409,6 +409,7 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         cancelProgressDialog();
         if (roadResult == null) {
             noInternetConnectionMsg();
+            return;
         }
         MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMyBusMap.getMap(), roadResult.getMarkerOptions(), roadResult.getStopMarkers(), roadResult.getPolylineOptions());
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
@@ -435,11 +436,14 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     private void updateDistanceAndTime(RoadResult roadResult) {
         TabLayout.Tab tab = mTabLayout.getTabAt(mViewPager.getCurrentItem());
         View tabView = tab.getCustomView();
+        if (tabView == null) {
+            return;
+        }
         TextView distance = (TextView) tabView.findViewById(R.id.bus_line_distance);
         TextView time = (TextView) tabView.findViewById(R.id.bus_line_time);
-        distance.setText(String.valueOf(roadResult.getTotalDistance()) + " Km.");
+        distance.setText(String.format("%s Km.", roadResult.getTotalDistance()));
         distance.setVisibility(View.VISIBLE);
-        time.setText(String.valueOf(roadResult.getTravelTime()) + " Min.");
+        time.setText(String.format("%s Min.", roadResult.getTravelTime()));
         time.setVisibility(View.VISIBLE);
     }
 
