@@ -173,6 +173,9 @@ public class RoadResult {
      * @return a list of Bus Stop markers to be drawn on the map
      */
     public List<MarkerOptions> getStopMarkers() {
+        if (mType != 0 && mType != 1) {
+            return null;
+        }
         List<MarkerOptions> list = new ArrayList<>();
         List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
         putMidMarkers(list, midPointsList);
