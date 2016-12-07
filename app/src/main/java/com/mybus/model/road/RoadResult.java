@@ -177,13 +177,13 @@ public class RoadResult {
             return null;
         }
         List<MarkerOptions> list = new ArrayList<>();
-        List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
-        putMidMarkers(list, midPointsList);
-        if (mType == 1) {
-            if (mRouteList.get(1) != null) {
-                midPointsList = mRouteList.get(1).getPointList();
-                putMidMarkers(list, midPointsList);
-            }
+        if (mRouteList.get(0) != null) {
+            List<RoutePoint> midPointsList = mRouteList.get(0).getPointList();
+            putMidMarkers(list, midPointsList);
+        }
+        if ((mType == 1) && (mRouteList.get(1) != null)) {
+            midPointsList = mRouteList.get(1).getPointList();
+            putMidMarkers(list, midPointsList);
         }
         return list;
     }
