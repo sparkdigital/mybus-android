@@ -1,6 +1,7 @@
 package com.mybus.model.road;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -12,10 +13,13 @@ import java.util.List;
 /**
  * @author Lucas Dimitroff <ldimitroff@devspark.com>
  */
-public class MapBusRoad {
+public class MapBusRoad implements GoogleMap.OnCameraChangeListener{
 
     private List<Marker> mMarkerList = new ArrayList<>();
+    private List<Marker> mStopsMarkers = new ArrayList<>();
     private List<Polyline> mPolylineList = new ArrayList<>();
+    public static final float MIN_MAP_STOPS_DISTANCE = 13.5f;
+    private GoogleMap mMap;
 
     public List<Marker> getMarkerList() {
         return mMarkerList;
@@ -23,18 +27,34 @@ public class MapBusRoad {
 
     /**
      * Adds the Specific road result into the map
-     *  @param map
-     *  @param markerOptionsList
-     *  @param polylineOptionsList
+     *
+     * @param map
+     * @param markerOptionsList
+     * @param polylineOptionsList
      */
-    public MapBusRoad addBusRoadOnMap(GoogleMap map, List<MarkerOptions> markerOptionsList, List<PolylineOptions> polylineOptionsList) {
+    public MapBusRoad addBusRoadOnMap(GoogleMap map, List<MarkerOptions> markerOptionsList, List<MarkerOptions> stopsMarkers, List<PolylineOptions> polylineOptionsList) {
+        mMap = map;
         for (MarkerOptions markerOptions : markerOptionsList) {
             mMarkerList.add(map.addMarker(markerOptions));
+        }
+        if (stopsMarkers != null) {
+            for (MarkerOptions markerOptions : stopsMarkers) {
+                Marker stopMarker = map.addMarker(markerOptions);
+                stopMarker.setVisible(false);
+                mStopsMarkers.add(stopMarker);
+            }
         }
         for (PolylineOptions polylineOptions : polylineOptionsList) {
             mPolylineList.add(map.addPolyline(polylineOptions));
         }
+        map.setOnCameraChangeListener(this);
         return this;
+    }
+
+    private void showStopMarkers(boolean show) {
+        for (Marker marker : mStopsMarkers) {
+            marker.setVisible(show);
+        }
     }
 
     /**
@@ -42,6 +62,9 @@ public class MapBusRoad {
      */
     public void clearBusRoadFromMap() {
         for (Marker marker : mMarkerList) {
+            marker.remove();
+        }
+        for (Marker marker : mStopsMarkers) {
             marker.remove();
         }
         for (Polyline polyline : mPolylineList) {
@@ -60,9 +83,21 @@ public class MapBusRoad {
         for (Marker marker : mMarkerList) {
             marker.setVisible(show);
         }
+        for (Marker marker : mStopsMarkers) {
+            marker.setVisible(show);
+        }
         for (Polyline polyline : mPolylineList) {
             polyline.setVisible(show);
         }
+        if (show) {
+            mMap.setOnCameraChangeListener(this);
+        } else {
+            mMap.setOnCameraChangeListener(null);
+        }
     }
 
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        showStopMarkers(cameraPosition.zoom > MIN_MAP_STOPS_DISTANCE);
+    }
 }
