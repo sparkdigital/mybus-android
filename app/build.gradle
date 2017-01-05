@@ -18,8 +18,8 @@ android {
         applicationId "com.mybus"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 3
-        versionName "v1.2"
+        versionCode 4
+        versionName "v1.3"
     }
     applicationVariants.all { variant ->
         variant.resValue "string", "versionName", variant.versionName
