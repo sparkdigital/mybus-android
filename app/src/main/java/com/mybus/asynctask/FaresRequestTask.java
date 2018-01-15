@@ -31,7 +31,7 @@ public class FaresRequestTask extends AsyncTask<Void, Void, List<Fare>> {
         JSONObject jsonMockedResponse = FileLoaderHelper.loadJSONObjectFromAssets(mContext, "fares_mock.json");
         JSONArray faresFromJson = null;
         try {
-            faresFromJson = jsonMockedResponse.getJSONArray("Fares");
+            faresFromJson = jsonMockedResponse.getJSONArray("Results");
         } catch (JSONException e) {
             Log.e("FaresRequestTask", e.getMessage());
         }

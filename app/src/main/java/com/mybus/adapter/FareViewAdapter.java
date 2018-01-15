@@ -42,13 +42,14 @@ public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
     public void onBindViewHolder(FareItemViewHolder holder, int position) {
         if (mDataset != null && !mDataset.isEmpty()) {
             holder.mFareTitle.setText(mDataset.get(position).getTitle());
-            holder.mFareCost.setText(mContext.getString(R.string.bus_cost, mDataset.get(position).getCost()));
+            //holder.mFareCost.setText(mContext.getString(R.string.bus_cost, mDataset.get(position).getCost()));
+            holder.mFareCost.setText(mDataset.get(position).getCost());
         }
     }
 
     @Override
     public int getItemCount() {
-        if (mDataset == null){
+        if (mDataset == null) {
             return 0;
         }
         return mDataset.size();

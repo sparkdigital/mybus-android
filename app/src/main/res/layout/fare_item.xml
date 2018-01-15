@@ -23,7 +23,7 @@
             android:id="@+id/fare_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="4"
             android:text="Title"
             android:layout_marginBottom="2dp"
             android:textSize="@dimen/fares_text_size"

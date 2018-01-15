@@ -43,28 +43,19 @@ public class Fare {
             return null;
         }
         List<Fare> list = new ArrayList<>();
-        JSONObject fareJsonObject = null;
+        Fare fare = null;
         for (int i = 0; i < results.length(); i++) {
             try {
-                fareJsonObject = results.getJSONObject(i);
+                JSONArray jsonArray = results.getJSONArray(i);
+                fare = new Fare(jsonArray.getString(0), jsonArray.getString(1));
             } catch (JSONException e) {
                 Log.e("Fare", e.getMessage());
             }
-            Fare fare = parseSingleFare(fareJsonObject);
             if (fare != null) {
                 list.add(fare);
             }
         }
         return list;
-    }
-
-    private static Fare parseSingleFare(JSONObject fareJsonObject) {
-        if (fareJsonObject == null) {
-            return null;
-        }
-        String title = fareJsonObject.optString("Title");
-        String cost = fareJsonObject.optString("Cost");
-        return new Fare(title, cost);
     }
 
     @Override

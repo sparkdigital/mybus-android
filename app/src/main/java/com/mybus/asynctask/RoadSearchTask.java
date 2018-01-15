@@ -89,6 +89,7 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
             return null;
         }
         result.setBusLine1Color(mBusLine1Color);
+        /*
         if (startLocation != null && firstBusStop != null) {
             result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
         }
@@ -98,7 +99,7 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
         }
         if (endLocation != null && endBusStop != null) {
             result.addWalkingDirection(ServiceFacade.getInstance().getDirection(endLocation, endBusStop));
-        }
+        }*/
         return result;
     }
 

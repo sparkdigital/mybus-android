@@ -1,60 +1,61 @@
 {
-  "Fares": [
-    {
-      "Title": "Local (Todas las líneas)",
-      "Cost": 7.97
-    },
-    {
-      "Title": "511 - Golf Club",
-      "Cost": 8.55
-    },
-    {
-      "Title": "511 - Col. Chapadmalal",
-      "Cost": 10.41
-    },
-    {
-      "Title": "511 - San Eduardo",
-      "Cost": 11.40
-    },
-    {
-      "Title": "542 - Estación Camet",
-      "Cost": 8.55
-    },
-    {
-      "Title": "542 - Aquasol",
-      "Cost": 10.41
-    },
-    {
-      "Title": "715/720 - Batán",
-      "Cost": 10.13
-    },
-    {
-      "Title": "715/720 - Chapadmalal",
-      "Cost": 11.15
-    },
-    {
-      "Title": "717 - Ruta 226, km. 10",
-      "Cost": 10.41
-    },
-    {
-      "Title": "717 - Ruta 226, km. 13",
-      "Cost": 10.41
-    },
-    {
-      "Title": "717 - Country Club",
-      "Cost": 11.40
-    },
-    {
-      "Title": "717 - San Carlos",
-      "Cost": 12.64
-    },
-    {
-      "Title": "717 - Colinas Verdes",
-      "Cost": 12.64
-    },
-    {
-      "Title": "717 - S. de los Padres",
-      "Cost": 12.64
-    }
+  "Type": 200,
+  "Results": [
+    [
+      "Local (Todas las lineas)",
+      "$9,85"
+    ],
+    [
+      "Aquasol (L.542)",
+      "$12,86"
+    ],
+    [
+      "Est.Camet (L.542)",
+      "$10,57"
+    ],
+    [
+      "Bat\u00e1n (L.715\/720)",
+      "$12,86"
+    ],
+    [
+      "Chapadmalal (L.715\/720)",
+      "$14,09"
+    ],
+    [
+      "Km 10 Ruta 226 (L.717)",
+      "$10,41"
+    ],
+    [
+      "Km 13 Ruta 226 (L.717)",
+      "$12,86"
+    ],
+    [
+      "Country Club (L.717)",
+      "$14,09"
+    ],
+    [
+      "San Carlos (L.717)",
+      "$15,62"
+    ],
+    [
+      "Colinas Verdes (L.717)",
+      "$15,62"
+    ],
+    [
+      "S. de los Padres (L.717)",
+      "$15,62"
+    ],
+    [
+      "Golf Club (L.511)",
+      "$10,57"
+    ],
+    [
+      "Col. Chapadmalal (L.511)",
+      "$12,86"
+    ],
+    [
+      "San Eduardo (L.511)",
+      "$15,62"
+    ]
   ]
 }
