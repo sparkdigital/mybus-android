@@ -2,6 +2,7 @@ package com.mybus.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -30,6 +31,7 @@ import com.mybus.R;
 import com.mybus.adapter.ViewPagerAdapter;
 import com.mybus.asynctask.ChargePointSearchCallback;
 import com.mybus.asynctask.CompleteBusRouteCallback;
+import com.mybus.asynctask.FaresRequestCallback;
 import com.mybus.asynctask.RoadSearchCallback;
 import com.mybus.asynctask.RouteSearchCallback;
 import com.mybus.dao.FavoriteLocationDao;
@@ -43,6 +45,7 @@ import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.ChargePoint;
 import com.mybus.model.CompleteBusRoute;
+import com.mybus.model.Fare;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.MyBusMap;
@@ -69,13 +72,14 @@ import butterknife.OnClick;
 public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallback, OnLocationChangedCallback,
         RouteSearchCallback, RoadSearchCallback, NavigationView.OnNavigationItemSelectedListener,
         CompoundSearchBoxListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener, FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener,
-        ChargePointSearchCallback, CompleteBusRouteCallback {
+        ChargePointSearchCallback, CompleteBusRouteCallback, FaresRequestCallback {
 
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
     public static final int DISPLAY_FAVORITES_RESULT = 3;
     private static final int DISPLAY_ROADS_RESULT = 4;
     public static final int DISPLAY_BUS_LINES_RESULT = 5;
+    public static final String FARES = "FARES";
 
     @Bind(R.id.center_location_action_button)
     FloatingActionButton mCenterLocationActionButton;
@@ -185,6 +189,8 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
             PlayServicesChecker.buildAlertMessageUpdatePlayServices(mContext);
             return;
         }
+
+        ServiceFacade.getInstance().getFares(this, this);
 
         mMyBusMap = new MyBusMap(this);
         mMyBusMap.resetLocalVariables();
@@ -802,6 +808,16 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 notificationDialog.setArguments(bundle);
                 notificationDialog.show(getFragmentManager(), "");
             }
+        }
+    }
+
+    @Override
+    public void onFaresFound(String fares) {
+        if (fares != null && fares.length() != 0) {
+            SharedPreferences settings = getSharedPreferences(MainActivity.FARES, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(MainActivity.FARES, fares);
+            editor.commit();
         }
     }
 }

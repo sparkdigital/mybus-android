@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface FaresRequestCallback {
 
-    void onFaresFound(List<Fare> fares);
+    void onFaresFound(String fares);
 }

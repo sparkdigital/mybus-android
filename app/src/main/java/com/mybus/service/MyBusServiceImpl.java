@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mybus.builder.MyBusServiceUrlBuilder;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.ChargePoint;
+import com.mybus.model.Fare;
 import com.mybus.model.road.RoadResult;
 import com.mybus.model.road.RoadSearch;
 
@@ -74,6 +75,15 @@ public class MyBusServiceImpl extends GenericService implements MyBusService {
             JSONArray jsonArray = jsonObject.getJSONArray("Results");
             return ChargePoint.parseResults(jsonArray);
         } catch (IOException | JSONException e) {
+            Log.e(TAG, e.toString());
+            return null;
+        }
+    }
+
+    public String getBusFares() {
+        try {
+            return executePOST(MyBusServiceUrlBuilder.FARES_URL, null);
+        } catch (IOException e) {
             Log.e(TAG, e.toString());
             return null;
         }

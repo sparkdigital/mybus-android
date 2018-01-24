@@ -19,7 +19,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 6
-        versionName "v1.5"
+        versionName "v1.4.1"
     }
     applicationVariants.all { variant ->
         variant.resValue "string", "versionName", variant.versionName
