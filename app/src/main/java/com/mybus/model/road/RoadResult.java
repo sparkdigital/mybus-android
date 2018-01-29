@@ -176,7 +176,7 @@ public class RoadResult {
     }
 
     private void putMidMarkers(List<MarkerOptions> markerOptionsList, List<RoutePoint> midPointsList) {
-        for (int i=1; (i < midPointsList.size() - 1) ; i++) {
+        for (int i = 1; (i < midPointsList.size() - 1); i++) {
             RoutePoint midStopBus = midPointsList.get(i);
             if (!midStopBus.isWaypoint()) {
                 markerOptionsList.add(new MarkerOptions()
@@ -206,7 +206,9 @@ public class RoadResult {
 
         if (mType == 1) {
             rectOptions = new PolylineOptions();
-            rectOptions.color(Color.parseColor("#" + mBusLine2Color));
+            if (mBusLine2Color != null && mBusLine2Color.length() > 0) {
+                rectOptions.color(Color.parseColor("#" + mBusLine2Color));
+            }
             rectOptions.width(POLYLINE_WIDTH);
             rectOptions.geodesic(true);
             route = mRouteList.get(1);

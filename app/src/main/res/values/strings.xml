@@ -84,4 +84,5 @@
     <string name="geocoding_url">http://maps.googleapis.com/maps/api/geocode/json?address=%1$s</string>
     <string name="going">ida</string>
     <string name="returning">vuelta</string>
+    <string name="no_hay_conexion">Dispositivo sin conexión</string>
 </resources>
