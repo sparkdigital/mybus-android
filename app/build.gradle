@@ -18,7 +18,7 @@ android {
         applicationId "com.mybus"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 6
+        versionCode 7
         versionName "v1.4.1"
     }
     applicationVariants.all { variant ->
