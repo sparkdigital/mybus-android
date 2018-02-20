@@ -89,17 +89,16 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
             return null;
         }
         result.setBusLine1Color(mBusLine1Color);
-        /*
-        if (startLocation != null && firstBusStop != null) {
-            result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
-        }
+        //if (startLocation != null && firstBusStop != null) {
+        //result.addWalkingDirection(ServiceFacade.getInstance().getDirection(startLocation, firstBusStop));
+        //}
         if (midStartStop != null && midEndStop != null) {
-            result.addWalkingDirection(ServiceFacade.getInstance().getDirection(midStartStop, midEndStop));
+            //result.addWalkingDirection(ServiceFacade.getInstance().getDirection(midStartStop, midEndStop));
             result.setBusLine2Color(mBusLine2Color);
         }
-        if (endLocation != null && endBusStop != null) {
-            result.addWalkingDirection(ServiceFacade.getInstance().getDirection(endLocation, endBusStop));
-        }*/
+        //if (endLocation != null && endBusStop != null) {
+        //result.addWalkingDirection(ServiceFacade.getInstance().getDirection(endLocation, endBusStop));
+        //}
         return result;
     }
 
