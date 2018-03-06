@@ -5,11 +5,25 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
  */
 public class BusRoute implements Parcelable {
     public static final int HASH_MULTIPLIER = 31;
+    public static final Creator<BusRoute> CREATOR = new Creator<BusRoute>() {
+        @Override
+        public BusRoute createFromParcel(Parcel in) {
+            return new BusRoute(in);
+        }
+
+        @Override
+        public BusRoute[] newArray(int size) {
+            return new BusRoute[size];
+        }
+    };
     private Integer mIdBusLine;
     private String mBusLineName;
     private Integer mBusLineDirection;
@@ -26,6 +40,7 @@ public class BusRoute implements Parcelable {
     private String mDestinationBusStopStreetName;
     private Integer mDestinationBusStopStreetNumber;
     private Double mDestinationBusStopDistanceToDestination;
+    private List<Integer> mArrivalTimes = new ArrayList<>();
 
     public BusRoute() {
         // This constructor is intentionally empty. Nothing special is needed here.
@@ -99,18 +114,6 @@ public class BusRoute implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BusRoute> CREATOR = new Creator<BusRoute>() {
-        @Override
-        public BusRoute createFromParcel(Parcel in) {
-            return new BusRoute(in);
-        }
-
-        @Override
-        public BusRoute[] newArray(int size) {
-            return new BusRoute[size];
-        }
-    };
 
     public Integer getIdBusLine() {
         return mIdBusLine;
@@ -353,5 +356,24 @@ public class BusRoute implements Parcelable {
 
     public String getFullDestinationStopBusAddress() {
         return mDestinationBusStopStreetName + " " + mDestinationBusStopStreetNumber;
+    }
+
+    public List<Integer> getArrivalTimes() {
+        return mArrivalTimes;
+    }
+
+    public void setArrivalTimes(List<Integer> mArrivalTimes) {
+        this.mArrivalTimes = mArrivalTimes;
+    }
+
+    public void addArrivalTime(int arrivalTime) {
+        mArrivalTimes.add(arrivalTime);
+    }
+
+    public int getNextArrivalTime() {
+        if (mArrivalTimes == null || mArrivalTimes.isEmpty()) {
+            return -1;
+        }
+        return mArrivalTimes.get(0);
     }
 }

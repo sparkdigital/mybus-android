@@ -15,7 +15,7 @@ import com.mybus.model.BusRoute;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.road.MapBusRoad;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -23,25 +23,25 @@ import butterknife.ButterKnife;
  */
 public class BusRouteFragment extends Fragment {
 
-    @Bind(R.id.origin_bus_stop_address)
+    @BindView(R.id.origin_bus_stop_address)
     public TextView mFirstLineOriginBusStopAddress;
-    @Bind(R.id.start_distance)
+    @BindView(R.id.start_distance)
     public TextView mFirstLineDistanceFromOrigin;
-    @Bind(R.id.first_destination_bus_stop_title)
+    @BindView(R.id.first_destination_bus_stop_title)
     public TextView mFirstDestinationTitle;
-    @Bind(R.id.destination_bus_stop_address)
+    @BindView(R.id.destination_bus_stop_address)
     public TextView mFirstLineDestinationBusStopAddress;
-    @Bind(R.id.stop_distance)
+    @BindView(R.id.stop_distance)
     public TextView mFirstLineDistanceToDestination;
-    @Bind(R.id.secondLineInfo)
+    @BindView(R.id.secondLineInfo)
     public LinearLayout mSecondLineInfo;
-    @Bind(R.id.secondLineStartAddress)
+    @BindView(R.id.secondLineStartAddress)
     public TextView mSecondLineOriginBusStopAddress;
-    @Bind(R.id.secondLineStartDistance)
+    @BindView(R.id.secondLineStartDistance)
     public TextView mCombinationDistance;
-    @Bind(R.id.secondLineStopAddress)
+    @BindView(R.id.secondLineStopAddress)
     public TextView mSecondLineDestinationBusStopAddress;
-    @Bind(R.id.secondLineStopDistance)
+    @BindView(R.id.secondLineStopDistance)
     public TextView mSecondLineDistanceToDestination;
 
     private BusRouteResult mBusRouteResult;
@@ -96,20 +96,20 @@ public class BusRouteFragment extends Fragment {
         }
     }
 
-    public void setBusRouteResult(BusRouteResult routeResult) {
-        this.mBusRouteResult = routeResult;
-    }
-
     public BusRouteResult getBusRouteResult() {
         return this.mBusRouteResult;
     }
 
-    public void setMapBusRoad(MapBusRoad mapBusRoad) {
-        this.mMapBusRoad = mapBusRoad;
+    public void setBusRouteResult(BusRouteResult routeResult) {
+        this.mBusRouteResult = routeResult;
     }
 
     public MapBusRoad getMapBusRoad() {
         return this.mMapBusRoad;
+    }
+
+    public void setMapBusRoad(MapBusRoad mapBusRoad) {
+        this.mMapBusRoad = mapBusRoad;
     }
 
     public void showMapBusRoad(boolean show) {

@@ -7,6 +7,7 @@ import com.mybus.helper.FileLoaderHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Created by Lucas De Lio on 6/29/2016.
  */
+@Ignore
 public class FareParseUnitTest {
 
     @Test

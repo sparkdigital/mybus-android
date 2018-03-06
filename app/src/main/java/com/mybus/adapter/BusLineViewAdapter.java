@@ -46,7 +46,7 @@ public class BusLineViewAdapter extends RecyclerView.Adapter<BusLineItemViewHold
 
     @Override
     public int getItemCount() {
-        if (mDataset == null){
+        if (mDataset == null) {
             return 0;
         }
         return mDataset.size();

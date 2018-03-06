@@ -25,6 +25,7 @@ public class RoadResult {
 
     private static final String TAG = RoadResult.class.getSimpleName();
     private static final int HASH_MULTIPLIER = 31;
+    private static final float POLYLINE_WIDTH = 7F;
     private int mType;
     private float mTotalDistance;
     private int mTravelTime;
@@ -35,8 +36,6 @@ public class RoadResult {
     private String mIdBusLine2;
     private String mBusLine1Color;
     private String mBusLine2Color;
-
-    private static final float POLYLINE_WIDTH = 7F;
 
     /**
      * @param jsonObject

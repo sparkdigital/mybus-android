@@ -13,7 +13,18 @@ public class StreetSuggestion implements SearchSuggestion, Comparable<StreetSugg
     public static final int TYPE_STREET = 0;
     public static final int TYPE_FAVORITE = 1;
     public static final int TYPE_TOURISTIC_PLACE = 2;
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<StreetSuggestion> CREATOR = new Parcelable.Creator<StreetSuggestion>() {
+        @Override
+        public StreetSuggestion createFromParcel(Parcel in) {
+            return new StreetSuggestion(in);
+        }
 
+        @Override
+        public StreetSuggestion[] newArray(int size) {
+            return new StreetSuggestion[size];
+        }
+    };
     private static final int HASH_MULTIPLIER = 31;
     private Long mFavID;
     private String mStreetName;
@@ -74,19 +85,6 @@ public class StreetSuggestion implements SearchSuggestion, Comparable<StreetSugg
         dest.writeInt(mType);
         dest.writeValue(mTouristicPlace);
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<StreetSuggestion> CREATOR = new Parcelable.Creator<StreetSuggestion>() {
-        @Override
-        public StreetSuggestion createFromParcel(Parcel in) {
-            return new StreetSuggestion(in);
-        }
-
-        @Override
-        public StreetSuggestion[] newArray(int size) {
-            return new StreetSuggestion[size];
-        }
-    };
 
     @Override
     public int compareTo(StreetSuggestion another) {

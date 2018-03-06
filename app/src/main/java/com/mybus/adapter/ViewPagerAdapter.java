@@ -63,7 +63,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             mBusLineTitle = (TextView) view.findViewById(R.id.bus_line_text);
             mBusLineTitle.setText(busRouteResult.getBusRoutes().get(0).getBusLineName());
             mBusLineLayoutOrigin = (LinearLayout) view.findViewById(R.id.bus_tab_layout);
-            int busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(0).getBusLineColor() );
+            int busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(0).getBusLineColor());
             setColorLine(busColor, mBusLineLayoutOrigin);
         } else {
             view = mInflater.inflate(R.layout.combined_bus_tab_layout, tabLayout, false);
@@ -75,9 +75,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             mBusLineDestination.setText(secondBus);
             mBusLineLayoutOrigin = (LinearLayout) view.findViewById(R.id.bus_tab_layout_origin);
             mBusLineLayoutDestination = (LinearLayout) view.findViewById(R.id.bus_tab_layout_destination);
-            int busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(0).getBusLineColor() );
+            int busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(0).getBusLineColor());
             setColorLine(busColor, mBusLineLayoutOrigin);
-            busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(1).getBusLineColor() );
+            busColor = Color.parseColor("#" + busRouteResult.getBusRoutes().get(1).getBusLineColor());
             setColorLine(busColor, mBusLineLayoutDestination);
         }
 

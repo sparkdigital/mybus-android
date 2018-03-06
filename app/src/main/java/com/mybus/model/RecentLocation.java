@@ -46,12 +46,12 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
         return id;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public Integer getType() {
         return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getAddress() {
@@ -78,12 +78,12 @@ public class RecentLocation extends RealmObject implements UsageTrackable, Compa
         this.longitude = longitude;
     }
 
-    public void setUsageTime(Long usageTime) {
-        this.lastUsage = usageTime;
-    }
-
     public Long getUsageTime() {
         return lastUsage;
+    }
+
+    public void setUsageTime(Long usageTime) {
+        this.lastUsage = usageTime;
     }
 
     public LatLng getLatLng() {

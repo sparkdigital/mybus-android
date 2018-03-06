@@ -58,12 +58,12 @@ public class CompleteBusRoute {
         this.mBusLineName = busLineName;
     }
 
-    public void setGoingPointList(List<RoutePoint> pointList) {
-        this.mGoingPointList = pointList;
-    }
-
     public List<RoutePoint> getGoingPointList() {
         return this.mGoingPointList;
+    }
+
+    public void setGoingPointList(List<RoutePoint> pointList) {
+        this.mGoingPointList = pointList;
     }
 
     public List<RoutePoint> getReturnPointList() {

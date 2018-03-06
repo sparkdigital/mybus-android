@@ -10,9 +10,9 @@ import com.mybus.service.CompleteBusRouteServiceImpl;
  */
 public class CompleteBusRouteTask extends AsyncTask<Void, Void, CompleteBusRoute> {
 
+    private final String mBusLineName;
     private CompleteBusRouteCallback mCompleteBusRouteCallback;
     private Integer mBusLineId;
-    private final String mBusLineName;
 
     public CompleteBusRouteTask(int busLineId, String busLineName, CompleteBusRouteCallback callback) {
         this.mCompleteBusRouteCallback = callback;

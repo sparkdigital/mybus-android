@@ -1,14 +1,18 @@
 package com.mybus.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -45,7 +49,6 @@ import com.mybus.marker.MyBusMarker;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.ChargePoint;
 import com.mybus.model.CompleteBusRoute;
-import com.mybus.model.Fare;
 import com.mybus.model.FavoriteLocation;
 import com.mybus.model.GeoLocation;
 import com.mybus.model.MyBusMap;
@@ -64,7 +67,7 @@ import com.mybus.view.NotificationDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
@@ -77,45 +80,57 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     public static final int FROM_SEARCH_RESULT_ID = 1;
     public static final int TO_SEARCH_RESULT_ID = 2;
     public static final int DISPLAY_FAVORITES_RESULT = 3;
-    private static final int DISPLAY_ROADS_RESULT = 4;
     public static final int DISPLAY_BUS_LINES_RESULT = 5;
+    public static final int SHORTCUT_SEARCH_RESULT_ID = 250;
     public static final String FARES = "FARES";
-
-    @Bind(R.id.center_location_action_button)
+    public static final String SHORTCUT_GEOLOCATION_EXTRA = "SHORTCUT_GEOLOCATION_EXTRA";
+    public static final String SHORTCUT_INTENT_ACTION = "SHORTCUT_INTENT_ACTION";
+    private static final int DISPLAY_ROADS_RESULT = 4;
+    private static final int LOCATION_PERMISSION_REQUEST = 22;
+    @BindView(R.id.center_location_action_button)
     FloatingActionButton mCenterLocationActionButton;
-    @Bind(R.id.compoundSearchBox)
+    @BindView(R.id.compoundSearchBox)
     CompoundSearchBox mCompoundSearchBox;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView navigationView;
-    @Bind(R.id.main_toolbar)
+    @BindView(R.id.main_toolbar)
     View mToolbar;
-    @Bind(R.id.GoingAndReturnLayout)
+    @BindView(R.id.GoingAndReturnLayout)
     LinearLayout mGoingAndReturnLayout;
-    @Bind(R.id.SwitchLayout)
+    @BindView(R.id.SwitchLayout)
     LinearLayout mSwitchLayout;
-    @Bind(R.id.SwitchGoing)
+    @BindView(R.id.SwitchGoing)
     SwitchCompat mGoingSwitch;
-    @Bind(R.id.lineNumber)
+    @BindView(R.id.lineNumber)
     TextView mLineNumber;
-
+    int mBusLineId;
+    @BindView(R.id.bottom_sheet)
+    LinearLayout mBottomSheet;
+    @BindView(R.id.tabs)
+    TabLayout mTabLayout;
+    @BindView(R.id.viewpager)
+    ViewPager mViewPager;
     private Context mContext;
     private MyBusMap mMyBusMap;
     private MyBusMarker mMarkerFavoriteToUpdate;
     private boolean mFromActivityResults;
-    int mBusLineId;
-
     /*---Bottom Sheet------*/
     private BottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private ViewPagerAdapter mViewPagerAdapter;
-    @Bind(R.id.bottom_sheet)
-    LinearLayout mBottomSheet;
-    @Bind(R.id.tabs)
-    TabLayout mTabLayout;
-    @Bind(R.id.viewpager)
-    ViewPager mViewPager;
     /*---Bottom Sheet------*/
+
+    /**
+     * @param context
+     * @return either location permissions are granted or not
+     */
+    private static boolean hasLocationPermission(Context context) {
+        boolean hasCoarseLocationPermission = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+        boolean hasFineLocationPermission = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+
+        return hasCoarseLocationPermission || hasFineLocationPermission;
+    }
 
     /**
      * Getter for Toolbar in order to interact with it from MyBusMap.
@@ -149,12 +164,12 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
     public void onHamgurgerIconClick(View view) {
         mDrawerLayout.openDrawer(GravityCompat.START);
     }
+    /*---Main bar---*/
 
     @OnClick(R.id.search_box)
     public void onSearchBoxClick(View view) {
         startSearchActivity(FROM_SEARCH_RESULT_ID, SearchType.ORIGIN, "");
     }
-    /*---Main bar---*/
 
     /*---Action Buton to center the current location---*/
     @OnClick(R.id.center_location_action_button)
@@ -178,6 +193,15 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Request the location permissions
+     */
+    private void requestLocationPermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                LOCATION_PERMISSION_REQUEST);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +211,28 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         if (!PlayServicesChecker.checkPlayServices(mContext)) {
             //if not, request to open the play store
             PlayServicesChecker.buildAlertMessageUpdatePlayServices(mContext);
+            return;
+        }
+
+        initAll();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST:
+                initAll();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void initAll() {
+        if (!hasLocationPermission(this)) {
+            requestLocationPermissions();
             return;
         }
 
@@ -212,8 +258,22 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         // Subscribe to news (notifications):
         FirebaseMessaging.getInstance().subscribeToTopic("news"); //TODO: let the user un-subscribe the app.
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         showNotificationDialog(extras);
+
+        String action = getIntent() != null ? getIntent().getAction() : null;
+        if (SHORTCUT_INTENT_ACTION.equalsIgnoreCase(action) && extras != null && extras.containsKey(SHORTCUT_GEOLOCATION_EXTRA)) {
+
+
+            long recentLocationId = extras.getLong(MainActivity.SHORTCUT_GEOLOCATION_EXTRA);
+
+            Intent shortcutSearchIntent = new Intent(MainActivity.this, ShortcutSearchActivity.class);
+            shortcutSearchIntent.putExtra(ShortcutSearchActivity.TO_GEOLOCATION_ID, recentLocationId);
+            startActivityForResult(shortcutSearchIntent, SHORTCUT_SEARCH_RESULT_ID);
+            overridePendingTransition(0, 0);
+
+
+        }
     }
 
     private void initDrawer() {
@@ -415,7 +475,9 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
         cancelProgressDialog();
         if (roadResult == null) {
             noInternetConnectionMsg();
+            return;
         }
+
         MapBusRoad mapBusRoad = new MapBusRoad().addBusRoadOnMap(mMyBusMap.getMap(), roadResult.getMarkerOptions(), roadResult.getPolylineOptions());
         if (isBusRouteFragmentPresent(mViewPager.getCurrentItem())) {
             mViewPagerAdapter.getItem(mViewPager.getCurrentItem()).setMapBusRoad(mapBusRoad);
@@ -593,6 +655,15 @@ public class MainActivity extends BaseMyBusActivity implements OnMapReadyCallbac
                 case DISPLAY_BUS_LINES_RESULT:
                     mFromActivityResults = true;
                     updateAfterBusLineResult(data);
+                    break;
+                case SHORTCUT_SEARCH_RESULT_ID:
+                    GeoLocation searchOrigin = data.getParcelableExtra(ShortcutSearchActivity.RESULT_GEOLOCATION_ORIGIN);
+                    GeoLocation searchDestination = data.getParcelableExtra(ShortcutSearchActivity.RESULT_GEOLOCATION_DESTINATION);
+
+                    mMyBusMap.updateFromInfo(searchOrigin, searchOrigin.getAddress(), false, false);
+                    mMyBusMap.updateToInfo(searchDestination, searchDestination.getAddress(), false, false);
+
+                    onSearchButtonClick();
                     break;
                 default:
                     break;

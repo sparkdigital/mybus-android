@@ -20,21 +20,21 @@ public class FavoriteViewAdapter extends RecyclerView.Adapter<FavoriteItemViewHo
     private List<FavoriteLocation> mDataset;
     private FavoriteListItemListener mFavoriteListItemListener;
 
+    /**
+     * @param dataSet
+     * @param mFavoriteListItemListener
+     */
+    public FavoriteViewAdapter(List<FavoriteLocation> dataSet, FavoriteListItemListener mFavoriteListItemListener) {
+        mDataset = dataSet;
+        this.mFavoriteListItemListener = mFavoriteListItemListener;
+    }
+
     @Override
     public FavoriteItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favorite_item_list, parent, false);
         return new FavoriteItemViewHolder(v, this);
-    }
-
-    /**
-     * @param dataSet
-     * @param mFavoriteListItemListener
-     */
-    public FavoriteViewAdapter(List<FavoriteLocation> dataSet,FavoriteListItemListener mFavoriteListItemListener) {
-        mDataset = dataSet;
-        this.mFavoriteListItemListener = mFavoriteListItemListener;
     }
 
     @Override

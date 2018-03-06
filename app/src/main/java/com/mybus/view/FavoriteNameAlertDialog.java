@@ -27,25 +27,9 @@ public class FavoriteNameAlertDialog extends BaseDialogFragment<FavoriteNameAler
     private FavoriteLocation mFavoriteLocation;
 
     /**
-     * Listener for FavoriteNameAlertDialog callbacks
-     */
-    public interface FavoriteAddOrEditNameListener {
-
-        /**
-         * @param favoriteLocation with the name updated
-         */
-        void onNewFavoriteName(FavoriteLocation favoriteLocation);
-
-        /**
-         * @param favoriteLocation with the new name updated
-         */
-        void onEditFavoriteName(FavoriteLocation favoriteLocation);
-    }
-
-    /**
      * @param type
      * @param previousName
-     * @param favLocation to modify
+     * @param favLocation  to modify
      * @return
      */
     public static FavoriteNameAlertDialog newInstance(int type, String previousName, FavoriteLocation favLocation) {
@@ -98,5 +82,21 @@ public class FavoriteNameAlertDialog extends BaseDialogFragment<FavoriteNameAler
                             }
                         });
         return builder.create();
+    }
+
+    /**
+     * Listener for FavoriteNameAlertDialog callbacks
+     */
+    public interface FavoriteAddOrEditNameListener {
+
+        /**
+         * @param favoriteLocation with the name updated
+         */
+        void onNewFavoriteName(FavoriteLocation favoriteLocation);
+
+        /**
+         * @param favoriteLocation with the new name updated
+         */
+        void onEditFavoriteName(FavoriteLocation favoriteLocation);
     }
 }

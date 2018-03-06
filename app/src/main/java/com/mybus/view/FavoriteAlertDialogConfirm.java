@@ -14,19 +14,14 @@ import com.mybus.model.FavoriteLocation;
  * Alert dialog used to confirm a favorite addition or remove
  */
 public class FavoriteAlertDialogConfirm extends BaseDialogFragment<FavoriteAlertDialogConfirm.OnFavoriteDialogConfirmClickListener> {
+    public static final int ADD = 0;
+    public static final int REMOVE = 1;
     //FavoriteLocation associated to this alert
     private FavoriteLocation mFavLocation;
     //MyBusMarker will be used to updated the marker after a favorite remove
     private MyBusMarker mMarker;
     //Alert Type ADD or Remove
     private Integer mType;
-    public static final int ADD = 0;
-    public static final int REMOVE = 1;
-
-    // interface to handle the dialog click back to the Activity
-    public interface OnFavoriteDialogConfirmClickListener {
-        void onOkFavoriteAlertConfirmClicked(FavoriteAlertDialogConfirm dialog);
-    }
 
     // Create an instance of the Dialog
     public static FavoriteAlertDialogConfirm newInstance(int type, String title, String message, FavoriteLocation favLocation, MyBusMarker marker) {
@@ -76,7 +71,12 @@ public class FavoriteAlertDialogConfirm extends BaseDialogFragment<FavoriteAlert
         return mMarker;
     }
 
-    public Integer getDialogType(){
+    public Integer getDialogType() {
         return mType;
+    }
+
+    // interface to handle the dialog click back to the Activity
+    public interface OnFavoriteDialogConfirmClickListener {
+        void onOkFavoriteAlertConfirmClicked(FavoriteAlertDialogConfirm dialog);
     }
 }

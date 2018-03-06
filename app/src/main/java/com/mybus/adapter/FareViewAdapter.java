@@ -18,20 +18,20 @@ import java.util.List;
 public class FareViewAdapter extends RecyclerView.Adapter<FareItemViewHolder> {
 
     private List<Fare> mDataset;
-    private Context mContext;
+    //private Context mContext;
+
+    /**
+     * @param context
+     */
+    public FareViewAdapter(Context context) {
+        //this.mContext = context;
+    }
 
     @Override
     public FareItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fare_item, parent, false);
         return new FareItemViewHolder(v);
-    }
-
-    /**
-     * @param context
-     */
-    public FareViewAdapter(Context context) {
-        this.mContext = context;
     }
 
     /**

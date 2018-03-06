@@ -26,13 +26,13 @@ public class HistoryCardView extends CardView implements HistoryItemSelectedList
     private TextView mNoRecentTextView;
     private List<RecentLocation> mRecentLocationList;
 
-    public void setHistoryItemSelectedListener(HistoryItemSelectedListener mHistoryItemSelectedListener) {
-        this.mHistoryItemSelectedListener = mHistoryItemSelectedListener;
-    }
-
     public HistoryCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    public void setHistoryItemSelectedListener(HistoryItemSelectedListener mHistoryItemSelectedListener) {
+        this.mHistoryItemSelectedListener = mHistoryItemSelectedListener;
     }
 
     private void init() {

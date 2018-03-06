@@ -11,17 +11,28 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * This class is used to manage Google Maps markers and its relationship with a favorite
  */
 public class MyBusMarker implements Parcelable {
+    public static final int ORIGIN = 1;
+    public static final int DESTINATION = 2;
+    public static final int USER_LOCATION = 3;
+    public static final int FAVORITE = 4;
+    public static final int CHARGING_POINT = 5;
+    public static final Parcelable.Creator<MyBusMarker> CREATOR = new Parcelable.Creator<MyBusMarker>() {
+        @Override
+        public MyBusMarker createFromParcel(Parcel in) {
+            return new MyBusMarker(in);
+        }
+
+        @Override
+        public MyBusMarker[] newArray(int size) {
+            return new MyBusMarker[size];
+        }
+    };
     private Marker mMapMarker;
     private MarkerOptions mMarkerOptions;
     private boolean mIsFavorite = false;
     private String mFavName;
     //MyBusMarker type
     private Integer mType;
-    public static final int ORIGIN = 1;
-    public static final int DESTINATION = 2;
-    public static final int USER_LOCATION = 3;
-    public static final int FAVORITE = 4;
-    public static final int CHARGING_POINT = 5;
 
     public MyBusMarker(MarkerOptions mOptions, boolean isFav, String favName, int type) {
         this.mMarkerOptions = mOptions;
@@ -30,12 +41,19 @@ public class MyBusMarker implements Parcelable {
         this.mType = type;
     }
 
-    public void setMapMarker(Marker marker) {
-        this.mMapMarker = marker;
+    protected MyBusMarker(Parcel in) {
+        mMarkerOptions = (MarkerOptions) in.readValue(MarkerOptions.class.getClassLoader());
+        mIsFavorite = (boolean) in.readValue(Boolean.class.getClassLoader());
+        mFavName = in.readString();
+        mType = in.readInt();
     }
 
     public Marker getMapMarker() {
         return this.mMapMarker;
+    }
+
+    public void setMapMarker(Marker marker) {
+        this.mMapMarker = marker;
     }
 
     public MarkerOptions getMarkerOptions() {
@@ -53,23 +71,16 @@ public class MyBusMarker implements Parcelable {
         return this.mIsFavorite;
     }
 
-    public void setFavoriteName(String favName) {
-        this.mFavName = favName;
-    }
-
     public String getFavoriteName() {
         return this.mFavName;
     }
 
-    public Integer getType() {
-        return this.mType;
+    public void setFavoriteName(String favName) {
+        this.mFavName = favName;
     }
 
-    protected MyBusMarker(Parcel in){
-        mMarkerOptions = (MarkerOptions) in.readValue(MarkerOptions.class.getClassLoader());
-        mIsFavorite = (boolean) in.readValue(Boolean.class.getClassLoader());
-        mFavName = in.readString();
-        mType = in.readInt();
+    public Integer getType() {
+        return this.mType;
     }
 
     @Override
@@ -84,16 +95,4 @@ public class MyBusMarker implements Parcelable {
         parcel.writeString(mFavName);
         parcel.writeInt(mType);
     }
-
-    public static final Parcelable.Creator<MyBusMarker> CREATOR = new Parcelable.Creator<MyBusMarker>() {
-        @Override
-        public MyBusMarker createFromParcel(Parcel in) {
-            return new MyBusMarker(in);
-        }
-
-        @Override
-        public MyBusMarker[] newArray(int size) {
-            return new MyBusMarker[size];
-        }
-    };
 }

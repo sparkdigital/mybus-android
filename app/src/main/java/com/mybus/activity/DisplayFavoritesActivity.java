@@ -26,7 +26,7 @@ import com.mybus.view.FavoriteNameAlertDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -36,14 +36,12 @@ import butterknife.OnClick;
 public class DisplayFavoritesActivity extends BaseMyBusActivity implements FavoriteListItemListener, FavoriteNameAlertDialog.FavoriteAddOrEditNameListener {
 
     public static final String RESULT_MYBUSMARKER = "FAVORITE_MARKER";
-    @Bind(R.id.favorites_recycler_view)
-    RecyclerView mFavoritesRecyclerView;
-    @Bind(R.id.noFavorites)
-    TextView mNoFavoritesTextView;
-
     private static final int EDIT_SEARCH_RESULT_ID = 1;
     private static final int ADD_SEARCH_RESULT_ID = 2;
-
+    @BindView(R.id.favorites_recycler_view)
+    RecyclerView mFavoritesRecyclerView;
+    @BindView(R.id.noFavorites)
+    TextView mNoFavoritesTextView;
     private List<FavoriteLocation> mFavorites;
     private int mFavoritePositionToEdit;
     private FavoriteViewAdapter mFavoriteViewAdapter;
@@ -207,6 +205,7 @@ public class DisplayFavoritesActivity extends BaseMyBusActivity implements Favor
 
     /**
      * Return to map a favorite MyBusMarker
+     *
      * @param favoriteLocations
      */
     private void returnFavoriteMarker(List<FavoriteLocation> favoriteLocations) {

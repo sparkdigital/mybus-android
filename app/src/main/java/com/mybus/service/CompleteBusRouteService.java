@@ -9,6 +9,7 @@ public interface CompleteBusRouteService {
 
     /**
      * Return the complete bus line route in both directions.
+     *
      * @param busLineId
      * @param busLineName
      * @return

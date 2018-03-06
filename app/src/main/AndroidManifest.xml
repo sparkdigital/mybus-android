@@ -22,8 +22,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MainActivity"
-            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize" />
+
+        <activity android:name=".activity.ShortcutSearchActivity" />
 
         <activity android:name=".activity.DisplayFaresActivity" />
 
@@ -33,20 +36,19 @@
 
         <activity android:name=".activity.BusResultsActivity" />
 
-        <activity android:name=".activity.SearchActivity"
+        <activity
+            android:name=".activity.SearchActivity"
             android:theme="@style/Theme.Transparent" />
 
-        <service
-            android:name=".fcm.MyBusFirebaseMessagingService">
+        <service android:name=".fcm.MyBusFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service
-            android:name=".fcm.MyBusFirebaseInstanceIDService">
+        <service android:name=".fcm.MyBusFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 

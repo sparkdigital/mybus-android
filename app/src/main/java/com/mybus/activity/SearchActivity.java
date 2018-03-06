@@ -39,7 +39,7 @@ import com.mybus.view.HistoryCardView;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -56,13 +56,13 @@ public class SearchActivity extends AppCompatActivity implements OnAddressGeocod
     public static final String RESULT_FAVORITE_NAME_EXTRA = "RESULT_FAVORITE_NAME_EXTRA";
     private static final String TAG = SearchActivity.class.getSimpleName();
 
-    @Bind(R.id.floating_search_view)
+    @BindView(R.id.floating_search_view)
     FloatingSearchView mSearchView;
-    @Bind(R.id.searchContent)
+    @BindView(R.id.searchContent)
     LinearLayout mSearchContent;
-    @Bind(R.id.card_view_recent)
+    @BindView(R.id.card_view_recent)
     HistoryCardView mHistoryCardView;
-    @Bind(R.id.card_view_favorites)
+    @BindView(R.id.card_view_favorites)
     FavoritesCardView mFavoriteCardView;
     private ProgressDialog mDialog;
     private int mSearchType;

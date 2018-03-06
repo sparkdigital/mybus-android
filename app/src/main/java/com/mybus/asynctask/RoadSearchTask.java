@@ -8,7 +8,6 @@ import com.mybus.model.BusRouteResult;
 import com.mybus.model.road.RoadResult;
 import com.mybus.model.road.RoadSearch;
 import com.mybus.service.MyBusServiceImpl;
-import com.mybus.service.ServiceFacade;
 
 
 /**
@@ -20,10 +19,10 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     private final int mType;
     private LatLng midEndStop;
     private LatLng midStartStop;
-    private LatLng endBusStop;
-    private LatLng startLocation;
-    private LatLng endLocation;
-    private LatLng firstBusStop;
+    //private LatLng endBusStop;
+    //private LatLng startLocation;
+    //private LatLng endLocation;
+    //private LatLng firstBusStop;
     private RoadSearchCallback roadSearchCallback;
     private RoadSearch roadSearch;
     private String mBusLine1Color;
@@ -40,8 +39,8 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
         this.mType = type;
         this.roadSearchCallback = callback;
         this.roadSearch = roadSearch;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
+        //this.startLocation = startLocation;
+        //this.endLocation = endLocation;
     }
 
 
@@ -55,8 +54,8 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
     public RoadSearchTask(int type, BusRouteResult route, LatLng startLocation, LatLng endLocation, RoadSearchCallback callback) {
         this.mType = type;
         this.roadSearchCallback = callback;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
+        //this.startLocation = startLocation;
+        //this.endLocation = endLocation;
         roadSearch = new RoadSearch();
         if (route != null) {
             BusRoute busRoute = route.getBusRoutes().get(0);
@@ -64,14 +63,14 @@ public class RoadSearchTask extends AsyncTask<Void, Integer, RoadResult> {
             roadSearch.setmDirection(String.valueOf(busRoute.getBusLineDirection()));
             roadSearch.setmStop1(String.valueOf(busRoute.getStartBusStopNumber()));
             roadSearch.setmStop2(String.valueOf(busRoute.getDestinationBusStopNumber()));
-            firstBusStop = busRoute.getStartBusStopLatLng();
-            endBusStop = busRoute.getEndBusStopLatLng();
+            //firstBusStop = busRoute.getStartBusStopLatLng();
+            //endBusStop = busRoute.getEndBusStopLatLng();
             mBusLine1Color = busRoute.getBusLineColor();
             if (type == 1) {
                 midStartStop = busRoute.getEndBusStopLatLng();
                 busRoute = route.getBusRoutes().get(1);
                 midEndStop = busRoute.getStartBusStopLatLng();
-                endBusStop = busRoute.getEndBusStopLatLng();
+                //endBusStop = busRoute.getEndBusStopLatLng();
                 roadSearch.setmIdLine2(String.valueOf(busRoute.getIdBusLine()));
                 roadSearch.setmDirection2(String.valueOf(busRoute.getBusLineDirection()));
                 roadSearch.setmStop1L2(String.valueOf(busRoute.getStartBusStopNumber()));

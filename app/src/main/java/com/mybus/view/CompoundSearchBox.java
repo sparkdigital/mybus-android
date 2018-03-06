@@ -122,13 +122,6 @@ public class CompoundSearchBox extends FrameLayout {
     }
 
     /**
-     * @param visible
-     */
-    public void setVisible(boolean visible) {
-        setVisibility(visible ? VISIBLE : GONE);
-    }
-
-    /**
      * * Show or hide the SearchBar
      *
      * @param visible
@@ -143,34 +136,17 @@ public class CompoundSearchBox extends FrameLayout {
     }
 
     /**
-     * @param text
-     */
-    public void setFromAddress(String text) {
-        if (text == null) {
-            mFromTextView.setText("");
-            mFromTextView.setHint(getResString(R.string.from_hint));
-        } else {
-            mFromTextView.setText(text);
-        }
-    }
-
-    /**
-     * @param text
-     */
-    public void setToAddress(String text) {
-        if (text == null) {
-            mToTextView.setText("");
-            mToTextView.setHint(getResString(R.string.to_hint));
-        } else {
-            mToTextView.setText(text);
-        }
-    }
-
-    /**
      * @return
      */
     public boolean isVisible() {
         return getVisibility() == VISIBLE;
+    }
+
+    /**
+     * @param visible
+     */
+    public void setVisible(boolean visible) {
+        setVisibility(visible ? VISIBLE : GONE);
     }
 
     /**
@@ -186,7 +162,31 @@ public class CompoundSearchBox extends FrameLayout {
         return mToTextView.getText().toString();
     }
 
+    /**
+     * @param text
+     */
+    public void setToAddress(String text) {
+        if (text == null) {
+            mToTextView.setText("");
+            mToTextView.setHint(getResString(R.string.to_hint));
+        } else {
+            mToTextView.setText(text);
+        }
+    }
+
     public String getFromAddress() {
         return mFromTextView.getText().toString();
+    }
+
+    /**
+     * @param text
+     */
+    public void setFromAddress(String text) {
+        if (text == null) {
+            mFromTextView.setText("");
+            mFromTextView.setHint(getResString(R.string.from_hint));
+        } else {
+            mFromTextView.setText(text);
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.mybus.model.BusRouteResult;
 import com.mybus.view.BusResultViewHolder;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Lucas De Lio on 19/07/2016.
@@ -23,15 +24,6 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
     private BusLineListItemListener mBusLineListItemListener;
     private Context mContext;
 
-    @Override
-    public BusResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        View v;
-        v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.bus_line_result, parent, false);
-        return new BusResultViewHolder(v, this);
-    }
-
     /**
      * @param dataSet
      * @param busLineListItemListener
@@ -40,6 +32,15 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
         this.mDataset = dataSet;
         this.mBusLineListItemListener = busLineListItemListener;
         this.mContext = context;
+    }
+
+    @Override
+    public BusResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // create a new view
+        View v;
+        v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.bus_line_result, parent, false);
+        return new BusResultViewHolder(v, this);
     }
 
     @Override
@@ -67,6 +68,13 @@ public class BusResultViewAdapter extends RecyclerView.Adapter<BusResultViewHold
                     holder.mSecondStopAddress.setText(secondBusRoute.getFullDestinationStopBusAddress());
                     // Show second line information
                     holder.mSecondLineView.setVisibility(View.VISIBLE);
+                }
+
+                if (firstBusRoute.getNextArrivalTime() >= 0) {
+                    holder.mArrivalTimeTxt.setText(String.format(Locale.getDefault(), "%d %s", firstBusRoute.getNextArrivalTime(), "min"));
+                    holder.mArrivalTimeLayout.setVisibility(View.VISIBLE);
+                } else {
+                    holder.mArrivalTimeLayout.setVisibility(View.GONE);
                 }
             }
         }

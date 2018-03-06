@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.mybus.R;
 import com.mybus.listener.BusLineListItemListener;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -16,23 +16,27 @@ import butterknife.ButterKnife;
  */
 public class BusResultViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind(R.id.bus_line_number)
+    @BindView(R.id.bus_line_number)
     public TextView mLineNumber;
-    @Bind(R.id.start_address)
+    @BindView(R.id.start_address)
     public TextView mStartAddress;
-    @Bind(R.id.stop_address)
+    @BindView(R.id.stop_address)
     public TextView mStopAddress;
 
     // Second line information:
-    @Bind(R.id.secondLineView)
+    @BindView(R.id.secondLineView)
     public LinearLayout mSecondLineView;
-    @Bind(R.id.first_line_destination_title)
+    @BindView(R.id.first_line_destination_title)
     public TextView mFirstDestinationTitle;
-    @Bind(R.id.second_line_start_address)
+    @BindView(R.id.second_line_start_address)
     public TextView mSecondStartAddress;
-    @Bind(R.id.second_line_stop_address)
+    @BindView(R.id.second_line_stop_address)
     public TextView mSecondStopAddress;
 
+    @BindView(R.id.arrival_time_layout)
+    public LinearLayout mArrivalTimeLayout;
+    @BindView(R.id.arrival_time_txt)
+    public TextView mArrivalTimeTxt;
 
     private BusLineListItemListener mItemClickListener;
 

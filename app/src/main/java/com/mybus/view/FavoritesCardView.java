@@ -26,13 +26,13 @@ public class FavoritesCardView extends CardView implements FavoriteItemSelectedL
     private TextView mNoFavoritesTextView;
     private List<FavoriteLocation> mFavoriteLocationList;
 
-    public void setFavoriteItemSelectedListener(FavoriteItemSelectedListener mHistoryItemSelectedListener) {
-        this.mFavoriteItemSelectedListener = mHistoryItemSelectedListener;
-    }
-
     public FavoritesCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    public void setFavoriteItemSelectedListener(FavoriteItemSelectedListener mHistoryItemSelectedListener) {
+        this.mFavoriteItemSelectedListener = mHistoryItemSelectedListener;
     }
 
     private void init() {

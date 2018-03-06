@@ -41,12 +41,12 @@ public class Route {
         return route;
     }
 
-    private void setPointList(List<RoutePoint> points) {
-        this.mPointList = points;
-    }
-
     public List<RoutePoint> getPointList() {
         return mPointList;
+    }
+
+    private void setPointList(List<RoutePoint> points) {
+        this.mPointList = points;
     }
 
     public LatLng getFirstLatLng() {

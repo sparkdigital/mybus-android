@@ -106,7 +106,6 @@ public final class FileLoaderHelper {
     }
 
     /**
-     *
      * @param is
      * @return
      * @throws IOException

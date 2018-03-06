@@ -5,6 +5,8 @@ package com.mybus.listener;
  */
 public interface FavoriteListItemListener {
     void onFavoriteItemEdit(int position);
+
     void onFavoriteItemDelete(int position);
+
     void onFavoriteClicked(int position);
 }

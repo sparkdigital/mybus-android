@@ -20,7 +20,7 @@ public class RealmDao<T extends RealmObject> {
     private Class<T> mType;
 
     protected RealmDao(Context c, Class<T> clazz) {
-        RealmConfiguration realConfig = new RealmConfiguration.Builder(c)
+        RealmConfiguration realConfig = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
         this.mRealm = Realm.getInstance(realConfig);

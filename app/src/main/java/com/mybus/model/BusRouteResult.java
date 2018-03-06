@@ -18,34 +18,6 @@ import java.util.List;
  */
 public class BusRouteResult implements Parcelable {
 
-    private static final String TAG = BusRouteResult.class.getSimpleName();
-    private int mType;
-    private List<BusRoute> mBusRoutes;
-    private double mCombinationDistance; //Only used when type is 1
-
-    public BusRouteResult(){
-        mBusRoutes = new ArrayList();
-    }
-
-    protected BusRouteResult(Parcel in) {
-        mBusRoutes = new ArrayList();
-        mType = in.readInt();
-        mBusRoutes = in.createTypedArrayList(BusRoute.CREATOR);
-        mCombinationDistance = in.readDouble();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mType);
-        dest.writeTypedList(mBusRoutes);
-        dest.writeDouble(mCombinationDistance);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
     public static final Creator<BusRouteResult> CREATOR = new Creator<BusRouteResult>() {
         @Override
         public BusRouteResult createFromParcel(Parcel in) {
@@ -57,6 +29,21 @@ public class BusRouteResult implements Parcelable {
             return new BusRouteResult[size];
         }
     };
+    private static final String TAG = BusRouteResult.class.getSimpleName();
+    private int mType;
+    private List<BusRoute> mBusRoutes;
+    private double mCombinationDistance; //Only used when type is 1
+
+    public BusRouteResult() {
+        mBusRoutes = new ArrayList();
+    }
+
+    protected BusRouteResult(Parcel in) {
+        mBusRoutes = new ArrayList();
+        mType = in.readInt();
+        mBusRoutes = in.createTypedArrayList(BusRoute.CREATOR);
+        mCombinationDistance = in.readDouble();
+    }
 
     public static List<BusRouteResult> parseResults(JSONArray results, int type) {
         if (results == null) {
@@ -100,7 +87,6 @@ public class BusRouteResult implements Parcelable {
         return null;
     }
 
-
     private static BusRouteResult parseSingleRoute(JSONObject route) {
         if (route == null) {
             return null;
@@ -126,6 +112,18 @@ public class BusRouteResult implements Parcelable {
         busRoute.setDestinationBusStopStreetNumber(route.optInt("DestinatioBusStopStreetNumber")); //Destination is misspelled
         doubleString = route.optString("DestinatioBusStopDistanceToDestination"); //Destination is misspelled
         busRoute.setDestinationBusStopDistanceToDestination(Double.valueOf(doubleString.replaceAll(",", ".")));
+
+        JSONArray arrivalTimes = route.optJSONArray("ArrivalTimes");
+        if (arrivalTimes != null) {
+            for (int i = 0; i < arrivalTimes.length(); i++) {
+                try {
+                    busRoute.addArrivalTime(arrivalTimes.getInt(i));
+                } catch (JSONException e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        }
+
         busRouteResult.getBusRoutes().add(busRoute);
         return busRouteResult;
     }
@@ -160,6 +158,17 @@ public class BusRouteResult implements Parcelable {
         String doubleString = route.optString("FirstLineStartBusStopDistance");
         firstBusRoute.setStartBusStopDistanceToOrigin(Double.valueOf(doubleString.replaceAll(",", ".")));
 
+        JSONArray firstLineArrivalTimes = route.optJSONArray("FirstLineArrivalTimes");
+        if (firstLineArrivalTimes != null) {
+            for (int i = 0; i < firstLineArrivalTimes.length(); i++) {
+                try {
+                    firstBusRoute.addArrivalTime(firstLineArrivalTimes.getInt(i));
+                } catch (JSONException e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        }
+
         //Adding the first line route
         busRouteResult.getBusRoutes().add(firstBusRoute);
 
@@ -184,6 +193,18 @@ public class BusRouteResult implements Parcelable {
         //Distance to Destination from DestinationBusStop
         doubleString = route.optString("SecondLineDestinationBusStopDistance");
         secondBusRoute.setDestinationBusStopDistanceToDestination(Double.valueOf(doubleString.replaceAll(",", ".")));
+
+        JSONArray secondLineArrivalTimes = route.optJSONArray("SecondLineArrivalTimes");
+        if (secondLineArrivalTimes != null) {
+            for (int i = 0; i < secondLineArrivalTimes.length(); i++) {
+                try {
+                    secondBusRoute.addArrivalTime(secondLineArrivalTimes.getInt(i));
+                } catch (JSONException e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        }
+
         //Adding the second line route
         busRouteResult.getBusRoutes().add(secondBusRoute);
 
@@ -193,24 +214,36 @@ public class BusRouteResult implements Parcelable {
         return busRouteResult;
     }
 
-    public void setType(int type) {
-        this.mType = type;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mType);
+        dest.writeTypedList(mBusRoutes);
+        dest.writeDouble(mCombinationDistance);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public int getType() {
         return this.mType;
     }
 
+    public void setType(int type) {
+        this.mType = type;
+    }
+
     public List<BusRoute> getBusRoutes() {
         return mBusRoutes;
     }
 
-    public void setCombinationDistance(double combinationDistance) {
-        this.mCombinationDistance = combinationDistance;
-    }
-
     public double getCombinationDistance() {
         return this.mCombinationDistance;
+    }
+
+    public void setCombinationDistance(double combinationDistance) {
+        this.mCombinationDistance = combinationDistance;
     }
 
     public boolean isCombined() {

@@ -4,13 +4,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.mybus.R;
 import com.mybus.adapter.FareViewAdapter;
 import com.mybus.asynctask.FaresRequestCallback;
-import com.mybus.builder.MyBusServiceUrlBuilder;
 import com.mybus.model.Fare;
 import com.mybus.service.ServiceFacade;
 
@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -28,9 +28,9 @@ import butterknife.ButterKnife;
  */
 public class DisplayFaresActivity extends BaseMyBusActivity implements FaresRequestCallback {
 
-    @Bind(R.id.fares_recycler_view)
+    @BindView(R.id.fares_recycler_view)
     RecyclerView mFaresRecyclerView;
-    @Bind(R.id.no_internet_layout)
+    @BindView(R.id.no_internet_layout)
     LinearLayout mNoInternetLayout;
     private FareViewAdapter mFaresAdapter;
 
@@ -40,7 +40,7 @@ public class DisplayFaresActivity extends BaseMyBusActivity implements FaresRequ
         ButterKnife.bind(this);
 
         SharedPreferences settings = getSharedPreferences(MainActivity.FARES, 0);
-        SharedPreferences.Editor editor = settings.edit();
+        //SharedPreferences.Editor editor = settings.edit();
         String fares = settings.getString(MainActivity.FARES, "");
 
         if (fares.length() == 0) {
@@ -96,7 +96,7 @@ public class DisplayFaresActivity extends BaseMyBusActivity implements FaresRequ
             mFaresAdapter.setDataSet(faresList);
             mFaresAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(DisplayFaresActivity.class.getSimpleName(), e.toString());
         }
     }
 }

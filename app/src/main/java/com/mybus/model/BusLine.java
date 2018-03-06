@@ -17,30 +17,6 @@ public class BusLine {
     private String mName;
     private String mColor;
 
-    public int getId() {
-        return mId;
-    }
-
-    public void setId(int id) {
-        this.mId = id;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        this.mName = name;
-    }
-
-    public String getColor() {
-        return mColor;
-    }
-
-    public void setColor(String color) {
-        this.mColor = "#" + color;
-    }
-
     public static List<BusLine> parseResults(JSONArray results) {
         if (results == null) {
             return null;
@@ -70,6 +46,30 @@ public class BusLine {
         busLine.setName(busLineJsonObject.optString("BusLineName"));
         busLine.setColor(busLineJsonObject.optString("Color"));
         return busLine;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        this.mId = id;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        this.mName = name;
+    }
+
+    public String getColor() {
+        return mColor;
+    }
+
+    public void setColor(String color) {
+        this.mColor = "#" + color;
     }
 
     @Override

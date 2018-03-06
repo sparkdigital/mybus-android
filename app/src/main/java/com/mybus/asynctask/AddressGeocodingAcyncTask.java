@@ -80,6 +80,7 @@ public class AddressGeocodingAcyncTask extends AsyncTask<String, Void, String> {
 
     /**
      * get the short_name from the administrative_area_level_2 section in the json
+     *
      * @param jsonObject
      * @return
      * @throws JSONException

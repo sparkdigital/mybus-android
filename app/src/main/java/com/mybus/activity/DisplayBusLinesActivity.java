@@ -16,7 +16,7 @@ import com.mybus.service.ServiceFacade;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -24,12 +24,12 @@ import butterknife.ButterKnife;
  */
 public class DisplayBusLinesActivity extends BaseMyBusActivity implements BusLinesRequestCallback, BusLineListItemListener {
 
-    @Bind(R.id.bus_lines_recycler_view)
+    public static final String RESULT_BUS_LINE_ID = "BUS_LINE_ID";
+    public static final String RESULT_BUS_LINE_NAME = "BUS_LINE_NAME";
+    @BindView(R.id.bus_lines_recycler_view)
     RecyclerView mBusLinesRecyclerView;
     private BusLineViewAdapter mBusLineAdapter;
     private List<BusLine> mBusLines;
-    public static final String RESULT_BUS_LINE_ID = "BUS_LINE_ID";
-    public static final String RESULT_BUS_LINE_NAME = "BUS_LINE_NAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

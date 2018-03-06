@@ -22,7 +22,7 @@ import com.mybus.service.ServiceFacade;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -38,13 +38,13 @@ public class BusResultsActivity extends BaseMyBusActivity implements BusLineList
     public static final int FROM_SEARCH_ORIGIN_RESULT_ID = 1;
     public static final int FROM_SEARCH_DESTINATION_RESULT_ID = 2;
 
-    @Bind(R.id.bus_results_recycler_view)
+    @BindView(R.id.bus_results_recycler_view)
     RecyclerView mBusResultsRecyclerView;
-    @Bind(R.id.searchOriginTextView)
+    @BindView(R.id.searchOriginTextView)
     TextView mSearchOriginTextView;
-    @Bind(R.id.searchDestinationTextView)
+    @BindView(R.id.searchDestinationTextView)
     TextView mSearchDestinationTextView;
-    @Bind(R.id.backArrowImageView)
+    @BindView(R.id.backArrowImageView)
     ImageView mBackArrowImageView;
 
     private List<BusRouteResult> mResults;
@@ -153,11 +153,6 @@ public class BusResultsActivity extends BaseMyBusActivity implements BusLineList
         mResults = results;
     }
 
-    // interface to handle the route selection
-    public interface OnBusResultSelectListener {
-        void onBusResultSelected();
-    }
-
     private void startSearchActivity(int requestCode, int type) {
         Intent searchIntent = new Intent(BusResultsActivity.this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_TYPE_EXTRA, type);
@@ -190,6 +185,11 @@ public class BusResultsActivity extends BaseMyBusActivity implements BusLineList
             default:
                 break;
         }
+    }
+
+    // interface to handle the route selection
+    public interface OnBusResultSelectListener {
+        void onBusResultSelected();
     }
 
 

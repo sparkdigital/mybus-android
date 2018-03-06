@@ -6,7 +6,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mybus.builder.MyBusServiceUrlBuilder;
 import com.mybus.model.BusRouteResult;
 import com.mybus.model.ChargePoint;
-import com.mybus.model.Fare;
 import com.mybus.model.road.RoadResult;
 import com.mybus.model.road.RoadSearch;
 

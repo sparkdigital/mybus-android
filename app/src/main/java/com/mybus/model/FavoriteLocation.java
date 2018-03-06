@@ -75,12 +75,12 @@ public class FavoriteLocation extends RealmObject implements UsageTrackable, Com
         this.longitude = longitude;
     }
 
-    public void setUsageCount(Integer usesCount) {
-        this.usageCount = usesCount;
-    }
-
     public Integer getUsageCount() {
         return usageCount;
+    }
+
+    public void setUsageCount(Integer usesCount) {
+        this.usageCount = usesCount;
     }
 
     public LatLng getLatLng() {

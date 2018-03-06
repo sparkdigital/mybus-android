@@ -4,7 +4,6 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,22 +18,6 @@ public class Fare {
 
     public Fare(String title, String cost) {
         this.mTitle = title;
-        this.mCost = cost;
-    }
-
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public void setTitle(String title) {
-        this.mTitle = title;
-    }
-
-    public String getCost() {
-        return mCost;
-    }
-
-    public void setCost(String cost) {
         this.mCost = cost;
     }
 
@@ -56,6 +39,22 @@ public class Fare {
             }
         }
         return list;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        this.mTitle = title;
+    }
+
+    public String getCost() {
+        return mCost;
+    }
+
+    public void setCost(String cost) {
+        this.mCost = cost;
     }
 
     @Override

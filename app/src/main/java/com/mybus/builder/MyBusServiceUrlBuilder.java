@@ -14,13 +14,13 @@ import okhttp3.RequestBody;
  */
 public final class MyBusServiceUrlBuilder {
 
+    public static final String FARES_URL = "http://www.mybus.com.ar/api/v1/PricesApi.php?tk=94a08da1fecbb6e8b46990538c7b50b2";
     //TODO: Replace constants by system properties
     private static final String SCHEME = "http";
     private static final String AUTHORITY = "www.mybus.com.ar";
     private static final String API = "api";
     private static final String VERSION = "v1";
     private static final String TOKEN = "94a08da1fecbb6e8b46990538c7b50b2";
-    public static final String FARES_URL = "http://www.mybus.com.ar/api/v1/PricesApi.php?tk=94a08da1fecbb6e8b46990538c7b50b2";
 
 
     private MyBusServiceUrlBuilder() {
@@ -104,13 +104,12 @@ public final class MyBusServiceUrlBuilder {
      * @return
      */
     public static RequestBody buildRechargeCarForm(Double latitude, Double longitude) {
-        RequestBody formBody = new FormBody.Builder()
+        return new FormBody.Builder()
                 .add("lat", latitude.toString())
                 .add("lng", longitude.toString())
                 .add("ra", "1")
                 .add("tk", TOKEN)
                 .build();
-        return formBody;
 
     }
 

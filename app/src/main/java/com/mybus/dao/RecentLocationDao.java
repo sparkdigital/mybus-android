@@ -3,7 +3,12 @@ package com.mybus.dao;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.mybus.helper.ShortcutHelper;
 import com.mybus.model.RecentLocation;
+
+import java.util.List;
+
+import io.realm.Sort;
 
 /**
  * Created by Julian Gonzalez <jgonzalez@devspark.com>
@@ -31,19 +36,6 @@ public final class RecentLocationDao extends RealmDao<RecentLocation> {
     }
 
     /**
-     * Gets the first item by a LatLng location
-     *
-     * @param latLng
-     */
-    public RecentLocation getItemByLatLng(LatLng latLng) {
-        return copyFromRealm(
-                mRealm.where(RecentLocation.class).equalTo("latitude", latLng.latitude)
-                        .equalTo("longitude", latLng.longitude)
-                        .findFirst()
-        );
-    }
-
-    /**
      * Finds a recent for History Searches and increases it's usage, or creates a new one if no one found
      *
      * @param query
@@ -57,5 +49,34 @@ public final class RecentLocationDao extends RealmDao<RecentLocation> {
             RecentLocation recentLocation = new RecentLocation(type, query, latLng.latitude, latLng.longitude);
             RecentLocationDao.getInstance(context).saveOrUpdate(recentLocation);
         }
+
+        ShortcutHelper.updateRecentLocationShortcuts(context);
+    }
+
+    /**
+     * Gets the first item by a LatLng location
+     *
+     * @param latLng
+     */
+    public RecentLocation getItemByLatLng(LatLng latLng) {
+        return copyFromRealm(
+                mRealm.where(RecentLocation.class).equalTo("latitude", latLng.latitude)
+                        .equalTo("longitude", latLng.longitude)
+                        .findFirst()
+        );
+    }
+
+    /**
+     * Finds all the RecentLocations by Type : @{@link com.mybus.model.SearchType}
+     *
+     * @param type
+     * @return
+     */
+    public List<RecentLocation> findAllByType(int type) {
+        return copyFromRealm(
+                mRealm.where(RecentLocation.class)
+                        .equalTo("type", type)
+                        .sort("lastUsage", Sort.DESCENDING)
+                        .findAll());
     }
 }

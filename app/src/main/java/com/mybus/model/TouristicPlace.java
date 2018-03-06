@@ -18,6 +18,18 @@ import java.util.List;
  */
 public class TouristicPlace implements Parcelable {
 
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<TouristicPlace> CREATOR = new Parcelable.Creator<TouristicPlace>() {
+        @Override
+        public TouristicPlace createFromParcel(Parcel in) {
+            return new TouristicPlace(in);
+        }
+
+        @Override
+        public TouristicPlace[] newArray(int size) {
+            return new TouristicPlace[size];
+        }
+    };
     private static final String TAG = TouristicPlace.class.getSimpleName();
     private String mName;
     private String mDescription;
@@ -34,44 +46,6 @@ public class TouristicPlace implements Parcelable {
         mLatitude = in.readByte() == 0x00 ? null : in.readDouble();
         mLongitude = in.readByte() == 0x00 ? null : in.readDouble();
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mName);
-        dest.writeString(mDescription);
-        dest.writeString(mAddress);
-        dest.writeString(mPhotoUrl);
-        if (mLatitude == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeDouble(mLatitude);
-        }
-        if (mLongitude == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeDouble(mLongitude);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<TouristicPlace> CREATOR = new Parcelable.Creator<TouristicPlace>() {
-        @Override
-        public TouristicPlace createFromParcel(Parcel in) {
-            return new TouristicPlace(in);
-        }
-
-        @Override
-        public TouristicPlace[] newArray(int size) {
-            return new TouristicPlace[size];
-        }
-    };
 
     public TouristicPlace() {
         // This constructor is intentionally empty. Nothing special is needed here.
@@ -114,6 +88,31 @@ public class TouristicPlace implements Parcelable {
             Log.e(TAG, e.toString());
         }
         return place;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mName);
+        dest.writeString(mDescription);
+        dest.writeString(mAddress);
+        dest.writeString(mPhotoUrl);
+        if (mLatitude == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(mLatitude);
+        }
+        if (mLongitude == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(mLongitude);
+        }
     }
 
     public String getName() {

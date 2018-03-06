@@ -124,6 +124,7 @@ public final class ServiceFacade {
 
     /**
      * Return the complete bus line route in both directions.
+     *
      * @param budLineId
      * @param busLineName
      * @param callback
